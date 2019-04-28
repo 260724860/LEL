@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="leerledbtestModelStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="le_admin_role">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_admin_role">
+        <MappingFragment StoreEntitySet="le_admin_role">
+          <ScalarProperty Name="enable" ColumnName="enable" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_admin_role_value">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_admin_role_value">
+        <MappingFragment StoreEntitySet="le_admin_role_value">
+          <ScalarProperty Name="NavigationID" ColumnName="NavigationID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_goods_suppliers">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_goods_suppliers">
+        <MappingFragment StoreEntitySet="le_goods_suppliers">
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="GoodsMappingID" ColumnName="GoodsMappingID" />
+          <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+          <ScalarProperty Name="SuppliersID" ColumnName="SuppliersID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_goods_value">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_goods_value">
+        <MappingFragment StoreEntitySet="le_goods_value">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="GoodsValue" ColumnName="GoodsValue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_goodsgroups">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_goodsgroups">
+        <MappingFragment StoreEntitySet="le_goodsgroups">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Level" ColumnName="Level" />
+          <ScalarProperty Name="Sort" ColumnName="Sort" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_navigation">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_navigation">
+        <MappingFragment StoreEntitySet="le_navigation">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="LinkUrl" ColumnName="LinkUrl" />
+          <ScalarProperty Name="Remark" ColumnName="Remark" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Sort" ColumnName="Sort" />
+          <ScalarProperty Name="Flag" ColumnName="Flag" />
+          <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_orders_head">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_orders_head">
+        <MappingFragment StoreEntitySet="le_orders_head">
+          <ScalarProperty Name="LinesCount" ColumnName="LinesCount" />
+          <ScalarProperty Name="CompleteTime" ColumnName="CompleteTime" />
+          <ScalarProperty Name="UsersID" ColumnName="UsersID" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+          <ScalarProperty Name="Orders_Head_ID" ColumnName="Orders_Head_ID" />
+          <ScalarProperty Name="Out_Trade_No" ColumnName="Out_Trade_No" />
+          <ScalarProperty Name="RcAddr" ColumnName="RcAddr" />
+          <ScalarProperty Name="RcName" ColumnName="RcName" />
+          <ScalarProperty Name="RcPhone" ColumnName="RcPhone" />
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Head_Notes" ColumnName="Head_Notes" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_suppliers">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_suppliers">
+        <MappingFragment StoreEntitySet="le_suppliers">
+          <ScalarProperty Name="SuppliersID" ColumnName="SuppliersID" />
+          <ScalarProperty Name="Suppliers_Name" ColumnName="Suppliers_Name" />
+          <ScalarProperty Name="Suppliers_Nickname" ColumnName="Suppliers_Nickname" />
+          <ScalarProperty Name="Suppliers_PassWord" ColumnName="Suppliers_PassWord" />
+          <ScalarProperty Name="Suppliers_Salt" ColumnName="Suppliers_Salt" />
+          <ScalarProperty Name="Suppliers_Email" ColumnName="Suppliers_Email" />
+          <ScalarProperty Name="Suppliers_Image" ColumnName="Suppliers_Image" />
+          <ScalarProperty Name="Suppliers_MobilePhone" ColumnName="Suppliers_MobilePhone" />
+          <ScalarProperty Name="Suppliers_Landline" ColumnName="Suppliers_Landline" />
+          <ScalarProperty Name="Suppliers_Gender" ColumnName="Suppliers_Gender" />
+          <ScalarProperty Name="Suppliers_LoginTime" ColumnName="Suppliers_LoginTime" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_users">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_users">
+        <MappingFragment StoreEntitySet="le_users">
+          <ScalarProperty Name="Users_ID" ColumnName="Users_ID" />
+          <ScalarProperty Name="UsersName" ColumnName="UsersName" />
+          <ScalarProperty Name="UsersNickname" ColumnName="UsersNickname" />
+          <ScalarProperty Name="UsersPassWord" ColumnName="UsersPassWord" />
+          <ScalarProperty Name="Salt" ColumnName="Salt" />
+          <ScalarProperty Name="UsersEmail" ColumnName="UsersEmail" />
+          <ScalarProperty Name="UsersImage" ColumnName="UsersImage" />
+          <ScalarProperty Name="UsersMobilePhone" ColumnName="UsersMobilePhone" />
+          <ScalarProperty Name="UsersLandline" ColumnName="UsersLandline" />
+          <ScalarProperty Name="UsersGender" ColumnName="UsersGender" />
+          <ScalarProperty Name="UsersLoginTime" ColumnName="UsersLoginTime" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="UsersStatus" ColumnName="UsersStatus" />
+          <ScalarProperty Name="UsersAddress" ColumnName="UsersAddress" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_ad">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_ad">
+        <MappingFragment StoreEntitySet="le_ad">
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Flag" ColumnName="Flag" />
+          <ScalarProperty Name="Link" ColumnName="Link" />
+          <ScalarProperty Name="ImgSrc" ColumnName="ImgSrc" />
+          <ScalarProperty Name="Sort" ColumnName="Sort" />
+          <ScalarProperty Name="AdName" ColumnName="AdName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_goods">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_goods">
+        <MappingFragment StoreEntitySet="le_goods">
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="ShelfLife" ColumnName="ShelfLife" />
+          <ScalarProperty Name="Sort" ColumnName="Sort" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="Describe" ColumnName="Describe" />
+          <ScalarProperty Name="IsHot" ColumnName="IsHot" />
+          <ScalarProperty Name="IsNewGoods" ColumnName="IsNewGoods" />
+          <ScalarProperty Name="IsRecommend" ColumnName="IsRecommend" />
+          <ScalarProperty Name="IsShelves" ColumnName="IsShelves" />
+          <ScalarProperty Name="Category5" ColumnName="Category5" />
+          <ScalarProperty Name="Category4" ColumnName="Category4" />
+          <ScalarProperty Name="Category3" ColumnName="Category3" />
+          <ScalarProperty Name="Category2" ColumnName="Category2" />
+          <ScalarProperty Name="Category1" ColumnName="Category1" />
+          <ScalarProperty Name="Specifications" ColumnName="Specifications" />
+          <ScalarProperty Name="SpecialOffer" ColumnName="SpecialOffer" />
+          <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
+          <ScalarProperty Name="GoodsName" ColumnName="GoodsName" />
+          <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />
+          <ScalarProperty Name="GoodsGroups_ID" ColumnName="GoodsGroups_ID" />
+          <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_admin">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_admin">
+        <MappingFragment StoreEntitySet="le_admin">
+          <ScalarProperty Name="Createtime" ColumnName="Createtime" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Roleid" ColumnName="Roleid" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="salt" ColumnName="salt" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="telephone" ColumnName="telephone" />
+          <ScalarProperty Name="nickname" ColumnName="nickname" />
+          <ScalarProperty Name="loginname" ColumnName="loginname" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_goods_img">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_goods_img">
+        <MappingFragment StoreEntitySet="le_goods_img">
+          <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+          <ScalarProperty Name="CreatTime" ColumnName="CreatTime" />
+          <ScalarProperty Name="Src" ColumnName="Src" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_goods_value_mapping">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_goods_value_mapping">
+        <MappingFragment StoreEntitySet="le_goods_value_mapping">
+          <ScalarProperty Name="CategoryType" ColumnName="CategoryType" />
+          <ScalarProperty Name="GoodsValueID" ColumnName="GoodsValueID" />
+          <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_shop_cart">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_shop_cart">
+        <MappingFragment StoreEntitySet="le_shop_cart">
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Createtime" ColumnName="Createtime" />
+          <ScalarProperty Name="GoodsCount" ColumnName="GoodsCount" />
+          <ScalarProperty Name="GoodsValueID" ColumnName="GoodsValueID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+          <ScalarProperty Name="CartID" ColumnName="CartID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_user_address">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_user_address">
+        <MappingFragment StoreEntitySet="le_user_address">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="DefaultAddr" ColumnName="DefaultAddr" />
+          <ScalarProperty Name="ReceiveAddress" ColumnName="ReceiveAddress" />
+          <ScalarProperty Name="ReceiveArea" ColumnName="ReceiveArea" />
+          <ScalarProperty Name="ReceivePhone" ColumnName="ReceivePhone" />
+          <ScalarProperty Name="ReceiveName" ColumnName="ReceiveName" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_orders_operationrecord">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_orders_operationrecord">
+        <MappingFragment StoreEntitySet="le_orders_operationrecord">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="OperationAction" ColumnName="OperationAction" />
+          <ScalarProperty Name="Orders_Head_ID" ColumnName="Orders_Head_ID" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+          <ScalarProperty Name="OperationRecordID" ColumnName="OperationRecordID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_goods_operationrecord">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_goods_operationrecord">
+        <MappingFragment StoreEntitySet="le_goods_operationrecord">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="AfterSpecialOffer" ColumnName="AfterSpecialOffer" />
+          <ScalarProperty Name="PreSpecialOffer" ColumnName="PreSpecialOffer" />
+          <ScalarProperty Name="AfterOriginalPrice" ColumnName="AfterOriginalPrice" />
+          <ScalarProperty Name="PreOriginalPrice" ColumnName="PreOriginalPrice" />
+          <ScalarProperty Name="AfterGoodsName" ColumnName="AfterGoodsName" />
+          <ScalarProperty Name="PreGoodsName" ColumnName="PreGoodsName" />
+          <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+          <ScalarProperty Name="OperationRecordID" ColumnName="OperationRecordID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_orders_lines">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_orders_lines">
+        <MappingFragment StoreEntitySet="le_orders_lines">
+          <ScalarProperty Name="Category5" ColumnName="Category5" />
+          <ScalarProperty Name="Category4" ColumnName="Category4" />
+          <ScalarProperty Name="Category3" ColumnName="Category3" />
+          <ScalarProperty Name="Category2" ColumnName="Category2" />
+          <ScalarProperty Name="Category1" ColumnName="Category1" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="SuppliersID" ColumnName="SuppliersID" />
+          <ScalarProperty Name="UsersID" ColumnName="UsersID" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="GoodsCount" ColumnName="GoodsCount" />
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Goods_ID" ColumnName="Goods_ID" />
+          <ScalarProperty Name="Out_Trade_No" ColumnName="Out_Trade_No" />
+          <ScalarProperty Name="Orders_Lines_ID" ColumnName="Orders_Lines_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="le_sms">
+      <EntityTypeMapping TypeName="leerledbtestModel.le_sms">
+        <MappingFragment StoreEntitySet="le_sms">
+          <ScalarProperty Name="NonceStr" ColumnName="NonceStr" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="VerifyTime" ColumnName="VerifyTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="CreatTime" ColumnName="CreatTime" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

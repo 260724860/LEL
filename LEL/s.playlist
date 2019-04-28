@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="Service.Tests.GoodsServiceTests.GetGoodsGroupListTest" /><Add Test="Service.Tests.GoodsServiceTests.AddGoodsValueTest" /><Add Test="Service.Tests.GoodsServiceTests.AddGoodsTest" /></Playlist>

@@ -1,0 +1,6 @@
+D:\伊鸿\LELGit\LEL_Server\LEL\DTO\bin\Debug\DTO.dll
+D:\伊鸿\LELGit\LEL_Server\LEL\DTO\bin\Debug\DTO.pdb
+D:\伊鸿\LELGit\LEL_Server\LEL\DTO\obj\Debug\DTO.csprojAssemblyReference.cache
+D:\伊鸿\LELGit\LEL_Server\LEL\DTO\obj\Debug\DTO.csproj.CoreCompileInputs.cache
+D:\伊鸿\LELGit\LEL_Server\LEL\DTO\obj\Debug\DTO.dll
+D:\伊鸿\LELGit\LEL_Server\LEL\DTO\obj\Debug\DTO.pdb

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4f763c79260240539feb67e565c6c634" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="leerledbtestModel.le_admin_role" Width="1.5" PointX="5.75" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_suppliers" Width="1.5" PointX="5.125" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_value" Width="1.5" PointX="5.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goodsgroups" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_head" Width="1.5" PointX="9.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_suppliers" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_users" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_goods_suppliers_le_suppliers" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_ad" Width="1.5" PointX="3.375" PointY="11.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods" Width="1.5" PointX="3" PointY="0.75" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_goods_le_goodsgroups" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_goods_suppliers_le_goods" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_goods_le_suppliers" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_admin" Width="1.5" PointX="5.375" PointY="12.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_img" Width="1.5" PointX="5.25" PointY="0.75" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_goods_img_le_goods" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_value_mapping" Width="1.5" PointX="13.75" PointY="7.625" />
+        <AssociationConnector Association="leerledbtestModel.FK_fa_admin_role_value_fa_navigation" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_goods_value_mapping_le_goods" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_goods_value_mapping_le_goods_value" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_shop_cart" Width="1.5" PointX="12" PointY="10.875" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_shop_cart_le_goods" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_shop_cart_le_goods_value" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_shop_cart_le_users" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_user_address" Width="1.5" PointX="3" PointY="15.375" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_user_address_le_users" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_operationrecords" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_operationrecord" Width="1.5" PointX="13.375" PointY="4.75" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_head_le_users" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_lines" Width="1.5" PointX="8" PointY="2.375" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_goods" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_goods_value" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_2" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_3" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_4" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_5" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_suppliers" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_sms" Width="1.5" PointX="10.375" PointY="0.75" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
