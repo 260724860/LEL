@@ -24,7 +24,7 @@ namespace DTO.HqManager.Index
         /// <summary>
         /// 订单支付时间
         /// </summary>
-        public DateTime? CompleteTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
 
         /// <summary>
         /// 订单创建时间
@@ -57,10 +57,9 @@ namespace DTO.HqManager.Index
     }
 
     public class PendingTransDTO {
-        
 
         /// <summary>
-        /// 未确认订单数
+        /// 待付款订单数
         /// </summary>
         public int UnconfirmedCount { get; set; }
 
@@ -70,38 +69,25 @@ namespace DTO.HqManager.Index
         public int CompleteCount { get; set; }
 
         /// <summary>
-        /// 已审核订单数
+        /// 待确认收货订单数
         /// </summary>
         public int ApprovedCount { get; set; }
 
         /// <summary>
-        /// 待接单订单数
+        /// 新缺货登记
         /// </summary>
         public int WaitingListCount { get; set; }
 
         /// <summary>
-        /// 已接单订单数
+        /// 带退款订单数
         /// </summary>
         public int HaveOrderCount { get; set; }
 
         /// <summary>
-        /// 已取消订单数
+        /// 已发货订单数
         /// </summary>
         public int CancelledCount { get; set; }
 
-    }
-
-    public class TotalOrderStatusDTO
-    {
-        /// <summary>
-        /// 订单ID
-        /// </summary>
-        public int Orders_Head_ID { get; set; }
-
-        /// <summary>
-        /// 订单状态
-        /// </summary>
-        public int Status { get; set; }
     }
 
     public class GoodsStaticDTO {
@@ -151,5 +137,11 @@ namespace DTO.HqManager.Index
         /// 订单金额
         /// </summary>
         public decimal OrderMoney { get; set; }
+    }
+
+    public class TotalOrderStatusDTO {
+        public int Orders_Head_ID { get; set; }
+
+        public int Status { get; set; }
     }
 }

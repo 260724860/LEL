@@ -22,13 +22,11 @@ namespace Service
     
         public int ID { get; set; }
         public string Name { get; set; }
-        public string Title { get; set; }
         public string LinkUrl { get; set; }
         public string Remark { get; set; }
         public int ParentID { get; set; }
         public int Sort { get; set; }
         public int Flag { get; set; }
-        public string ActionType { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_admin_role_value> le_admin_role_value { get; set; }

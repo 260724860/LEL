@@ -14,17 +14,8 @@ namespace Service
     
     public partial class le_admin_role
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public le_admin_role()
-        {
-            this.le_admin_role_value = new HashSet<le_admin_role_value>();
-        }
-    
         public int ID { get; set; }
         public string name { get; set; }
         public int enable { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_admin_role_value> le_admin_role_value { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTO.Goods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,12 +19,48 @@ namespace DTO.ShopOrder
         public string GoodsImg { get; set; }
 
         public int GoodsID { get; set; }
-        /// <summary>
-        /// 商品属性名
-        /// </summary>
-        public string GoodsValueName { get; set; }
+       
         public int CartID { get; set; }
+        /// <summary>
+        /// 数量
+        /// </summary>
         public int GoodsCount { get; set; }
+        /// <summary>
+        /// 销售价
+        /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// 商品分类
+        /// </summary>
+        public int GoodsGroups_ID { get; set; }
+
+        /// <summary>
+        /// 供应商ID
+        /// </summary>
+       // public int SuppliersID { get; set; }
+
+        /// <summary>
+        /// 供应商价格
+        /// </summary>
+       // public decimal Supplyprice { get; set; }
+
+        public IEnumerable<GoodsValues> GoodsValueList { get; set; }
+        /// <summary>
+        /// 限购
+        /// </summary>
+        public int? Quota { get; set; }
+        /// <summary>
+        /// 库存
+        /// </summary>
+        public int? Stock { get; set; }
+
+        public decimal SpecialOffer { get; set; }
+        public DateTime RowVersion { get; set; }
+
+        public List<SupplierGoods> SupplierGoodsList { get; set; }
+
+        public int MinimumPurchase { get; set; }
     }
+   
 }

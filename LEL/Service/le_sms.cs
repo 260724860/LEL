@@ -18,8 +18,8 @@ namespace Service
         public string Code { get; set; }
         public System.DateTime CreatTime { get; set; }
         public int Status { get; set; }
+        public string NonceStr { get; set; }
         public Nullable<System.DateTime> VerifyTime { get; set; }
         public string Phone { get; set; }
-        public string NonceStr { get; set; }
     }
 }

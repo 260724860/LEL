@@ -32,5 +32,9 @@ namespace LEL.Oauth
             identity.AddClaim(new Claim("role", "user"));
             context.Validated(identity);
         }
+        public override Task ValidateTokenRequest(OAuthValidateTokenRequestContext context)
+        {
+            return base.ValidateTokenRequest(context);
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace Service
         public string Src { get; set; }
         public System.DateTime CreatTime { get; set; }
         public int GoodsID { get; set; }
+        public int IsDelete { get; set; }
+        public System.DateTime UpdateTime { get; set; }
     
         public virtual le_goods le_goods { get; set; }
     }

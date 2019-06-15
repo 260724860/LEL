@@ -25,22 +25,22 @@ namespace Service
                 
                 var NowDate = DateTime.Now;
                 var SevenDate = Convert.ToDateTime(NowDate.AddDays(-6).ToShortDateString());
-                var tempIq = ctx.le_orders_head.Where(s => s.CompleteTime >= SevenDate);
+                var tempIq = ctx.le_orders_head.Where(s => s.CompleteTime >= SevenDate&&s.Status==1);
 
                 var TDresult = tempIq.Select(s => new IndexDTO
                 {
-                    Out_Trade_No = s.Out_Trade_No,
+                    Out_Trade_No = s.OutTradeNo,
                     Money = s.Money,
-                    CompleteTime = s.CompleteTime,
+                    UpdateTime = s.CompleteTime,
                     CreateTime = s.CreateTime
                 }).ToList();
 
                 DTO.SevendaysSalesMoney = TDresult.Sum(a => a.Money);//近七日销售额
                 var YesDateEn = Convert.ToDateTime(NowDate.ToShortDateString());
                 var YesDateSt = Convert.ToDateTime(NowDate.AddDays(-1).ToShortDateString());
-                DTO.YesterdaySalesMoney = TDresult.Where(a => a.CompleteTime <= YesDateEn && a.CompleteTime >= YesDateSt).Sum(b => b.Money);
-                DTO.TodaySalesCount = TDresult.Where(a => a.CompleteTime >= Convert.ToDateTime(NowDate.ToShortDateString())).Count();
-                DTO.TodaySalesMoney = TDresult.Where(a => a.CompleteTime >= Convert.ToDateTime(NowDate.ToShortDateString())).Sum(b => b.Money);
+                DTO.YesterdaySalesMoney = TDresult.Where(a => a.UpdateTime <= YesDateEn && a.UpdateTime >= YesDateSt).Sum(b => b.Money);
+                DTO.TodaySalesCount = TDresult.Where(a => a.UpdateTime >= Convert.ToDateTime(NowDate.ToShortDateString())).Count();
+                DTO.TodaySalesMoney = TDresult.Where(a => a.UpdateTime >= Convert.ToDateTime(NowDate.ToShortDateString())).Sum(b => b.Money);
 
                 return DTO;
             }
@@ -55,13 +55,14 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 GoodsStaticDTO DTO = new GoodsStaticDTO();
+                var list = ctx.le_goods.Select(s=>s.IsShelves).ToList();
 
-                var Shelves = ctx.le_goods.Select(a => a.IsShelves == 0).ToList();
-                var TheShelves = ctx.le_goods.Select(a => a.IsShelves == 1).ToList();
+                var Shelves = list.Count(s=>s==0);
+                var TheShelves = list.Count(s => s == 1);
 
-                DTO.ShelvesCount = Shelves.Count;
-                DTO.TheShelvesCount = TheShelves.Count;
-                DTO.TotalGoodsCount = DTO.ShelvesCount + DTO.TheShelvesCount;
+                DTO.ShelvesCount = list.Count(s => s == 0);//下架
+                DTO.TheShelvesCount = list.Count(s => s == 1);//上架
+                DTO.TotalGoodsCount = DTO.ShelvesCount + DTO.TheShelvesCount;//总计
 
                 return DTO;
             }
@@ -79,7 +80,7 @@ namespace Service
             {
                 SalesChartDTO DTO = new SalesChartDTO();
 
-                string sql = string.Format(@"select count(loh.Orders_Head_ID) OrderCount,round(sum(loh.Money),2) OrderMoney,date_format(loh.CompleteTime, '%Y-%m-%d') OrderTime from le_orders_head loh 
+                string sql = string.Format(@"select count(loh.OrdersHeadID) OrderCount,round(sum(loh.Money),2) OrderMoney,date_format(loh.CompleteTime, '%Y-%m-%d') OrderTime from le_orders_head loh 
 where loh.`Status`=1 and loh.CompleteTime between @StartTime and @EndTime
 group by OrderTime");
 
@@ -115,7 +116,7 @@ group by OrderTime");
 
                 var result = ctx.le_orders_head.Select(s => new TotalOrderStatusDTO
                 {
-                    Orders_Head_ID = s.Orders_Head_ID,
+                    Orders_Head_ID = s.OrdersHeadID,
                     Status = s.Status
                 }).ToList();
 

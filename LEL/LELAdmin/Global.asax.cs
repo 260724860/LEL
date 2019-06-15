@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LELAdmin.App_Start;
+using LELAdmin.QuzrtzJob;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,7 +20,10 @@ namespace LELAdmin
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            log4net.Config.XmlConfigurator.Configure();
 
+            GlobalConfiguration.Configuration.Filters.Add(new LELExceptionFilter());
+            new JobScheduler().startQuartzAsync();
         }
     }
 }

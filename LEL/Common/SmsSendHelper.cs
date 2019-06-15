@@ -31,9 +31,8 @@ namespace Common
         /// </summary>
         /// <param name="mobile"></param>
         /// <param name="msg"></param>
-        public void SendSingleSms(string mobile,string content, out ReturnMsg obj)
+        public void SendSingleSms(string mobile,string content, out Result msg)
         {
-            var  msg = "";
             Message box = new Message();
             box.apikey = APIKEY;
             box.mobile = mobile;
@@ -46,10 +45,8 @@ namespace Common
 
             MyDelegate dele = new MyDelegate(httpPost);
             IAsyncResult Ir = dele.BeginInvoke(paras, null, null);
-            msg = dele.EndInvoke(Ir);
-
-            obj = JsonConvert.DeserializeObject<ReturnMsg>(msg);
-
+            //msg = dele.EndInvoke(Ir);
+            msg = JsonConvert.DeserializeObject<Result>(dele.EndInvoke(Ir));
         }
 
         /// <summary>
@@ -57,8 +54,9 @@ namespace Common
         /// </summary>
         /// <param name="MultimtList"></param>
         /// <param name="msg"></param>
-        public void SendMultiSms(List<Multimt> MultimtList,out ReturnMsg obj)
+        public void SendMultiSms(List<Multimt> MultimtList,out object msg)
         {
+            msg = "";
             Message box = new Message();
             box.apikey = APIKEY;
             box.multimt = JsonConvert.SerializeObject(MultimtList);
@@ -70,9 +68,8 @@ namespace Common
 
             MyDelegate dele = new MyDelegate(httpPost);
             IAsyncResult Ir = dele.BeginInvoke(paras, null, null);
-            var msg = dele.EndInvoke(Ir);
+            msg = dele.EndInvoke(Ir);
 
-            obj = JsonConvert.DeserializeObject<ReturnMsg>(msg);
         }
 
         /// <summary>
@@ -176,7 +173,7 @@ namespace Common
             public string exdata { get; set; }
         }
 
-        public class ReturnMsg {
+        public class Result {
             public int result { get; set; }
             public string msgid { get; set; }
             public string custid { get; set; }

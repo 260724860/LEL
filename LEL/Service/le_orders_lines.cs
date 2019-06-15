@@ -14,30 +14,37 @@ namespace Service
     
     public partial class le_orders_lines
     {
-        public int Orders_Lines_ID { get; set; }
-        public string Out_Trade_No { get; set; }
-        public int Goods_ID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public le_orders_lines()
+        {
+            this.le_orderline_goodsvalue = new HashSet<le_orderline_goodsvalue>();
+            this.le_orders_lines_log = new HashSet<le_orders_lines_log>();
+        }
+    
+        public int OrdersLinesID { get; set; }
+        public int OrderHeadID { get; set; }
+        public int GoodsID { get; set; }
         public decimal Money { get; set; }
+        public decimal SupplyPrice { get; set; }
         public int GoodsCount { get; set; }
+        public int DeliverCount { get; set; }
+        public Nullable<decimal> Profit { get; set; }
         public string Notes { get; set; }
         public int Status { get; set; }
         public Nullable<int> AdminID { get; set; }
         public int UsersID { get; set; }
-        public Nullable<int> SuppliersID { get; set; }
+        public int SuppliersID { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
-        public Nullable<int> Category1 { get; set; }
-        public Nullable<int> Category2 { get; set; }
-        public Nullable<int> Category3 { get; set; }
-        public Nullable<int> Category4 { get; set; }
-        public Nullable<int> Category5 { get; set; }
     
+        public virtual le_admin le_admin { get; set; }
         public virtual le_goods le_goods { get; set; }
-        public virtual le_goods_value le_goods_value { get; set; }
-        public virtual le_goods_value le_goods_value1 { get; set; }
-        public virtual le_goods_value le_goods_value2 { get; set; }
-        public virtual le_goods_value le_goods_value3 { get; set; }
-        public virtual le_goods_value le_goods_value4 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orderline_goodsvalue> le_orderline_goodsvalue { get; set; }
+        public virtual le_orders_head le_orders_head { get; set; }
         public virtual le_suppliers le_suppliers { get; set; }
+        public virtual le_users le_users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_lines_log> le_orders_lines_log { get; set; }
     }
 }

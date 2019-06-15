@@ -17,31 +17,25 @@ namespace Service
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public le_goods_value()
         {
-            this.le_goods_value_mapping = new HashSet<le_goods_value_mapping>();
-            this.le_shop_cart = new HashSet<le_shop_cart>();
-            this.le_orders_lines = new HashSet<le_orders_lines>();
-            this.le_orders_lines1 = new HashSet<le_orders_lines>();
-            this.le_orders_lines2 = new HashSet<le_orders_lines>();
-            this.le_orders_lines3 = new HashSet<le_orders_lines>();
-            this.le_orders_lines4 = new HashSet<le_orders_lines>();
+            this.le_cart_goodsvalue = new HashSet<le_cart_goodsvalue>();
+            this.le_orderline_goodsvalue = new HashSet<le_orderline_goodsvalue>();
         }
     
-        public int ID { get; set; }
+        public int GoodsValueID { get; set; }
         public string GoodsValue { get; set; }
+        public int Enable { get; set; }
+        public string SerialNumber { get; set; }
+        public int CategoryType { get; set; }
+        public int GoodsID { get; set; }
+        public System.DateTime CreateTime { get; set; }
+        public System.DateTime UpdateTime { get; set; }
+        public Nullable<int> Stock { get; set; }
+        public int RowVersion { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_goods_value_mapping> le_goods_value_mapping { get; set; }
+        public virtual ICollection<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }
+        public virtual le_goods le_goods { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_orders_lines> le_orders_lines1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_orders_lines> le_orders_lines2 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_orders_lines> le_orders_lines3 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_orders_lines> le_orders_lines4 { get; set; }
+        public virtual ICollection<le_orderline_goodsvalue> le_orderline_goodsvalue { get; set; }
     }
 }

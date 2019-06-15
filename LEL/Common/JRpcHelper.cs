@@ -26,6 +26,7 @@ namespace Common
             dt.Add("content", obj);
             dt.Add("ext", obj2);
             return dt;
+
         }
 
         public static string JsonResultSuccess(int code=0, string msg="SUCCESS", object obj=null)

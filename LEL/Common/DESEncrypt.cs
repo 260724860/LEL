@@ -11,7 +11,7 @@ namespace Common
     /// <summary>
     /// DES加密/解密类。
     /// </summary>
-    public class DESEncrypt
+    public partial class DESEncrypt
     {
         public DESEncrypt()
         {

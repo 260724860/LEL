@@ -14,17 +14,46 @@ namespace Service
     
     public partial class le_admin
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public le_admin()
+        {
+            this.le_admin_re_users = new HashSet<le_admin_re_users>();
+            this.le_goods_log = new HashSet<le_goods_log>();
+            this.le_orders_head = new HashSet<le_orders_head>();
+            this.le_orders_head_log = new HashSet<le_orders_head_log>();
+            this.le_orders_lines = new HashSet<le_orders_lines>();
+            this.le_orders_lines_log = new HashSet<le_orders_lines_log>();
+            this.lel_admin_suppliers = new HashSet<lel_admin_suppliers>();
+        }
+    
         public int AdminID { get; set; }
-        public string loginname { get; set; }
-        public string nickname { get; set; }
-        public string telephone { get; set; }
-        public string password { get; set; }
-        public string salt { get; set; }
-        public string email { get; set; }
-        public int status { get; set; }
+        public string LoginName { get; set; }
+        public string Nickname { get; set; }
+        public string TelePhone { get; set; }
+        public string Password { get; set; }
+        public string Salt { get; set; }
+        public string Email { get; set; }
+        public int Status { get; set; }
         public int Roleid { get; set; }
+        public string AdminRoleStr { get; set; }
         public string Address { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public System.DateTime Createtime { get; set; }
+        public int IsUrgent { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_admin_re_users> le_admin_re_users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_goods_log> le_goods_log { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_head> le_orders_head { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_head_log> le_orders_head_log { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_lines_log> le_orders_lines_log { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<lel_admin_suppliers> lel_admin_suppliers { get; set; }
     }
 }

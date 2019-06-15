@@ -18,6 +18,10 @@ namespace DTO.Admin
         public int AdminID { get; set; }
 
         /// <summary>
+        /// 消息累加值
+        /// </summary>
+        public int MsgCount { get; set; }
+        /// <summary>
         /// 用户姓名
         /// </summary>
         public string loginname { get; set; }
@@ -36,6 +40,8 @@ namespace DTO.Admin
         /// 密码
         /// </summary>
         public string password { get; set; }
+        public string AdminRoleStr { get; set; }
+        
 
         /// <summary>
         /// 密码盐
@@ -72,6 +78,10 @@ namespace DTO.Admin
         /// </summary>
         public DateTime Createtime { get; set; }
 
+        /// <summary>
+        /// 是否有加急单得权限
+        /// </summary>
+        public int IsUrgent { get; set; }
         #endregion
 
         #region 扩展字段
@@ -81,9 +91,9 @@ namespace DTO.Admin
 
         public string RoleName { get; set; }
 
-        public AdminRoleDTO Role { get; set; }
+        //public AdminRoleDTO Role { get; set; }
 
-        public List<AdminRoleValueDTO> RoleValueList { get; set; }
+        //public List<AdminRoleMappingDTO> RoleValueList { get; set; }
         #endregion
     }
 
@@ -103,5 +113,40 @@ namespace DTO.Admin
         /// 修改后密码
         /// </summary>
         public string Updatepassword { get; set; }
+    }
+
+    public class EditAdminUserDto
+    {
+        /// <summary>
+        /// 管理员ID
+        /// </summary>
+        public int AdminID { get; set; }
+        /// <summary>
+        /// 用户账号
+        /// </summary>
+        public string LoginName { get; set; }
+        /// <summary>
+        /// 用户昵称
+        /// </summary>
+        public string Nickname { get; set; }
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 权限
+        /// </summary>
+        public string AdminRoleStr { get; set; }
+        /// <summary>
+        /// 是否有加急单操作权限
+        /// </summary>
+        public string IsUrgent { get; set; }
+
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public string TelePhone { get; set; }
     }
 }

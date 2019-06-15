@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTO.Goods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,13 +19,41 @@ namespace DTO.ShopOrder
         public string SuppliersName { get; set; }
         public int GoodsCount { get; set; }
         public string DefultSupplier { get; set; }
+        public int DefultSupplierID { get; set; }
 
-        public string CategoryName1 { get; set; }
-        public string CategoryName2 { get; set; }
-        public string CategoryName3 { get; set; }
-        public string CategoryName4 { get; set; }
-        public string CategoryName5 { get; set; }
+        public int Orders_Lines_ID { get; set; }
+        public string SupplierPhone{get;set;}
+        public int SupplierID { get; set; }
 
+        /// <summary>
+        /// 供应商价格
+        /// </summary>
+        public decimal SupplyPrice { get; set; }
 
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public decimal Money { get; set; }
+
+        public decimal OriginalPrice { get; set; }
+
+        public string SerialNumber { get; set; }
+
+        public List<GoodsValues> GoodsValuesList { get; set; }
+
+        /// <summary>
+        /// 规格单位
+        /// </summary>
+        public string Specifications { get; set; }
+        
+        /// <summary>
+        /// 装箱数
+        /// </summary>
+        public int? PackingNumber { get; set; }
+
+        /// <summary>
+        /// 实际发货数
+        /// </summary>
+        public int DeliverCount { get; set; }
     }
 }

@@ -36,8 +36,10 @@ namespace Service
                 model.UpdateTime = DateTime.Now;
                 model.Link = Link;
                 model.ImgSrc = Img;
+                model.Sort = Sort;
                 try
                 {
+                    ctx.le_ad.Add(model);
                     if (ctx.SaveChanges() > 0)
                     {
                         return model.ID;
@@ -52,6 +54,34 @@ namespace Service
             return 0;
         }
 
+        /// <summary>
+        /// 删除广告
+        /// </summary>
+        /// <param name="AdID"></param>
+        /// <returns></returns>
+        public bool DeleteAd(int AdID)
+        {
+            using (Entities ctx = new Entities())
+            {
+                le_ad entity = new le_ad { ID = AdID };
+                ctx.le_ad.Attach(entity);
+                ctx.le_ad.Remove(entity);
+
+                try
+                {
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    log.Error(ex.ToString(), ex);
+                    return false;
+                }
+                return false;
+            }
+        }
         /// <summary>
         /// 修改广告
         /// </summary>
@@ -77,6 +107,7 @@ namespace Service
                 temp.UpdateTime = DateTime.Now;
                 temp.Link = Link;
                 temp.ImgSrc = Img;
+                temp.Sort = Sort;
                 try
                 {
                     ctx.Entry<le_ad>(temp).State = EntityState.Modified;
@@ -103,7 +134,7 @@ namespace Service
         /// <param name="Flag"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public  List<le_ad> GetAdList(int offset,int rows,string Keywords,int Flag,out int Count)
+        public  List<le_ad> GetAdList(string Keywords,int Flag,out int Count)
         {
             using (Entities ctx = new Entities())
             {
@@ -113,7 +144,7 @@ namespace Service
                     tmepIq = tmepIq.Where(s => s.AdName.Contains(Keywords));
                 }
                 Count = tmepIq.Count();
-                var result = tmepIq.OrderByDescending(s => s.Sort).Skip(offset).Take(rows).ToList();
+                var result = tmepIq.OrderByDescending(s => s.Sort).ToList();
                 return result;
             }
         }
@@ -243,6 +274,7 @@ namespace Service
             }
         }
 
+
         /// <summary>
         /// 获取验证码
         /// </summary>
@@ -303,8 +335,9 @@ namespace Service
                 }
                 catch(Exception ex)
                 {
-                    return 0;
                     log.Error(Code, ex);
+                    return 0;
+                   
                 }
             }
         }
@@ -338,6 +371,243 @@ namespace Service
                     log.Error(Phone, ex);
                     return false;
                 }
+            }
+        }
+
+
+       /// <summary>
+       /// 添加系统收货地址
+       /// </summary>
+       /// <param name="UserID"></param>
+       /// <param name="ReceiveName"></param>
+       /// <param name="ReceivePhone"></param>
+       /// <param name="ReceiveArea"></param>
+       /// <param name="ReceiveAddress"></param>
+       /// <param name="DefaultAddr"></param>
+       /// <returns></returns>
+        public int AddSysAddress( string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort,double? Longitude,double? Latitude)
+        {
+            using (Entities ctx = new Entities())
+            {
+                le_sys_address model = new le_sys_address();
+                model.CreateTime = DateTime.Now;
+                model.ReceiveAddress = ReceiveAddress;
+                model.ReceiveArea = ReceiveArea;
+                model.ReceivePhone = ReceivePhone;
+                model.ReceiveName = ReceiveName;
+                model.Status = 1;
+                model.Sort = Sort;
+                model.Longitude = Longitude;
+                model.Latitude = Latitude;
+                ctx.le_sys_address.Add(model);
+                try
+                {
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return model.AddressID;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.Message, ex);
+                    return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改系统收获地址
+        /// </summary>
+        /// <param name="AddressID"></param>
+        /// <param name="ReceiveName"></param>
+        /// <param name="ReceivePhone"></param>
+        /// <param name="ReceiveArea"></param>
+        /// <param name="ReceiveAddress"></param>
+        /// <param name="DefaultAddr"></param>
+        /// <returns></returns>
+        public bool UpdateSysAddress(int AddressID, string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort, int Status, double? Longitude, double? Latitude)
+        {
+            using (Entities ctx = new Entities())
+            {
+                le_sys_address model = ctx.le_sys_address.Where(s => s.AddressID == AddressID).FirstOrDefault();
+                if (model == null)
+                {
+                    return false;
+                }
+                if (Status != 0 && Status != 1)
+                {
+                    return false;
+                }
+                model.Sort = Sort;
+                model.ReceiveAddress = ReceiveAddress;
+                model.ReceiveArea = ReceiveArea;
+                model.ReceivePhone = ReceivePhone;
+                model.ReceiveName = ReceiveName;
+                model.Status = Status;
+                model.Longitude = Longitude;
+                model.Latitude = Latitude;
+                ctx.Entry<le_sys_address>(model).State = EntityState.Modified;
+                try
+                {
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.Message, ex);
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除收货系统地址
+        /// </summary>
+        /// <param name="AddressID"></param>
+        /// <returns></returns>
+        public bool DeleteSysAddress(int AddressID)
+        {
+            using (Entities ctx = new Entities())
+            {
+                le_sys_address entity = new le_sys_address { AddressID= AddressID };
+                ctx.le_sys_address.Attach(entity);
+                ctx.le_sys_address.Remove(entity);
+
+                try
+                {
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.ToString(), ex);
+                    return false;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取系统地址列表
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public List<le_sys_address> GetSysAddressList(SeachOptions options, out int Count)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var tempIq = ctx.le_sys_address.Where(s=>true);
+                if(options.Status!=null)
+                {
+                    tempIq= tempIq.Where(s => s.Status == options.Status);
+                }
+                if (!string.IsNullOrEmpty(options.KeyWords))
+                {
+                    tempIq = tempIq.Where(s => s.ReceiveAddress.Contains(options.KeyWords)
+                      || s.ReceiveArea.Contains(options.KeyWords) || s.ReceivePhone.Contains(options.KeyWords));
+                }
+                tempIq = tempIq.OrderBy(s => s.Sort);
+                tempIq = tempIq.Skip(options.Offset).Take(options.Rows);
+                Count = tempIq.Count();
+                return tempIq.ToList();
+            }
+        }
+
+        /// <summary>
+        /// 添加消息推送
+        /// </summary>
+        /// <param name="UserID">用户ID</param>
+        /// <param name="UserType">用户类型 1 商户 2 供应商 3 总部</param>
+        /// <returns></returns>
+        public int AddPulshMsg(int UserID,int UserType)
+        {
+            using (Entities ctx = new Entities())
+            {
+                le_pushmsg le_Pushmsg = new le_pushmsg();
+                le_Pushmsg.UserType = UserType;
+                le_Pushmsg.MsgCount = 1;
+                le_Pushmsg.IsDeleted = 0;
+                le_Pushmsg.UpdateTime = DateTime.Now;
+                le_Pushmsg.UserID = UserID;
+                le_Pushmsg.MsgType = 1;
+                ctx.le_pushmsg.Add(le_Pushmsg);
+                try
+                {
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return le_Pushmsg.ID;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    log.Error(UserID, ex);
+                    return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 推送订单消息
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <param name="OrderNO"></param>
+        /// <returns></returns>
+        public bool UpdatePushMsg(int UserID,string OrderNO,int UserType,int MsgType=1)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var model = ctx.le_pushmsg.Where(s => s.UserID == UserID&& s.UserType==UserType).FirstOrDefault();
+                if (model == null)
+                {
+                    log.Error(string.Format("推送订单消息失败,UserID:{0}，单号:{1}", UserID, OrderNO));
+                    return false;
+                }
+                model.UpdateTime = DateTime.Now;
+                model.OrderNo = OrderNO;
+                model.MsgCount += 1;
+                model.UpdateTime = DateTime.Now;
+                model.MsgType = MsgType;
+                ctx.Entry<le_pushmsg>(model).State = EntityState.Modified;
+                if(ctx.SaveChanges()>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取推送消息
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <param name="UserType"></param>
+        /// <returns></returns>
+        public le_pushmsg GetPushMsg(int UserID,int UserType)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var result = ctx.le_pushmsg.Where(s => s.UserID == UserID && s.UserType == UserType).FirstOrDefault();
+                return result;
             }
         }
     }

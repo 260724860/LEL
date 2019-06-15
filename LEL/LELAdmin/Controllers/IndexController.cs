@@ -1,4 +1,5 @@
 ﻿using Common;
+using Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,8 @@ namespace LELAdmin.Controllers
     /// 后台首页 API
     /// </summary>
     [RoutePrefix("api/Index")]
-    public class IndexController : ApiController
+    [Authorize]
+    public class IndexController : BaseController
     {
         private Service.IndexService IdService = new Service.IndexService();
         SmsSendHelper ssh = new SmsSendHelper();
@@ -32,7 +34,7 @@ namespace LELAdmin.Controllers
                 return Json(new { code = 0, msg = "SUCCESS", content = dto });
             } catch (Exception ex)
             {
-                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+                return Json(new { code = 0, msg = "ERROR", content = ex.ToString() });
             }
         }
 
@@ -51,7 +53,7 @@ namespace LELAdmin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+                return Json(new { code = 0, msg = "ERROR", content = ex.ToString() });
             }
         }
 
@@ -67,7 +69,7 @@ namespace LELAdmin.Controllers
         {
             if (Convert.ToDateTime(StartTime) >= Convert.ToDateTime(EndTime))
             {
-                return Json(new { code = 1, msg = "ERROR", content = "时间选择有误" });
+                return Json(new { code = 0, msg = "ERROR", content = "时间选择有误" });
             }
 
             try
@@ -77,29 +79,18 @@ namespace LELAdmin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+                return Json(new { code = 0, msg = "ERROR", content = ex.ToString() });
             }
         }
 
-        /// <summary>
-        /// 查询代办事项
-        /// </summary>
-        /// <returns></returns>
+
         [Route("GetPendingTransDTO")]
         [HttpGet]
         public IHttpActionResult GetPendingTransDTO()
         {
-            try
-            {
-                var dto = IdService.GetPendingTransDTO();
-                return Json(new { code = 0, msg = "SUCCESS", content = dto });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
-            }
+            var result= IdService.GetPendingTransDTO();
+            return  Json(new { code = 0, msg = "SUCCESS", content = result });
         }
-
         /// <summary>
         /// 发送短信测试接口
         /// </summary>
@@ -108,13 +99,13 @@ namespace LELAdmin.Controllers
         [HttpGet]
         public IHttpActionResult SendSingleSms()
         {
-            var mobile = "18569553462";
+            var mobile = "15107330889";
             var content = string.Format(@"" + ssh.SmsTemplate("T0001"), RandomCode());
-            ReturnMsg result = new ReturnMsg();
-            ssh.SendSingleSms(mobile, content, out result);
+            return Json("a");
+           // ssh.SendSingleSms(mobile, content, out object result);
 
             //List<Multimt> List = new List<Multimt>();
-            
+
             //Multimt group1 = new Multimt();
             //group1.mobile = "15107330889";
             //group1.content = HttpUtility.UrlEncode(string.Format(@ssh.SmsTemplate("T0001"),"260001"), Encoding.GetEncoding("GBK"));
@@ -125,11 +116,31 @@ namespace LELAdmin.Controllers
             //group2.content = HttpUtility.UrlEncode(string.Format(@ssh.SmsTemplate("T0001"), "260002"), Encoding.GetEncoding("GBK"));
             //List.Add(group2);
 
-            //ReturnMsg result = new ReturnMsg();
+            //string result;
 
             //ssh.SendMultiSms(List,out result);
 
-            return Json(new { code = 0, msg = "SUCCESS", content = result });
+         //   return Json(new { code = 0, msg = "ERROR", content = result });
+        }
+
+
+        /// <summary>
+        /// 修改系统配置参数
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/Other/UpdateSysConfig/")]
+        public IHttpActionResult UpdateSysConfig(le_sysconfig model)
+        {
+            var result = new SysConfigServie().UpdateSysConfig(model);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, "FAIL", model));
+            }
         }
     }
 }

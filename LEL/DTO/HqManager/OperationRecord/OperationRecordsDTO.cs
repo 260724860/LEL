@@ -53,4 +53,32 @@ namespace DTO.HqManager.OperationRecord
         public string Out_Trade_No { get; set; }
 
     }
+
+    public class OrderHeadChangeRecordDTO {
+        public int HeadRecordID { get; set; }
+        public int OrderHeadID { get; set; }
+        public int BeforeCount { get; set; }
+        public int AfterCount { get; set; }
+        public decimal BeforeMoney { get; set; }
+        public decimal AfterMoney { get; set; }
+        public int AdminID { get; set; }
+        public DateTime CreateTime { get; set; }
+
+        public string AdminName { get; set; }
+    }
+
+    public class OrderLineChangeRecordDTO
+    {
+        public int LinesRecordID { get; set; }
+        public int OrderLineID { get; set; }
+        public int BeforeCount { get; set; }
+        public int AfterCount { get; set; }
+        public decimal BeforeMoney { get; set; }
+        public decimal AfterMoney { get; set; }
+        public int UserID { get; set; }
+        public int UserType { get; set; }
+        public DateTime CreateTime { get; set; }
+
+        public string UserName { get; set; }
+    }
 }

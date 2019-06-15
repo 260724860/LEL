@@ -5,8 +5,9 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 
+[assembly: OwinStartup(typeof(LELAdmin.App_Start.Startup))]
 
-namespace LELAdmin
+namespace LELAdmin.App_Start
 {
     public partial class Startup
     {

@@ -10,6 +10,9 @@ using System.Web.Http;
 
 namespace LEL.Controllers
 {
+    /// <summary>
+    /// 商城API地址
+    /// </summary>
     public class ShoppingMallController : ApiController
     {
         private Service.GoodsService GoodsService = new Service.GoodsService();
@@ -38,9 +41,10 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }
-            var result = await GoodsService.GetGoodsListAsync(options);
+            var result = await GoodsService.GetGoodsListAsync(options,null);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
+
         /// <summary>
         /// 获取商品详细
         /// </summary>

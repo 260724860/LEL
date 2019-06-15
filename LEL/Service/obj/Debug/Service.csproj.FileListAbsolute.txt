@@ -10,9 +10,13 @@ D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\log4net.dll
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\MySql.Data.dll
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\MySql.Data.Entity.EF6.dll
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\Newtonsoft.Json.dll
+D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\qcloudsms_csharp.dll
+D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\NPOI.dll
+D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\Common.pdb
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\Common.dll.config
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\DTO.pdb
+D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\DTO.xml
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\EntityFramework.xml
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\EntityFramework.SqlServer.xml
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\Google.Protobuf.xml
@@ -20,6 +24,7 @@ D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\log4net.xml
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\MySql.Data.xml
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\MySql.Data.Entity.EF6.xml
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\Newtonsoft.Json.xml
+D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\zh-Hans\EntityFramework.resources.dll
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
 D:\伊鸿\LELGit\LEL_Server\LEL\Service\obj\Debug\Service.csprojAssemblyReference.cache

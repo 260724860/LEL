@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\LEL\bin\DTO.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,27 +44,47 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AdminDTO.cs" />
+    <Compile Include="Admin\AdminReUserList.cs" />
     <Compile Include="Admin\AdminRoleDTO.cs" />
     <Compile Include="Admin\AdminRoleValueDTO.cs" />
-    <Compile Include="Admin\NavigationDTO.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Common\Enum.cs" />
     <Compile Include="Common\SeachOptions.cs" />
     <Compile Include="Goods\AddGoodsDto.cs" />
     <Compile Include="Goods\GoodsDetailedDto.cs" />
     <Compile Include="Goods\GoodsGroup.cs" />
     <Compile Include="Goods\GoodsSeachOptions.cs" />
+    <Compile Include="Goods\GoodsStock.cs" />
     <Compile Include="Goods\GroodsListDto.cs" />
+    <Compile Include="Goods\SupplierGoodsPriceDto.cs" />
     <Compile Include="HqManager\Goods\GoodsListDTO.cs" />
     <Compile Include="HqManager\Index\IndexDTO.cs" />
     <Compile Include="HqManager\OperationRecord\OperationRecordsDTO.cs" />
+    <Compile Include="LogDto\GoodsLogDto.cs" />
+    <Compile Include="LogDto\OrderHeadLogDto.cs" />
+    <Compile Include="LogDto\OrderLineLogDto.cs" />
+    <Compile Include="Others\AddressDto.cs" />
     <Compile Include="Others\UserAddressDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report\GoodsSaleDTO.cs" />
+    <Compile Include="Report\StoreSaleDto.cs" />
+    <Compile Include="Report\SupplierSaleDto.cs" />
     <Compile Include="ShopOrder\OrderDetail.cs" />
     <Compile Include="ShopOrder\OrderDto.cs" />
+    <Compile Include="ShopOrder\OrderEditDto.cs" />
+    <Compile Include="ShopOrder\OrderLineDto.cs" />
+    <Compile Include="ShopOrder\OrderLineSeachParames.cs" />
+    <Compile Include="ShopOrder\OrderPackCount.cs" />
     <Compile Include="ShopOrder\OrderSaveParams.cs" />
     <Compile Include="ShopOrder\OrderSeachParams.cs" />
     <Compile Include="ShopOrder\ShopCartDto.cs" />
+    <Compile Include="Suppliers\SuppliersDto.cs" />
+    <Compile Include="Suppliers\UpdateOrderLineParamas.cs" />
+    <Compile Include="SupplierUser\SupplierUserDto.cs" />
+    <Compile Include="User\UserBaseInfoDto.cs" />
+    <Compile Include="User\UserInfo.cs" />
     <Compile Include="User\UserRegistDTO.cs" />
+    <Compile Include="User\UserSeachOptions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

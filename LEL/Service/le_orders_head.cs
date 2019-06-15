@@ -14,21 +14,47 @@ namespace Service
     
     public partial class le_orders_head
     {
-        public int Orders_Head_ID { get; set; }
-        public string Out_Trade_No { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public le_orders_head()
+        {
+            this.le_order_pack = new HashSet<le_order_pack>();
+            this.le_orders_modify_record = new HashSet<le_orders_modify_record>();
+            this.le_orders_head_log = new HashSet<le_orders_head_log>();
+            this.le_orders_lines = new HashSet<le_orders_lines>();
+        }
+    
+        public int OrdersHeadID { get; set; }
+        public string OutTradeNo { get; set; }
         public string RcAddr { get; set; }
         public string RcName { get; set; }
         public string RcPhone { get; set; }
         public decimal Money { get; set; }
+        public decimal SupplyMoney { get; set; }
         public int Status { get; set; }
-        public string Head_Notes { get; set; }
-        public Nullable<System.DateTime> UpdateTime { get; set; }
-        public System.DateTime CreateTime { get; set; }
         public Nullable<int> AdminID { get; set; }
         public int UsersID { get; set; }
+        public string Head_Notes { get; set; }
         public Nullable<System.DateTime> CompleteTime { get; set; }
-        public int LinesCount { get; set; }
+        public Nullable<System.DateTime> UpdateTime { get; set; }
+        public System.DateTime CreateTime { get; set; }
+        public Nullable<System.DateTime> PickupTime { get; set; }
+        public string PickUpMan { get; set; }
+        public string PickUpPhone { get; set; }
+        public string CarNumber { get; set; }
+        public int GoodsCount { get; set; }
+        public int DeliverCount { get; set; }
+        public int OrderType { get; set; }
+        public int ExpressType { get; set; }
     
+        public virtual le_admin le_admin { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_order_pack> le_order_pack { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_modify_record> le_orders_modify_record { get; set; }
         public virtual le_users le_users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_head_log> le_orders_head_log { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
     }
 }

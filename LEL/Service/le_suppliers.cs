@@ -18,29 +18,44 @@ namespace Service
         public le_suppliers()
         {
             this.le_goods_suppliers = new HashSet<le_goods_suppliers>();
-            this.le_goods = new HashSet<le_goods>();
+            this.le_order_pack = new HashSet<le_order_pack>();
+            this.le_orders_head_log = new HashSet<le_orders_head_log>();
             this.le_orders_lines = new HashSet<le_orders_lines>();
+            this.le_orders_lines_log = new HashSet<le_orders_lines_log>();
+            this.lel_admin_suppliers = new HashSet<lel_admin_suppliers>();
         }
     
         public int SuppliersID { get; set; }
-        public string Suppliers_Name { get; set; }
-        public string Suppliers_Nickname { get; set; }
-        public string Suppliers_PassWord { get; set; }
-        public string Suppliers_Salt { get; set; }
-        public string Suppliers_Email { get; set; }
-        public string Suppliers_Image { get; set; }
-        public string Suppliers_MobilePhone { get; set; }
-        public string Suppliers_Landline { get; set; }
-        public int Suppliers_Gender { get; set; }
-        public Nullable<System.DateTime> Suppliers_LoginTime { get; set; }
-        public System.DateTime UpdateTime { get; set; }
+        public string SuppliersName { get; set; }
+        public string ResponPeople { get; set; }
+        public string MobilePhone { get; set; }
+        public string PassWord { get; set; }
+        public string Salt { get; set; }
+        public string Email { get; set; }
+        public string HeadImage { get; set; }
+        public string ImgA { get; set; }
+        public string ImgB { get; set; }
+        public string ImgC { get; set; }
+        public string ImgD { get; set; }
+        public string ImgE { get; set; }
+        public string Addr { get; set; }
+        public int Status { get; set; }
+        public Nullable<System.DateTime> UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
+        public string IDCardNo { get; set; }
+        public string BusinessNo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_goods> le_goods { get; set; }
+        public virtual ICollection<le_order_pack> le_order_pack { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_head_log> le_orders_head_log { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_lines_log> le_orders_lines_log { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<lel_admin_suppliers> lel_admin_suppliers { get; set; }
     }
 }

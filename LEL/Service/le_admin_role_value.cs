@@ -15,11 +15,10 @@ namespace Service
     public partial class le_admin_role_value
     {
         public int ID { get; set; }
-        public int RoleID { get; set; }
-        public string ActionType { get; set; }
+        public int AdminRoleID { get; set; }
         public int NavigationID { get; set; }
+        public int ActionType { get; set; }
     
-        public virtual le_admin_role le_admin_role { get; set; }
         public virtual le_navigation le_navigation { get; set; }
     }
 }

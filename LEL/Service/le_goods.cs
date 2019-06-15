@@ -17,48 +17,54 @@ namespace Service
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public le_goods()
         {
-            this.le_goods_suppliers = new HashSet<le_goods_suppliers>();
             this.le_goods_img = new HashSet<le_goods_img>();
-            this.le_goods_value_mapping = new HashSet<le_goods_value_mapping>();
-            this.le_shop_cart = new HashSet<le_shop_cart>();
+            this.le_goods_log = new HashSet<le_goods_log>();
+            this.le_goods_suppliers = new HashSet<le_goods_suppliers>();
+            this.le_goods_value = new HashSet<le_goods_value>();
             this.le_orders_lines = new HashSet<le_orders_lines>();
+            this.le_shop_cart = new HashSet<le_shop_cart>();
         }
     
         public int GoodsID { get; set; }
-        public int GoodsGroups_ID { get; set; }
-        public string SerialNumber { get; set; }
+        public int GoodsGroupsID { get; set; }
         public string GoodsName { get; set; }
         public string Image { get; set; }
         public decimal OriginalPrice { get; set; }
         public decimal SpecialOffer { get; set; }
+        public decimal MSRP { get; set; }
         public string Specifications { get; set; }
-        public string Category1 { get; set; }
-        public string Category2 { get; set; }
-        public string Category3 { get; set; }
-        public string Category4 { get; set; }
-        public string Category5 { get; set; }
         public int IsShelves { get; set; }
         public int IsRecommend { get; set; }
         public int IsNewGoods { get; set; }
         public int IsHot { get; set; }
+        public int IsSeckill { get; set; }
+        public int IsBulkCargo { get; set; }
+        public int IsDeliverHome { get; set; }
         public string Describe { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
         public int Sort { get; set; }
         public string ShelfLife { get; set; }
-        public int SupplierID { get; set; }
+        public Nullable<int> PackingNumber { get; set; }
+        public int SalesVolumes { get; set; }
+        public int TotalSalesVolume { get; set; }
+        public int Stock { get; set; }
+        public System.DateTime RowVersion { get; set; }
+        public int Quota { get; set; }
+        public int MinimumPurchase { get; set; }
     
-        public virtual le_goodsgroups le_goodsgroups { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }
-        public virtual le_suppliers le_suppliers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }
+        public virtual le_goodsgroups le_goodsgroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_goods_value_mapping> le_goods_value_mapping { get; set; }
+        public virtual ICollection<le_goods_log> le_goods_log { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
+        public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_goods_value> le_goods_value { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
     }
 }

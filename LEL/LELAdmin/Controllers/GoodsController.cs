@@ -1,4 +1,9 @@
-﻿using DTO.Goods;
+﻿using Common;
+using DTO.Common;
+using DTO.Goods;
+using DTO.SupplierUser;
+using DTO.User;
+using LELAdmin.Models;
 using Service;
 using System;
 using System.Collections.Generic;
@@ -15,17 +20,19 @@ namespace LELAdmin.Controllers
     /// 后台商品 API
     /// </summary>
     [RoutePrefix("api/Goods")]
-    public class GoodsController : ApiController
+    [Authorize]
+    public class GoodsController : BaseController
     {
         private GoodsService GService = new GoodsService();
-
+        private SuppliersService SlService = new SuppliersService();
+        private StoreUserService StoreUserBLL = new StoreUserService();
         /// <summary>
         /// 获取商品列表
         /// </summary>
         /// <param name="options">查询参数</param>
         /// <returns></returns>
         [Route("GetGoodsList")]
-        [HttpGet]
+        [HttpPost]
         public async Task<IHttpActionResult> GetGoodsList(GoodsSeachOptions options)
         {
             //options.IsShelves = 1;
@@ -35,9 +42,10 @@ namespace LELAdmin.Controllers
             //options.SortKey = GoodsSeachOrderByType.CreateTimeDesc;
 
             try {
-                var result = await GService.GetGoodsListAsync(options);
+                var result = await GService.GetGoodsListAsync(options,GetLoginInfo().UserID);
                 return Json(new { code = 0, msg = "SUCCESS", content = result });
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
             }
@@ -65,32 +73,372 @@ namespace LELAdmin.Controllers
         }
 
         /// <summary>
-        /// 图片上传测试接口
+        /// 获取商品详细
         /// </summary>
+        /// <param name="GoodsID"></param>
         /// <returns></returns>
-        [Route("AttachmentUrl")]
+        [Route("GetGoodDetailedAync")]
         [HttpGet]
-        public String AttachmentUrl()
+        public async Task<IHttpActionResult> GetGoodDetailedAync(int GoodsID)
         {
-            //var filebyte = GetPictureData("E:/LeerleWebServer/LELAdmin/Image/1.jpg");
-            var filebyte = GetPictureData("C:/Users/wuyou/Desktop/乐尔乐项目/LeerleCode/LEL_Server/LEL/LELAdmin/Image/1.jpg");
-
-            return GService.AttachmentUrl(filebyte);
+            try
+            {
+                var result = await GService.GetGoodDetailedAync(GoodsID);
+                return Json(new { code = 0, msg = "SUCCESS", content = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
         }
 
-        /// <summary>  
-        /// 图片转二进制  
-        /// </summary>  
-        /// <param name="imagepath">图片地址</param>  
-        /// <returns>二进制</returns>  
-        public static byte[] GetPictureData(string imagepath)
+        /// <summary>
+        /// 添加商品
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [Route("AddGoods")]
+        [HttpPost]
+        public IHttpActionResult AddGoods(AddGoodsDto dto)
         {
-            //根据图片文件的路径使用文件流打开，并保存为byte[]   
-            FileStream fs = new FileStream(imagepath, FileMode.Open);//可以是其他重载方法   
-            byte[] byData = new byte[fs.Length];
-            fs.Read(byData, 0, byData.Length);
-            fs.Close();
-            return byData;
+            try
+            {
+                var result = GService.AddGoods(dto,out string msg);
+                if (result != 0)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = result });
+                }
+                else {
+                    return Json(new { code = 1, msg = "ERROR", content = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 商品下架
+        /// </summary>
+        /// <param name="GoodsID"></param>
+        /// <returns></returns>
+        [Route("UnShelvesGoods")]
+        [HttpPost]
+        public IHttpActionResult UnShelvesGoods(int GoodsID)
+        {
+            try
+            {
+                string Msg;
+                var result = GService.UnShelvesGoods(GoodsID,out Msg);
+                if (Msg.Equals("SUCCESS") && result) {
+                    return Json(new { code = 0, msg = "SUCCESS", content = Msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = Msg });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 修改商品信息
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [Route("EditGoods")]
+        [HttpPost]
+        public IHttpActionResult EditGoods(AddGoodsDto dto)
+        {
+            try
+            {
+                string Msg;
+
+                var result = GService.EditGoods(dto, GetLoginInfo() ,out Msg);
+                if (Msg.Equals("SUCCESS") && result)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = Msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = Msg });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 删除商品图片
+        /// </summary>
+        /// <param name="ListImgID"></param>
+        /// <param name="GoodsID"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        [Route("DeleteGoodsImage")]
+        [HttpPost]
+        public IHttpActionResult DeleteGoodsImage(List<int> ListImgID)
+        {
+            try
+            {
+                var result = GService.DeleteGoodsImg(ListImgID, out string Msg);
+                if (Msg.Equals("SUCCESS") && result)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = Msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = Msg });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 添加商品图片
+        /// </summary>
+        /// <param name="List"></param>
+        /// <returns></returns>
+        [Route("AddGoodsImage")]
+        [HttpPost]
+        public IHttpActionResult AddGoodsImage(List<AddGoodsImgDto> List)
+        {
+            try
+            {
+                if (List.Count <=0 )
+                {
+                    return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
+                }
+                var result = GService.AddGoodsImage(List, out string Msg);
+                if (Msg.Equals("SUCCESS") && result!=0)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = result });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = Msg });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 删除商品属性
+        /// </summary>
+        /// <param name="List">GetGoodDetailedAync 返回的GoodsValueID</param>
+        /// <returns></returns>
+        [Route("DeleteGoodsValue")]
+        [HttpPost]
+        public IHttpActionResult DeleteGoodsValue(List<int> List)
+        {
+            try
+            {
+                var result = GService.DeleteGoodsValue(List, out string Msg);
+                if (Msg.Equals("SUCCESS") && result)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = Msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = Msg });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 删除商品分类 (硬删除)
+        /// </summary>
+        /// <param name="GoodsGroupID"></param>
+        /// <returns></returns>
+        [HttpDelete,Route("DeleteGoodsGroup")]
+        public IHttpActionResult DeleteGoodsGroup(int GoodsGroupID)
+        {
+            var result= GService.DeleteGoodsGroup(GoodsGroupID);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0,"SUCCESS", GoodsGroupID));
+            }
+            return Json(JRpcHelper.AjaxResult(1, "删除失败,尚有商品使用该分类", GoodsGroupID));
+        }
+        /// <summary>
+        /// 增加商品属性
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Price"></param>
+        /// <returns></returns>
+        [Route("AddGoodsValue")]
+        [HttpPost]
+        public IHttpActionResult AddGoodsValue(List<GoodsValues> List)
+        {
+            try
+            {
+                if (List.Count <= 0)
+                {
+                    return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
+                }
+                var result = GService.AddGoodsValueList(List , out string Msg);
+                if (result)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = "添加成功", result = Msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = "添加失败" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 获取用户列表
+        /// </summary>
+        /// <param name="KeyWords"></param>
+        /// <returns></returns>
+        [Route("GetSupplierList")]
+        [HttpGet]
+        public IHttpActionResult GetSupplierList(string KeyWords)
+        {
+            try
+            {
+                var result = SlService.GetSupplierList(KeyWords);
+                if (result.Count > 0)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = result });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = "" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+       
+
+        /// <summary>
+        /// 添加商品分类
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        [Route("AddGoodsGroupList")]
+        [HttpPost]
+        public IHttpActionResult AddGoodsGroupList(GoodsGroupDto model)
+        {
+            try
+            {
+                var result = GService.AddGoodsGroupList(model, out string msg);
+                if (result)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = msg });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 修改商品分类
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        [Route("EditGoodsGroupList")]
+        [HttpPost]
+        public IHttpActionResult EditGoodsGroupList(GoodsGroupDto model)
+        {
+            try
+            {
+                var result = GService.EditGoodsGroupList(model, out string msg);
+                if (result)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = msg });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
+        /// <summary>
+        /// 获取供应商价格
+        /// </summary>
+        /// <param name="KeyWords"></param>
+        /// <param name="Offset"></param>
+        /// <param name="Rows"></param>
+        /// <param name="GoodsID"></param>
+        /// <param name="SuppliersID"></param>
+        /// <returns></returns>
+        [Route("GetSupplierGoodsPriceList")]
+        [HttpPost]
+        public IHttpActionResult GetSupplierGoodsPriceList(string KeyWords, int Offset, int Rows, int? GoodsID, int? SuppliersID)
+        {
+            int Count;
+            var result = GService.GetSupplierGoodsPriceList(KeyWords, Offset, Rows, GoodsID, SuppliersID, out Count);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+
+
+        /// <summary>
+        /// 生成条码 散货生成五位数,否则六位数条码
+        /// </summary>
+        /// <param name="IsBulkCargo"></param>
+        /// <returns></returns>
+        [Route("BarcodeGeneration")]
+        [HttpGet]
+        public IHttpActionResult BarcodeGeneration(int IsBulkCargo)
+        {
+            string result;
+            if (IsBulkCargo == 0)
+            {
+                 result = GService.BarcodeGeneration(6);
+            }
+            else
+            {
+                 result = GService.BarcodeGeneration(5);
+            }
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+
+        /// <summary>
+        /// 检查商品条码重复
+        /// </summary>
+        /// <param name="SerialNumber"></param>
+        /// <returns></returns>
+        //[Route("IsSerialNumberExit")]
+        //[HttpGet]
+        //public IHttpActionResult IsSerialNumberExit(string SerialNumber)
+        //{
+        //    var Exit = GService.IsSerialNumberExit(SerialNumber);
+        //    if(Exit)
+        //    {
+        //        return Json(JRpcHelper.AjaxResult(1, "已存在相同的条码", SerialNumber));
+        //    }
+        //    return Json(JRpcHelper.AjaxResult(0, "SUCCESS", SerialNumber));
+
+        //}
+
+
+
+
+
+        /// <summary>
+        /// 获取商品日志
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [Route("GetGoodsLogList")]
+        [HttpPost]
+        public IHttpActionResult GetGoodsLogList(GoodsLogParam param)
+        {
+            var result = new LogService().GetGoodsLogList(param.SeachOptions,param.AdminID,param.GoodsID,out int Count);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
     }
 }

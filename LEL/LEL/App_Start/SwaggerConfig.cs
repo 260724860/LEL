@@ -104,7 +104,7 @@ namespace LEL
                         // more Xml comment files.
                         //
                         c.IncludeXmlComments(GetXmlCommentsPath());
-
+                        c.IncludeXmlComments(string.Format("{0}/bin/DTO.xml", System.AppDomain.CurrentDomain.BaseDirectory));
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
                         // This is supported through the "MapType" and "SchemaFilter" options:
@@ -260,7 +260,7 @@ namespace LEL
         private static string GetXmlCommentsPath()
         {
             //throw new System.NotImplementedException();
-            return string.Format("{0}/App_Data/DG.Swagger.API.XML", System.AppDomain.CurrentDomain.BaseDirectory);
+            return string.Format("{0}/bin/DG.Swagger.API.XML", System.AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

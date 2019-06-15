@@ -481,6 +481,22 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:LEL.Controllers.AccountController.Update(DTO.User.UserDTO)">
+            <summary>
+            加盟店上传资料
+            </summary>
+            <param name="dTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.AccountController.UpdatePwd(System.String,System.String,System.String)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="LoginName">账号</param>
+            <param name="NewPWD">新密码</param>
+            <param name="OriginalPWD">旧密码</param>
+            <returns></returns>
+        </member>
         <member name="M:LEL.Controllers.AuthenticateController.GetAccessToken(System.String,System.String)">
             <summary>
             获取AccessToken
@@ -489,13 +505,58 @@
             <param name="PWD"></param>
             <returns></returns>
         </member>
-        <member name="M:LEL.Controllers.AuthenticateController.Regist(System.String,System.String,System.String)">
+        <member name="M:LEL.Controllers.AuthenticateController.GetSuppliersAccessToken(System.String,System.String)">
+            <summary>
+            供应商登陆
+            </summary>
+            <param name="Loginname">登陆名</param>
+            <param name="PWD"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.AuthenticateController.SupplierRegist(System.String,System.String)">
+            <summary>
+            供应商注册
+            </summary>
+            <param name="LoginName">登陆名</param>
+            <param name="PWD">密码</param>  
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.AuthenticateController.Regist(System.String,System.String)">
             <summary>
             商户注册
             </summary>
             <param name="LoginName">登陆名</param>
-            <param name="PWD">密码</param>
+            <param name="PWD">密码</param>  
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.AuthenticateController.CheckCode(System.String,System.String)">
+            <summary>
+            验证短信验证码
+            </summary>
+            <param name="LoginName">手机号码</param>
             <param name="Code">验证码 10分钟内有效</param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.AuthenticateController.RetrievePassword(System.String,System.String)">
+            <summary>
+            商户 找回密码 需要验证短信
+            </summary>
+            <param name="LoginName"></param>
+            <param name="PWD"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.AuthenticateController.SupplierRetrievePassword(System.String,System.String)">
+            <summary>
+            供应商 找回密码 需要验证短信
+            </summary>
+            <param name="LoginName"></param>
+            <param name="PWD"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.CommonController.UploadWithStream">
+            <summary>
+            图片上传 过滤 .gif|.jpg|.bmp|.jpeg|.png 大小限制16240000B
+            </summary>
             <returns></returns>
         </member>
         <member name="M:LEL.Controllers.CommonController.GetADList">
@@ -511,18 +572,101 @@
             <param name="Phone"></param>
             <returns></returns>
         </member>
+        <member name="M:LEL.Controllers.CommonController.DesHepler16(System.String)">
+            <summary>
+            加密测试 返回16进制
+            </summary>
+            <param name="PWD"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.CommonController.DesHeplerBase64(System.String)">
+            <summary>
+            加密测试 返回Base64
+            </summary>
+            <param name="PWD"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.CommonController.DecryptString16(System.String)">
+            <summary>
+            解密测试 返回16进制
+            </summary>
+            <param name="PWD"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.CommonController.GetSysAddressList(DTO.Common.SeachOptions)">
+            <summary>
+            获取系统自提地址
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.CommonController.GetPushMsg(System.Int32,System.Int32)">
+            <summary>
+            获取最新订单推送消息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <param name="UserType">用户类型 1商户 2供货商</param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.CommonController.GetSysConfig">
+            <summary>
+            获取系统运行参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.CommonController.RefreshSysConfig">
+            <summary>
+            强制刷新系统运行参数（可能会引发系统异常）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.ReportController.GetGoodsSalesReport(DTO.Common.SeachDateTimeOptions,DTO.Common.Enum.GoodsSalesReportOrderByType,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            商品销量报表
+            </summary>
+            <param name="options"></param>
+            <param name="GoodsID"></param>
+            <param name="GoodsGroupsID"></param>
+            <param name="SupplierID"></param>
+            <param name="UserID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.ReportController.GetStoreSaleReport(DTO.Common.SeachDateTimeOptions,System.Nullable{System.Int32},DTO.Common.Enum.GoodsSalesReportOrderByType)">
+            <summary>
+            商户销量统计报表
+            </summary>
+            <param name="options"></param>
+            <param name="UserID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.ReportController.GetSupplierSaleReport(DTO.Common.SeachDateTimeOptions,System.Nullable{System.Int32},DTO.Common.Enum.GoodsSalesReportOrderByType)">
+            <summary>
+            供应商统计报表
+            </summary>
+            <param name="options"></param>
+            <param name="SupplierID"></param>
+            <returns></returns>
+        </member>
         <member name="T:LEL.Controllers.ShopOrderController">
             <summary>
             商城订单
             </summary>
         </member>
-        <member name="M:LEL.Controllers.ShopOrderController.AddCart(System.Int32,System.Int32,System.Int32)">
+        <member name="M:LEL.Controllers.ShopOrderController.AddCart(System.Int32,System.Collections.Generic.List{DTO.Goods.AddGoodsValues},System.Int32,System.Boolean)">
             <summary>
             添加购物车
             </summary>
             <param name="GoodsID">商品ID</param>
             <param name="GoodValueID">商品属性ID</param>
             <param name="GoodsCount">商品数量</param>
+            <param name="cumulation">商品数量是否累加</param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.ShopOrderController.DeleteCart(System.Collections.Generic.List{System.Int32})">
+            <summary>
+             删除购物车
+            </summary>
+            <param name="CartIDList"></param>
             <returns></returns>
         </member>
         <member name="M:LEL.Controllers.ShopOrderController.GetCartList">
@@ -531,11 +675,14 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:LEL.Controllers.ShopOrderController.OrderSave(System.Collections.Generic.List{DTO.ShopOrder.OrderGoodsList},System.Int32)">
+        <member name="M:LEL.Controllers.ShopOrderController.OrderSave(DTO.ShopOrder.OrderSaveParams)">
             <summary>
-            保存订单
+            保存订单 （从购物车获取）
             </summary>
-            <param name="orderGoods"></param>
+            <param name="AddressID">地址ID</param>
+            <param name="Notes">备注</param>
+            <param name="OrderType">订单类型/ 1订货单 2 退货单</param>
+            <param name="ExpressType">快递类型/1快递物流 2 自提</param>
             <returns></returns>
         </member>
         <member name="M:LEL.Controllers.ShopOrderController.AddAddress(System.String,System.String,System.String,System.String,System.Int32)">
@@ -583,6 +730,18 @@
             <param name="options"></param>
             <returns></returns>
         </member>
+        <member name="M:LEL.Controllers.ShopOrderController.CancelOrder(System.String)">
+            <summary>
+            取消订单
+            </summary>
+            <param name="OrderNO">订单号码</param>
+            <returns></returns>
+        </member>
+        <member name="T:LEL.Controllers.ShoppingMallController">
+            <summary>
+            商城API地址
+            </summary>
+        </member>
         <member name="M:LEL.Controllers.ShoppingMallController.GetGoodsGroupList(System.String)">
             <summary>
             获取所有商品分类
@@ -602,6 +761,127 @@
             获取商品详细
             </summary>
             <param name="GoodsID">商品ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.Update(DTO.SupplierUser.SupplierUserDto)">
+            <summary>
+            供应商上传资料
+            </summary>
+            <param name="dTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetSupplierGoodsPric(System.String,System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            获取供应商价格
+            </summary>
+            <param name="KeyWords"></param>
+            <param name="Offset"></param>
+            <param name="Rows"></param>
+            <param name="GoodsID"></param>
+            <param name="SuppliersID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.UpdateOrderLineStatus(System.Collections.Generic.List{DTO.Suppliers.UpdateOrderLineParamas})">
+            <summary>
+            修改订单状态
+            </summary>
+            <param name="Status"></param>
+            <param name="OrderLineID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetOrderlineList(DTO.ShopOrder.OrderLineSeachParames)">
+            <summary>
+            获取订单行列表
+            </summary>
+            <param name="SeachOptions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.UpdatePwd(System.String,System.String,System.String)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="LoginName">账号</param>
+            <param name="NewPWD">新密码</param>
+            <param name="OriginalPWD">旧密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetOrderDetails(System.String)">
+            <summary>
+            获取订单详细
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetSupplierGoodsPric(System.Int32,System.Int32,System.Nullable{System.Int32},System.String)">
+            <summary>
+            获取供应商价格
+            </summary>
+            <param name="KeyWords">搜索关键字</param>
+            <param name="Offset"></param>
+            <param name="Rows"></param>
+            <param name="GoodsID">商品ID 可为空</param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetGoodsList(DTO.Goods.GoodsSeachOptions)">
+            <summary>
+            获取商品列表
+            </summary>
+            <param name="options">查询参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.BatchEditLinesInfo(System.Collections.Generic.List{DTO.ShopOrder.EditLinesInfo})">
+            <summary>
+            批量修改订单行供货商/商品数量
+            </summary>
+            <param name="List"></param>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetSalesDTO">
+            <summary>
+            查询后台首页业绩统计
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetGoodsStaticDTO">
+            <summary>
+            查询商品总览
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetSalesChartDTO(System.String,System.String)">
+            <summary>
+            查询选择时间段内销售订单数据
+            </summary>
+            <param name="StartTime"></param>
+            <param name="EndTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.SetOrderPackCount(System.Int32,System.Int32)">
+            <summary>
+            设置订单打包数 重复设置覆盖
+            </summary>
+            <param name="OrderHeadID"></param>
+            <param name="PacetCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.SuppliersController.GetOrderPackCountsList(System.Int32)">
+            <summary>
+            获取订单打包数
+            </summary>
+            <param name="OrderHeadID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LEL.Controllers.ValuesController.Get(System.Int32)">
+            <summary>
+            修改订单行状态，拆单
+            </summary>
+            <param name="Status"></param>
+            <param name="OrdersLinesID"></param>
+            <param name="Notes"></param>
+            <param name="AdminID"></param>
+            <param name="SuppliersID"></param>
+            <param name="UserID"></param>
             <returns></returns>
         </member>
         <member name="M:LEL.Oauth.SimpleRefreshTokenProvider.Create(Microsoft.Owin.Security.Infrastructure.AuthenticationTokenCreateContext)">

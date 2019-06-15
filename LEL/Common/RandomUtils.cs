@@ -159,7 +159,7 @@ namespace Common
 
 
         /// <summary>
-        /// 生成随机数字
+        /// 生成随机数字 请勿在for循环内使用此方法，会导致产生随机数重复问题
         /// </summary>
         /// <param name="Count"></param>
         /// <returns></returns>

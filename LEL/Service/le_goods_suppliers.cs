@@ -15,11 +15,15 @@ namespace Service
     public partial class le_goods_suppliers
     {
         public int GoodsMappingID { get; set; }
-        public int GoodsID { get; set; }
         public int SuppliersID { get; set; }
-        public decimal Price { get; set; }
+        public decimal Supplyprice { get; set; }
+        public int GoodsID { get; set; }
+        public int IsDeleted { get; set; }
+        public int IsDefalut { get; set; }
+        public System.DateTime CreatTime { get; set; }
+        public Nullable<System.DateTime> UpdateTime { get; set; }
     
-        public virtual le_suppliers le_suppliers { get; set; }
         public virtual le_goods le_goods { get; set; }
+        public virtual le_suppliers le_suppliers { get; set; }
     }
 }
