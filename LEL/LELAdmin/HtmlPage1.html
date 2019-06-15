@@ -1,0 +1,106 @@
+﻿
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>echarts.js中国地图省份悬浮提示</title>
+    <script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
+    <script src="Scripts/echarts.min.js"></script>
+    <script src="Scripts/china.js"></script>
+</head>
+
+<body>
+
+    <div id="container" style="height: 800px;width:1200px;background:white;margin:20px 0 0;"></div>
+
+    <script type="text/javascript">
+        // 全国省份列表
+
+        //function '1' {
+        //    return Math.round(Math.random() * 500);
+        //}
+
+        var dataMap = [
+            { name: '北京', value: '1' }, { name: '天津', value: '1' },
+            { name: '上海', value: '1' }, { name: '重庆', value: '118' },
+            { name: '河北', value: '1' }, { name: '河南', value: '1' },
+            { name: '云南', value: '1' }, { name: '辽宁', value: '1' },
+            { name: '黑龙江', value: '1' }, { name: '湖南', value: '625' },
+            { name: '安徽', value: '1' }, { name: '山东', value: '1' },
+            { name: '新疆', value: '1' }, { name: '江苏', value: '1' },
+            { name: '浙江', value: '1' }, { name: '江西', value: '2' },
+            { name: '湖北', value: '1' }, { name: '广西', value: '1' },
+            { name: '甘肃', value: '1' }, { name: '山西', value: '26' },
+            { name: '内蒙古', value: '33' }, { name: '陕西', value: '1' },
+            { name: '吉林', value: '1' }, { name: '福建', value: '3' },
+            { name: '贵州', value: '1' }, { name: '广东', value: '183' },
+            { name: '青海', value: '1' }, { name: '西藏', value: '1' },
+            { name: '四川', value: '1' }, { name: '宁夏', value: '1' },
+            { name: '海南', value: '1' }, { name: '台湾', value: '1' },
+            { name: '香港', value: '1' }, { name: '澳门', value: '1' }, { name: '南海诸岛', value: '1' }
+        ];
+        // 需要在页面上直接标记出来的城市
+
+        var specialMap = [];
+        // 对dataMap进行处理，使其可以直接在页面上展示
+        for (var i = 0; i < specialMap.length; i++) {
+            for (var j = 0; j < dataMap.length; j++) {
+                if (specialMap[i] == dataMap[j].name) {
+                    dataMap[j].selected = true;
+                    break;
+                }
+
+            }
+        }
+
+        var option = {
+            tooltip: {
+                formatter: function (params) {
+                    var info = '<p style="font-size:18px">' + params.name + '</p><p style="font-size:14px">这里可以写一些，想展示在页面上的别的信息</p>'
+                    return info;
+                },
+                backgroundColor: "#ff7f50",//提示标签背景颜色
+                textStyle: { color: "#fff" } //提示标签字体颜色
+            },
+            //左侧小导航图标
+            visualMap: {
+                show: true,
+                x: 'left',
+                y: 'center',
+                splitList: [
+                    { start: 500, end: 1000 },
+                    { start: 200, end: 500 }, { start: 100, end: 200 },
+                    { start: 50, end: 100 }, { start: 10, end: 50 },
+                    { start: 5, end: 10 }, { start: 0, end: 5 },
+                ],
+                color: ['#FF3300', '#FFCC33', '#FFFF66', '#66FF33', '#66FFFF', '#6666CC', '#6699FF'] 
+                
+            },
+            series: [
+                {
+                    name: '中国',
+                    type: 'map',
+                    mapType: 'china',
+
+                    label: {
+                        normal: {
+                            show: true,//显示省份标签
+                        },
+                        emphasis: {
+                            show: true,//对应的鼠标悬浮效果
+                        }
+                    },
+
+                    data: dataMap
+                }
+            ]
+        };
+        //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('container'));
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+    </script>
+
+</body>
+</html>
