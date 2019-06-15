@@ -1011,14 +1011,23 @@ namespace Service
         /// <param name="Price"></param>
         /// <param name="IsDeleted"></param>
         /// <returns></returns>
-        public bool UpdateSupplierPrice(int ID,decimal Price,int IsDeleted,int IsDefault)
+        public bool UpdateSupplierPrice(int ID,decimal Price,int IsDeleted,int IsDefault,int? AdminID=null)
         {
             using (Entities ctx = new Entities())
             {
+               
                 var Model = ctx.le_goods_suppliers.Where(s => s.GoodsMappingID == ID).FirstOrDefault();
                 if(Model != null)
                 {
-                    if(IsDefault==1)
+                    if (AdminID != null)
+                    {
+                        if (!ctx.lel_admin_suppliers.Any(s => s.AdminID == AdminID && s.SupplierID== Model.SuppliersID))
+                        {
+                            ///无权限
+                            return false;
+                        }
+                    }
+                    if (IsDefault==1)
                     {
                         var List = ctx.le_goods_suppliers.Where(s => s.GoodsID == Model.GoodsID && s.IsDefalut == 1&&s.GoodsMappingID!= Model.GoodsMappingID).FirstOrDefault();
                         if (List != null)
@@ -1604,7 +1613,7 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                string NonceStr = ctx.le_goods_value.OrderBy(s => s.GoodsValueID).Skip(0).Take(1).FirstOrDefault().GoodsValueID.ToString();
+                string NonceStr = ctx.le_goods_value.OrderByDescending(s => s.GoodsValueID).Skip(0).Take(1).FirstOrDefault().GoodsValueID.ToString();
                 int StrCount = NonceStr.Length;
                 for(int i= 0;i< Count- StrCount; i++)
                 {

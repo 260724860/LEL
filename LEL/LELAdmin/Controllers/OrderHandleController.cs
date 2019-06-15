@@ -56,24 +56,26 @@ namespace LELAdmin.Controllers
 
         }
         
-        /// <summary>
-        /// 修改供应商价格
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <param name="Price"></param>
-        /// <param name="IsDeleted"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 修改供应商价格
+       /// </summary>
+       /// <param name="ID"></param>
+       /// <param name="Price"></param>
+       /// <param name="IsDeleted"></param>
+       /// <param name="IsDefault"></param>
+       /// <returns></returns>
         [HttpPost, Route("api/OrderHandle/UpdateSupplierPrice/")]
         public IHttpActionResult UpdateSupplierPrice(int ID, decimal Price, int IsDeleted,int IsDefault)
         {
-            var result = GoodsBLL.UpdateSupplierPrice(ID, Price, IsDeleted, IsDefault);
+
+            var result = GoodsBLL.UpdateSupplierPrice(ID, Price, IsDeleted, IsDefault,GetLoginInfo().UserID);
             if (result)
             {
                 return Json(new { code = 0, msg = "SUCCESS", content = result });
             }
             else
             {
-                return Json(new { code = 1, msg = "ERROR", content = result });
+                return Json(new { code = 1, msg = "操作失败或权限不足", content = result });
             }
         }
       

@@ -105,7 +105,7 @@ namespace LELAdmin.Controllers
         }
 
         /// <summary>
-        /// 商品信息导出Excel
+        /// 商品信息导出Excel 下载模板
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]

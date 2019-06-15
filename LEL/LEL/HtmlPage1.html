@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/aes.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/pad-zeropadding.min.js"></script>
+    <script type="text/javascript">
+        //AES-128-CBC加密模式，key需要为16位，key和iv可以一样
+
+        function encrypt(data) {
+            var key = CryptoJS.enc.Utf8.parse('1234567890000000');
+            var iv = CryptoJS.enc.Utf8.parse('1234567890000000');
+            return CryptoJS.AES.encrypt(data, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding }).toString();
+        }
+
+        alert(encrypt('123'));
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

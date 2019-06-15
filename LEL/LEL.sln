@@ -13,10 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LEL", "LEL\LEL.csproj", "{6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LELAdmin", "LELAdmin\LELAdmin.csproj", "{BB20400D-B1E6-4C41-B5EA-BCE8EB5B21B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTests1", "ServiceTests1\ServiceTests1.csproj", "{1C729268-7999-4C8F-8B76-37FC141DFBFE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{DF50EEDD-BA93-4EC9-AB90-3B8141690788}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,14 +39,6 @@ Global
 		{BB20400D-B1E6-4C41-B5EA-BCE8EB5B21B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB20400D-B1E6-4C41-B5EA-BCE8EB5B21B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB20400D-B1E6-4C41-B5EA-BCE8EB5B21B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C729268-7999-4C8F-8B76-37FC141DFBFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C729268-7999-4C8F-8B76-37FC141DFBFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C729268-7999-4C8F-8B76-37FC141DFBFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C729268-7999-4C8F-8B76-37FC141DFBFE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF50EEDD-BA93-4EC9-AB90-3B8141690788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF50EEDD-BA93-4EC9-AB90-3B8141690788}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF50EEDD-BA93-4EC9-AB90-3B8141690788}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF50EEDD-BA93-4EC9-AB90-3B8141690788}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
