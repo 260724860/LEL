@@ -2,12 +2,7 @@
 using DTO.Common;
 using Service;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web;
 using System.Web.Http;
 using static Common.SmsSendHelper;
 
@@ -77,7 +72,7 @@ namespace LEL.Controllers
         public IHttpActionResult GetADList()
         {
             int Count;
-            var result = OtherService.GetAdList( "", 1, out Count);
+            var result = OtherService.GetAdList("", 1, out Count);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
         /// <summary>
@@ -140,7 +135,7 @@ namespace LEL.Controllers
             }
             //var content = string.Format(@"" + ssh.SmsTemplate("T0001"), Code);
             //ssh.SendSingleSms(Phone, content, out returnmsg);
-            var str= TenCentSmsHelper.RandomCode();
+            var str = TenCentSmsHelper.RandomCode();
             string[] parm = new string[] { str };
             TenCentSmsHelper.SmsSingleSender(Phone, 334320, parm, "蘑菇侠");
             if (returnmsg.result == 0)
@@ -202,8 +197,8 @@ namespace LEL.Controllers
         {
             int Count;
             options.Status = 1;
-            var result= OtherService.GetSysAddressList(options, out Count);
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result,Count));
+            var result = OtherService.GetSysAddressList(options, out Count);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
 
         /// <summary>
@@ -213,7 +208,7 @@ namespace LEL.Controllers
         /// <param name="UserType">用户类型 1商户 2供货商</param>
         /// <returns></returns>
         [HttpPost, Route("api/Common/GetPushMsg/")]
-        public IHttpActionResult GetPushMsg(int UserID,int UserType)
+        public IHttpActionResult GetPushMsg(int UserID, int UserType)
         {
             var result = OtherService.GetPushMsg(UserID, UserType);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));

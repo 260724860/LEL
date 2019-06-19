@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.Goods
 {
@@ -70,6 +67,6 @@ namespace DTO.Goods
     {
         public List<GroodsModelDto> GoodsModel { get; set; }
         public int PageCount { get; set; }
-    
+
     }
 }

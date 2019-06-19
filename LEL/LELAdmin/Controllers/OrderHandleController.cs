@@ -1,18 +1,13 @@
 ﻿using Common;
-using DTO.Common;
 using DTO.ShopOrder;
 using LELAdmin.Models;
 using Service;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
 {
-    
+
     public class OrderHandleController : BaseController
     {
         private GoodsService GoodsBLL = new GoodsService();
@@ -25,17 +20,17 @@ namespace LELAdmin.Controllers
         /// <param name="Price"></param>
         /// <returns></returns>
         [HttpPost, Route("api/OrderHandle/AddSupplierGoodsPrice/")]
-        public IHttpActionResult AddSupplierGoodsPrice(int SupplierID, int GoodsID, decimal Price,int IsDefalut)
+        public IHttpActionResult AddSupplierGoodsPrice(int SupplierID, int GoodsID, decimal Price, int IsDefalut)
         {
             var result = GoodsBLL.AddSupplierGoodsPrice(SupplierID, GoodsID, Price, IsDefalut, out string Msg);
             if (result > 0)
             {
-                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", Msg));            
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", Msg));
             }
             else
             {
                 return Json(JRpcHelper.AjaxResult(1, "ERROR", Msg));
-               
+
             }
         }
 
@@ -55,20 +50,20 @@ namespace LELAdmin.Controllers
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
 
         }
-        
-       /// <summary>
-       /// 修改供应商价格
-       /// </summary>
-       /// <param name="ID"></param>
-       /// <param name="Price"></param>
-       /// <param name="IsDeleted"></param>
-       /// <param name="IsDefault"></param>
-       /// <returns></returns>
+
+        /// <summary>
+        /// 修改供应商价格
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="Price"></param>
+        /// <param name="IsDeleted"></param>
+        /// <param name="IsDefault"></param>
+        /// <returns></returns>
         [HttpPost, Route("api/OrderHandle/UpdateSupplierPrice/")]
-        public IHttpActionResult UpdateSupplierPrice(int ID, decimal Price, int IsDeleted,int IsDefault)
+        public IHttpActionResult UpdateSupplierPrice(int ID, decimal Price, int IsDeleted, int IsDefault)
         {
 
-            var result = GoodsBLL.UpdateSupplierPrice(ID, Price, IsDeleted, IsDefault,GetLoginInfo().UserID);
+            var result = GoodsBLL.UpdateSupplierPrice(ID, Price, IsDeleted, IsDefault, GetLoginInfo().UserID);
             if (result)
             {
                 return Json(new { code = 0, msg = "SUCCESS", content = result });
@@ -78,7 +73,7 @@ namespace LELAdmin.Controllers
                 return Json(new { code = 1, msg = "操作失败或权限不足", content = result });
             }
         }
-      
+
         /// <summary>
         /// 修改订单行状态，拆单
         /// </summary>
@@ -90,25 +85,25 @@ namespace LELAdmin.Controllers
         /// <param name="UserID"></param>
         /// <returns></returns>
         [HttpPost, Route("api/OrderHandle/UpdateOrderLineStatus/")]
-        public IHttpActionResult UpdateOrderLineStatus(List< UpdateOrderLineParams> UpdateParams)
+        public IHttpActionResult UpdateOrderLineStatus(List<UpdateOrderLineParams> UpdateParams)
         {
-            int AdminID =GetLoginInfo().UserID;
+            int AdminID = GetLoginInfo().UserID;
             int ErrCount = 0;
             foreach (var indexModel in UpdateParams)
             {
-                var result = ShopOrderBLL.UpdateOrderLineStatus(indexModel.Status, indexModel.OrdersLinesID,indexModel.OrderNo, indexModel.Notes, out string Msg, AdminID, indexModel.SuppliersID);
+                var result = ShopOrderBLL.UpdateOrderLineStatus(indexModel.Status, indexModel.OrdersLinesID, indexModel.OrderNo, indexModel.Notes, out string Msg, AdminID, indexModel.SuppliersID);
                 if (!result)
                 {
                     ErrCount++;
                     return Json(JRpcHelper.AjaxResult(1, Msg, UpdateParams));
                 }
-                
+
             }
             if (ErrCount == UpdateParams.Count)
             {
                 return Json(JRpcHelper.AjaxResult(1, "FAIL", UpdateParams));
             }
-           return Json(JRpcHelper.AjaxResult(0, "SUCCESS", UpdateParams));
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", UpdateParams));
         }
 
         /// <summary>
@@ -119,11 +114,11 @@ namespace LELAdmin.Controllers
         [HttpPost, Route("api/OrderHandle/UpdateOrderInfo/")]
         public IHttpActionResult UpdateOrderInfo(OrderEditInfo orderEditInfo)
         {
-            if(orderEditInfo==null)
+            if (orderEditInfo == null)
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误", orderEditInfo));
             }
-            var result= ShopOrderBLL.UpdateOrderInfo(orderEditInfo);
+            var result = ShopOrderBLL.UpdateOrderInfo(orderEditInfo);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -143,7 +138,7 @@ namespace LELAdmin.Controllers
         [HttpPost, Route("api/OrderHandle/GetPushMsg/")]
         public IHttpActionResult GetPushMsg(int UserID, int UserType)
         {
-            var result =new OtherService().GetPushMsg(UserID, UserType);
+            var result = new OtherService().GetPushMsg(UserID, UserType);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
@@ -153,7 +148,7 @@ namespace LELAdmin.Controllers
         /// <param name="Supperid"></param>
         /// <returns></returns>
         [HttpGet, Route("api/OrderHandle/AddPulshMsg/")]
-        public IHttpActionResult AddPulshMsg(int Supperid,string OrderNO,int MsgType)
+        public IHttpActionResult AddPulshMsg(int Supperid, string OrderNO, int MsgType)
         {
             var result = new OtherService().UpdatePushMsg(Supperid, OrderNO, 2, MsgType);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -167,7 +162,7 @@ namespace LELAdmin.Controllers
         [HttpPost, Route("api/OrderHandle/GetOrderLineLogList/")]
         public IHttpActionResult GetOrderLineLogList(OrderLineLogParams logParams)
         {
-          //  , out int Count
+            //  , out int Count
             var result = new LogService().GetOrderLineLogList(logParams.SeachOptions, logParams.AdminID, logParams.LinesRecordID, out int Count);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }

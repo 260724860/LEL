@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Goods
+﻿namespace DTO.Goods
 {
     /// <summary>
     /// 商品查询参数
@@ -17,7 +11,7 @@ namespace DTO.Goods
         public string KeyWords { get; set; }
         public int Offset { get; set; }
         public int Rows { get; set; }
-       
+
         public int? IsShelves { get; set; }
         public int? IsRecommend { get; set; }
         public int? IsNewGoods { get; set; }
@@ -28,7 +22,7 @@ namespace DTO.Goods
         /// 排序字段
         /// </summary>
         public GoodsSeachOrderByType SortKey { get; set; }
-     
+
         /// <summary>
         /// 供应商ID
         /// </summary>
@@ -44,12 +38,12 @@ namespace DTO.Goods
         OriginalPriceAsc = 3,
         OriginalPriceDesc = 4,
         SortAsc = 5,
-        SortDesc =6,
-        SalesVolumesASC =7,
-        SalesVolumesDesc=8,
-        TotalSalesVolumesASC=9,
-        TotalSalesVolumesDESC=10,
-        
+        SortDesc = 6,
+        SalesVolumesASC = 7,
+        SalesVolumesDesc = 8,
+        TotalSalesVolumesASC = 9,
+        TotalSalesVolumesDESC = 10,
+
     }
- 
+
 }

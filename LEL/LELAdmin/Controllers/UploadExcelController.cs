@@ -4,9 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
@@ -37,7 +34,7 @@ namespace LELAdmin.Controllers
                     if (fileFilt.IndexOf(fileExt) <= -1)
                     {
                         return Json(JRpcHelper.AjaxResult(1, "上传文件类型错误,允许上传格式.xlsx", null));
-                    }                   
+                    }
                     DateTime dt = DateTime.Now;
                     string folderPath = "UploadFile\\";
                     string serverFolderPath = "/Upload/File";
@@ -88,9 +85,9 @@ namespace LELAdmin.Controllers
                     string fileName = RandomUtils.GenerateOutTradeNo("Excel") + Path.GetExtension(hpf.FileName);
                     string filePath = System.Web.HttpContext.Current.Server.MapPath("/") + folderPath + fileName;
                     hpf.SaveAs(filePath);
-                   // string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/1.xlsx";
-                    var ImportData = UploadFileBLL.InsetDb(filePath,out string Msg);
-                    if(ImportData)
+                    // string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/1.xlsx";
+                    var ImportData = UploadFileBLL.InsetDb(filePath, out string Msg);
+                    if (ImportData)
                     {
                         return Json(JRpcHelper.AjaxResult(0, "上传成功", null));
                     }
@@ -117,7 +114,7 @@ namespace LELAdmin.Controllers
                 DataTable GoodsSource = new DataTable();
                 //DataTable Goods
                 string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/商品批量导入格式.xlsx";
-                string FileName= RandomUtils.GenerateOutTradeNo("Excel") + ".xlsx";
+                string FileName = RandomUtils.GenerateOutTradeNo("Excel") + ".xlsx";
                 string SavPath = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/export/" + FileName;
 
                 DataColumn[] myColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
@@ -132,11 +129,11 @@ namespace LELAdmin.Controllers
                 ExcelHelper.DataTableToExcel(path, DtList, true, SavPath);
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", "/UploadFile/export/" + FileName));
             }
-            catch( Exception ex)
+            catch (Exception ex)
             {
-                return  Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
+                return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
             }
-           
+
         }
 
         /// <summary>
@@ -150,7 +147,7 @@ namespace LELAdmin.Controllers
             try
             {
                 UploadFileService service = new UploadFileService();
-            
+
                 string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/商品供应价格批量上传格式.xlsx";
                 string FileName = RandomUtils.GenerateOutTradeNo("GoodsSupplierPrice") + ".xlsx";
                 string SavPath = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/export/" + FileName;
@@ -227,7 +224,7 @@ namespace LELAdmin.Controllers
         public void gess()
         {
             string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/商品录入格式.xlsx";
-           // ExcelHelper.addExcelData(path,0,null);
+            // ExcelHelper.addExcelData(path,0,null);
         }
     }
 }

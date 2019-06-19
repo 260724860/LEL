@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
-using log4net;
-using DTO.ShopOrder;
-using DTO.Common;
+﻿using Common;
 using DTO.Goods;
-using DTO.Suppliers;
-using MySql.Data.MySqlClient;
 using DTO.Others;
-using Common;
+using DTO.ShopOrder;
+using DTO.Suppliers;
 using DTO.User;
+using log4net;
+using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace Service
 {
-        public class ShopOrderService
-        {
+    public class ShopOrderService
+    {
         private static ILog log = LogManager.GetLogger(typeof(ShopOrderService));
         private SortedList<string, le_sysconfig> GetSysConfigList = SysConfig.Get().values;
         string BasePath = SysConfig.Get().values.Values.Where(s => s.Name == "HeadQuartersDomain").FirstOrDefault().Value;
@@ -30,7 +27,7 @@ namespace Service
         /// <param name="Mes"></param>
         /// <param name="cumulation">是否累加</param>
         /// <returns></returns>
-        public int AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount,int UserID,bool cumulation, out string Mes)
+        public int AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, int UserID, bool cumulation, out string Mes)
         {
             using (Entities ctx = new Entities())
             {
@@ -54,16 +51,20 @@ namespace Service
                             }
                         }
                     }
-                   
+
                     var ListGoodValueID = GoodValueID.Select(s => s.GoodsValueID).ToList();
 
                     //var GoodsValuePrice = GoodValueMaping[0];
-                    var GoodsModel = ctx.le_goods.Where(s => s.GoodsID == GoodsID).Select(s => new {s.SpecialOffer,s
-                    .Stock,s.Quota
+                    var GoodsModel = ctx.le_goods.Where(s => s.GoodsID == GoodsID).Select(s => new
+                    {
+                        s.SpecialOffer,
+                        s
+                    .Stock,
+                        s.Quota
                     }).FirstOrDefault();
-                   
+
                     //增加
-                    if (IsAdd)                       
+                    if (IsAdd)
                     {
 
                         le_shop_cart model = new le_shop_cart();
@@ -79,7 +80,7 @@ namespace Service
                             le_Cart_Goodsvalue.CategoryType = inde.CategoryType;
                             model.le_cart_goodsvalue.Add(le_Cart_Goodsvalue);
                         }
-                        if(GoodsModel.Quota!=-1&& model.GoodsCount> GoodsModel.Quota)
+                        if (GoodsModel.Quota != -1 && model.GoodsCount > GoodsModel.Quota)
                         {
                             Mes = string.Format("该商品每人限购{0}件", GoodsModel.Quota);
                             return 0;
@@ -94,7 +95,7 @@ namespace Service
                     //修改
                     else
                     {
-                        
+
                         if (cumulation)//是否累加
                         {
                             ShopCarModel.GoodsCount += GoodsCount;
@@ -119,7 +120,7 @@ namespace Service
                             Mes = "修改失败";
                             return 0;
                         }
-                    }                  
+                    }
                     Mes = "操作失败";
                     return 0;
                 }
@@ -129,7 +130,7 @@ namespace Service
                 }
             }
             Mes = "操作失败";
-           return 0;
+            return 0;
         }
 
         /// <summary>
@@ -137,13 +138,13 @@ namespace Service
         /// </summary>
         /// <param name="CartID"></param>
         /// <returns></returns>
-        public bool DeleteCart(List<int> CartList,int? UserID)
+        public bool DeleteCart(List<int> CartList, int? UserID)
         {
             using (Entities ctx = new Entities())
-            {             
+            {
                 var tempIq = ctx.le_shop_cart.Where(s => CartList.Contains(s.CartID));
                 List<le_shop_cart> modelList;
-                if(UserID!=null)
+                if (UserID != null)
                 {
                     modelList = tempIq.Where(s => s.UserID == UserID).ToList();
                 }
@@ -151,7 +152,7 @@ namespace Service
                 {
                     modelList = tempIq.ToList();
                 }
-                if(modelList==null||modelList.Count<=0)
+                if (modelList == null || modelList.Count <= 0)
                 {
                     return false;
                 }
@@ -159,16 +160,16 @@ namespace Service
                 foreach (var model in modelList)
                 {
                     var CartValue = model.le_cart_goodsvalue.ToList();
-                    foreach( var index in CartValue)
+                    foreach (var index in CartValue)
                     {
                         ctx.Entry<le_cart_goodsvalue>(index).State = EntityState.Deleted;
                     }
 
                     ctx.le_shop_cart.Remove(model);
                 }
-               // ctx.le_shop_cart.RemoveRange(modelList);
+                // ctx.le_shop_cart.RemoveRange(modelList);
 
-                if (ctx.SaveChanges()>0)
+                if (ctx.SaveChanges() > 0)
                 {
                     return true;
                 }
@@ -192,13 +193,13 @@ namespace Service
                     CartID = s.CartID,
                     GoodsCount = s.GoodsCount,
                     GoodsID = s.GoodsID,
-                    GoodsImg = BasePath+ s.le_goods.Image,
+                    GoodsImg = BasePath + s.le_goods.Image,
                     GoodsName = s.le_goods.GoodsName,
                     //SuppliersID = s.le_goods.le_goods_suppliers.Where(k=>k.IsDefalut==1).FirstOrDefault().SuppliersID,
                     Price = s.le_goods.SpecialOffer,
                     Stock = s.le_goods.Stock,
                     Quota = s.le_goods.Quota,
-                    MinimumPurchase=s.le_goods.MinimumPurchase,
+                    MinimumPurchase = s.le_goods.MinimumPurchase,
                     RowVersion = s.le_goods.RowVersion,
                     //Supplyprice=s.le_goods.le_goods_suppliers.Where(k => k.IsDefalut == 1).FirstOrDefault().Supplyprice,
                     SpecialOffer = s.le_goods.SpecialOffer,
@@ -211,14 +212,15 @@ namespace Service
                         GoodsValueID = k.GoodsValueID
 
                     }),
-                    SupplierGoodsList = s.le_goods.le_goods_suppliers.Select(k => new SupplierGoods {
+                    SupplierGoodsList = s.le_goods.le_goods_suppliers.Select(k => new SupplierGoods
+                    {
                         IsDefalut = k.IsDefalut,
-                        SupplierID=k.SuppliersID,
-                        Price=k.Supplyprice
+                        SupplierID = k.SuppliersID,
+                        Price = k.Supplyprice
                     }).ToList(),
                     GoodsGroups_ID = s.le_goods.GoodsGroupsID,
-                    
-                  
+
+
                 }).ToList();
                 return result;
             }
@@ -236,11 +238,11 @@ namespace Service
         /// <param name="ExpressType">快递类型/1快递物流 2 自提</param>
         /// <param name="Msg"></param>
         /// <returns></returns>
-        public int OrderSave(OrderSaveParams ParamasData, out string Msg,out  List<ShopCartDto> FailCartList)
+        public int OrderSave(OrderSaveParams ParamasData, out string Msg, out List<ShopCartDto> FailCartList)
         {
             Msg = "未知错误";
             using (Entities ctx = new Entities())
-            {             
+            {
                 FailCartList = new List<ShopCartDto>();
                 List<ShopCartDto> CartList = GetCartList(ParamasData.UserID);
                 //  List<ShopCartDto> FialCartList = new List<ShopCartDto>();//下单失败的购物车对象
@@ -289,26 +291,26 @@ namespace Service
                     }
                 }
 
-                var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g=>new {GoodsID=g.Key,GoodsCount=g.Sum(s=>s.GoodsCount) });
-                
+                var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
+
                 List<le_orders_lines> OrderLinesList = new List<le_orders_lines>();
                 string Trade_no = Common.RandomUtils.GenerateOutTradeNo("LEL");
                 List<GoodsStock> goodsStocksList = new List<GoodsStock>();
 
-                le_orders_head le_Orders_Head = new le_orders_head(); 
+                le_orders_head le_Orders_Head = new le_orders_head();
 
                 foreach (var goodsModel in CartList)
                 {
                     var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
-                    int AlreadyBuyCount=0;
-                   
+                    int AlreadyBuyCount = 0;
+
                     var BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID).Select(k => new { k.GoodsCount }).ToList();
-                    if(BuyCountIquery!=null)
+                    if (BuyCountIquery != null)
                     {
-                        AlreadyBuyCount = BuyCountIquery.Sum(g=>g.GoodsCount);
+                        AlreadyBuyCount = BuyCountIquery.Sum(g => g.GoodsCount);
                     }
 
-                    if ((QuotaGoods!=null&&goodsModel.Quota!=-1&& goodsModel.Quota-AlreadyBuyCount< 0)|| (goodsModel.Quota - QuotaGoods.GoodsCount < 0&& goodsModel.Quota != -1))
+                    if ((QuotaGoods != null && goodsModel.Quota != -1 && goodsModel.Quota - AlreadyBuyCount < 0) || (goodsModel.Quota - QuotaGoods.GoodsCount < 0 && goodsModel.Quota != -1))
                     {
                         Msg = string.Format("该商品没人限购{0}件", goodsModel.Quota);
                         log.Debug(Msg);
@@ -320,13 +322,13 @@ namespace Service
                         return 0;
                     }
                     var DefaulSuplier = goodsModel.SupplierGoodsList.Where(s => s.IsDefalut == 1).FirstOrDefault();
-                    if(DefaulSuplier==null)
+                    if (DefaulSuplier == null)
                     {
-                        Msg = "该商品未设置商品默认供应商,下单失败.商品ID:"+ goodsModel.GoodsID.ToString();
+                        Msg = "该商品未设置商品默认供应商,下单失败.商品ID:" + goodsModel.GoodsID.ToString();
                         log.Debug(Msg);
                         return 0;
                     }
-                   
+
                     GoodsStock goodsStock = new GoodsStock();
                     goodsStock.Stock = goodsModel.Stock;
                     goodsStock.RowVersion = goodsModel.RowVersion;
@@ -341,7 +343,7 @@ namespace Service
                     linesModel.Money = goodsModel.SpecialOffer;
                     linesModel.SupplyPrice = DefaulSuplier.Price;
                     linesModel.Profit = goodsModel.Price - DefaulSuplier.Price;
-                     
+
                     linesModel.Status = 0;
                     linesModel.UpdateTime = DateTime.Now;
                     linesModel.UsersID = ParamasData.UserID;
@@ -353,9 +355,9 @@ namespace Service
                         linValue.CategoryType = GoodsValue.CategoryType;
                         linValue.GoodsValueID = GoodsValue.GoodsValueID;
                         linesModel.le_orderline_goodsvalue.Add(linValue);
-                    }                   
+                    }
                     OrderLinesList.Add(linesModel);
-                  
+
                     le_Orders_Head.le_orders_lines.Add(linesModel);
                 }
                 le_Orders_Head.CreateTime = DateTime.Now;
@@ -367,7 +369,7 @@ namespace Service
                 le_Orders_Head.Status = 0;
                 le_Orders_Head.UsersID = ParamasData.UserID;
                 le_Orders_Head.UpdateTime = DateTime.Now;
-                le_Orders_Head.GoodsCount = OrderLinesList.Sum(s=>s.GoodsCount);
+                le_Orders_Head.GoodsCount = OrderLinesList.Sum(s => s.GoodsCount);
                 le_Orders_Head.DeliverCount = le_Orders_Head.GoodsCount;
                 le_Orders_Head.Head_Notes = CartList[0].GoodsName + "$" + ParamasData.Notes;
                 le_Orders_Head.OrderType = ParamasData.OrderType;
@@ -380,7 +382,7 @@ namespace Service
                 ctx.le_orders_head.Add(le_Orders_Head);
 
                 //去重复
-                var NORepeat= goodsStocksList.GroupBy(s=>s.GoodsID).Select(g => new GoodsStock { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount),Stock=g.Max(k=>k.Stock),RowVersion=g.Max(k=>k.RowVersion) }).ToList();
+                var NORepeat = goodsStocksList.GroupBy(s => s.GoodsID).Select(g => new GoodsStock { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount), Stock = g.Max(k => k.Stock), RowVersion = g.Max(k => k.RowVersion) }).ToList();
                 bool IsHaveStock = true;
 
                 //退货单不计销量
@@ -390,7 +392,7 @@ namespace Service
                 }
                 if (!IsHaveStock)
                 {
-                        
+
                     Msg = "访问人次太多,请稍后再试!";
                     log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
                     return 0;
@@ -402,7 +404,7 @@ namespace Service
                     var CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.UserID).ToList();
                     foreach (var CartModel in CartLists)
                     {
-                      
+
                         var CartValue = CartModel.le_cart_goodsvalue.ToList();
                         foreach (var index in CartValue)
                         {
@@ -441,11 +443,11 @@ namespace Service
                 }
                 Msg = "FAIL";
                 return 0;
-                
+
             }
             return 0;
         }
-      
+
         /// <summary>
         /// 排序扩展
         /// DistinctBy不是.net framework提供的扩展方法，是第三方的扩展方法
@@ -465,12 +467,12 @@ namespace Service
         /// <param name="seachParams"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public List<OrderDto> GetListOrder(OrderSeachParams seachParams,out int Count)
+        public List<OrderDto> GetListOrder(OrderSeachParams seachParams, out int Count)
         {
             using (Entities ctx = new Entities())
             {
-                var tempIq = ctx.le_orders_head.Where(s =>s.CreateTime>=seachParams.BeginTime&&s.CreateTime<=seachParams.EndTime);
-                if(seachParams.Status!=null)
+                var tempIq = ctx.le_orders_head.Where(s => s.CreateTime >= seachParams.BeginTime && s.CreateTime <= seachParams.EndTime);
+                if (seachParams.Status != null)
                 {
                     tempIq = tempIq.Where(s => s.Status == seachParams.Status);
                 }
@@ -483,31 +485,31 @@ namespace Service
                       || s.le_users.UsersNickname.Contains(seachParams.KeyWords)
                     );
                 }
-                if(!string.IsNullOrEmpty(seachParams.Out_Trade_No))
+                if (!string.IsNullOrEmpty(seachParams.Out_Trade_No))
                 {
                     tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
                 }
-                if(seachParams.Status!=null)
+                if (seachParams.Status != null)
                 {
                     tempIq = tempIq.Where(s => s.Status == seachParams.Status);
                 }
-                if(seachParams.UserID!=null)
+                if (seachParams.UserID != null)
                 {
                     tempIq = tempIq.Where(s => s.UsersID == seachParams.UserID);
-                }               
+                }
                 if (seachParams.OrderType != null)
                 {
                     tempIq = tempIq.Where(s => s.OrderType == seachParams.OrderType);
                 }
-                if(seachParams.AdminID!=null)
+                if (seachParams.AdminID != null)
                 {
                     tempIq = tempIq.Where(s => s.AdminID == seachParams.AdminID);
                 }
-                if(seachParams.ExpressType!=null)
+                if (seachParams.ExpressType != null)
                 {
                     tempIq = tempIq.Where(s => s.ExpressType == seachParams.ExpressType);
                 }
-                var result  = tempIq.Join(ctx.le_admin_re_users, o => o.UsersID, p => p.UserID, (p, o) => new OrderDto
+                var result = tempIq.Join(ctx.le_admin_re_users, o => o.UsersID, p => p.UserID, (p, o) => new OrderDto
                 {
                     AdminID = p.AdminID,
                     AdminName = p.le_admin.Nickname,
@@ -562,14 +564,14 @@ namespace Service
                 //    PickUpPhone=s.PickUpPhone,
                 //    SupplyMoney=s.SupplyMoney,
                 //    DeliverCount=s.DeliverCount,
-                    
+
                 //}
                 //);
 
                 result = result.OrderByDescending(s => s.CreateTime);
                 Count = result.Count();
                 result = result.Skip(seachParams.Offset).Take(seachParams.Rows);
-               
+
                 return result.ToList();
             }
         }
@@ -661,13 +663,13 @@ namespace Service
         //}
         #endregion
 
-        
+
         /// <summary>
         /// 获取订单详细
         /// </summary>
         /// <param name="OrderNo"></param>
         /// <returns></returns>
-        public List<OrderDetail> GetOrderDetails(string OrderNo,int SupperID=0)
+        public List<OrderDetail> GetOrderDetails(string OrderNo, int SupperID = 0)
         {
             using (Entities ctx = new Entities())
             {
@@ -677,34 +679,35 @@ namespace Service
                 {
                     tempIq = tempIq.Where(s => s.SuppliersID == SupperID);
                 }
-                  var result=tempIq.Select(s => new OrderDetail
+                var result = tempIq.Select(s => new OrderDetail
+                {
+                    SupplierID = s.SuppliersID,
+                    GoodsCount = s.GoodsCount,
+                    GoodsID = s.GoodsID,
+                    GoodsImg = BasePath + s.le_goods.Image,
+                    GoodsName = s.le_goods.GoodsName,
+                    Notes = s.Notes,
+                    SpecialOffer = s.le_goods.SpecialOffer,
+                    Status = s.Status,
+                    SuppliersName = s.le_suppliers.SuppliersName,
+                    GoodsValuesList = s.le_orderline_goodsvalue.Select(k => new GoodsValues()
                     {
-                        SupplierID = s.SuppliersID,
-                        GoodsCount = s.GoodsCount,
-                        GoodsID = s.GoodsID,
-                        GoodsImg = BasePath+s.le_goods.Image,
-                        GoodsName = s.le_goods.GoodsName,
-                        Notes = s.Notes,
-                        SpecialOffer = s.le_goods.SpecialOffer,
-                        Status = s.Status,
-                        SuppliersName = s.le_suppliers.SuppliersName,
-                        GoodsValuesList = s.le_orderline_goodsvalue.Select(k => new GoodsValues()
-                        {
-                            SerialNumber = k.le_goods_value.SerialNumber,
-                            CategoryType = k.CategoryType,
-                            GoodsValueID = k.GoodsValueID,
-                            GoodsValueName = k.le_goods_value.GoodsValue
-                        }).ToList(),
-                        Orders_Lines_ID = s.OrdersLinesID,
-                        SupplierPhone = s.le_suppliers.MobilePhone,
-                        SupplyPrice = s.SupplyPrice,
-                        Money=s.Money,
-                        OriginalPrice = s.le_goods.OriginalPrice,
-                      Specifications=s.le_goods.Specifications,
-                      PackingNumber=s.le_goods.PackingNumber,
-                      DeliverCount=s.DeliverCount,
-                  });
-               
+                        SerialNumber = k.le_goods_value.SerialNumber,
+                        CategoryType = k.CategoryType,
+                        GoodsValueID = k.GoodsValueID,
+                        GoodsValueName = k.le_goods_value.GoodsValue
+                    }).ToList(),
+                    Orders_Lines_ID = s.OrdersLinesID,
+                    SupplierPhone = s.le_suppliers.MobilePhone,
+                    SupplyPrice = s.SupplyPrice,
+                    Money = s.Money,
+                    OriginalPrice = s.le_goods.OriginalPrice,
+                    Specifications = s.le_goods.Specifications,
+                    PackingNumber = s.le_goods.PackingNumber,
+                    DeliverCount = s.DeliverCount,
+                    MinimumPurchase=s.le_goods.MinimumPurchase
+                });
+
                 return result.ToList();
             }
             return null;
@@ -720,7 +723,8 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                try {
+                try
+                {
                     var model = ctx.le_orders_head.Where(s => s.OutTradeNo == dto.Out_Trade_No).FirstOrDefault();
 
                     if (model == null)
@@ -746,20 +750,21 @@ namespace Service
                         return false;
                     }
                 }
-                catch (Exception ex) {
-                    msg = "修改异常，异常信息："+ex.ToString();
+                catch (Exception ex)
+                {
+                    msg = "修改异常，异常信息：" + ex.ToString();
                     return false;
                 }
             }
         }
-    
+
         /// <summary>
         /// 修改订单备注信息
         /// </summary>
         /// <param name="OutTradeNo"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool EditOrderHead_Notes(string OutTradeNo,string Head_Notes, out string msg)
+        public bool EditOrderHead_Notes(string OutTradeNo, string Head_Notes, out string msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -803,7 +808,7 @@ namespace Service
         /// <param name="List"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool BatchEditLinesInfo(List<EditLinesInfo> List,LoginInfo info, out string msg)
+        public bool BatchEditLinesInfo(List<EditLinesInfo> List, LoginInfo info, out string msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -840,7 +845,7 @@ namespace Service
                 {
                     foreach (var data in List)
                     {
-                       
+
                         decimal SupplyPrice;//供货价格
                         var Linemodel = ctx.le_orders_lines.Where(s => s.OrdersLinesID == data.Orders_Lines_ID).FirstOrDefault();
                         OrderLineList.Add(Linemodel);
@@ -851,7 +856,7 @@ namespace Service
                         }
                         if (info.UserType == 2)
                         {
-                            data.SuppliersID= info.UserID; 
+                            data.SuppliersID = info.UserID;
                             OrderLineLogModel.SupplierID = info.UserID;
                         }
                         if (info.UserType == 1)
@@ -882,10 +887,10 @@ namespace Service
                         }
                         if (Linemodel.DeliverCount != data.GoodsCount)//更改商品数量
                         {
-                            Linemodel.DeliverCount = data.GoodsCount; 
-                            if (Linemodel.DeliverCount <= 0)  
+                            Linemodel.DeliverCount = data.GoodsCount;
+                            if (Linemodel.DeliverCount <= 0)
                             {
-                                Linemodel.DeliverCount = 0;                              
+                                Linemodel.DeliverCount = 0;
                             }
                             OrderLineLogModel.AfterCount = Linemodel.DeliverCount;
                             OrderLineLogModel.AfterMoney = Linemodel.Money;
@@ -895,7 +900,7 @@ namespace Service
                             ///更改订单数量 更新商品库存
                             var GoodsModel = Linemodel.le_goods;
                             GoodsModel.Stock += (Linemodel.DeliverCount - data.GoodsCount);
-                            GoodsModel.SalesVolumes+= (Linemodel.DeliverCount - data.GoodsCount);
+                            GoodsModel.SalesVolumes += (Linemodel.DeliverCount - data.GoodsCount);
                             GoodsModel.TotalSalesVolume += (Linemodel.DeliverCount - data.GoodsCount);
                             ctx.Entry<le_goods>(GoodsModel).State = EntityState.Modified;
                         }
@@ -905,7 +910,7 @@ namespace Service
                     }
 
                     modhead.DeliverCount = OrderLineList.Sum(s => s.DeliverCount);
-                    modhead.SupplyMoney = OrderLineList.Sum(s => s.SupplyPrice*s.DeliverCount);
+                    modhead.SupplyMoney = OrderLineList.Sum(s => s.SupplyPrice * s.DeliverCount);
                     modhead.Money = OrderLineList.Sum(s => s.Money * s.DeliverCount);
 
                     if (modhead.DeliverCount < 0)
@@ -949,7 +954,8 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                try {
+                try
+                {
                     string sql = string.Format(@"select lg.GoodsID,lg.GoodsName,ls.Suppliers_Name,lgs.Price,ls.SuppliersID from le_suppliers ls 
 left join le_goods_suppliers lgs on lgs.SuppliersID = ls.SuppliersID
 left join le_goods lg on lg.GoodsID=lgs.GoodsID
@@ -964,7 +970,8 @@ where lg.GoodsID=@GoodsID");
                     var resule = ctx.Database.SqlQuery<GoodsSuppliersInfoDto>(sql, parameters).ToList();
                     msg = "SUCCESS";
                     return resule;
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     msg = "查询异常，信息：" + ex.ToString();
                     return null;
@@ -1011,20 +1018,20 @@ where lg.GoodsID=@GoodsID");
         /// <param name="SeachOptions"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public List<OrderLineDto> GetOrderlineList(OrderLineSeachParames SeachOptions,out int Count)
+        public List<OrderLineDto> GetOrderlineList(OrderLineSeachParames SeachOptions, out int Count)
         {
             using (Entities ctx = new Entities())
             {
                 var tempIq = ctx.le_orders_lines.Where(s => true);
-                if(SeachOptions.AdminID!=null)
+                if (SeachOptions.AdminID != null)
                 {
                     tempIq = tempIq.Where(s => s.AdminID == SeachOptions.AdminID.Value);
                 }
-                if(!string.IsNullOrEmpty(SeachOptions.OrderNo))
+                if (!string.IsNullOrEmpty(SeachOptions.OrderNo))
                 {
                     tempIq = tempIq.Where(s => s.le_orders_head.OutTradeNo == SeachOptions.OrderNo);
                 }
-                if(SeachOptions.BeginTime!=null)
+                if (SeachOptions.BeginTime != null)
                 {
                     tempIq = tempIq.Where(s => s.CreateTime >= SeachOptions.BeginTime);
                 }
@@ -1032,19 +1039,19 @@ where lg.GoodsID=@GoodsID");
                 {
                     tempIq = tempIq.Where(s => s.CreateTime <= SeachOptions.EndTinme);
                 }
-                if(SeachOptions.UserID!=null)
+                if (SeachOptions.UserID != null)
                 {
                     tempIq = tempIq.Where(s => s.UsersID == SeachOptions.UserID.Value);
                 }
-                if(SeachOptions.SuppliersID!=null)
+                if (SeachOptions.SuppliersID != null)
                 {
                     tempIq = tempIq.Where(s => s.SuppliersID == SeachOptions.SuppliersID.Value);
                 }
-                if(SeachOptions.OrderType!=null)
+                if (SeachOptions.OrderType != null)
                 {
                     tempIq = tempIq.Where(s => s.le_orders_head.OrderType == SeachOptions.OrderType);
                 }
-                if(SeachOptions.Status!=null)
+                if (SeachOptions.Status != null)
                 {
                     tempIq = tempIq.Where(s => s.Status == SeachOptions.Status.Value);
                 }
@@ -1052,25 +1059,25 @@ where lg.GoodsID=@GoodsID");
                 {
                     tempIq = tempIq.Where(s => s.Status != 0);
                 }
-                if(!string.IsNullOrEmpty(SeachOptions.KeyWords))
+                if (!string.IsNullOrEmpty(SeachOptions.KeyWords))
                 {
                     tempIq = tempIq.Where(s => s.le_goods.GoodsName.Contains(SeachOptions.KeyWords));
                 }
                 var result = tempIq.Select(s => new OrderLineDto
                 {
-                    AdminName=s.le_admin.Nickname,
-                    AdminTelPhone=s.le_admin.TelePhone,
+                    AdminName = s.le_admin.Nickname,
+                    AdminTelPhone = s.le_admin.TelePhone,
                     AdminID = s.AdminID,
                     OrderHeadID = s.OrderHeadID,
                     CreateTime = s.CreateTime,
                     GoodsCount = s.GoodsCount,
-                    DeliverCount=s.DeliverCount,
-                    GoodsImage = BasePath+ s.le_goods.Image,
+                    DeliverCount = s.DeliverCount,
+                    GoodsImage = BasePath + s.le_goods.Image,
                     GoodsName = s.le_goods.GoodsName,
                     Goods_ID = s.GoodsID,
                     //RcName = s.le_orders_head.RcName,
                     //RcPhone = s.le_orders_head.RcName,
-                    SupplyMoney =s.SupplyPrice,
+                    SupplyMoney = s.SupplyPrice,
                     Notes = s.Notes,
                     OrderLineID = s.OrdersLinesID,
                     Status1 = s.Status,
@@ -1080,14 +1087,14 @@ where lg.GoodsID=@GoodsID");
                     UpdateTime = s.UpdateTime,
                     UsersID = s.UsersID,
                     OrderType = s.le_orders_head.OrderType,
-                    Out_Trade_No=s.le_orders_head.OutTradeNo,
-                    PickupTime=s.le_orders_head.PickupTime,
-                  
+                    Out_Trade_No = s.le_orders_head.OutTradeNo,
+                    PickupTime = s.le_orders_head.PickupTime,
+
                 });
                 result = result.OrderByDescending(s => s.CreateTime);
                 var GroupResult = result.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
                 {
-                    AdminName=k.Max(p=>p.AdminName),
+                    AdminName = k.Max(p => p.AdminName),
                     AdminTelPhone = k.Max(p => p.AdminTelPhone),
                     AdminID = k.Max(p => p.AdminID),
                     OrderHeadID = k.Max(p => p.OrderHeadID),
@@ -1099,29 +1106,29 @@ where lg.GoodsID=@GoodsID");
                     Goods_ID = k.Max(p => p.Goods_ID),
                     //RcName = k.Max(p => p.RcName),
                     //RcPhone = k.Max(p => p.RcPhone),
-                    SupplyMoney =k.Sum(p=>p.SupplyMoney* p.DeliverCount),
+                    SupplyMoney = k.Sum(p => p.SupplyMoney * p.DeliverCount),
                     Notes = k.Max(p => p.Notes),
                     OrderLineID = k.Max(p => p.OrderLineID),
-                    Status1 = k.Min(p=>p.Status1),
-                    Status2 = k.Max(p => p.Status1)-1==0?1:1,
+                    Status1 = k.Min(p => p.Status1),
+                    Status2 = k.Max(p => p.Status1) - 1 == 0 ? 1 : 1,
                     Status3 = k.Max(p => p.Status1),
                     SuppliersID = k.Max(p => p.SuppliersID),
                     UpdateTime = k.Max(p => p.UpdateTime),
                     UsersID = k.Max(p => p.UsersID),
-                  
+
                     OrderType = k.Max(p => p.OrderType),
-                    
+
                     Out_Trade_No = k.Max(p => p.Out_Trade_No),
                     PickupTime = k.Max(p => p.PickupTime),
                 });
                 GroupResult = GroupResult.OrderByDescending(s => s.CreateTime);
                 Count = GroupResult.Count();
                 GroupResult = GroupResult.Skip(SeachOptions.Offset).Take(SeachOptions.Rows);
-                var filter= GroupResult.ToList();
+                var filter = GroupResult.ToList();
                 List<OrderLineDto> ResultList = new List<OrderLineDto>();
-                foreach( var index in filter)
+                foreach (var index in filter)
                 {
-                    if(index.Status1==index.Status3)
+                    if (index.Status1 == index.Status3)
                     {
                         index.Status2 = index.Status1;
                     }
@@ -1154,7 +1161,7 @@ where lg.GoodsID=@GoodsID");
         /// <param name="SuppliersID"></param>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        public bool UpdateOrderLineStatus(int Status, int OrdersLinesID,string OrderNo, string Notes, out string Msg, int AdminID=0,int SuppliersID=0)
+        public bool UpdateOrderLineStatus(int Status, int OrdersLinesID, string OrderNo, string Notes, out string Msg, int AdminID = 0, int SuppliersID = 0)
         {
             using (Entities ctx = new Entities())
             {
@@ -1172,12 +1179,12 @@ where lg.GoodsID=@GoodsID");
                 var LinesList = OrderHeadModel.le_orders_lines.ToList();
                 var CurrentLine = LinesList.Where(s => s.OrdersLinesID == OrdersLinesID).FirstOrDefault();
 
-                if (SuppliersID!=0&& CurrentLine.SuppliersID!=SuppliersID&& AdminID==0)
+                if (SuppliersID != 0 && CurrentLine.SuppliersID != SuppliersID && AdminID == 0)
                 {
                     Msg = "非法操作,无权限";
                     return false;
                 }
-               
+
                 le_orders_lines_log OrderLineLogName = new le_orders_lines_log();
                 OrderLineLogName.BeforeCount = CurrentLine.GoodsCount;
                 OrderLineLogName.BeforeMoney = CurrentLine.Money;
@@ -1195,7 +1202,7 @@ where lg.GoodsID=@GoodsID");
                 {
                     if (Status == 1 && AdminID != 0) //派发订单只有总部有权限
                     {
-                        if(CurrentLine.Status==3) //重新派单。 修改销量和库存
+                        if (CurrentLine.Status == 3) //重新派单。 修改销量和库存
                         {
                             CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
@@ -1212,15 +1219,15 @@ where lg.GoodsID=@GoodsID");
                         CurrentLine.AdminID = AdminID;
                         CurrentLine.Status = 1;
                         CurrentLine.SuppliersID = SuppliersID;
-                       
+
                         if (!string.IsNullOrEmpty(Notes))
                         {
                             CurrentLine.Notes = Notes;
-                        }                     
+                        }
 
-                        var IsComplete = LinesList.Any(s=>s.Status!=3&&s.Status!=2&&s.Status!=0&&s.OrdersLinesID!= CurrentLine.OrdersLinesID);
+                        var IsComplete = LinesList.Any(s => s.Status != 3 && s.Status != 2 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
 
-                        if (IsComplete|| LinesList.Count==1) //全部派单 更新订单头状态为待接单
+                        if (IsComplete || LinesList.Count == 1) //全部派单 更新订单头状态为待接单
                         {
                             // var OrderHead = ctx.le_orders_head.Where(s => s.OutTradeNo == CurrentLine.OutTradeNo).FirstOrDefault();
                             OrderHeadModel.Status = 3;//修改订单头状态为待接单
@@ -1229,24 +1236,24 @@ where lg.GoodsID=@GoodsID");
                         OrderHeadModel.AdminID = AdminID;
                         ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                         //总部派发订单 推送消息给供货商
-                        new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo,2);
+                        new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
 
                         CurrentLine.UpdateTime = DateTime.Now;
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
 
-                       
+
                     }
                     if (Status == 2)//已接单
                     {
-                        if(AdminID!=0)  //总部加急单也有接单权限
+                        if (AdminID != 0)  //总部加急单也有接单权限
                         {
                             OrderLineLogName.AdminID = AdminID;
                         }
-                        if(AdminID == 0&&SuppliersID!=0)
+                        if (AdminID == 0 && SuppliersID != 0)
                         {
                             OrderLineLogName.SupplierID = SuppliersID;
                         }
-                        if (CurrentLine.Status == 3 ) //之前是已取消 现在改为已结单修改销量库存
+                        if (CurrentLine.Status == 3) //之前是已取消 现在改为已结单修改销量库存
                         {
                             CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
@@ -1263,28 +1270,30 @@ where lg.GoodsID=@GoodsID");
                         }
 
                         CurrentLine.UpdateTime = DateTime.Now;
-                        
-                        ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
-                        
 
-                        var IsComplete = LinesList.Any(s=>s.Status != 1 && s.Status != 3 && s.Status != 0&& s.OrdersLinesID != CurrentLine.OrdersLinesID);
-                       
-                        if (IsComplete|| LinesList.Count == 1) //全部已接单,更新订单头状态
+                        ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+
+
+                        var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
+
+                        if (IsComplete || LinesList.Count == 1) //全部已接单,更新订单头状态
                         {
                             //var OrderHead = ctx.le_orders_head.Where(s => s.OutTradeNo == CurrentLine.OutTradeNo).FirstOrDefault();
                             OrderHeadModel.Status = 4;//修改订单头状态为已结单
                             ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                         }
                         //供货商完成接单 推送消息给总部
-                        new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo,3);
+                        new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
                     }
                     if (Status == 3)//取消订单
                     {
                         OrderLineLogName.SupplierID = SuppliersID;
+                       
                         CurrentLine.Status = 3;
                         CurrentLine.le_goods.Stock += CurrentLine.GoodsCount;
                         CurrentLine.le_goods.SalesVolumes -= CurrentLine.GoodsCount;
                         CurrentLine.le_goods.TotalSalesVolume -= CurrentLine.GoodsCount;
+                        CurrentLine.DeliverCount = 0;
                         ctx.Entry<le_goods>(CurrentLine.le_goods).State = EntityState.Modified;
                         if (!string.IsNullOrEmpty(Notes))
                         {
@@ -1292,11 +1301,13 @@ where lg.GoodsID=@GoodsID");
                         }
                         CurrentLine.UpdateTime = DateTime.Now;
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
-                       
+
                         new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-                     
+
                         new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
+                       
                     }
+                    OrderLineLogName.AfterCount = CurrentLine.DeliverCount;
                     OrderLineLogName.AfterStatus = Status;
                     OrderLineLogName.OrderLineID = CurrentLine.OrdersLinesID;
                     ctx.le_orders_lines_log.Add(OrderLineLogName);
@@ -1307,11 +1318,11 @@ where lg.GoodsID=@GoodsID");
                     }
                     else
                     {
-                        Msg = "保存失败"+AdminID.ToString();
+                        Msg = "保存失败" + AdminID.ToString();
                         return false;
                     }
                 }
-                catch ( Exception ex)
+                catch (Exception ex)
                 {
                     Msg = ex.Message;
                 }
@@ -1319,7 +1330,7 @@ where lg.GoodsID=@GoodsID");
                 return false;
             }
         }
-        
+
         /// <summary>
         /// 更新订单状态
         /// </summary>
@@ -1352,7 +1363,7 @@ where lg.GoodsID=@GoodsID");
                     {
                         OrderHeadLogModel.UserID = loginInfo.UserID;
                     }
-                   
+
                     OrderHeadLogModel.OrderHeadID = model.OrdersHeadID;
 
                     if (model == null)
@@ -1375,7 +1386,7 @@ where lg.GoodsID=@GoodsID");
                     {
                         msg = "非加急单,无直接接单权限";
                     }
-                    if(Status==1)//已完成
+                    if (Status == 1)//已完成
                     {
                         new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1); //推送消息给用户
                     }
@@ -1400,7 +1411,7 @@ where lg.GoodsID=@GoodsID");
                     }
                     if (Status == 5)//取消订单
                     {
-                        if(loginInfo.UserID!=model.AdminID&&model.AdminID!=null)
+                        if (loginInfo.UserID != model.AdminID && model.AdminID != null)
                         {
                             msg = "无权限操作此订单";
                             return false;
@@ -1444,7 +1455,7 @@ where lg.GoodsID=@GoodsID");
                         }
                         new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1);
                     }
-                   
+
                     model.UpdateTime = DateTime.Now;
                     model.CompleteTime = DateTime.Now;
                     model.Status = Status;
@@ -1483,7 +1494,7 @@ where lg.GoodsID=@GoodsID");
             using (Entities ctx = new Entities())
             {
                 var Model = ctx.le_orders_head.Where(s => s.OutTradeNo == orderEditParams.OrderNo).FirstOrDefault();
-                if (Model ==null)
+                if (Model == null)
                 {
                     return false;
                 }
@@ -1492,11 +1503,11 @@ where lg.GoodsID=@GoodsID");
                 //{
                 //    Model.Status = orderEditParams.Status.Value;
                 //}
-               if(!string.IsNullOrEmpty(orderEditParams.Notes))
+                if (!string.IsNullOrEmpty(orderEditParams.Notes))
                 {
                     Model.Head_Notes = orderEditParams.Notes;
                 }
-              if(orderEditParams!=null)
+                if (orderEditParams != null)
                 {
                     Model.PickupTime = orderEditParams.PickupTime;
                 }
@@ -1504,7 +1515,7 @@ where lg.GoodsID=@GoodsID");
                 Model.PickUpPhone = orderEditParams.PickUpPhone;
                 Model.CarNumber = orderEditParams.CarNumber;
                 ctx.Entry<le_orders_head>(Model).State = EntityState.Modified;
-                if (ctx.SaveChanges()>0)
+                if (ctx.SaveChanges() > 0)
                 {
                     return true;
                 }
@@ -1512,7 +1523,7 @@ where lg.GoodsID=@GoodsID");
                 {
                     return false;
                 }
-               
+
             }
         }
 
@@ -1523,12 +1534,12 @@ where lg.GoodsID=@GoodsID");
         /// <param name="SupplierID"></param>
         /// <param name="PackCount"></param>
         /// <returns></returns>
-        public bool SetOrderPackCount(int OrderHeadID,int SupplierID,int PackCount)
+        public bool SetOrderPackCount(int OrderHeadID, int SupplierID, int PackCount)
         {
             using (Entities ctx = new Entities())
             {
-                var Model = ctx.le_order_pack.Where(s => s.OrderHeadID == OrderHeadID&&s.SupplierID== SupplierID).FirstOrDefault();
-                if(Model==null)
+                var Model = ctx.le_order_pack.Where(s => s.OrderHeadID == OrderHeadID && s.SupplierID == SupplierID).FirstOrDefault();
+                if (Model == null)
                 {
                     le_order_pack model = new le_order_pack();
                     model.OrderHeadID = OrderHeadID;
@@ -1556,7 +1567,7 @@ where lg.GoodsID=@GoodsID");
                         return false;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error("SetOrderPackCount" + ex.Message, ex);
                     return false;
@@ -1570,12 +1581,12 @@ where lg.GoodsID=@GoodsID");
         /// <param name="OrderHeadID"></param>
         /// <param name="SupplierID"></param>
         /// <returns></returns>
-        public List<OrderPackCount> GetOrderPackCountsList(int OrderHeadID,int? SupplierID)
+        public List<OrderPackCount> GetOrderPackCountsList(int OrderHeadID, int? SupplierID)
         {
             using (Entities ctx = new Entities())
             {
-                var tempIq = ctx.le_order_pack.Where(s => s.OrderHeadID==OrderHeadID);
-                if(SupplierID!=null)
+                var tempIq = ctx.le_order_pack.Where(s => s.OrderHeadID == OrderHeadID);
+                if (SupplierID != null)
                 {
                     tempIq = tempIq.Where(s => s.SupplierID == SupplierID);
                 }
@@ -1599,7 +1610,7 @@ where lg.GoodsID=@GoodsID");
         /// <returns></returns>
         public bool CheckStock(List<GoodsStock> goodsStocks)
         {
-           
+
             List<CommandInfo> sqllist = new List<CommandInfo>();
             foreach (var index in goodsStocks)
             {
@@ -1632,22 +1643,22 @@ where lg.GoodsID=@GoodsID");
             }
         }
 
-        public bool IsEqual(List<AddGoodsValues> a , List<AddGoodsValues>b )
+        public bool IsEqual(List<AddGoodsValues> a, List<AddGoodsValues> b)
         {
             a = a.OrderBy(p => p.CategoryType).ToList();
             b = b.OrderBy(p => p.GoodsValueID).ToList();
 
-            if(a.Count!=b.Count)
+            if (a.Count != b.Count)
             {
                 return false;
             }
-            for(int i=0;i<a.Count;i++)
+            for (int i = 0; i < a.Count; i++)
             {
-                if(a[i].CategoryType!=b[i].CategoryType)
+                if (a[i].CategoryType != b[i].CategoryType)
                 {
                     return false;
                 }
-                if(a[i].GoodsValueID!=b[i].GoodsValueID)
+                if (a[i].GoodsValueID != b[i].GoodsValueID)
                 {
                     return false;
                 }
@@ -1655,5 +1666,5 @@ where lg.GoodsID=@GoodsID");
             return true;
         }
     }
-   
+
 }

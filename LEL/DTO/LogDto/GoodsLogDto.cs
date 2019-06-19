@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.LogDto
 {
@@ -18,7 +14,7 @@ namespace DTO.LogDto
         public Nullable<decimal> AfterSpecialOffer { get; set; }
         public int BeforeSheLvesStatus { get; set; }
         public Nullable<int> AfterSheLvesStatus { get; set; }
-    
+
         public int BeforeStock { get; set; }
         public Nullable<int> AfterStock { get; set; }
         public int BeforeQuota { get; set; }

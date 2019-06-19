@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
@@ -16,7 +12,7 @@ namespace Common
         /// </summary>
         /// <param name="ex"></param>
         /// <returns></returns>
-        public static string  GetInnerExceptionMsg( Exception ex)
+        public static string GetInnerExceptionMsg(Exception ex)
         {
             var str = ex.Message + "\n";
             while (ex.InnerException != null)

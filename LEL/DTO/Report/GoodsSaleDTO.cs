@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Report
+﻿namespace DTO.Report
 {
-     public  class GoodsSaleDTO
-     {
+    public class GoodsSaleDTO
+    {
 
         public string GoodsName { get; set; }
         public string GoodsGroupName { get; set; }

@@ -6,8 +6,6 @@ using Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace LEL.Controllers
@@ -42,19 +40,19 @@ namespace LEL.Controllers
         /// <param name="cumulation">商品数量是否累加</param>
         /// <returns></returns>
         [HttpPost, Route("api/ShopOrder/AddCart/")]
-        public IHttpActionResult AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount,bool cumulation)
-         {           
-            if(GetUserID()==-1)
+        public IHttpActionResult AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, bool cumulation)
+        {
+            if (GetUserID() == -1)
             {
                 return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             }
-            if(GoodsCount<=0)
+            if (GoodsCount <= 0)
             {
                 return Json(JRpcHelper.AjaxResult(1, "GoodsCount 参数错误", GoodsCount));
             }
             string Msg;
-            var result= shopOrderService.AddCart(GoodsID, GoodValueID, GoodsCount,GetUserID(), cumulation, out Msg);
-            if (result>0)
+            var result = shopOrderService.AddCart(GoodsID, GoodValueID, GoodsCount, GetUserID(), cumulation, out Msg);
+            if (result > 0)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
@@ -73,7 +71,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             }
-            if(CartIDList==null)
+            if (CartIDList == null)
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", CartIDList));
             }
@@ -84,7 +82,7 @@ namespace LEL.Controllers
             }
             return Json(JRpcHelper.AjaxResult(1, "Fail", result));
         }
-       
+
         /// <summary>
         /// 获取购物车
         /// </summary>
@@ -111,19 +109,19 @@ namespace LEL.Controllers
         [HttpPost, Route("api/ShopOrder/OrderSave/")]
         public IHttpActionResult OrderSave(OrderSaveParams Data)
         {
-            int[] OrderTypes = { 1, 2 ,3}; int []ExpressTypes = { 1, 2 };
+            int[] OrderTypes = { 1, 2, 3 }; int[] ExpressTypes = { 1, 2 };
             if (GetUserID() == -1)
             {
                 return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             }
-            if(!OrderTypes.Contains(Data.OrderType) || !ExpressTypes.Contains(Data.ExpressType))
+            if (!OrderTypes.Contains(Data.OrderType) || !ExpressTypes.Contains(Data.ExpressType))
             {
-                return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", Data.OrderType.ToString()+","+ Data.ExpressType.ToString()));
+                return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", Data.OrderType.ToString() + "," + Data.ExpressType.ToString()));
             }
             Data.UserID = GetUserID();
             string msg;
             List<ShopCartDto> FailCartList;
-            var result= shopOrderService.OrderSave(Data, out msg,out FailCartList);
+            var result = shopOrderService.OrderSave(Data, out msg, out FailCartList);
             if (result != 0)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -152,8 +150,8 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             }
-            var result= OtherService.AddAddress(GetUserID(), ReceiveName, ReceivePhone, ReceiveArea, ReceiveAddress, DefaultAddr);
-            if(result>0)
+            var result = OtherService.AddAddress(GetUserID(), ReceiveName, ReceivePhone, ReceiveArea, ReceiveAddress, DefaultAddr);
+            if (result > 0)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
@@ -162,7 +160,7 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "新增收货地址失败，请稍后再试", result));
             }
         }
-        
+
         /// <summary>
         /// 修改收货地址
         /// </summary>
@@ -191,7 +189,7 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "修改收货地址失败，请稍后再试", result));
             }
         }
-      
+
         /// <summary>
         /// 获取收货地址
         /// </summary>
@@ -205,7 +203,7 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             }
             int Count;
-            var result = OtherService.GetAddressList(options, GetUserID(),out Count);
+            var result = OtherService.GetAddressList(options, GetUserID(), out Count);
             result = result.Where(s => s.Status == 1).ToList();
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
@@ -216,7 +214,7 @@ namespace LEL.Controllers
         /// <param name="options"></param>
         /// <returns></returns>
         [HttpPost, Route("api/ShopOrder/GetListOrder/")]
-        public IHttpActionResult GetListOrder(OrderSeachParams options )
+        public IHttpActionResult GetListOrder(OrderSeachParams options)
         {
             //if (GetUserID() == -1)
             //{
@@ -224,9 +222,9 @@ namespace LEL.Controllers
             //}
             options.UserID = GetUserID();
             var result = shopOrderService.GetListOrder(options, out int Count);
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result,Count));
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
-      
+
         /// <summary>
         /// 获取订单详细
         /// </summary>
@@ -240,7 +238,7 @@ namespace LEL.Controllers
             //    return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             //}
             var result = shopOrderService.GetOrderDetails(OrderNO);
-            var filter =new List<OrderDetail>();
+            var filter = new List<OrderDetail>();
             foreach (var model in result)
             {
                 model.SuppliersName = "******";
@@ -262,7 +260,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             }
-            var result = shopOrderService.UpdateOrderStatus(OrderNO, 5,GetLoginInfo(), out string msg);
+            var result = shopOrderService.UpdateOrderStatus(OrderNO, 5, GetLoginInfo(), out string msg);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", msg));

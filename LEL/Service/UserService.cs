@@ -5,15 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
     /// <summary>
     /// 商户用户管理
     /// </summary>
-    public  class StoreUserService
+    public class StoreUserService
     {
         private static ILog log = LogManager.GetLogger(typeof(StoreUserService));
         private SortedList<string, le_sysconfig> SysConfigs = SysConfig.Get().values;
@@ -23,12 +21,12 @@ namespace Service
         /// <param name="LoginName"></param>
         /// <param name="PWD"></param>
         /// <returns></returns>
-        public UserDTO Login(string LoginName,string PWD )
+        public UserDTO Login(string LoginName, string PWD)
         {
             using (Entities ctx = new Entities())
             {
                 UserDTO UserDto = new UserDTO();
-                var User = ctx.le_users.Join(ctx.le_pushmsg,a=>a.UsersID,b=>b.UserID,(a,b)=> new UserDTO
+                var User = ctx.le_users.Join(ctx.le_pushmsg, a => a.UsersID, b => b.UserID, (a, b) => new UserDTO
                 {
                     Address = a.UsersAddress,
                     status = a.UsersStatus,
@@ -43,37 +41,37 @@ namespace Service
                     PWD = a.UsersPassWord,
                     TrueName = a.UsersName,
                     UserID = a.UsersID,
-                    MsgCount=b.MsgCount,
-                    UserType=b.UserType,
-                    CarNumber=a.CarNumber,
-                    BusinessNo=a.BusinessNo,
-                    IDCardNo=a.IDCardNo,
-                   
-                }).Where(s => s.Mobile == LoginName).Where(s=>s.UserType==1).FirstOrDefault();
-               
-                if (User!=null)
+                    MsgCount = b.MsgCount,
+                    UserType = b.UserType,
+                    CarNumber = a.CarNumber,
+                    BusinessNo = a.BusinessNo,
+                    IDCardNo = a.IDCardNo,
+
+                }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
+
+                if (User != null)
                 {
                     var DbPwd = DESEncrypt.Decrypt(User.PWD, User.Salt);
-                    var result =DESEncrypt.MD5Encrypt32(DbPwd + "SystemLEL");
+                    var result = DESEncrypt.MD5Encrypt32(DbPwd + "SystemLEL");
                     if (result != PWD)
                     {
                         User.Code = 1;
                         User.Msg = "账号或密码错误";
                         return User;
-                    }                  
+                    }
                     if (User.status == 2)
                     {
                         User.Code = 1;
                         User.Msg = "账号被禁用";
-                        return User;                     
+                        return User;
                     }
-                  
+
                     User.Code = 0;
                     User.Salt = "******";
                     User.PWD = "*******";
                     User.Msg = "SUCCESS";
                     return User;
-                }               
+                }
                 else
                 {
                     //log.Debug(string.Format("用户名：{0},登陆失败)",LoginName));
@@ -142,7 +140,7 @@ namespace Service
         /// <returns></returns>
         public bool Update(UserDTO dTO, bool oneself)
         {
-           
+
             using (Entities ctx = new Entities())
             {
                 var UserModel = ctx.le_users.Where(s => s.UsersID == dTO.UserID).FirstOrDefault();
@@ -155,7 +153,7 @@ namespace Service
                 UserModel.UsersImage = dTO.HeadImage;
                 UserModel.UsersEmail = dTO.Email;
                 //UserModel.UsersMobilePhone = dTO.Mobile;
-                UserModel.UsersNickname = dTO.NickName;            
+                UserModel.UsersNickname = dTO.NickName;
                 UserModel.UsersName = dTO.TrueName;
                 UserModel.UsersIDImgA = dTO.IDImgA;
                 UserModel.UsersIDImgB = dTO.IDImgB;
@@ -211,7 +209,7 @@ namespace Service
         /// <param name="PWD"></param>
         /// <param name="Msg"></param>
         /// <returns></returns>
-        public int Regist(string LoginName,string PWD,out string Msg)
+        public int Regist(string LoginName, string PWD, out string Msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -229,10 +227,10 @@ namespace Service
 
                 le_admin_re_users Admin_ReModel = new le_admin_re_users();
                 Admin_ReModel.CreateTime = DateTime.Now;
-                Admin_ReModel.UpdateTime = DateTime.Now;               
+                Admin_ReModel.UpdateTime = DateTime.Now;
                 if (SysConfigs.Where(s => s.Value.Name == "CurrentContext").FirstOrDefault().Value.Value == "TEST")
                 {
-                    Admin_ReModel.AdminID = 9;   
+                    Admin_ReModel.AdminID = 9;
                 }
                 Admin_ReModel.le_users = model;
 
@@ -251,7 +249,7 @@ namespace Service
                         return 0;
                     }
                 }
-                catch( Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(LoginName, ex);
                     Msg = ex.Message;
@@ -267,28 +265,28 @@ namespace Service
         /// <param name="UserID"></param>
         /// <param name="Pwd"></param>
         /// <returns></returns>
-        public bool UpdatePwd(string Loginname,string Pwd)
+        public bool UpdatePwd(string Loginname, string Pwd)
         {
             using (Entities ctx = new Entities())
             {
-                 var result=  ctx.le_users.Where(s => s.UsersMobilePhone == Loginname).FirstOrDefault();
-                 if(result!=null)
+                var result = ctx.le_users.Where(s => s.UsersMobilePhone == Loginname).FirstOrDefault();
+                if (result != null)
                 {
 
                     result.Salt = DESEncrypt.GetCheckCode(6);
-                   // string TruePwd = DESEncrypt.DecryptString16(Pwd, "SystemLE");
+                    // string TruePwd = DESEncrypt.DecryptString16(Pwd, "SystemLE");
                     result.UsersPassWord = DESEncrypt.Encrypt(Pwd, result.Salt);
                 }
 
                 ctx.Entry<le_users>(result).State = EntityState.Modified;
-                if(ctx.SaveChanges()>0)
+                if (ctx.SaveChanges() > 0)
                 {
                     return true;
                 }
                 else
                 {
                     return false;
-                }           
+                }
             }
         }
 
@@ -298,56 +296,56 @@ namespace Service
         /// <param name="options"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public List<UserDTO> GetUserList(UserSeachOptions options,out int Count)
+        public List<UserDTO> GetUserList(UserSeachOptions options, out int Count)
         {
             using (Entities ctx = new Entities())
             {
                 var temp = ctx.le_users.Where(s => true);
-                   
-                if(!string.IsNullOrEmpty(options.KeyWords))
+
+                if (!string.IsNullOrEmpty(options.KeyWords))
                 {
                     temp = temp.Where(s => s.UsersNickname.Contains(options.KeyWords)
                       || s.UsersName.Contains(options.KeyWords)
                       || s.UsersMobilePhone.Contains(options.KeyWords)
                       || s.UsersAddress.Contains(options.KeyWords));
                 }
-                if(options.BeginTime!=null)
+                if (options.BeginTime != null)
                 {
                     temp = temp.Where(s => s.CreateTime > options.BeginTime.Value);
                 }
-                if(options.EndTime!=null)
+                if (options.EndTime != null)
                 {
                     temp = temp.Where(s => s.CreateTime < options.EndTime.Value);
                 }
-                if(options.Status!=null)
+                if (options.Status != null)
                 {
                     temp = temp.Where(s => s.UsersStatus == options.Status);
                 }
-                
+
                 temp = temp.OrderByDescending(s => s.UsersLoginTime);
                 Count = temp.Count();
                 temp = temp.Skip(options.Offset).Take(options.Rows);
-                var result= temp.Select(s => new UserDTO
-                  {
-                      Address = s.UsersAddress,
-                      status = s.UsersStatus,
-                      Salt = s.Salt,
-                      BusinessImg = s.UsersBusinessImg,
-                      Email = s.UsersEmail,
-                      HeadImage = s.UsersImage,
-                      IDImgA = s.UsersIDImgA,
-                      IDImgB = s.UsersIDImgB,
-                      Mobile = s.UsersMobilePhone,
-                      NickName = s.UsersNickname,
-                      PWD = s.UsersPassWord,
-                      TrueName = s.UsersName,
-                      UserID = s.UsersID,
-                      BusinessNo=s.BusinessNo,
-                      CarNumber=s.CarNumber,
-                      IDCardNo=s.IDCardNo, 
+                var result = temp.Select(s => new UserDTO
+                {
+                    Address = s.UsersAddress,
+                    status = s.UsersStatus,
+                    Salt = s.Salt,
+                    BusinessImg = s.UsersBusinessImg,
+                    Email = s.UsersEmail,
+                    HeadImage = s.UsersImage,
+                    IDImgA = s.UsersIDImgA,
+                    IDImgB = s.UsersIDImgB,
+                    Mobile = s.UsersMobilePhone,
+                    NickName = s.UsersNickname,
+                    PWD = s.UsersPassWord,
+                    TrueName = s.UsersName,
+                    UserID = s.UsersID,
+                    BusinessNo = s.BusinessNo,
+                    CarNumber = s.CarNumber,
+                    IDCardNo = s.IDCardNo,
 
-                  }).ToList();
-                
+                }).ToList();
+
                 return result;
             }
             return null;
@@ -359,25 +357,26 @@ namespace Service
         /// </summary>
         /// <param name="KeyWords"></param>
         /// <returns></returns>
-        public List<UserBaseInfoDto> GetBaseStoreUserList(string KeyWords,int AdminID)
+        public List<UserBaseInfoDto> GetBaseStoreUserList(string KeyWords, int AdminID)
         {
             using (Entities ctx = new Entities())
             {
-                var tempIq = ctx.le_admin_re_users.Where(s =>s.AdminID==AdminID);
+                var tempIq = ctx.le_admin_re_users.Where(s => s.AdminID == AdminID);
                 if (!string.IsNullOrEmpty(KeyWords))
                 {
                     tempIq = tempIq.Where(s => s.le_users.UsersNickname.Contains(KeyWords) || s.le_users.UsersMobilePhone.Contains(KeyWords));
                 }
-                var result = tempIq.Select(s=>new UserBaseInfoDto {
-                    UsersStatus=s.le_users.UsersStatus,
-                    UsersID=s.le_users.UsersID,
-                    UsersMobilePhone=s.le_users.UsersMobilePhone,
-                    UsersNickname=s.le_users.UsersNickname,
+                var result = tempIq.Select(s => new UserBaseInfoDto
+                {
+                    UsersStatus = s.le_users.UsersStatus,
+                    UsersID = s.le_users.UsersID,
+                    UsersMobilePhone = s.le_users.UsersMobilePhone,
+                    UsersNickname = s.le_users.UsersNickname,
                 });
                 return result.ToList();
             }
         }
 
-         
+
     }
 }

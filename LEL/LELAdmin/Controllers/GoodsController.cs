@@ -1,16 +1,9 @@
 ﻿using Common;
-using DTO.Common;
 using DTO.Goods;
-using DTO.SupplierUser;
-using DTO.User;
 using LELAdmin.Models;
 using Service;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -41,15 +34,16 @@ namespace LELAdmin.Controllers
             //options.KeyWords = "7";
             //options.SortKey = GoodsSeachOrderByType.CreateTimeDesc;
 
-            try {
-                var result = await GService.GetGoodsListAsync(options,GetLoginInfo().UserID);
+            try
+            {
+                var result = await GService.GetGoodsListAsync(options, GetLoginInfo().UserID);
                 return Json(new { code = 0, msg = "SUCCESS", content = result });
             }
             catch (Exception ex)
             {
                 return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
             }
-            
+
         }
 
         /// <summary>
@@ -103,12 +97,13 @@ namespace LELAdmin.Controllers
         {
             try
             {
-                var result = GService.AddGoods(dto,out string msg);
+                var result = GService.AddGoods(dto, out string msg);
                 if (result != 0)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = result });
                 }
-                else {
+                else
+                {
                     return Json(new { code = 1, msg = "ERROR", content = msg });
                 }
             }
@@ -130,8 +125,9 @@ namespace LELAdmin.Controllers
             try
             {
                 string Msg;
-                var result = GService.UnShelvesGoods(GoodsID,out Msg);
-                if (Msg.Equals("SUCCESS") && result) {
+                var result = GService.UnShelvesGoods(GoodsID, out Msg);
+                if (Msg.Equals("SUCCESS") && result)
+                {
                     return Json(new { code = 0, msg = "SUCCESS", content = Msg });
                 }
                 return Json(new { code = 1, msg = "ERROR", content = Msg });
@@ -155,7 +151,7 @@ namespace LELAdmin.Controllers
             {
                 string Msg;
 
-                var result = GService.EditGoods(dto, GetLoginInfo() ,out Msg);
+                var result = GService.EditGoods(dto, GetLoginInfo(), out Msg);
                 if (Msg.Equals("SUCCESS") && result)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = Msg });
@@ -205,12 +201,12 @@ namespace LELAdmin.Controllers
         {
             try
             {
-                if (List.Count <=0 )
+                if (List.Count <= 0)
                 {
                     return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
                 }
                 var result = GService.AddGoodsImage(List, out string Msg);
-                if (Msg.Equals("SUCCESS") && result!=0)
+                if (Msg.Equals("SUCCESS") && result != 0)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = result });
                 }
@@ -251,13 +247,13 @@ namespace LELAdmin.Controllers
         /// </summary>
         /// <param name="GoodsGroupID"></param>
         /// <returns></returns>
-        [HttpDelete,Route("DeleteGoodsGroup")]
+        [HttpDelete, Route("DeleteGoodsGroup")]
         public IHttpActionResult DeleteGoodsGroup(int GoodsGroupID)
         {
-            var result= GService.DeleteGoodsGroup(GoodsGroupID);
+            var result = GService.DeleteGoodsGroup(GoodsGroupID);
             if (result)
             {
-                return Json(JRpcHelper.AjaxResult(0,"SUCCESS", GoodsGroupID));
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", GoodsGroupID));
             }
             return Json(JRpcHelper.AjaxResult(1, "删除失败,尚有商品使用该分类", GoodsGroupID));
         }
@@ -277,7 +273,7 @@ namespace LELAdmin.Controllers
                 {
                     return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
                 }
-                var result = GService.AddGoodsValueList(List , out string Msg);
+                var result = GService.AddGoodsValueList(List, out string Msg);
                 if (result)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = "添加成功", result = Msg });
@@ -314,7 +310,7 @@ namespace LELAdmin.Controllers
             }
         }
 
-       
+
 
         /// <summary>
         /// 添加商品分类
@@ -395,14 +391,9 @@ namespace LELAdmin.Controllers
         public IHttpActionResult BarcodeGeneration(int IsBulkCargo)
         {
             string result;
-            if (IsBulkCargo == 0)
-            {
-                 result = GService.BarcodeGeneration(6);
-            }
-            else
-            {
-                 result = GService.BarcodeGeneration(5);
-            }
+
+            result = GService.BarcodeGeneration(IsBulkCargo);
+
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
@@ -437,7 +428,7 @@ namespace LELAdmin.Controllers
         [HttpPost]
         public IHttpActionResult GetGoodsLogList(GoodsLogParam param)
         {
-            var result = new LogService().GetGoodsLogList(param.SeachOptions,param.AdminID,param.GoodsID,out int Count);
+            var result = new LogService().GetGoodsLogList(param.SeachOptions, param.AdminID, param.GoodsID, out int Count);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
     }

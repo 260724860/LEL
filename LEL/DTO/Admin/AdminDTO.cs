@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.Admin
 {
@@ -41,7 +37,7 @@ namespace DTO.Admin
         /// </summary>
         public string password { get; set; }
         public string AdminRoleStr { get; set; }
-        
+
 
         /// <summary>
         /// 密码盐

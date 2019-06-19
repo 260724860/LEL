@@ -1,22 +1,16 @@
 ﻿using Common;
-using DTO.User;
-using LEL;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Linq;
 using Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Web.Http;
 
 namespace LEL.Controllers
 {
-    
-    public class AuthenticateController :BaseApiController
+
+    public class AuthenticateController : BaseApiController
     {
         StoreUserService userService = new StoreUserService();
         OtherService otherService = new OtherService();
@@ -32,15 +26,15 @@ namespace LEL.Controllers
         [HttpPost]
         [AllowAnonymous]
         public IHttpActionResult GetAccessToken(string Loginname, string PWD)
-        {          
+        {
             var UserDto = userService.Login(Loginname, PWD);
-            if(UserDto.Code==1)
+            if (UserDto.Code == 1)
             {
-                return Json( JRpcHelper.AjaxResult(1, UserDto.Msg, null));
+                return Json(JRpcHelper.AjaxResult(1, UserDto.Msg, null));
             }
             var tokenExpiration = TimeSpan.FromHours(2);
             ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.Name, Loginname+","+ UserDto.UserID.ToString()+","+UserDto.status.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.Name, Loginname + "," + UserDto.UserID.ToString() + "," + UserDto.status.ToString()));
             identity.AddClaim(new Claim("UserID", UserDto.UserID.ToString()));
             identity.AddClaim(new Claim("UserType", "1"));
             identity.AddClaim(new Claim("Status", UserDto.status.ToString()));
@@ -108,7 +102,7 @@ namespace LEL.Controllers
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", tokenResponse, SupplierUser));
             return null;
         }
-       
+
         /// <summary>
         /// 供应商注册
         /// </summary>
@@ -144,7 +138,7 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, Msg, LoginName));
             }
         }
-      
+
         /// <summary>
         /// 商户注册
         /// </summary>
@@ -153,27 +147,27 @@ namespace LEL.Controllers
         /// <returns></returns>
         [HttpPost, Route("api/Authenticate/Regist/")]
         [AllowAnonymous]
-        public IHttpActionResult Regist(string LoginName,string PWD)
+        public IHttpActionResult Regist(string LoginName, string PWD)
         {
             var Model = otherService.GetSmsRecord(LoginName);
-            if(Model==null)
+            if (Model == null)
             {
                 return Json(JRpcHelper.AjaxResult(1, "非法操作！请重新获取验证码", LoginName));
             }
-            if(Model.Status!=1|| Model.Status == 1&& Model.CreatTime < DateTime.Now.AddMinutes(-10))
+            if (Model.Status != 1 || Model.Status == 1 && Model.CreatTime < DateTime.Now.AddMinutes(-10))
             {
                 return Json(JRpcHelper.AjaxResult(1, "非法操作！请重新获取验证码", LoginName));
             }
             string TruePwd = DESEncrypt.DecryptStringHex(PWD, "SystemLE");
-            if(string.IsNullOrEmpty(TruePwd))
+            if (string.IsNullOrEmpty(TruePwd))
             {
                 return Json(JRpcHelper.AjaxResult(1, "解密失败,请确认", LoginName));
             }
             string Msg;
-            var result= userService.Regist(LoginName, TruePwd, out Msg);
-            if(result!=0)
+            var result = userService.Regist(LoginName, TruePwd, out Msg);
+            if (result != 0)
             {
-                return  Json(JRpcHelper.AjaxResult(0, "SUCCESS", LoginName));
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", LoginName));
             }
             else
             {
@@ -189,7 +183,7 @@ namespace LEL.Controllers
         /// <returns></returns>
         [HttpPost, Route("api/Authenticate/CheckCode/")]
         [AllowAnonymous]
-        public IHttpActionResult CheckCode(string LoginName,string Code)
+        public IHttpActionResult CheckCode(string LoginName, string Code)
         {
             var Model = otherService.GetSmsRecord(LoginName);
             if (Model == null)
@@ -204,12 +198,12 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "验证码已验证过,请重新获取", Code));
             }
-            if(Model.Code!= Code)
+            if (Model.Code != Code)
             {
                 return Json(JRpcHelper.AjaxResult(1, "验证码错误", Code));
             }
             otherService.UpdateSmsRecord(Code, LoginName);
-            return Json(JRpcHelper.AjaxResult(0,"SUCCESS", Code));
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", Code));
         }
 
         /// <summary>

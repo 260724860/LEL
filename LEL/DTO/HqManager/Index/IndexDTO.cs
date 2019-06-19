@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.HqManager.Index
 {
@@ -56,7 +53,8 @@ namespace DTO.HqManager.Index
 
     }
 
-    public class PendingTransDTO {
+    public class PendingTransDTO
+    {
 
         /// <summary>
         /// 待付款订单数
@@ -90,7 +88,8 @@ namespace DTO.HqManager.Index
 
     }
 
-    public class GoodsStaticDTO {
+    public class GoodsStaticDTO
+    {
         /// <summary>
         /// 已上架商品数
         /// </summary>
@@ -122,7 +121,8 @@ namespace DTO.HqManager.Index
         public List<SalesChartListDTO> SalesChartList { get; set; }
     }
 
-    public class SalesChartListDTO {
+    public class SalesChartListDTO
+    {
         /// <summary>
         /// 订单支付时间
         /// </summary>
@@ -139,7 +139,8 @@ namespace DTO.HqManager.Index
         public decimal OrderMoney { get; set; }
     }
 
-    public class TotalOrderStatusDTO {
+    public class TotalOrderStatusDTO
+    {
         public int Orders_Head_ID { get; set; }
 
         public int Status { get; set; }

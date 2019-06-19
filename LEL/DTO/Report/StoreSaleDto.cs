@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Report
+﻿namespace DTO.Report
 {
     /// <summary>
     /// 商品销量统计
@@ -22,6 +16,6 @@ namespace DTO.Report
         public string UsersName { get; set; }
         public string UsersNickname { get; set; }
         public string UsersMobilePhone { get; set; }
-       
+
     }
 }

@@ -1,9 +1,6 @@
 ﻿using DTO.Goods;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.ShopOrder
 {
@@ -19,7 +16,7 @@ namespace DTO.ShopOrder
         public string GoodsImg { get; set; }
 
         public int GoodsID { get; set; }
-       
+
         public int CartID { get; set; }
         /// <summary>
         /// 数量
@@ -62,5 +59,5 @@ namespace DTO.ShopOrder
 
         public int MinimumPurchase { get; set; }
     }
-   
+
 }

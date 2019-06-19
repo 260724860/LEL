@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
@@ -29,7 +25,7 @@ namespace Common
 
         }
 
-        public static string JsonResultSuccess(int code=0, string msg="SUCCESS", object obj=null)
+        public static string JsonResultSuccess(int code = 0, string msg = "SUCCESS", object obj = null)
         {
             Dictionary<string, object> dt = new Dictionary<string, object>();
             dt.Add("code", code);

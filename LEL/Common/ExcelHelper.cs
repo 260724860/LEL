@@ -1,14 +1,9 @@
-﻿using NPOI.HSSF.UserModel;
-using NPOI.POIFS.FileSystem;
-using NPOI.SS.UserModel;
+﻿using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
@@ -25,7 +20,7 @@ namespace Common
                     XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
 
                     ISheet sheet = hssfworkbook.GetSheet(SheetName);
-                   
+
 
                     //sheet.ShiftRows(1, sheet.LastRowNum, -1);
                     //sheet.RemoveRow(sheet.GetRow(sheet.LastRowNum));
@@ -35,7 +30,7 @@ namespace Common
                     {
                         dt.Columns.Add(sheet.GetRow(0).GetCell(j).ToString());
                     }
-                   // dt.Columns.AddRange(columns);
+                    // dt.Columns.AddRange(columns);
                     for (int k = 0; k <= sheet.LastRowNum; k++)
                     {
                         IRow row = sheet.GetRow(k);
@@ -94,7 +89,7 @@ namespace Common
 
         }
 
-        public static XSSFWorkbook BuildWorkbook(DataTable dt,string SheetName)
+        public static XSSFWorkbook BuildWorkbook(DataTable dt, string SheetName)
         {
             var book = new XSSFWorkbook();
             ISheet sheet = book.CreateSheet(SheetName);
@@ -133,7 +128,7 @@ namespace Common
         /// <param name="isColumnWritten">DataTable的列名是否要导入</param>
         /// <param name="sheetName">要导入的excel的sheet的名称</param>
         /// <returns>导入数据行数(包含列名那一行)</returns>
-        public static int DataTableToExcel(string fileName, List<DtoImportExcel> List, bool isColumnWritten,string savePath)
+        public static int DataTableToExcel(string fileName, List<DtoImportExcel> List, bool isColumnWritten, string savePath)
         {
             XSSFWorkbook workbook = null;
             //HSSFWorkbook workbook=null;
@@ -144,7 +139,7 @@ namespace Common
 
             //HSSFWorkbook workbook;
             using (FileStream stream = File.OpenRead(fileName))
-                workbook = new XSSFWorkbook(stream);          
+                workbook = new XSSFWorkbook(stream);
             try
             {
                 foreach (var model in List)
@@ -164,9 +159,9 @@ namespace Common
                         IRow row = sheet.CreateRow(0);
                         for (j = 0; j < model.dt.Columns.Count; ++j)
                         {
-                            
+
                             row.CreateCell(j).SetCellValue(model.dt.Columns[j].ColumnName);
-                            sheet.SetColumnWidth(j,7000);
+                            sheet.SetColumnWidth(j, 7000);
                         }
                         count = 1;
                     }
@@ -183,13 +178,13 @@ namespace Common
                             row.CreateCell(j).SetCellValue(model.dt.Rows[i][j].ToString());
                         }
                         ++count;
-                    }                  
+                    }
                 }
                 using (FileStream fs = new FileStream(savePath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
-                 workbook.Write(fs);
+                    workbook.Write(fs);
                 //fs.Flush();
                 //workbook.Write(fs); //写入到excel
-                
+
                 return count;
             }
             catch (Exception ex)
@@ -206,7 +201,7 @@ namespace Common
         /// <summary>
         /// 数据表
         /// </summary>
-        public  DataTable dt { get; set; }
+        public DataTable dt { get; set; }
         /// <summary>
         /// 
         /// </summary>

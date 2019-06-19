@@ -5,12 +5,8 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Service;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Web.Http;
 
@@ -24,7 +20,7 @@ namespace LELAdmin.Controllers
     {
         private Service.AdminService AdService = new Service.AdminService();
 
-      
+
         /// <summary>
         /// 后台用户登录
         /// </summary>
@@ -46,9 +42,9 @@ namespace LELAdmin.Controllers
                 }
                 var tokenExpiration = TimeSpan.FromHours(2);
                 ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
-                identity.AddClaim(new Claim(ClaimTypes.Name, LoginName ));
-                identity.AddClaim(new Claim("UserID",dto.AdminID.ToString()));
-                identity.AddClaim(new Claim("UserType","3"));
+                identity.AddClaim(new Claim(ClaimTypes.Name, LoginName));
+                identity.AddClaim(new Claim("UserID", dto.AdminID.ToString()));
+                identity.AddClaim(new Claim("UserType", "3"));
                 identity.AddClaim(new Claim("Status", dto.status.ToString()));
                 identity.AddClaim(new Claim(ClaimTypes.Sid, dto.AdminID.ToString()));
                 var props = new AuthenticationProperties()
@@ -84,7 +80,7 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [Route("AddAdmin")]
         [HttpPost]
-        public IHttpActionResult AddAdmin (AdminDTO model)
+        public IHttpActionResult AddAdmin(AdminDTO model)
         {
             try
             {
@@ -96,7 +92,8 @@ namespace LELAdmin.Controllers
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = message });
                 }
-                else {
+                else
+                {
                     return Json(new { code = 1, msg = "ERROR", content = message });
                 }
             }
@@ -182,7 +179,7 @@ namespace LELAdmin.Controllers
             {
                 string message;
 
-                var bol = AdService.GetAdminList(out message,KeyWords);
+                var bol = AdService.GetAdminList(out message, KeyWords);
 
                 if (message.Equals("SUCCESS"))
                 {
@@ -268,7 +265,7 @@ namespace LELAdmin.Controllers
         public IHttpActionResult EditAdminUserInfo(EditAdminUserDto editAdmin)
         {
 
-            if(!string.IsNullOrEmpty(editAdmin.Password))
+            if (!string.IsNullOrEmpty(editAdmin.Password))
             {
                 string TruePwd = DESEncrypt.DecryptStringHex(editAdmin.Password, "SystemLE");
                 if (string.IsNullOrEmpty(TruePwd))
@@ -277,12 +274,12 @@ namespace LELAdmin.Controllers
                 }
                 editAdmin.Password = TruePwd;
             }
-           
-            var success= AdService.EditAdminUserInfo(editAdmin, out string Msg);
 
-            if(success)
+            var success = AdService.EditAdminUserInfo(editAdmin, out string Msg);
+
+            if (success)
             {
-                return Json(JRpcHelper.AjaxResult(0,"SUCCESS",null));
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", null));
             }
             else
             {
@@ -300,12 +297,12 @@ namespace LELAdmin.Controllers
         [HttpPost]
         public IHttpActionResult SetAdminReUsers(List<int> UserListID, int AdminID)
         {
-            if(UserListID==null||UserListID.Count==0)
+            if (UserListID == null || UserListID.Count == 0)
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误【UserListID】错误", UserListID));
             }
-            var result= AdService.SetAdminReUsers(UserListID, AdminID);
-            if(result)
+            var result = AdService.SetAdminReUsers(UserListID, AdminID);
+            if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", UserListID));
             }

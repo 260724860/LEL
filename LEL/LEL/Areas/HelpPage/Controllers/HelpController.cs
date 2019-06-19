@@ -1,8 +1,8 @@
+using LEL.Areas.HelpPage.ModelDescriptions;
+using LEL.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using LEL.Areas.HelpPage.ModelDescriptions;
-using LEL.Areas.HelpPage.Models;
 
 namespace LEL.Areas.HelpPage.Controllers
 {

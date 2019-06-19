@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using LELAdmin.Oauth;
+﻿using LELAdmin.Oauth;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
+using System;
 
 [assembly: OwinStartup(typeof(LELAdmin.App_Start.Startup))]
 

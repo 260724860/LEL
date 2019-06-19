@@ -1,9 +1,5 @@
 ﻿using DTO.Goods;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.ShopOrder
 {
@@ -22,7 +18,7 @@ namespace DTO.ShopOrder
         public int DefultSupplierID { get; set; }
 
         public int Orders_Lines_ID { get; set; }
-        public string SupplierPhone{get;set;}
+        public string SupplierPhone { get; set; }
         public int SupplierID { get; set; }
 
         /// <summary>
@@ -45,7 +41,7 @@ namespace DTO.ShopOrder
         /// 规格单位
         /// </summary>
         public string Specifications { get; set; }
-        
+
         /// <summary>
         /// 装箱数
         /// </summary>
@@ -55,5 +51,10 @@ namespace DTO.ShopOrder
         /// 实际发货数
         /// </summary>
         public int DeliverCount { get; set; }
+
+        /// <summary>
+        /// 最小起配数
+        /// </summary>
+        public int MinimumPurchase { get; set; } 
     }
 }

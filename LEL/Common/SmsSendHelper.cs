@@ -2,11 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace Common
@@ -31,14 +28,14 @@ namespace Common
         /// </summary>
         /// <param name="mobile"></param>
         /// <param name="msg"></param>
-        public void SendSingleSms(string mobile,string content, out Result msg)
+        public void SendSingleSms(string mobile, string content, out Result msg)
         {
             Message box = new Message();
             box.apikey = APIKEY;
             box.mobile = mobile;
             box.content = content;
             string SmsJsonStr = getSingleContentString(box);
-            
+
             SortedList<string, string> paras = new SortedList<string, string>();
             paras.Add("contents", SmsJsonStr);
             paras.Add("url", SmsSendUrl("U0001"));
@@ -54,7 +51,7 @@ namespace Common
         /// </summary>
         /// <param name="MultimtList"></param>
         /// <param name="msg"></param>
-        public void SendMultiSms(List<Multimt> MultimtList,out object msg)
+        public void SendMultiSms(List<Multimt> MultimtList, out object msg)
         {
             msg = "";
             Message box = new Message();
@@ -173,7 +170,8 @@ namespace Common
             public string exdata { get; set; }
         }
 
-        public class Result {
+        public class Result
+        {
             public int result { get; set; }
             public string msgid { get; set; }
             public string custid { get; set; }

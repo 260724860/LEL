@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.ShopOrder
 {
@@ -46,9 +42,9 @@ namespace DTO.ShopOrder
         /// <summary>
         /// 供应商价格
         /// </summary>
-       public decimal SupplyMoney { get; set; }
-       
-       public string AdminName { get; set; }
+        public decimal SupplyMoney { get; set; }
+
+        public string AdminName { get; set; }
 
         public int AdminTelPhone { get; set; }
         /// <summary>

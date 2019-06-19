@@ -173,6 +173,8 @@
           <Property Name="UpdateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Stock" Type="int" />
           <Property Name="RowVersion" Type="int" Nullable="false" />
+          <Property Name="IsBulkCargo" Type="int" Nullable="false" />
+          <Property Name="IsAuto" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="le_goodsgroups">
           <Key>
@@ -1134,6 +1136,8 @@
           <EntitySet Name="le_sysconfig" EntityType="leerledbtestModel.le_sysconfig" />
           <EntitySet Name="le_user_address" EntityType="leerledbtestModel.le_user_address" />
           <EntitySet Name="le_users" EntityType="leerledbtestModel.le_users" />
+          <EntitySet Name="lel_admin_suppliers" EntityType="leerledbtestModel.lel_admin_suppliers" />
+          <EntitySet Name="lel_imei" EntityType="leerledbtestModel.lel_imei" />
           <AssociationSet Name="FK_le_admin_re_users_le_admin" Association="leerledbtestModel.FK_le_admin_re_users_le_admin">
             <End Role="le_admin" EntitySet="le_admin" />
             <End Role="le_admin_re_users" EntitySet="le_admin_re_users" />
@@ -1157,6 +1161,10 @@
           <AssociationSet Name="FK_le_orders_lineschangerecord_le_admin" Association="leerledbtestModel.FK_le_orders_lineschangerecord_le_admin">
             <End Role="le_admin" EntitySet="le_admin" />
             <End Role="le_orders_lines_log" EntitySet="le_orders_lines_log" />
+          </AssociationSet>
+          <AssociationSet Name="FK_lel_admin_suppliers_le_admin" Association="leerledbtestModel.FK_lel_admin_suppliers_le_admin">
+            <End Role="le_admin" EntitySet="le_admin" />
+            <End Role="lel_admin_suppliers" EntitySet="lel_admin_suppliers" />
           </AssociationSet>
           <AssociationSet Name="FK_le_admin_re_users_le_users" Association="leerledbtestModel.FK_le_admin_re_users_le_users">
             <End Role="le_users" EntitySet="le_users" />
@@ -1270,19 +1278,13 @@
             <End Role="le_users" EntitySet="le_users" />
             <End Role="le_shop_cart" EntitySet="le_shop_cart" />
           </AssociationSet>
-          <AssociationSet Name="FK_le_user_address_le_users" Association="leerledbtestModel.FK_le_user_address_le_users">
-            <End Role="le_users" EntitySet="le_users" />
-            <End Role="le_user_address" EntitySet="le_user_address" />
-          </AssociationSet>
-          <EntitySet Name="lel_admin_suppliers" EntityType="leerledbtestModel.lel_admin_suppliers" />
-          <EntitySet Name="lel_imei" EntityType="leerledbtestModel.lel_imei" />
-          <AssociationSet Name="FK_lel_admin_suppliers_le_admin" Association="leerledbtestModel.FK_lel_admin_suppliers_le_admin">
-            <End Role="le_admin" EntitySet="le_admin" />
-            <End Role="lel_admin_suppliers" EntitySet="lel_admin_suppliers" />
-          </AssociationSet>
           <AssociationSet Name="FK_lel_admin_suppliers_le_suppliers" Association="leerledbtestModel.FK_lel_admin_suppliers_le_suppliers">
             <End Role="le_suppliers" EntitySet="le_suppliers" />
             <End Role="lel_admin_suppliers" EntitySet="lel_admin_suppliers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_le_user_address_le_users" Association="leerledbtestModel.FK_le_user_address_le_users">
+            <End Role="le_users" EntitySet="le_users" />
+            <End Role="le_user_address" EntitySet="le_user_address" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="le_ad">
@@ -1477,6 +1479,8 @@
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Stock" Type="Int32" />
           <Property Name="RowVersion" Type="Int32" Nullable="false" />
+          <Property Name="IsBulkCargo" Type="Int32" Nullable="false" />
+          <Property Name="IsAuto" Type="Int32" Nullable="false" />
           <NavigationProperty Name="le_cart_goodsvalue" Relationship="leerledbtestModel.FK_le_cart_goodsvalue_le_goods_value" FromRole="le_goods_value" ToRole="le_cart_goodsvalue" />
           <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_value_le_goods" FromRole="le_goods_value" ToRole="le_goods" />
           <NavigationProperty Name="le_orderline_goodsvalue" Relationship="leerledbtestModel.FK_le_orderline_goodsvalue_le_goods_value" FromRole="le_goods_value" ToRole="le_orderline_goodsvalue" />
@@ -1798,6 +1802,35 @@
           <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_users" FromRole="le_users" ToRole="le_shop_cart" />
           <NavigationProperty Name="le_user_address" Relationship="leerledbtestModel.FK_le_user_address_le_users" FromRole="le_users" ToRole="le_user_address" />
         </EntityType>
+        <EntityType Name="lel_admin_suppliers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdminID" Type="Int32" Nullable="false" />
+          <Property Name="SupplierID" Type="Int32" Nullable="false" />
+          <Property Name="IsDelete" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="le_admin" Relationship="leerledbtestModel.FK_lel_admin_suppliers_le_admin" FromRole="lel_admin_suppliers" ToRole="le_admin" />
+          <NavigationProperty Name="le_suppliers" Relationship="leerledbtestModel.FK_lel_admin_suppliers_le_suppliers" FromRole="lel_admin_suppliers" ToRole="le_suppliers" />
+        </EntityType>
+        <EntityType Name="lel_imei">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Imei" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <Property Name="a" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="b" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="c" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="d" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+        </EntityType>
         <Association Name="FK_le_admin_re_users_le_admin">
           <End Type="leerledbtestModel.le_admin" Role="le_admin" Multiplicity="1" />
           <End Type="leerledbtestModel.le_admin_re_users" Role="le_admin_re_users" Multiplicity="*" />
@@ -1866,6 +1899,18 @@
               <PropertyRef Name="AdminID" />
             </Principal>
             <Dependent Role="le_orders_lines_log">
+              <PropertyRef Name="AdminID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_lel_admin_suppliers_le_admin">
+          <End Type="leerledbtestModel.le_admin" Role="le_admin" Multiplicity="1" />
+          <End Type="leerledbtestModel.lel_admin_suppliers" Role="lel_admin_suppliers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_admin">
+              <PropertyRef Name="AdminID" />
+            </Principal>
+            <Dependent Role="lel_admin_suppliers">
               <PropertyRef Name="AdminID" />
             </Dependent>
           </ReferentialConstraint>
@@ -2206,59 +2251,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_le_user_address_le_users">
-          <End Type="leerledbtestModel.le_users" Role="le_users" Multiplicity="1" />
-          <End Type="leerledbtestModel.le_user_address" Role="le_user_address" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="le_users">
-              <PropertyRef Name="UsersID" />
-            </Principal>
-            <Dependent Role="le_user_address">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="lel_admin_suppliers">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AdminID" Type="Int32" Nullable="false" />
-          <Property Name="SupplierID" Type="Int32" Nullable="false" />
-          <Property Name="IsDelete" Type="Int32" Nullable="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="le_admin" Relationship="leerledbtestModel.FK_lel_admin_suppliers_le_admin" FromRole="lel_admin_suppliers" ToRole="le_admin" />
-          <NavigationProperty Name="le_suppliers" Relationship="leerledbtestModel.FK_lel_admin_suppliers_le_suppliers" FromRole="lel_admin_suppliers" ToRole="le_suppliers" />
-        </EntityType>
-        <EntityType Name="lel_imei">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Imei" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Phone" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
-          <Property Name="a" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Name="b" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Name="c" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Name="d" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <Association Name="FK_lel_admin_suppliers_le_admin">
-          <End Type="leerledbtestModel.le_admin" Role="le_admin" Multiplicity="1" />
-          <End Type="leerledbtestModel.lel_admin_suppliers" Role="lel_admin_suppliers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="le_admin">
-              <PropertyRef Name="AdminID" />
-            </Principal>
-            <Dependent Role="lel_admin_suppliers">
-              <PropertyRef Name="AdminID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_lel_admin_suppliers_le_suppliers">
           <End Type="leerledbtestModel.le_suppliers" Role="le_suppliers" Multiplicity="1" />
           <End Type="leerledbtestModel.lel_admin_suppliers" Role="lel_admin_suppliers" Multiplicity="*" />
@@ -2268,6 +2260,18 @@
             </Principal>
             <Dependent Role="lel_admin_suppliers">
               <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_le_user_address_le_users">
+          <End Type="leerledbtestModel.le_users" Role="le_users" Multiplicity="1" />
+          <End Type="leerledbtestModel.le_user_address" Role="le_user_address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_users">
+              <PropertyRef Name="UsersID" />
+            </Principal>
+            <Dependent Role="le_user_address">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2445,6 +2449,8 @@
           <EntitySetMapping Name="le_goods_value">
             <EntityTypeMapping TypeName="leerledbtestModel.le_goods_value">
               <MappingFragment StoreEntitySet="le_goods_value">
+                <ScalarProperty Name="IsAuto" ColumnName="IsAuto" />
+                <ScalarProperty Name="IsBulkCargo" ColumnName="IsBulkCargo" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Stock" ColumnName="Stock" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />

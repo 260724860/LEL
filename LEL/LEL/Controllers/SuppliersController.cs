@@ -1,22 +1,14 @@
 ﻿using Common;
-using DTO.Common;
 using DTO.Goods;
 using DTO.ShopOrder;
 using DTO.Suppliers;
 using DTO.SupplierUser;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.OAuth;
-using Newtonsoft.Json.Linq;
 using Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
-using static DTO.Common.Enum;
 
 namespace LEL.Controllers
 {
@@ -152,7 +144,7 @@ namespace LEL.Controllers
             //{
             //    return Json(JRpcHelper.AjaxResult(1, "非法操作！请重新获取验证码", LoginName));
             //}
-            var UserDto =  SupplierUserService.Login(LoginName, OriginalPWD);
+            var UserDto = SupplierUserService.Login(LoginName, OriginalPWD);
             if (UserDto.Code == 1)
             {
                 return Json(JRpcHelper.AjaxResult(1, UserDto.Msg, null));
@@ -205,7 +197,7 @@ namespace LEL.Controllers
         /// <param name="GoodsID">商品ID 可为空</param>
         /// <returns></returns>
         [HttpGet, Route("api/Suppliers/GetSupplierGoodsPric/")]
-        public IHttpActionResult GetSupplierGoodsPric( int Offset, int Rows, int? GoodsID=0, string KeyWords ="")
+        public IHttpActionResult GetSupplierGoodsPric(int Offset, int Rows, int? GoodsID = 0, string KeyWords = "")
         {
             var result = GoodService.GetSupplierGoodsPriceList(KeyWords, Offset, Rows, GoodsID, GetUserID(), out int Count);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -224,7 +216,7 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }
             options.SupplierID = GetUserID();
-            var result =  await GoodService.GetGoodsListAsync(options,null);
+            var result = await GoodService.GetGoodsListAsync(options);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 

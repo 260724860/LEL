@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
@@ -33,7 +30,7 @@ namespace Common
         /// </summary>
         /// <param name="decryptString"></param>
         /// <returns></returns>
-        public static string DesDecryptStringBase64(string decryptString,string key)
+        public static string DesDecryptStringBase64(string decryptString, string key)
         {
             byte[] keyBytes = Encoding.UTF8.GetBytes(key.Substring(0, 8));
             byte[] keyIV = keyBytes;
@@ -75,7 +72,7 @@ namespace Common
         /// <param name="pToDecrypt"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string DecryptStringHex(string pToDecrypt,string key)
+        public static string DecryptStringHex(string pToDecrypt, string key)
         {
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
             byte[] inputByteArray = new byte[pToDecrypt.Length / 2];

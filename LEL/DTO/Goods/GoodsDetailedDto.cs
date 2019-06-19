@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DTO.Goods
 {
@@ -16,8 +12,8 @@ namespace DTO.Goods
         public int IsRecommend { get; set; }
         public int IsShelves { get; set; }
         public int Sort { get; set; }
-        public string Specifications { get; set; }      
-        public List<SupplierGoods> SupplierGoodsList { get; set; } 
+        public string Specifications { get; set; }
+        public List<SupplierGoods> SupplierGoodsList { get; set; }
         public string GoodsGroupsName { get; set; }
 
         public int GoodsID { get; set; }

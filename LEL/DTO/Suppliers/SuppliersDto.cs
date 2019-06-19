@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.Suppliers
 {
@@ -29,7 +25,7 @@ namespace DTO.Suppliers
 
         public string Suppliers_ImgA { get; set; }
 
-        public string Suppliers_ImgB{ get; set; }
+        public string Suppliers_ImgB { get; set; }
 
         public string Suppliers_ImgC { get; set; }
 
@@ -40,7 +36,7 @@ namespace DTO.Suppliers
         public string Suppliers_Addr { get; set; }
 
         public int Suppliers_Status { get; set; }
-        
+
 
         public DateTime Suppliers_LoginTime { get; set; }
 

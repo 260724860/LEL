@@ -4,9 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
@@ -14,7 +11,7 @@ namespace Common
     /// 数据访问抽象基础类
     /// Copyright (C) Maticsoft
     /// </summary>
-    public  abstract partial class DbHelperMySQL
+    public abstract partial class DbHelperMySQL
     {
         //数据库连接字符串(web.config来配置)，可以动态更改connectionString支持多数据库.		
         public static string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
@@ -49,7 +46,7 @@ namespace Common
         /// <returns></returns>
         public static bool Exists(string strSql)
         {
-            
+
             object obj = GetSingle(strSql);
             int cmdresult;
             if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
@@ -175,7 +172,7 @@ namespace Common
                 {
                     int count = 0;
                     for (int n = 0; n < SQLStringList.Count; n++)
-                    {                       
+                    {
                         string strsql = SQLStringList[n];
                         if (strsql.Trim().Length > 1)
                         {
@@ -471,7 +468,7 @@ namespace Common
                             string cmdText = myDE.Key.ToString();
                             MySqlParameter[] cmdParms = (MySqlParameter[])myDE.Value;
                             PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
-                            
+
                             int val = cmd.ExecuteNonQuery();
                             cmd.Parameters.Clear();
                         }
@@ -597,7 +594,7 @@ namespace Common
                             }
                             PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
                             int val = cmd.ExecuteNonQuery();
-                            
+
                             foreach (MySqlParameter q in cmdParms)
                             {
                                 if (q.Direction == ParameterDirection.Output)

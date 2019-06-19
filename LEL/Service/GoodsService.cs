@@ -9,7 +9,6 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service
@@ -17,23 +16,23 @@ namespace Service
     /// <summary>
     /// 商品管理
     /// </summary>
-   public class GoodsService
+    public class GoodsService
     {
         private static ILog log = LogManager.GetLogger(typeof(GoodsService));
         private string GoodsImagePath = ConfigurationManager.AppSettings["goodsimagepath"];
-        private SortedList<string,le_sysconfig> GetSysConfigList = SysConfig.Get().values;
+        private SortedList<string, le_sysconfig> GetSysConfigList = SysConfig.Get().values;
         /// <summary>
         /// 获取商品列表
         /// </summary>
         /// <returns></returns>
-        public async Task<GoodsListDto> GetGoodsListAsync(GoodsSeachOptions options,int? AdminID)
+        public async Task<GoodsListDto> GetGoodsListAsync(GoodsSeachOptions options)
         {
             var BasePath = GetSysConfigList.Values.Where(s => s.Name == "HeadQuartersDomain").FirstOrDefault().Value;
             GoodsListDto list = new GoodsListDto();
             using (Entities ctx = new Entities())
-            {               
+            {
                 var tempIq = ctx.le_goods.Where(s => true);
-                if(options.IsHot==1)
+                if (options.IsHot == 1)
                 {
                     tempIq = tempIq.Where(s => s.IsHot == 1);
                 }
@@ -41,15 +40,15 @@ namespace Service
                 {
                     tempIq = tempIq.Where(s => s.IsHot == 0);
                 }
-                if ( options.IsNewGoods == 1)
+                if (options.IsNewGoods == 1)
                 {
                     tempIq = tempIq.Where(s => s.IsNewGoods == 1);
                 }
                 if (options.IsNewGoods == 0)
                 {
-                    tempIq = tempIq.Where(s => s.IsNewGoods ==0);
+                    tempIq = tempIq.Where(s => s.IsNewGoods == 0);
                 }
-                if ( options.IsSeckill == 1)
+                if (options.IsSeckill == 1)
                 {
                     tempIq = tempIq.Where(s => s.IsSeckill == 1);
                 }
@@ -67,191 +66,119 @@ namespace Service
                 }
                 if (options.GoodsGroupID != null && options.GoodsGroupID != 0)
                 {
-                    tempIq = tempIq.Where(s => s.GoodsGroupsID == options.GoodsGroupID);
+                    int[] GroupID = ctx.le_goodsgroups.Where(s => s.ID == options.GoodsGroupID || s.ParentID == options.GoodsGroupID).Select(s => s.ID).ToArray();
+
+                    tempIq = tempIq.Where(s => GroupID.Contains(s.GoodsGroupsID));
                 }
-                if(options.IsShelves == 1)
+                if (options.IsShelves == 1)
                 {
                     tempIq = tempIq.Where(S => S.IsShelves == 1);
                 }
-                if (options.IsShelves  == 0)
+                if (options.IsShelves == 0)
                 {
                     tempIq = tempIq.Where(S => S.IsShelves == 0);
                 }
-               
+
                 if (!string.IsNullOrEmpty(options.KeyWords)) //搜索
                 {
                     tempIq = tempIq.Where(s => s.GoodsName.Contains(options.KeyWords)
-                      ||s.GoodsID.ToString().Contains(options.KeyWords) 
+                      || s.GoodsID.ToString().Contains(options.KeyWords)
                       || s.Describe.Contains(options.KeyWords)
-                      || s.GoodsGroupsID.ToString() == options.KeyWords  
-                      || s.le_goods_value.Any(k=>k.SerialNumber.Contains(options.KeyWords))
-                      );   
+                      || s.GoodsGroupsID.ToString() == options.KeyWords
+                      || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords))
+                      );
                 }
-                if(!string.IsNullOrEmpty(options.SerialNumber))
+                if (!string.IsNullOrEmpty(options.SerialNumber))
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k =>k.SerialNumber.Contains(options.SerialNumber)));
+                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber)));
                 }
-                if(options.SupplierID!=null)
+                if (options.SupplierID != null)
                 {
                     tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID));
-                }              
-
-                IQueryable<GroodsModelDto> result=null;
-
-                if (AdminID != null)
-                {
-                    var tempJoin = tempIq.Join(ctx.le_goods_suppliers, o => o.GoodsID, p => p.GoodsID, (p, o) => new GroodsModelDto
-                    {
-                        GoodsID = o.GoodsID,
-                        GoodsName = p.GoodsName,
-                        GoodsGroups_ID = p.GoodsGroupsID,
-                        Sort = p.Sort,
-                        Specifications = p.Specifications,
-                        Describe = p.Describe,
-                        IsShelves = p.IsShelves,
-                        Image = BasePath + p.Image,
-                        IsHot = p.IsHot,
-                        IsNewGoods = p.IsNewGoods,
-                        IsRecommend = p.IsRecommend,
-                        IsSeckill = p.IsSeckill,
-                        CreateTime = p.CreateTime,
-                        SpecialOffer = p.SpecialOffer,
-                        OriginalPrice = p.OriginalPrice,
-                        GoodsGroupName = p.le_goodsgroups.Name,
-                        PackingNumber = p.PackingNumber,
-                        SalesVolumes = p.SalesVolumes,
-                        TotalSalesVolumes = p.TotalSalesVolume,
-                        Stock = p.Stock,
-                        Quota = p.Quota,
-                        MSRP = p.MSRP,
-                        GoodsValueList = p.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
-                        {
-                            SerialNumber = k.SerialNumber,
-                            CategoryType = k.CategoryType,
-                            GoodsID = k.GoodsID,
-                            GoodsValueID = k.GoodsValueID,
-                            GoodsValueName = k.GoodsValue
-                        }).ToList(),
-                        SupplierID = o.SuppliersID,
-                    });
-                    var tmepGroup = tempJoin.Join(ctx.lel_admin_suppliers, s => s.SupplierID, p => p.SupplierID, (s, p) => new GroodsModelDto
-                    {
-                        GoodsID = s.GoodsID,
-                        GoodsName = s.GoodsName,
-                        GoodsGroups_ID = s.GoodsGroups_ID,
-                        Sort = s.Sort,
-                        Specifications = s.Specifications,
-                        Describe = s.Describe,
-                        IsShelves = s.IsShelves,
-                        Image = s.Image,
-                        IsHot = s.IsHot,
-                        IsNewGoods = s.IsNewGoods,
-                        IsRecommend = s.IsRecommend,
-                        IsSeckill = s.IsSeckill,
-                        CreateTime = s.CreateTime,
-                        SpecialOffer = s.SpecialOffer,
-                        OriginalPrice = s.OriginalPrice,
-                        GoodsGroupName = s.GoodsGroupName,
-                        PackingNumber = s.PackingNumber,
-                        SalesVolumes = s.SalesVolumes,
-                        TotalSalesVolumes = s.TotalSalesVolumes,
-                        Stock = s.Stock,
-                        Quota = s.Quota,
-                        MSRP = s.MSRP,
-                        GoodsValueList = s.GoodsValueList,
-                        //SupplierID = p.SupplierID,
-                    }).GroupBy(s=>s.GoodsID);
-                    #region 排序              
-                    switch (options.SortKey)
-                    {
-                        case GoodsSeachOrderByType.CreateTimeAsc:
-                            tmepGroup = tmepGroup.OrderBy(s => s.Max(k=>k.CreateTime));
-                            break;
-                        case GoodsSeachOrderByType.CreateTimeDesc:
-                            tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.CreateTime));
-                            break;
-                        case GoodsSeachOrderByType.OriginalPriceAsc:
-                            tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.SpecialOffer));
-                            break;
-                        case GoodsSeachOrderByType.OriginalPriceDesc:
-                            tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.SpecialOffer));
-                            break;
-                        case GoodsSeachOrderByType.SortAsc:
-                            tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.Sort));
-                            break;
-                        case GoodsSeachOrderByType.SortDesc:
-                            tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.Sort));
-                            break;
-                        case GoodsSeachOrderByType.SalesVolumesASC:
-                            tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.SalesVolumes));
-                            break;
-                        case GoodsSeachOrderByType.SalesVolumesDesc:
-                            tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.SalesVolumes));
-                            break;
-                        case GoodsSeachOrderByType.TotalSalesVolumesASC:
-                            tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.TotalSalesVolumes));
-                            break;
-                        case GoodsSeachOrderByType.TotalSalesVolumesDESC:
-                            tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.TotalSalesVolumes));
-                            break;
-                        default:
-                            tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.Sort));
-                            break;
-                    }
-                    #endregion
-                    list.PageCount = tmepGroup.Count();
-                    tmepGroup = tmepGroup.Skip(options.Offset).Take(options.Rows);
-                    var kk = tmepGroup.ToList();
-                    // return kk;
-                    //list.GoodsModel = await tmepGroup.ToListAsync();
-                    //return list;
                 }
-                else
+
+                IQueryable<GroodsModelDto> result = null;
+                result = tempIq.Select(s => new GroodsModelDto
                 {
-                    result = tempIq.Select(s => new GroodsModelDto
+                    GoodsID = s.GoodsID,
+                    GoodsName = s.GoodsName,
+                    GoodsGroups_ID = s.GoodsGroupsID,
+                    Sort = s.Sort,
+                    Specifications = s.Specifications,
+                    Describe = s.Describe,
+                    IsShelves = s.IsShelves,
+                    Image = BasePath + s.Image,
+                    IsHot = s.IsHot,
+                    IsNewGoods = s.IsNewGoods,
+                    IsRecommend = s.IsRecommend,
+                    IsSeckill = s.IsSeckill,
+                    CreateTime = s.CreateTime,
+                    SpecialOffer = s.SpecialOffer,
+                    OriginalPrice = s.OriginalPrice,
+                    GoodsGroupName = s.le_goodsgroups.Name,
+                    PackingNumber = s.PackingNumber,
+                    SalesVolumes = s.SalesVolumes,
+                    TotalSalesVolumes = s.TotalSalesVolume,
+                    Stock = s.Stock,
+                    Quota = s.Quota,
+                    MSRP = s.MSRP,
+                    GoodsValueList = s.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
                     {
-                        GoodsID = s.GoodsID,
-                        GoodsName = s.GoodsName,
-                        GoodsGroups_ID = s.GoodsGroupsID,
-                        Sort = s.Sort,
-                        Specifications = s.Specifications,
-                        Describe = s.Describe,
-                        IsShelves = s.IsShelves,
-                        Image = BasePath + s.Image,
-                        IsHot = s.IsHot,
-                        IsNewGoods = s.IsNewGoods,
-                        IsRecommend = s.IsRecommend,
-                        IsSeckill = s.IsSeckill,
-                        CreateTime = s.CreateTime,
-                        SpecialOffer = s.SpecialOffer,
-                        OriginalPrice = s.OriginalPrice,
-                        GoodsGroupName = s.le_goodsgroups.Name,
-                        PackingNumber = s.PackingNumber,
-                        SalesVolumes = s.SalesVolumes,
-                        TotalSalesVolumes = s.TotalSalesVolume,
-                        Stock = s.Stock,
-                        Quota = s.Quota,
-                        MSRP = s.MSRP,
-                        GoodsValueList = s.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
-                        {
-                            SerialNumber = k.SerialNumber,
-                            CategoryType = k.CategoryType,
-                            GoodsID = k.GoodsID,
-                            GoodsValueID = k.GoodsValueID,
-                            GoodsValueName = k.GoodsValue
-                        }).ToList(),
-                    });
+                        SerialNumber = k.SerialNumber,
+                        CategoryType = k.CategoryType,
+                        GoodsID = k.GoodsID,
+                        GoodsValueID = k.GoodsValueID,
+                        GoodsValueName = k.GoodsValue
+                    }).ToList(),
+                });
+
+                #region 排序              
+                switch (options.SortKey)
+                {
+                    case GoodsSeachOrderByType.CreateTimeAsc:
+                        result = result.OrderBy(k => k.CreateTime);
+                        break;
+                    case GoodsSeachOrderByType.CreateTimeDesc:
+                        result = result.OrderByDescending(k => k.CreateTime);
+                        break;
+                    case GoodsSeachOrderByType.OriginalPriceAsc:
+                        result = result.OrderBy(k => k.SpecialOffer);
+                        break;
+                    case GoodsSeachOrderByType.OriginalPriceDesc:
+                        result = result.OrderByDescending(k => k.SpecialOffer);
+                        break;
+                    case GoodsSeachOrderByType.SortAsc:
+                        result = result.OrderBy(k => k.Sort);
+                        break;
+                    case GoodsSeachOrderByType.SortDesc:
+                        result = result.OrderByDescending(k => k.Sort);
+                        break;
+                    case GoodsSeachOrderByType.SalesVolumesASC:
+                        result = result.OrderBy(k => k.SalesVolumes);
+                        break;
+                    case GoodsSeachOrderByType.SalesVolumesDesc:
+                        result = result.OrderByDescending(k => k.SalesVolumes);
+                        break;
+                    case GoodsSeachOrderByType.TotalSalesVolumesASC:
+                        result = result.OrderBy(k => k.TotalSalesVolumes);
+                        break;
+                    case GoodsSeachOrderByType.TotalSalesVolumesDESC:
+                        result = result.OrderByDescending(k => k.TotalSalesVolumes);
+                        break;
+                    default:
+                        result = result.OrderBy(k => k.Sort);
+                        break;
                 }
-              
-               
-                result= result.Distinct();
+                #endregion
+
+                //result= result.Distinct();
                 list.PageCount = result.Count();
                 result = result.Skip(options.Offset).Take(options.Rows);
-                
+
                 list.GoodsModel = await result.ToListAsync();
                 return list;
             }
-            
+
         }
 
         /// <summary>
@@ -299,7 +226,9 @@ namespace Service
                 }
                 if (options.GoodsGroupID != null && options.GoodsGroupID != 0)
                 {
-                    tempIq = tempIq.Where(s => s.GoodsGroupsID == options.GoodsGroupID);
+                    int[] GroupID = ctx.le_goodsgroups.Where(s => s.ID == options.GoodsGroupID || s.ParentID == options.GoodsGroupID).Select(s => s.ID).ToArray();
+
+                    tempIq = tempIq.Where(s => GroupID.Contains(s.GoodsGroupsID));
                 }
                 if (options.IsShelves == 1)
                 {
@@ -328,7 +257,6 @@ namespace Service
                     tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID));
                 }
 
-            
                 var tempJoin = tempIq.Join(ctx.le_goods_suppliers, o => o.GoodsID, p => p.GoodsID, (p, o) => new GroodsModelDto
                 {
                     GoodsID = o.GoodsID,
@@ -361,7 +289,7 @@ namespace Service
                         GoodsValueID = k.GoodsValueID,
                         GoodsValueName = k.GoodsValue
                     }).ToList(),
-                    SupplierID=o.SuppliersID
+                    SupplierID = o.SuppliersID
                 });
                 var tmepGroup = tempJoin.Join(ctx.lel_admin_suppliers, s => s.SupplierID, p => p.SupplierID, (s, p) => new GroodsModelDto
                 {
@@ -388,47 +316,49 @@ namespace Service
                     Quota = s.Quota,
                     MSRP = s.MSRP,
                     GoodsValueList = s.GoodsValueList,
-                   SupplierID=p.SupplierID
-                }).GroupBy(s => s.GoodsID).Select(k=>k.ToList());
+                    SupplierID = 0
+                }).GroupBy(s => s.GoodsID).Select(k => k.ToList());
+
+                list.PageCount = await tmepGroup.CountAsync();
                 #region 排序              
                 switch (options.SortKey)
                 {
                     case GoodsSeachOrderByType.CreateTimeAsc:
-                        tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.CreateTime));
+                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.CreateTime));
                         break;
                     case GoodsSeachOrderByType.CreateTimeDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(s=>s.Max(k=>k.CreateTime));
+                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.CreateTime));
                         break;
                     case GoodsSeachOrderByType.OriginalPriceAsc:
-                        tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.SpecialOffer));
+                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.SpecialOffer));
                         break;
                     case GoodsSeachOrderByType.OriginalPriceDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.SpecialOffer));
+                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.SpecialOffer));
                         break;
                     case GoodsSeachOrderByType.SortAsc:
-                        tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.Sort));
+                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.Sort));
                         break;
                     case GoodsSeachOrderByType.SortDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.Sort));
+                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.Sort));
                         break;
                     case GoodsSeachOrderByType.SalesVolumesASC:
-                        tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.SalesVolumes));
+                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.SalesVolumes));
                         break;
                     case GoodsSeachOrderByType.SalesVolumesDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.SalesVolumes));
+                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.SalesVolumes));
                         break;
                     case GoodsSeachOrderByType.TotalSalesVolumesASC:
-                        tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.TotalSalesVolumes));
+                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.TotalSalesVolumes));
                         break;
                     case GoodsSeachOrderByType.TotalSalesVolumesDESC:
-                        tmepGroup = tmepGroup.OrderByDescending(s => s.Max(k => k.TotalSalesVolumes));
+                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.TotalSalesVolumes));
                         break;
                     default:
-                        tmepGroup = tmepGroup.OrderBy(s => s.Max(k => k.Sort));
+                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.Sort));
                         break;
                 }
                 #endregion
-                list.PageCount =await tmepGroup.CountAsync ();
+
                 tmepGroup = tmepGroup.Skip(options.Offset).Take(options.Rows);
                 var kk = await tmepGroup.ToListAsync();
 
@@ -442,7 +372,7 @@ namespace Service
                 }
                 list.GoodsModel = result;
                 return list;
-              
+
                 //list.PageCount = result.Count();
                 //result = result.Skip(options.Offset).Take(options.Rows);
 
@@ -464,9 +394,9 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 var temp = ctx.le_goods.Where(s => s.GoodsID == GoodsID);
-                var result =await temp.Select(s => new
+                var result = await temp.Select(s => new
                 {
-                    s.GoodsName,                 
+                    s.GoodsName,
                     s.SpecialOffer,
                     s.OriginalPrice,
                     s.Specifications,
@@ -477,11 +407,11 @@ namespace Service
                     s.IsNewGoods,
                     s.IsRecommend,
                     s.IsShelves,
-                    s.Sort,                 
+                    s.Sort,
                     s.Image,
-                    s.GoodsID,                  
+                    s.GoodsID,
                     s.PackingNumber,
-                    s.le_goodsgroups.Name,                 
+                    s.le_goodsgroups.Name,
                     s.le_goods_value,
                     s.le_goods_img,
                     s.SalesVolumes,
@@ -495,7 +425,7 @@ namespace Service
                     s.IsDeliverHome,
                     s.MSRP
                 }).FirstOrDefaultAsync();
-                if(result == null|| result.GoodsID==0)
+                if (result == null || result.GoodsID == 0)
                 {
                     return null;
                 }
@@ -511,7 +441,7 @@ namespace Service
                 GDetailed.SpecialOffer = result.SpecialOffer;
                 GDetailed.OriginalPrice = result.OriginalPrice;
                 GDetailed.ShelfLife = result.ShelfLife;
-                
+
                 GDetailed.Sort = result.Sort;
                 GDetailed.Describe = result.Describe;
                 GDetailed.IsHot = result.IsHot;
@@ -557,16 +487,17 @@ namespace Service
 
                 }
                 List<SupplierGoods> supplierGoods = new List<SupplierGoods>();
-                foreach(var Supplier in result.le_goods_suppliers )
+                foreach (var Supplier in result.le_goods_suppliers)
                 {
-                    if(Supplier.IsDeleted==0)
+                    if (Supplier.IsDeleted == 0)
                     {
-                        supplierGoods.Add(new SupplierGoods {
+                        supplierGoods.Add(new SupplierGoods
+                        {
                             SupplierID = Supplier.SuppliersID,
                             IsDefalut = Supplier.IsDefalut,
                             SupplierName = Supplier.le_suppliers.SuppliersName,
-                            Price= Supplier.Supplyprice,
-                            GoodsMappingID=Supplier.GoodsMappingID,
+                            Price = Supplier.Supplyprice,
+                            GoodsMappingID = Supplier.GoodsMappingID,
                         });
                     }
                 }
@@ -586,7 +517,7 @@ namespace Service
         /// </summary>
         /// <param name="KeyWords"></param>
         /// <returns></returns>
-        public List<GoodsGroupDto> GetGoodsGroupList(string KeyWords="")
+        public List<GoodsGroupDto> GetGoodsGroupList(string KeyWords = "")
         {
             using (Entities ctx = new Entities())
             {
@@ -595,7 +526,7 @@ namespace Service
                 {
                     tempIq = tempIq.Where(s => s.Name.Contains(KeyWords));
                 }
-                var result = tempIq.OrderBy(s=>s.Sort).Select(s => new GoodsGroupDto
+                var result = tempIq.OrderBy(s => s.Sort).Select(s => new GoodsGroupDto
                 {
                     Sort = s.Sort,
                     ID = s.ID,
@@ -692,19 +623,26 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                le_goodsgroups entity = new le_goodsgroups { ID = GoodsGroupID };
-                ctx.le_goodsgroups.Attach(entity);
-                ctx.le_goodsgroups.Remove(entity);
+                var List = ctx.le_goodsgroups.Where(s => s.ParentID == GoodsGroupID || s.ID == GoodsGroupID).ToList();
+                if (List.Count == 0)
+                {
+                    return false;
+                }
+
+                //le_goodsgroups entity = new le_goodsgroups { ID = GoodsGroupID };
+
+                //ctx.le_goodsgroups.Attach(entity);
+                ctx.le_goodsgroups.RemoveRange(List);
                 try
                 {
                     if (ctx.SaveChanges() > 0)
                     {
-                       
+
                         return true;
                     }
                     else
                     {
-                     
+
                         return false;
                     }
                 }
@@ -722,8 +660,8 @@ namespace Service
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public int AddGoods(AddGoodsDto dto,out string msg)
-        {        
+        public int AddGoods(AddGoodsDto dto, out string msg)
+        {
             using (Entities ctx = new Entities())
             {
                 try
@@ -748,7 +686,7 @@ namespace Service
                     model.IsHot = dto.IsHot;
                     model.IsNewGoods = dto.IsNewGoods;
                     model.IsRecommend = dto.IsRecommend;
-                    model.IsShelves = dto.IsShelves;   
+                    model.IsShelves = dto.IsShelves;
                     model.Sort = dto.Sort;
                     model.Specifications = dto.Specifications;
                     model.UpdateTime = DateTime.Now;
@@ -764,25 +702,44 @@ namespace Service
                     model.IsDeliverHome = dto.IsDeliverHome;
                     model.MSRP = dto.MSRP;
                     model.MinimumPurchase = dto.MinimumPurchase;
-                    
+
 
                     #region 添加属性
-                    List<le_goods_value> List =new  List<le_goods_value>();
-                    foreach(var index in dto.GoodsValueList)
+                    int p = 1;
+                    List<le_goods_value> List = new List<le_goods_value>();
+                    foreach (var index in dto.GoodsValueList)
                     {
+
                         le_goods_value goods_Value = new le_goods_value();
                         goods_Value.CategoryType = index.CategoryType;
                         goods_Value.Enable = 1;
                         goods_Value.GoodsID = dto.GoodsID;
                         goods_Value.SerialNumber = index.SerialNumber;
+                        goods_Value.IsBulkCargo = model.IsBulkCargo;
+                        if (string.IsNullOrEmpty(goods_Value.SerialNumber))
+                        {
+                            goods_Value.IsAuto = 1;
+                            if (model.IsBulkCargo == 0)
+                            {
+
+                                goods_Value.SerialNumber = BarcodeGeneration(0);
+                            }
+                            else
+                            {
+                                goods_Value.SerialNumber = BarcodeGeneration(1);
+                            }
+                        }
+
+
                         goods_Value.GoodsValue = index.GoodsValueName;
                         List.Add(goods_Value);
                         model.le_goods_value.Add(goods_Value);
+                        p++;
                     }
                     #endregion
 
                     #region 添加图片
-                    foreach(var imgsrc in dto.GoodsImgList)
+                    foreach (var imgsrc in dto.GoodsImgList)
                     {
                         le_goods_img imgModel = new le_goods_img();
                         imgModel.CreatTime = DateTime.Now;
@@ -808,9 +765,9 @@ namespace Service
                         model.le_goods_suppliers.Add(le_Goods_Suppliers);
                     }
                     #endregion
-                    
+
                     ctx.le_goods.Add(model);
-                   
+
 
                     // string addimagemsg;
 
@@ -823,17 +780,17 @@ namespace Service
                         //    //{
                         //    //    return model.GoodsID;
                         //    //}
-                       msg = "SUCCESS";
-                       return model.GoodsID;
+                        msg = "SUCCESS";
+                        return model.GoodsID;
                         //}
                     }
                     msg = "数据库保存失败";
                     return 0;
                 }
-                catch(DbEntityValidationException ex)
+                catch (DbEntityValidationException ex)
                 {
-                    string kk ="";
-                   foreach( var index in ex.EntityValidationErrors)
+                    string kk = "";
+                    foreach (var index in ex.EntityValidationErrors)
                     {
                         kk += index.ValidationErrors;
                     }
@@ -845,9 +802,9 @@ namespace Service
                 {
                     //log.Debug(dto, ex);
 
-                    log.Error(dto,ex);
-                    msg= ExceptionHelper.GetInnerExceptionMsg(ex);
-                 //   msg = ex.Message;
+                    log.Error(dto, ex);
+                    msg = ExceptionHelper.GetInnerExceptionMsg(ex);
+                    //   msg = ex.Message;
                     return 0;
                 }
 
@@ -859,7 +816,7 @@ namespace Service
         /// </summary>
         /// <param name="GoodsID"></param>
         /// <returns></returns>
-        public bool UnShelvesGoods(int GoodsID,out string msg)
+        public bool UnShelvesGoods(int GoodsID, out string msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -873,7 +830,8 @@ namespace Service
                 {
                     dto.IsShelves = 1;
                 }
-                else{
+                else
+                {
                     dto.IsShelves = 0;
                 }
                 ctx.Entry<le_goods>(dto).State = EntityState.Modified;
@@ -914,10 +872,10 @@ namespace Service
                     msg = "该记录不存在，请确认后重试";
                     return false;
                 }
-               
+
                 model.GoodsGroupsID = dto.GoodsGroups_ID;
                 model.GoodsName = dto.GoodsName;
-               
+
                 model.Specifications = dto.Specifications;
                 model.IsShelves = dto.IsShelves;
                 model.IsRecommend = dto.IsRecommend;
@@ -947,10 +905,11 @@ namespace Service
                 {
                     model.ShelfLife = dto.ShelfLife;
                 }
-                if(!string.IsNullOrEmpty(dto.HeadImage))
+                if (!string.IsNullOrEmpty(dto.HeadImage))
                 {
                     model.Image = dto.HeadImage;
                 }
+
                 ctx.le_goods_log.Add(GoodLogModel);
                 if (ctx.SaveChanges() > 0)
                 {
@@ -973,16 +932,16 @@ namespace Service
         /// <param name="Price"></param>
         /// <param name="Msg"></param>
         /// <returns></returns>
-        public int AddSupplierGoodsPrice(int SupplierID,int GoodsID,decimal Price ,int IsDefalut, out string Msg)
+        public int AddSupplierGoodsPrice(int SupplierID, int GoodsID, decimal Price, int IsDefalut, out string Msg)
         {
             using (Entities ctx = new Entities())
             {
-                if(ctx.le_goods_suppliers.Any(s=>s.SuppliersID==SupplierID&&s.GoodsID==GoodsID&&s.IsDeleted==0))
+                if (ctx.le_goods_suppliers.Any(s => s.SuppliersID == SupplierID && s.GoodsID == GoodsID && s.IsDeleted == 0))
                 {
                     Msg = "已存在供应商价格,请勿重复添加";
                     return 0;
                 }
-                le_goods_suppliers model =  new le_goods_suppliers();
+                le_goods_suppliers model = new le_goods_suppliers();
                 model.SuppliersID = SupplierID;
                 model.GoodsID = GoodsID;
                 model.Supplyprice = Price;
@@ -991,7 +950,7 @@ namespace Service
                 model.IsDeleted = 0;
                 model.IsDefalut = IsDefalut;
                 ctx.le_goods_suppliers.Add(model);
-                if(ctx.SaveChanges()>0)
+                if (ctx.SaveChanges() > 0)
                 {
                     Msg = "SUCCESS";
                     return model.GoodsMappingID;
@@ -1011,30 +970,30 @@ namespace Service
         /// <param name="Price"></param>
         /// <param name="IsDeleted"></param>
         /// <returns></returns>
-        public bool UpdateSupplierPrice(int ID,decimal Price,int IsDeleted,int IsDefault,int? AdminID=null)
+        public bool UpdateSupplierPrice(int ID, decimal Price, int IsDeleted, int IsDefault, int? AdminID = null)
         {
             using (Entities ctx = new Entities())
             {
-               
+
                 var Model = ctx.le_goods_suppliers.Where(s => s.GoodsMappingID == ID).FirstOrDefault();
-                if(Model != null)
+                if (Model != null)
                 {
                     if (AdminID != null)
                     {
-                        if (!ctx.lel_admin_suppliers.Any(s => s.AdminID == AdminID && s.SupplierID== Model.SuppliersID))
+                        if (!ctx.lel_admin_suppliers.Any(s => s.AdminID == AdminID && s.SupplierID == Model.SuppliersID))
                         {
                             ///无权限
                             return false;
                         }
                     }
-                    if (IsDefault==1)
+                    if (IsDefault == 1)
                     {
-                        var List = ctx.le_goods_suppliers.Where(s => s.GoodsID == Model.GoodsID && s.IsDefalut == 1&&s.GoodsMappingID!= Model.GoodsMappingID).FirstOrDefault();
+                        var List = ctx.le_goods_suppliers.Where(s => s.GoodsID == Model.GoodsID && s.IsDefalut == 1 && s.GoodsMappingID != Model.GoodsMappingID).FirstOrDefault();
                         if (List != null)
                         {
                             List.IsDefalut = 0;
                             ctx.Entry<le_goods_suppliers>(List).State = EntityState.Modified;
-                            if (ctx.SaveChanges() <=0)
+                            if (ctx.SaveChanges() <= 0)
                             {
                                 return false;
                             }
@@ -1045,7 +1004,7 @@ namespace Service
                     Model.IsDefalut = IsDefault;
                     ctx.Entry<le_goods_suppliers>(Model).State = EntityState.Modified;
                     int SaveCount = ctx.SaveChanges();
-                    if (SaveCount>0)
+                    if (SaveCount > 0)
                     {
                         return true;
                     }
@@ -1064,38 +1023,39 @@ namespace Service
         /// <param name="SuppliersID"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public List<SupplierGoodsPriceDto> GetSupplierGoodsPriceList(string KeyWords,int Offset,int Rows,int? GoodsID,int? SuppliersID,out int Count)
+        public List<SupplierGoodsPriceDto> GetSupplierGoodsPriceList(string KeyWords, int Offset, int Rows, int? GoodsID, int? SuppliersID, out int Count)
         {
             using (Entities ctx = new Entities())
             {
                 var tempIq = ctx.le_goods_suppliers.Where(s => s.IsDeleted == 0);
-                if(!string.IsNullOrEmpty(KeyWords))
+                if (!string.IsNullOrEmpty(KeyWords))
                 {
                     tempIq = tempIq.Where(s => s.le_suppliers.SuppliersName.Contains(KeyWords));
                 }
-                if(GoodsID!=null&& GoodsID!=0)
+                if (GoodsID != null && GoodsID != 0)
                 {
                     tempIq = tempIq.Where(s => s.GoodsID == GoodsID.Value);
                 }
-                if(SuppliersID!=null && GoodsID != 0)
+                if (SuppliersID != null && GoodsID != 0)
                 {
                     tempIq = tempIq.Where(s => s.SuppliersID == SuppliersID.Value);
                 }
                 tempIq = tempIq.OrderByDescending(s => s.CreatTime);
-                var result = tempIq.Select(s => new SupplierGoodsPriceDto {
+                var result = tempIq.Select(s => new SupplierGoodsPriceDto
+                {
                     CreateTime = s.CreatTime,
                     SuppliersID = s.SuppliersID,
                     SuppliersName = s.le_suppliers.SuppliersName,
                     GoodsID = s.GoodsID,
                     GoodsName = s.le_goods.GoodsName,
                     Price = s.Supplyprice,
-                    SuppliersPhone=s.le_suppliers.MobilePhone,
-                    GoodsMappingID=s.GoodsMappingID
+                    SuppliersPhone = s.le_suppliers.MobilePhone,
+                    GoodsMappingID = s.GoodsMappingID
                 });
                 Count = tempIq.Count();
                 result = result.Skip(Offset).Take(Rows);
                 return result.ToList();
-             
+
             }
         }
 
@@ -1158,7 +1118,7 @@ namespace Service
         /// <summary>
         /// 添加商品图片
         /// </summary>        
-        public int AddGoodsImage(List<AddGoodsImgDto> List,out string msg)
+        public int AddGoodsImage(List<AddGoodsImgDto> List, out string msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -1171,7 +1131,7 @@ namespace Service
                     }
                     le_goods_img model = new le_goods_img();
                     foreach (var eh in List)
-                    {                       
+                    {
                         model.GoodsID = eh.GoodsID;
                         model.Src = eh.Src;
                         model.CreatTime = DateTime.Now;
@@ -1186,11 +1146,11 @@ namespace Service
                     {
                         msg = "新增商品图片失败";
                         return 0;
-                    }                 
+                    }
                 }
                 catch (Exception ex)
                 {
-                   // obj = grouplist;
+                    // obj = grouplist;
                     msg = "新增商品图片异常，ERROR:" + ex.ToString();
                     log.Error(List, ex);
                     return 0;
@@ -1249,7 +1209,7 @@ namespace Service
         /// <param name="ListImgID"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool DeleteGoodsImg(List<int> ListImgID,out string msg)
+        public bool DeleteGoodsImg(List<int> ListImgID, out string msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -1262,13 +1222,13 @@ namespace Service
                     }
                     foreach (var id in ListImgID)
                     {
-                        var entity= ctx.le_goods_img.Find(id);
+                        var entity = ctx.le_goods_img.Find(id);
                         if (entity != null)
                         {
                             entity.IsDelete = 1;
                             //entity.UpdateTime = DateTime.Now;
                             ctx.Entry<le_goods_img>(entity).State = EntityState.Modified;
-                         
+
                             //ctx.le_goods_img(model);
                         }
                     }
@@ -1293,12 +1253,12 @@ namespace Service
 
         #region 商品属性操作
 
-        public bool AddGoodsValueList(List<GoodsValues> List,out string Msg)
+        public bool AddGoodsValueList(List<GoodsValues> List, out string Msg)
         {
             using (Entities ctx = new Entities())
             {
                 List<Object> list = new List<Object>();
-             
+
                 if (List.Count <= 0)
                 {
                     Msg = "参数错误，未获取到有效值";
@@ -1344,39 +1304,39 @@ namespace Service
                     Msg = "SUCCESS";
                     return true;
                 }
-                    catch ( Exception ex)
-                        {
+                catch (Exception ex)
+                {
                     Msg = ex.Message;
                     return false;
-                    }
-                    //Object group = new Object();
-                    //List<GoodsValue> Valuelist = new List<GoodsValue>();
-                    //Valuelist.Add(dto);
-
-                    //var exit = ctx.le_goods_value_mapping.Where(s => s.CategoryType == dto.CategoryType && s.GoodsID == dto.GoodsID).FirstOrDefault();
-                    //if (exit != null)
-                    //{
-                    //    //已存在属性大类，直接添加
-                    //    AddGoodsValue(Valuelist, exit.ID,out object valueobj);
-                    //    list.Add(valueobj);
-                    //}
-                    //else {
-                    //    //先添加属性大类，在添加属性明细
-                    //    le_goods_value_mapping lgvm = new le_goods_value_mapping();
-                    //    lgvm.GoodsID = dto.GoodsID;
-                    //    lgvm.CategoryType = dto.CategoryType;
-                    //    ctx.le_goods_value_mapping.Add(lgvm);
-
-                    //    if (ctx.SaveChanges() > 0)
-                    //    {
-                    //        AddGoodsValue(Valuelist, lgvm.ID, out object valueobj);
-                    //        list.Add(valueobj);
-                    //    }
-                    //}
                 }
-                //obj = list;
-                //return true;
-            
+                //Object group = new Object();
+                //List<GoodsValue> Valuelist = new List<GoodsValue>();
+                //Valuelist.Add(dto);
+
+                //var exit = ctx.le_goods_value_mapping.Where(s => s.CategoryType == dto.CategoryType && s.GoodsID == dto.GoodsID).FirstOrDefault();
+                //if (exit != null)
+                //{
+                //    //已存在属性大类，直接添加
+                //    AddGoodsValue(Valuelist, exit.ID,out object valueobj);
+                //    list.Add(valueobj);
+                //}
+                //else {
+                //    //先添加属性大类，在添加属性明细
+                //    le_goods_value_mapping lgvm = new le_goods_value_mapping();
+                //    lgvm.GoodsID = dto.GoodsID;
+                //    lgvm.CategoryType = dto.CategoryType;
+                //    ctx.le_goods_value_mapping.Add(lgvm);
+
+                //    if (ctx.SaveChanges() > 0)
+                //    {
+                //        AddGoodsValue(Valuelist, lgvm.ID, out object valueobj);
+                //        list.Add(valueobj);
+                //    }
+                //}
+            }
+            //obj = list;
+            //return true;
+
         }
 
         /// <summary>
@@ -1558,16 +1518,16 @@ namespace Service
             try
             {
 
-                string FileHead = imgsrc.Split(',')[0]; 
-                string FileContent=imgsrc.Split(',')[1];
-                string FileType = FileHead.Substring(FileHead.IndexOf("/")+1,FileHead.IndexOf(";")- FileHead.IndexOf("/")-1);
+                string FileHead = imgsrc.Split(',')[0];
+                string FileContent = imgsrc.Split(',')[1];
+                string FileType = FileHead.Substring(FileHead.IndexOf("/") + 1, FileHead.IndexOf(";") - FileHead.IndexOf("/") - 1);
 
-                string fileFilt = "gif|jpg|bmp|jpeg|png"; 
+                string fileFilt = "gif|jpg|bmp|jpeg|png";
                 if (fileFilt.IndexOf(fileFilt) <= -1)
                 {
-                    Exception ex=  new Exception("图片上传格式错误,允许上传格式为：" + FileHead);
+                    Exception ex = new Exception("图片上传格式错误,允许上传格式为：" + FileHead);
                     log.Error(imgsrc, ex);
-                    throw ex;                   
+                    throw ex;
                 }
 
 
@@ -1601,28 +1561,68 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                return ctx.le_goods_value.Any(s=>s.SerialNumber== SerialNumber);
+                return ctx.le_goods_value.Any(s => s.SerialNumber == SerialNumber);
             }
         }
 
         /// <summary>
-        /// 生成条码
+        /// 生成条码 
         /// </summary>
+        /// <param name="Count">位数</param>
+        /// <param name="Offest">偏移量</param>
         /// <returns></returns>
-        public string BarcodeGeneration(int Count)
+        public string BarcodeGeneration(int IsBulkCargo)
         {
+            string SerialNumber = "";
             using (Entities ctx = new Entities())
             {
-                string NonceStr = ctx.le_goods_value.OrderByDescending(s => s.GoodsValueID).Skip(0).Take(1).FirstOrDefault().GoodsValueID.ToString();
-                int StrCount = NonceStr.Length;
-                for(int i= 0;i< Count- StrCount; i++)
+                var Model = ctx.le_goods_value.Where(s => s.IsBulkCargo == IsBulkCargo && s.IsAuto == 1).OrderByDescending(s => s.SerialNumber).Skip(0).Take(1).FirstOrDefault();
+
+                if (Model != null)
                 {
-                    NonceStr = NonceStr.Insert(0, "0");
-                    
+                    SerialNumber = (Model.SerialNumber).ToString();
                 }
+                else
+                {
+                    SerialNumber = "0";
+                }
+                string NonceStr = "";
+                int StrCount;
+                var IsSuccess = long.TryParse(SerialNumber, out long Number);
+                if (!IsSuccess)
+                {
+                    new Exception("自动生成条码出错 转化出错");
+                }
+                NonceStr = (Number + 1).ToString();
+                StrCount = NonceStr.Length;
+                if (IsBulkCargo == 0 && NonceStr.Length < 6) //非散货不足6位补0
+                {
+                    for (int i = 0; i < 6 - StrCount; i++)
+                    {
+                        NonceStr = NonceStr.Insert(0, "0");
+                    }
+                }
+                else if (IsBulkCargo == 1 && NonceStr.Length < 5)//散货不足5位补0
+                {
+                    for (int i = 0; i < 5 - StrCount; i++)
+                    {
+                        NonceStr = NonceStr.Insert(0, "0");
+                    }
+                }
+                else
+                {
+
+
+                }
+                //var kk = NonceStr.LastIndexOf('0');
+                //var sub = NonceStr.Substring(kk);
+                //var str= NonceStr.Split(sub)
+                // int StrCount = NonceStr.Length;
+
+
                 return NonceStr;
             }
-                           
+
         }
 
 
@@ -1637,9 +1637,9 @@ namespace Service
             {
                 //var count = 0;
                 var count = await ctx.Database.ExecuteSqlCommandAsync(sql);
-                if(count>0)
+                if (count > 0)
                 {
-                    log.Debug(string.Format("清空月销量,影响行数：{0}",count));
+                    log.Debug(string.Format("清空月销量,影响行数：{0}", count));
                     return true;
                 }
                 else

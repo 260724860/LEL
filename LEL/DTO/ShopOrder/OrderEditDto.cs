@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.ShopOrder
 {
@@ -21,7 +17,8 @@ namespace DTO.ShopOrder
 
     }
 
-    public class EditLinesInfo {
+    public class EditLinesInfo
+    {
 
         public int Orders_Lines_ID { get; set; }
         public int SuppliersID { get; set; }

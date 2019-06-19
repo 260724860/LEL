@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
@@ -53,12 +51,12 @@ namespace Service
                         return false;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error("SetAdminReUsers", ex);
                     return false;
                 }
-               
+
             }
         }
         /// <summary>
@@ -136,8 +134,8 @@ namespace Service
                 var Result = ctx.le_admin_re_users.Where(s => s.AdminID == AdminID).Select(
                     k => new AdminReUsers
                     {
-                        UserID=k.UserID,
-                        UserName=k.le_users.UsersNickname
+                        UserID = k.UserID,
+                        UserName = k.le_users.UsersNickname
                     }
                     ).ToList();
                 return Result;
@@ -193,7 +191,7 @@ namespace Service
                         return dto;
                     }
                     dto.status = Exit.Status;
-                    dto.AdminID =Exit.AdminID;
+                    dto.AdminID = Exit.AdminID;
                     dto.loginname = Exit.LoginName;
                     dto.Roleid = Exit.Roleid;
                     dto.AdminRoleStr = Exit.AdminRoleStr;
@@ -206,7 +204,7 @@ namespace Service
                     //    dto.RoleValueList = GetAdminRoleValueList(dto.Role.ID);
                     //}
                     #endregion
-                   // dto.AdminID = 2;
+                    // dto.AdminID = 2;
                     dto.code = 0;
                     dto.IsUrgent = Exit.IsUrgent;
                     dto.msg = "SUCCESS";
@@ -233,7 +231,8 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                try {
+                try
+                {
                     if (dto == null)
                     {
                         msg = "参数为空，请确认后重试";
@@ -270,7 +269,8 @@ namespace Service
 
                     msg = "添加失败";
                     return false;
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     msg = "添加异常，错误信息：" + ex.ToString();
                     return false;
@@ -288,7 +288,8 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                try {
+                try
+                {
 
                     var dto = ctx.le_admin.Where(s => s.AdminID == AdminID).FirstOrDefault();
                     if (dto == null)
@@ -309,9 +310,10 @@ namespace Service
                         return false;
                     }
 
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
-                    msg = "删除异常，错误信息："+ ex.ToString();
+                    msg = "删除异常，错误信息：" + ex.ToString();
                     return false;
                 }
             }
@@ -327,7 +329,8 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                try {
+                try
+                {
                     var model = ctx.le_admin.Where(s => s.AdminID == dto.AdminID).FirstOrDefault();
                     if (model == null)
                     {
@@ -355,7 +358,8 @@ namespace Service
                         msg = "修改失败，请稍后重试";
                         return false;
                     }
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     msg = "更新异常，错误信息：" + ex.ToString();
                     return false;
@@ -369,39 +373,39 @@ namespace Service
         /// <param name="editAdmin"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool EditAdminUserInfo( EditAdminUserDto editAdmin, out string msg)
+        public bool EditAdminUserInfo(EditAdminUserDto editAdmin, out string msg)
         {
             using (Entities ctx = new Entities())
             {
                 var model = ctx.le_admin.Where(s => s.AdminID == editAdmin.AdminID).FirstOrDefault();
-                if(model==null)
+                if (model == null)
                 {
                     msg = "参数错误请检查，AdminID：" + editAdmin.AdminID.ToString();
                     return false;
                 }
-                if(!string.IsNullOrEmpty(editAdmin.AdminRoleStr))
+                if (!string.IsNullOrEmpty(editAdmin.AdminRoleStr))
                 {
                     model.AdminRoleStr = editAdmin.AdminRoleStr;
                 }
-                if(!string.IsNullOrEmpty(editAdmin.LoginName))
+                if (!string.IsNullOrEmpty(editAdmin.LoginName))
                 {
                     model.LoginName = editAdmin.LoginName;
                 }
-                if(!string.IsNullOrEmpty(editAdmin.Nickname))
+                if (!string.IsNullOrEmpty(editAdmin.Nickname))
                 {
                     model.Nickname = editAdmin.Nickname;
                 }
-                if(!string.IsNullOrEmpty(editAdmin.Password))
+                if (!string.IsNullOrEmpty(editAdmin.Password))
                 {
                     model.Salt = DESEncrypt.GetCheckCode(6);
                     model.Password = DESEncrypt.Encrypt(editAdmin.Password, model.Salt);
                 }
-                if(!string.IsNullOrEmpty(editAdmin.TelePhone))
+                if (!string.IsNullOrEmpty(editAdmin.TelePhone))
                 {
                     model.TelePhone = editAdmin.TelePhone;
                 }
                 model.Status = editAdmin.Status;
-              //  model.UpdateTime = DateTime.Now;
+                //  model.UpdateTime = DateTime.Now;
                 ctx.Entry<le_admin>(model).State = EntityState.Modified;
                 try
                 {
@@ -416,7 +420,7 @@ namespace Service
                         return false;
                     }
                 }
-                catch( Exception ex)
+                catch (Exception ex)
                 {
                     msg = ex.Message;
                     log.Error(editAdmin, ex);
@@ -433,16 +437,17 @@ namespace Service
         /// <param name="msg"></param>
         /// <param name="KeyWords"></param>
         /// <returns></returns>
-        public List<AdminDTO> GetAdminList(out string msg,string KeyWords = "")
+        public List<AdminDTO> GetAdminList(out string msg, string KeyWords = "")
         {
             using (Entities ctx = new Entities())
             {
-                try {
+                try
+                {
                     List<AdminDTO> List = new List<AdminDTO>();
                     msg = "";
                     var tempIq = from a in ctx.le_admin
-                                  join b in ctx.le_admin_role
-                                 on a.Roleid equals b.ID
+                                 join b in ctx.le_admin_role
+                                on a.Roleid equals b.ID
                                  select new AdminDTO
                                  {
                                      AdminID = a.AdminID,
@@ -457,7 +462,7 @@ namespace Service
                                      Createtime = a.Createtime,
                                      RoleName = b.name,
                                      AdminRoleStr = a.AdminRoleStr,
-                                     IsUrgent=a.IsUrgent
+                                     IsUrgent = a.IsUrgent
                                  };
 
                     if (string.IsNullOrEmpty(KeyWords))
@@ -480,8 +485,9 @@ namespace Service
                         }).ToList();
 
                     }
-                    else {
-                        List = tempIq.Where(s => s.loginname.Contains(KeyWords) 
+                    else
+                    {
+                        List = tempIq.Where(s => s.loginname.Contains(KeyWords)
                         || s.nickname.Contains(KeyWords)
                         || s.telephone.Contains(KeyWords)
 
@@ -507,13 +513,14 @@ namespace Service
                     msg = "SUCCESS";
                     return List;
                 }
-                catch (Exception ex) {
-                    msg = "查询异常，错误信息："+ ex.ToString();
+                catch (Exception ex)
+                {
+                    msg = "查询异常，错误信息：" + ex.ToString();
                     return null;
                 }
             }
         }
-        
+
         /// <summary>
         /// 修改后台用户密码
         /// </summary>
@@ -524,7 +531,8 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                try {
+                try
+                {
 
                     var model = ctx.le_admin.Where(s => s.TelePhone == dto.telephone).FirstOrDefault();
                     if (model == null)
@@ -541,7 +549,8 @@ namespace Service
                         msg = "密码有误，修改失败";
                         return false;
                     }
-                    else {
+                    else
+                    {
                         model.Password = DESEncrypt.Encrypt(dto.Updatepassword, model.Salt);
                         ctx.Entry<le_admin>(model).State = EntityState.Modified;
 
@@ -556,7 +565,8 @@ namespace Service
                             return false;
                         }
                     }
-                } catch (Exception ex )
+                }
+                catch (Exception ex)
                 {
                     msg = "更新密码异常，错误信息：" + ex.ToString();
                     return false;

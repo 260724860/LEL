@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Admin
+﻿namespace DTO.Admin
 {
     /// <summary>
     /// 后台用户角色 DTO

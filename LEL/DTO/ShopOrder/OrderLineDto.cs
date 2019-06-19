@@ -1,10 +1,7 @@
 
-﻿using DTO.Goods;
+using DTO.Goods;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.ShopOrder
 {
@@ -15,7 +12,7 @@ namespace DTO.ShopOrder
     {
         public string OrderNo { get; set; }
         public int OrderLineID { get; set; }
-        public int OrderHeadID { get;set;}
+        public int OrderHeadID { get; set; }
         public int Goods_ID { get; set; }
         public decimal Money { get; set; }
         public int GoodsCount { get; set; }
@@ -23,7 +20,7 @@ namespace DTO.ShopOrder
 
         public string Notes { get; set; }
         public int? Status1 { get; set; }
-        public int? Status2{ get; set; }
+        public int? Status2 { get; set; }
         public int? Status3 { get; set; }
         public int? AdminID { get; set; }
         public int UsersID { get; set; }
@@ -35,7 +32,7 @@ namespace DTO.ShopOrder
 
         public string GoodsName { get; set; }
         public string GoodsImage { get; set; }
-        
+
 
         public int OrderType { get; set; }
         #region 扩展属性

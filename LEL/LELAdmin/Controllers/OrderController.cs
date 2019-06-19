@@ -1,11 +1,7 @@
-﻿using Common;
-using DTO.ShopOrder;
+﻿using DTO.ShopOrder;
 using Service;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
@@ -63,7 +59,7 @@ namespace LELAdmin.Controllers
                 return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
             }
         }
-       
+
         /// <summary>
         /// 修改订单收货信息
         /// </summary>
@@ -82,10 +78,11 @@ namespace LELAdmin.Controllers
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = msg });
                 }
-                else {
+                else
+                {
                     return Json(new { code = 1, msg = "ERROR", content = msg });
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -93,7 +90,7 @@ namespace LELAdmin.Controllers
             }
         }
 
-        
+
 
         /// <summary>
         /// 更新订单头状态
@@ -107,7 +104,7 @@ namespace LELAdmin.Controllers
         {
             try
             {
-                var bol = ShopBLL.UpdateOrderStatus(Out_Trade_No, Status,GetLoginInfo() ,out string msg);
+                var bol = ShopBLL.UpdateOrderStatus(Out_Trade_No, Status, GetLoginInfo(), out string msg);
 
                 if (bol)
                 {
@@ -189,7 +186,7 @@ namespace LELAdmin.Controllers
         {
             try
             {
-                var bol = ShopBLL.BatchEditLinesInfo(List,GetLoginInfo(), out string msg);
+                var bol = ShopBLL.BatchEditLinesInfo(List, GetLoginInfo(), out string msg);
                 if (bol)
                 {
                     return Json(new { code = 0, msg = msg, content = "修改成功" });
@@ -205,7 +202,7 @@ namespace LELAdmin.Controllers
             }
         }
 
-        
+
         #endregion
 
         #region 订单行列表操作 (暂弃)

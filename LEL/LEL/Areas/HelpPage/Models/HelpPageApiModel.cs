@@ -1,8 +1,8 @@
+using LEL.Areas.HelpPage.ModelDescriptions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
-using LEL.Areas.HelpPage.ModelDescriptions;
 
 namespace LEL.Areas.HelpPage.Models
 {

@@ -1,10 +1,5 @@
 ﻿using Common;
 using DTO.Goods;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -23,10 +18,10 @@ namespace LEL.Controllers
         /// <param name="KeyWords">搜索关键字</param>
         /// <returns></returns>
         [HttpGet, Route("api/ShoppingMall/GetGoodsGroupList/")]
-        public IHttpActionResult  GetGoodsGroupList(string KeyWords = "")
+        public IHttpActionResult GetGoodsGroupList(string KeyWords = "")
         {
-             var result=  GoodsService.GetGoodsGroupList(KeyWords);
-             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            var result = GoodsService.GetGoodsGroupList(KeyWords);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
         /// <summary>
@@ -37,11 +32,11 @@ namespace LEL.Controllers
         [HttpPost, Route("api/ShoppingMall/GetGoodsList/")]
         public async Task<IHttpActionResult> GetGoodsList([FromBody]GoodsSeachOptions options)
         {
-            if(options==null)
+            if (options == null)
             {
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }
-            var result = await GoodsService.GetGoodsListAsync(options,null);
+            var result = await GoodsService.GetGoodsListAsync(options);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 

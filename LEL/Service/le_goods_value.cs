@@ -31,6 +31,8 @@ namespace Service
         public System.DateTime UpdateTime { get; set; }
         public Nullable<int> Stock { get; set; }
         public int RowVersion { get; set; }
+        public int IsBulkCargo { get; set; }
+        public int IsAuto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }

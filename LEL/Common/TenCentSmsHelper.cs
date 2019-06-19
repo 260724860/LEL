@@ -30,7 +30,7 @@ namespace Common
         /// <param name="parm"></param>
         /// <param name="smsSign"></param>
         /// <returns></returns>
-        public static SmsSingleSenderResult SmsSingleSender(string phoneNumbers,int templateId,string[] parm,string smsSign)
+        public static SmsSingleSenderResult SmsSingleSender(string phoneNumbers, int templateId, string[] parm, string smsSign)
         {
             try
             {
@@ -66,11 +66,11 @@ namespace Common
         /// <param name="parm"></param>
         /// <param name="smsSign"></param>
         /// <returns></returns>
-        public static SmsMultiSenderResult SmsMultiSender(List<string> phoneNumbers, int templateId,List<string> parm, string smsSign)
+        public static SmsMultiSenderResult SmsMultiSender(List<string> phoneNumbers, int templateId, List<string> parm, string smsSign)
         {
             try
             {
-                SmsMultiSenderResult result = null; 
+                SmsMultiSenderResult result = null;
                 SmsMultiSender msender = new SmsMultiSender(appid, appkey);
                 result = msender.sendWithParam("86", phoneNumbers, templateId,
                     parm, smsSign, "", "");  // 签名参数未提供或者为空时，会使用默认签名发送短信

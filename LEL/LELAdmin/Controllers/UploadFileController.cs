@@ -1,10 +1,6 @@
 ﻿using Common;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
@@ -21,7 +17,8 @@ namespace LELAdmin.Controllers
         [HttpPost, Route("api/UploadFile/UploadWithStream/")]
         public IHttpActionResult UploadWithStream()
         {
-            try {
+            try
+            {
 
                 System.Web.HttpContext context = System.Web.HttpContext.Current;
                 string serverPath = ""; //System.Configuration.ConfigurationSettings.AppSettings["serverPath"];
@@ -68,11 +65,11 @@ namespace LELAdmin.Controllers
                 }
                 return Json(JRpcHelper.AjaxResult(1, "没有获取到文件", null));
             }
-            catch( Exception ex)
+            catch (Exception ex)
             {
                 return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
             }
-            }
-       
+        }
+
     }
 }

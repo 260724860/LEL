@@ -1,12 +1,6 @@
 ﻿using Common;
 using Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Web;
 using System.Web.Http;
 using static Common.SmsSendHelper;
 
@@ -29,10 +23,12 @@ namespace LELAdmin.Controllers
         [HttpGet]
         public IHttpActionResult GetSalesDTO()
         {
-            try {
+            try
+            {
                 var dto = IdService.GetSalesDTO();
                 return Json(new { code = 0, msg = "SUCCESS", content = dto });
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Json(new { code = 0, msg = "ERROR", content = ex.ToString() });
             }
@@ -88,8 +84,8 @@ namespace LELAdmin.Controllers
         [HttpGet]
         public IHttpActionResult GetPendingTransDTO()
         {
-            var result= IdService.GetPendingTransDTO();
-            return  Json(new { code = 0, msg = "SUCCESS", content = result });
+            var result = IdService.GetPendingTransDTO();
+            return Json(new { code = 0, msg = "SUCCESS", content = result });
         }
         /// <summary>
         /// 发送短信测试接口
@@ -102,7 +98,7 @@ namespace LELAdmin.Controllers
             var mobile = "15107330889";
             var content = string.Format(@"" + ssh.SmsTemplate("T0001"), RandomCode());
             return Json("a");
-           // ssh.SendSingleSms(mobile, content, out object result);
+            // ssh.SendSingleSms(mobile, content, out object result);
 
             //List<Multimt> List = new List<Multimt>();
 
@@ -120,7 +116,7 @@ namespace LELAdmin.Controllers
 
             //ssh.SendMultiSms(List,out result);
 
-         //   return Json(new { code = 0, msg = "ERROR", content = result });
+            //   return Json(new { code = 0, msg = "ERROR", content = result });
         }
 
 

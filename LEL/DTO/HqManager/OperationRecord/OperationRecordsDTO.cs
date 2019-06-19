@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.HqManager.OperationRecord
 {
@@ -54,7 +50,8 @@ namespace DTO.HqManager.OperationRecord
 
     }
 
-    public class OrderHeadChangeRecordDTO {
+    public class OrderHeadChangeRecordDTO
+    {
         public int HeadRecordID { get; set; }
         public int OrderHeadID { get; set; }
         public int BeforeCount { get; set; }

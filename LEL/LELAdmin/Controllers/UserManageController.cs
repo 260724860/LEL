@@ -3,10 +3,6 @@ using DTO.SupplierUser;
 using DTO.User;
 using Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
@@ -15,7 +11,7 @@ namespace LELAdmin.Controllers
     /// 商户管理
     /// </summary>
     [RoutePrefix("api/UserManage")]
-    public class UserManageController :BaseController
+    public class UserManageController : BaseController
     {
         StoreUserService StoreSevice = new StoreUserService();
         private SuppliersService SlService = new SuppliersService();
@@ -50,7 +46,7 @@ namespace LELAdmin.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "FAIL", result));
             }
-        }       
+        }
 
         #region 门店管理相关
         /// <summary>
@@ -112,7 +108,7 @@ namespace LELAdmin.Controllers
         [Route("GetUserList")]
         [HttpPost]
         public IHttpActionResult GetUserList(UserSeachOptions options)
-        {
+        { 
             try
             {
                 var result = StoreSevice.GetUserList(options, out int Count);
@@ -129,7 +125,7 @@ namespace LELAdmin.Controllers
         }
 
         /// <summary>
-        /// 修改用户资料
+        /// 修改加盟店用户资料
         /// </summary>
         /// <param name="dTO"></param>
         /// <param name="oneself"></param>
@@ -162,7 +158,7 @@ namespace LELAdmin.Controllers
         [HttpPost]
         public IHttpActionResult GetBaseStoreUserList(string KeyWords)
         {
-            var result = StoreSevice.GetBaseStoreUserList(KeyWords,GetLoginInfo().UserID);
+            var result = StoreSevice.GetBaseStoreUserList(KeyWords, GetLoginInfo().UserID);
             return Json(new { code = 0, msg = "SUCCESS", content = result });
         }
 

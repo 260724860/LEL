@@ -1,9 +1,7 @@
-using System.Web.Http;
-using WebActivatorEx;
 using LEL;
 using Swashbuckle.Application;
-using System;
-using System.Xml.XPath;
+using System.Web.Http;
+using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 

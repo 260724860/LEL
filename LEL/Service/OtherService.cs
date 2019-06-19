@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
@@ -25,7 +23,7 @@ namespace Service
         /// <param name="Sort"></param>
         /// <param name="AdName"></param>
         /// <returns></returns>
-        public int AddAd(string Img,string Link,int Sort,string AdName)
+        public int AddAd(string Img, string Link, int Sort, string AdName)
         {
             using (Entities ctx = new Entities())
             {
@@ -74,7 +72,7 @@ namespace Service
                         return true;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(ex.ToString(), ex);
                     return false;
@@ -91,12 +89,12 @@ namespace Service
         /// <param name="Sort"></param>
         /// <param name="AdName"></param>
         /// <returns></returns>
-        public bool UpdateAd(int AdId,string Img, string Link, int Sort, string AdName,int flag=1)
+        public bool UpdateAd(int AdId, string Img, string Link, int Sort, string AdName, int flag = 1)
         {
             using (Entities ctx = new Entities())
             {
                 var temp = ctx.le_ad.Where(s => s.ID == AdId).FirstOrDefault();
-                if(temp==null)
+                if (temp == null)
                 {
                     return false;
                 }
@@ -134,12 +132,12 @@ namespace Service
         /// <param name="Flag"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public  List<le_ad> GetAdList(string Keywords,int Flag,out int Count)
+        public List<le_ad> GetAdList(string Keywords, int Flag, out int Count)
         {
             using (Entities ctx = new Entities())
             {
-                var tmepIq = ctx.le_ad.Where(s => s.Flag==Flag);
-                if(!string.IsNullOrEmpty(Keywords))
+                var tmepIq = ctx.le_ad.Where(s => s.Flag == Flag);
+                if (!string.IsNullOrEmpty(Keywords))
                 {
                     tmepIq = tmepIq.Where(s => s.AdName.Contains(Keywords));
                 }
@@ -159,7 +157,7 @@ namespace Service
         /// <param name="ReceiveAddress"></param>
         /// <param name="DefaultAddr"></param>
         /// <returns></returns>
-        public int AddAddress(int UserID,string ReceiveName,string ReceivePhone,string ReceiveArea,string  ReceiveAddress,int DefaultAddr)
+        public int AddAddress(int UserID, string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int DefaultAddr)
         {
             using (Entities ctx = new Entities())
             {
@@ -173,8 +171,9 @@ namespace Service
                 model.UserID = UserID;
                 model.Status = 1;
                 ctx.le_user_address.Add(model);
-                try {
-                    if(ctx.SaveChanges()>0)
+                try
+                {
+                    if (ctx.SaveChanges() > 0)
                     {
                         return model.AddressID;
                     }
@@ -201,16 +200,16 @@ namespace Service
         /// <param name="ReceiveAddress"></param>
         /// <param name="DefaultAddr"></param>
         /// <returns></returns>
-        public bool UpdateAddress(int AddressID, string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int DefaultAddr,int Status)
+        public bool UpdateAddress(int AddressID, string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int DefaultAddr, int Status)
         {
             using (Entities ctx = new Entities())
             {
                 le_user_address model = ctx.le_user_address.Where(s => s.AddressID == AddressID).FirstOrDefault();
-                if(model==null)
+                if (model == null)
                 {
                     return false;
-                }  
-                if(Status!=0&&Status!=1)
+                }
+                if (Status != 0 && Status != 1)
                 {
                     return false;
                 }
@@ -246,7 +245,7 @@ namespace Service
         /// <param name="options"></param>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        public List<UserAddressDto> GetAddressList(SeachOptions options,int UserID,out int Count)
+        public List<UserAddressDto> GetAddressList(SeachOptions options, int UserID, out int Count)
         {
             using (Entities ctx = new Entities())
             {
@@ -262,7 +261,7 @@ namespace Service
                           ReceivePhone = s.ReceivePhone,
                           UserID = s.UserID
                       });
-                if(!string.IsNullOrEmpty(options.KeyWords))
+                if (!string.IsNullOrEmpty(options.KeyWords))
                 {
                     tempIq = tempIq.Where(s => s.ReceiveAddress.Contains(options.KeyWords)
                       || s.ReceiveArea.Contains(options.KeyWords) || s.ReceivePhone.Contains(options.KeyWords));
@@ -307,7 +306,7 @@ namespace Service
         /// <param name="Code"></param>
         /// <param name="Phone"></param>
         /// <returns></returns>
-        public int AddSmsRecord(string Code,string Phone,string NoceStr)
+        public int AddSmsRecord(string Code, string Phone, string NoceStr)
         {
             using (Entities ctx = new Entities())
             {
@@ -333,11 +332,11 @@ namespace Service
                         return 0;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(Code, ex);
                     return 0;
-                   
+
                 }
             }
         }
@@ -347,7 +346,7 @@ namespace Service
         /// <param name="Code"></param>
         /// <param name="Phone"></param>
         /// <returns></returns>
-        public bool UpdateSmsRecord(string Code,string Phone)
+        public bool UpdateSmsRecord(string Code, string Phone)
         {
             using (Entities ctx = new Entities())
             {
@@ -357,7 +356,7 @@ namespace Service
                 ctx.Entry<le_sms>(Model).State = EntityState.Modified;
                 try
                 {
-                    if(ctx.SaveChanges()>0)
+                    if (ctx.SaveChanges() > 0)
                     {
                         return true;
                     }
@@ -366,7 +365,7 @@ namespace Service
                         return false;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(Phone, ex);
                     return false;
@@ -375,17 +374,17 @@ namespace Service
         }
 
 
-       /// <summary>
-       /// 添加系统收货地址
-       /// </summary>
-       /// <param name="UserID"></param>
-       /// <param name="ReceiveName"></param>
-       /// <param name="ReceivePhone"></param>
-       /// <param name="ReceiveArea"></param>
-       /// <param name="ReceiveAddress"></param>
-       /// <param name="DefaultAddr"></param>
-       /// <returns></returns>
-        public int AddSysAddress( string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort,double? Longitude,double? Latitude)
+        /// <summary>
+        /// 添加系统收货地址
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <param name="ReceiveName"></param>
+        /// <param name="ReceivePhone"></param>
+        /// <param name="ReceiveArea"></param>
+        /// <param name="ReceiveAddress"></param>
+        /// <param name="DefaultAddr"></param>
+        /// <returns></returns>
+        public int AddSysAddress(string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort, double? Longitude, double? Latitude)
         {
             using (Entities ctx = new Entities())
             {
@@ -479,7 +478,7 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                le_sys_address entity = new le_sys_address { AddressID= AddressID };
+                le_sys_address entity = new le_sys_address { AddressID = AddressID };
                 ctx.le_sys_address.Attach(entity);
                 ctx.le_sys_address.Remove(entity);
 
@@ -509,10 +508,10 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                var tempIq = ctx.le_sys_address.Where(s=>true);
-                if(options.Status!=null)
+                var tempIq = ctx.le_sys_address.Where(s => true);
+                if (options.Status != null)
                 {
-                    tempIq= tempIq.Where(s => s.Status == options.Status);
+                    tempIq = tempIq.Where(s => s.Status == options.Status);
                 }
                 if (!string.IsNullOrEmpty(options.KeyWords))
                 {
@@ -532,7 +531,7 @@ namespace Service
         /// <param name="UserID">用户ID</param>
         /// <param name="UserType">用户类型 1 商户 2 供应商 3 总部</param>
         /// <returns></returns>
-        public int AddPulshMsg(int UserID,int UserType)
+        public int AddPulshMsg(int UserID, int UserType)
         {
             using (Entities ctx = new Entities())
             {
@@ -555,7 +554,7 @@ namespace Service
                         return 0;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(UserID, ex);
                     return 0;
@@ -569,11 +568,11 @@ namespace Service
         /// <param name="UserID"></param>
         /// <param name="OrderNO"></param>
         /// <returns></returns>
-        public bool UpdatePushMsg(int UserID,string OrderNO,int UserType,int MsgType=1)
+        public bool UpdatePushMsg(int UserID, string OrderNO, int UserType, int MsgType = 1)
         {
             using (Entities ctx = new Entities())
             {
-                var model = ctx.le_pushmsg.Where(s => s.UserID == UserID&& s.UserType==UserType).FirstOrDefault();
+                var model = ctx.le_pushmsg.Where(s => s.UserID == UserID && s.UserType == UserType).FirstOrDefault();
                 if (model == null)
                 {
                     log.Error(string.Format("推送订单消息失败,UserID:{0}，单号:{1}", UserID, OrderNO));
@@ -585,7 +584,7 @@ namespace Service
                 model.UpdateTime = DateTime.Now;
                 model.MsgType = MsgType;
                 ctx.Entry<le_pushmsg>(model).State = EntityState.Modified;
-                if(ctx.SaveChanges()>0)
+                if (ctx.SaveChanges() > 0)
                 {
                     return true;
                 }
@@ -602,7 +601,7 @@ namespace Service
         /// <param name="UserID"></param>
         /// <param name="UserType"></param>
         /// <returns></returns>
-        public le_pushmsg GetPushMsg(int UserID,int UserType)
+        public le_pushmsg GetPushMsg(int UserID, int UserType)
         {
             using (Entities ctx = new Entities())
             {

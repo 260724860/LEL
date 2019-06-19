@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.Admin
 {
@@ -30,7 +27,8 @@ namespace DTO.Admin
 
     }
 
-    public class RoleValueDTO {
+    public class RoleValueDTO
+    {
 
         public int ID { get; set; }
 
@@ -41,7 +39,8 @@ namespace DTO.Admin
         public int ActionType { get; set; }
     }
 
-    public class NavigationDTO {
+    public class NavigationDTO
+    {
         public int NavigationID { get; set; }
 
         public string Name { get; set; }

@@ -2,19 +2,13 @@
 using DTO.User;
 using LEL.App_Start;
 using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Web;
 using System.Web.Http;
 namespace LEL.Controllers
 {
-   
+
     [Authorize]
     public class AccountController : ApiController
     {
@@ -30,7 +24,7 @@ namespace LEL.Controllers
 
             var claimIdentity = (ClaimsIdentity)User.Identity;
             var HspUID = claimIdentity.FindFirstValue("RoleID");
-            if (Status==0)
+            if (Status == 0)
             {
                 return -1;
             }
@@ -48,16 +42,16 @@ namespace LEL.Controllers
         [HttpPost, Route("api/Account/Update/")]
         public IHttpActionResult Update(UserDTO dTO)
         {
-            if(dTO==null)
+            if (dTO == null)
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误请检查", null));
             }
-           
+
             dTO.UserID = Convert.ToInt32(User.Identity.Name.Split(',')[1]);
-            var result= StoreUserService.Update(dTO,false);
-            if(result)
+            var result = StoreUserService.Update(dTO, false);
+            if (result)
             {
-                return  Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
             else
             {
@@ -65,16 +59,16 @@ namespace LEL.Controllers
             }
             return null;
         }
-      
-       /// <summary>
-       /// 修改密码
-       /// </summary>
-       /// <param name="LoginName">账号</param>
-       /// <param name="NewPWD">新密码</param>
-       /// <param name="OriginalPWD">旧密码</param>
-       /// <returns></returns>
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="LoginName">账号</param>
+        /// <param name="NewPWD">新密码</param>
+        /// <param name="OriginalPWD">旧密码</param>
+        /// <returns></returns>
         [HttpPost, Route("api/Account/UpdatePwd/")]
-        public IHttpActionResult UpdatePwd(string LoginName, string NewPWD, string OriginalPWD )
+        public IHttpActionResult UpdatePwd(string LoginName, string NewPWD, string OriginalPWD)
         {
             //var Model = OtherService.GetSmsRecord(LoginName);
             //if (Model.Status != 1 || Model.Status == 1 && Model.CreatTime < DateTime.Now.AddMinutes(-10))
@@ -92,7 +86,7 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "解密失败,请确认", LoginName));
             }
             var result = StoreUserService.UpdatePwd(LoginName, TruePwd);
-            if(result)
+            if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", LoginName));
             }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.User
 {
@@ -12,6 +8,6 @@ namespace DTO.User
         public int UserType { get; set; }
         public string LoginName { get; set; }
         public int Status { get; set; }
-        public DateTime LoginTime { get;set; }
+        public DateTime LoginTime { get; set; }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.Goods
 {
@@ -11,9 +8,9 @@ namespace DTO.Goods
         public int GoodsID { get; set; }
         public int GoodsGroups_ID { get; set; }
 
-       // public string SerialNumber { get; set; }
+        // public string SerialNumber { get; set; }
         public string GoodsName { get; set; }
-        
+
         public int IsSeckill { get; set; }
         public int Stock { get; set; }
         /// <summary>
@@ -25,7 +22,7 @@ namespace DTO.Goods
         public int IsRecommend { get; set; }
         public int IsNewGoods { get; set; }
         public int IsHot { get; set; }
-        public string Describe { get; set; }   
+        public string Describe { get; set; }
         public int Sort { get; set; }
         public int SupplierID { get; set; }
         /// <summary>
@@ -40,7 +37,7 @@ namespace DTO.Goods
         public List<string> GoodsImgList { get; set; }
 
         public List<GoodsValues> GoodsValueList { get; set; }
-        
+
         public List<AddSupplierDto> GoodsSuplierPriceList { get; set; }
 
         public string HeadImage { get; set; } = null;
@@ -57,12 +54,12 @@ namespace DTO.Goods
         /// <summary>
         /// 是否散货 0否 1 是
         /// </summary>
-        public int IsBulkCargo { get; set; }=0;
+        public int IsBulkCargo { get; set; } = 0;
 
         /// <summary>
         /// 建议零售价
         /// </summary>
-        public decimal MSRP { get; set; }=0;
+        public decimal MSRP { get; set; } = 0;
 
         /// <summary>
         /// 是否送货上门
@@ -75,11 +72,12 @@ namespace DTO.Goods
         public int MinimumPurchase { get; set; } = 1;
     }
 
-    public class GoodsImage {
+    public class GoodsImage
+    {
 
         public int ID { get; set; }
         public string Src { get; set; }
-     
+
         public DateTime CreatTime { get; set; }
         public int GoodsID { get; set; }
 
@@ -101,7 +99,7 @@ namespace DTO.Goods
     public class AddSupplierDto
     {
         public int SupplierID { get; set; }
-        public decimal Price { get; set; } 
+        public decimal Price { get; set; }
         public int IsDefalut { get; set; }
     }
 

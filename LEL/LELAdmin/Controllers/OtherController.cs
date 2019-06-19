@@ -1,11 +1,6 @@
 ﻿using Common;
 using DTO.Common;
 using Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
@@ -14,12 +9,12 @@ namespace LELAdmin.Controllers
     {
         OtherService OtherBLL = new OtherService();
         [HttpGet, Route("api/Other/AddSysAddress/")]
-        public IHttpActionResult AddSysAddress (string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort, double? Longitude, double? Latitude)
+        public IHttpActionResult AddSysAddress(string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort, double? Longitude, double? Latitude)
         {
-            var result= OtherBLL.AddSysAddress(ReceiveName, ReceivePhone, ReceiveArea, ReceiveAddress, Sort,   Longitude,   Latitude);
-            if(result>0)
+            var result = OtherBLL.AddSysAddress(ReceiveName, ReceivePhone, ReceiveArea, ReceiveAddress, Sort, Longitude, Latitude);
+            if (result > 0)
             {
-                return  Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
             else
             {
@@ -40,7 +35,7 @@ namespace LELAdmin.Controllers
         [HttpGet, Route("api/Other/UpdateSysAddress/")]
         public IHttpActionResult UpdateSysAddress(int AddressID, string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort, int Status, double? Longitude, double? Latitude)
         {
-            var result = OtherBLL.UpdateSysAddress( AddressID,  ReceiveName,  ReceivePhone,  ReceiveArea,  ReceiveAddress,  Sort,  Status, Longitude, Latitude);
+            var result = OtherBLL.UpdateSysAddress(AddressID, ReceiveName, ReceivePhone, ReceiveArea, ReceiveAddress, Sort, Status, Longitude, Latitude);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -60,7 +55,7 @@ namespace LELAdmin.Controllers
         public IHttpActionResult GetSysAddressList(SeachOptions options)
         {
             int Count;
-            var result = OtherBLL.GetSysAddressList(options,out Count);
+            var result = OtherBLL.GetSysAddressList(options, out Count);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
         /// <summary>
@@ -74,7 +69,7 @@ namespace LELAdmin.Controllers
         [HttpGet, Route("api/Other/AddAd/")]
         public IHttpActionResult AddAd(string Img, string Link, int Sort, string AdName)
         {
-            var result = OtherBLL.AddAd( Img,  Link,  Sort,  AdName);
+            var result = OtherBLL.AddAd(Img, Link, Sort, AdName);
             if (result > 0)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -95,9 +90,9 @@ namespace LELAdmin.Controllers
         /// <param name="falag"></param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/UpdateAd/")]
-        public IHttpActionResult  UpdateAd(int AdId, string Img, string Link, int Sort, string AdName,int falag)
+        public IHttpActionResult UpdateAd(int AdId, string Img, string Link, int Sort, string AdName, int falag)
         {
-            var result = OtherBLL.UpdateAd( AdId,  Img,  Link,  Sort,  AdName, falag);
+            var result = OtherBLL.UpdateAd(AdId, Img, Link, Sort, AdName, falag);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -131,7 +126,7 @@ namespace LELAdmin.Controllers
         /// </summary>
         /// <param name="AddressID"></param>
         /// <returns></returns>
-        [HttpDelete,Route("api/Other/DeleteSysAddress/")]
+        [HttpDelete, Route("api/Other/DeleteSysAddress/")]
         public IHttpActionResult DeleteSysAddress(int AddressID)
         {
             var result = OtherBLL.DeleteSysAddress(AddressID);
@@ -157,10 +152,10 @@ namespace LELAdmin.Controllers
         public IHttpActionResult GetAdList(int offset, int rows, string Keywords, int Flag)
         {
             int Count;
-            var result = OtherBLL.GetAdList( Keywords,  Flag,out Count);
-           
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result,Count));
-          
+            var result = OtherBLL.GetAdList(Keywords, Flag, out Count);
+
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
+
         }
         /// <summary>
         /// 获取系统运行参数
@@ -169,7 +164,7 @@ namespace LELAdmin.Controllers
         [HttpGet, Route("api/Other/GetSysConfig/")]
         public IHttpActionResult GetSysConfig()
         {
-            var result= SysConfig.Get().values;
+            var result = SysConfig.Get().values;
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
         /// <summary>
@@ -192,7 +187,7 @@ namespace LELAdmin.Controllers
         public IHttpActionResult UpdateSysConfig(le_sysconfig model)
         {
             var result = new SysConfigServie().UpdateSysConfig(model);
-            if(result)
+            if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }

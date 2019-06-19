@@ -1,10 +1,7 @@
 ﻿using DTO.HqManager.Index;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
@@ -22,10 +19,10 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 SalesDTO DTO = new SalesDTO();
-                
+
                 var NowDate = DateTime.Now;
                 var SevenDate = Convert.ToDateTime(NowDate.AddDays(-6).ToShortDateString());
-                var tempIq = ctx.le_orders_head.Where(s => s.CompleteTime >= SevenDate&&s.Status==1);
+                var tempIq = ctx.le_orders_head.Where(s => s.CompleteTime >= SevenDate && s.Status == 1);
 
                 var TDresult = tempIq.Select(s => new IndexDTO
                 {
@@ -55,9 +52,9 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 GoodsStaticDTO DTO = new GoodsStaticDTO();
-                var list = ctx.le_goods.Select(s=>s.IsShelves).ToList();
+                var list = ctx.le_goods.Select(s => s.IsShelves).ToList();
 
-                var Shelves = list.Count(s=>s==0);
+                var Shelves = list.Count(s => s == 0);
                 var TheShelves = list.Count(s => s == 1);
 
                 DTO.ShelvesCount = list.Count(s => s == 0);//下架
@@ -74,7 +71,7 @@ namespace Service
         /// <param name="StartTime"></param>
         /// <param name="EndTime"></param>
         /// <returns></returns>
-        public SalesChartDTO GetSalesChartDTO(string StartTime,string EndTime)
+        public SalesChartDTO GetSalesChartDTO(string StartTime, string EndTime)
         {
             using (Entities ctx = new Entities())
             {
@@ -98,7 +95,7 @@ group by OrderTime");
                 {
                     DTO.SalesChartList = QueryList;
                     DTO.OrderTolCount = QueryList.Sum(a => a.OrderCount);
-                    DTO.OrderTolMoney = Math.Round(QueryList.Sum(a => a.OrderMoney),2);
+                    DTO.OrderTolMoney = Math.Round(QueryList.Sum(a => a.OrderMoney), 2);
                 }
                 return DTO;
             }
