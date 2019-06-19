@@ -1,0 +1,914 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="leerledbtestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="le_ad" EntityType="leerledbtestModel.le_ad" />
+    <EntitySet Name="le_admin" EntityType="leerledbtestModel.le_admin" />
+    <EntitySet Name="le_admin_role" EntityType="leerledbtestModel.le_admin_role" />
+    <EntitySet Name="le_admin_role_mapping" EntityType="leerledbtestModel.le_admin_role_mapping" />
+    <EntitySet Name="le_admin_role_value" EntityType="leerledbtestModel.le_admin_role_value" />
+    <EntitySet Name="le_goods" EntityType="leerledbtestModel.le_goods" />
+    <EntitySet Name="le_goods_img" EntityType="leerledbtestModel.le_goods_img" />
+    <EntitySet Name="le_goods_operationrecord" EntityType="leerledbtestModel.le_goods_operationrecord" />
+    <EntitySet Name="le_goods_suppliers" EntityType="leerledbtestModel.le_goods_suppliers" />
+    <EntitySet Name="le_goods_value" EntityType="leerledbtestModel.le_goods_value" />
+    <EntitySet Name="le_goods_value_mapping" EntityType="leerledbtestModel.le_goods_value_mapping" />
+    <EntitySet Name="le_goodsgroups" EntityType="leerledbtestModel.le_goodsgroups" />
+    <EntitySet Name="le_navigation" EntityType="leerledbtestModel.le_navigation" />
+    <EntitySet Name="le_orders_head" EntityType="leerledbtestModel.le_orders_head" />
+    <EntitySet Name="le_orders_headschangerecord" EntityType="leerledbtestModel.le_orders_headschangerecord" />
+    <EntitySet Name="le_orders_lines" EntityType="leerledbtestModel.le_orders_lines" />
+    <EntitySet Name="le_orders_lineschangerecord" EntityType="leerledbtestModel.le_orders_lineschangerecord" />
+    <EntitySet Name="le_orders_operationrecord" EntityType="leerledbtestModel.le_orders_operationrecord" />
+    <EntitySet Name="le_pushmsg" EntityType="leerledbtestModel.le_pushmsg" />
+    <EntitySet Name="le_shop_cart" EntityType="leerledbtestModel.le_shop_cart" />
+    <EntitySet Name="le_sms" EntityType="leerledbtestModel.le_sms" />
+    <EntitySet Name="le_suppliers" EntityType="leerledbtestModel.le_suppliers" />
+    <EntitySet Name="le_sys_address" EntityType="leerledbtestModel.le_sys_address" />
+    <EntitySet Name="le_user_address" EntityType="leerledbtestModel.le_user_address" />
+    <EntitySet Name="le_users" EntityType="leerledbtestModel.le_users" />
+    <AssociationSet Name="FK_le_orders_headschangerecord_le_admin" Association="leerledbtestModel.FK_le_orders_headschangerecord_le_admin">
+      <End Role="le_admin" EntitySet="le_admin" />
+      <End Role="le_orders_headschangerecord" EntitySet="le_orders_headschangerecord" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_admin" Association="leerledbtestModel.FK_le_orders_lines_le_admin">
+      <End Role="le_admin" EntitySet="le_admin" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_fa_admin_role_value_fa_navigation" Association="leerledbtestModel.FK_fa_admin_role_value_fa_navigation">
+      <End Role="le_navigation" EntitySet="le_navigation" />
+      <End Role="le_admin_role_value" EntitySet="le_admin_role_value" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_goods_img_le_goods" Association="leerledbtestModel.FK_le_goods_img_le_goods">
+      <End Role="le_goods" EntitySet="le_goods" />
+      <End Role="le_goods_img" EntitySet="le_goods_img" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_goods_le_goodsgroups" Association="leerledbtestModel.FK_le_goods_le_goodsgroups">
+      <End Role="le_goodsgroups" EntitySet="le_goodsgroups" />
+      <End Role="le_goods" EntitySet="le_goods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_goods_le_suppliers" Association="leerledbtestModel.FK_le_goods_le_suppliers">
+      <End Role="le_suppliers" EntitySet="le_suppliers" />
+      <End Role="le_goods" EntitySet="le_goods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_goods_suppliers_le_goods" Association="leerledbtestModel.FK_le_goods_suppliers_le_goods">
+      <End Role="le_goods" EntitySet="le_goods" />
+      <End Role="le_goods_suppliers" EntitySet="le_goods_suppliers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_goods_value_mapping_le_goods" Association="leerledbtestModel.FK_le_goods_value_mapping_le_goods">
+      <End Role="le_goods" EntitySet="le_goods" />
+      <End Role="le_goods_value_mapping" EntitySet="le_goods_value_mapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_goods" Association="leerledbtestModel.FK_le_orders_lines_le_goods">
+      <End Role="le_goods" EntitySet="le_goods" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_shop_cart_le_goods" Association="leerledbtestModel.FK_le_shop_cart_le_goods">
+      <End Role="le_goods" EntitySet="le_goods" />
+      <End Role="le_shop_cart" EntitySet="le_shop_cart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_goods_suppliers_le_suppliers" Association="leerledbtestModel.FK_le_goods_suppliers_le_suppliers">
+      <End Role="le_suppliers" EntitySet="le_suppliers" />
+      <End Role="le_goods_suppliers" EntitySet="le_goods_suppliers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_goods_value_le_goods_value_mapping" Association="leerledbtestModel.FK_le_goods_value_le_goods_value_mapping">
+      <End Role="le_goods_value_mapping" EntitySet="le_goods_value_mapping" />
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_goods_value" Association="leerledbtestModel.FK_le_orders_lines_le_goods_value">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_goods_value_2" Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_2">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_goods_value_3" Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_3">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_goods_value_4" Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_4">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_goods_value_5" Association="leerledbtestModel.FK_le_orders_lines_le_goods_value_5">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_shop_cart_le_goods_value" Association="leerledbtestModel.FK_le_shop_cart_le_goods_value">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_shop_cart" EntitySet="le_shop_cart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_shop_cart_le_goods_value_2" Association="leerledbtestModel.FK_le_shop_cart_le_goods_value_2">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_shop_cart" EntitySet="le_shop_cart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_shop_cart_le_goods_value_3" Association="leerledbtestModel.FK_le_shop_cart_le_goods_value_3">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_shop_cart" EntitySet="le_shop_cart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_shop_cart_le_goods_value_4" Association="leerledbtestModel.FK_le_shop_cart_le_goods_value_4">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_shop_cart" EntitySet="le_shop_cart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_shop_cart_le_goods_value_5" Association="leerledbtestModel.FK_le_shop_cart_le_goods_value_5">
+      <End Role="le_goods_value" EntitySet="le_goods_value" />
+      <End Role="le_shop_cart" EntitySet="le_shop_cart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_head_le_users" Association="leerledbtestModel.FK_le_orders_head_le_users">
+      <End Role="le_users" EntitySet="le_users" />
+      <End Role="le_orders_head" EntitySet="le_orders_head" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_headschangerecord_le_orders_head" Association="leerledbtestModel.FK_le_orders_headschangerecord_le_orders_head">
+      <End Role="le_orders_head" EntitySet="le_orders_head" />
+      <End Role="le_orders_headschangerecord" EntitySet="le_orders_headschangerecord" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_suppliers" Association="leerledbtestModel.FK_le_orders_lines_le_suppliers">
+      <End Role="le_suppliers" EntitySet="le_suppliers" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lines_le_users" Association="leerledbtestModel.FK_le_orders_lines_le_users">
+      <End Role="le_users" EntitySet="le_users" />
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_orders_lineschangerecord_le_orders_lines" Association="leerledbtestModel.FK_le_orders_lineschangerecord_le_orders_lines">
+      <End Role="le_orders_lines" EntitySet="le_orders_lines" />
+      <End Role="le_orders_lineschangerecord" EntitySet="le_orders_lineschangerecord" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_shop_cart_le_users" Association="leerledbtestModel.FK_le_shop_cart_le_users">
+      <End Role="le_users" EntitySet="le_users" />
+      <End Role="le_shop_cart" EntitySet="le_shop_cart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_le_user_address_le_users" Association="leerledbtestModel.FK_le_user_address_le_users">
+      <End Role="le_users" EntitySet="le_users" />
+      <End Role="le_user_address" EntitySet="le_user_address" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="le_ad">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AdName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Sort" Type="Int32" Nullable="false" />
+    <Property Name="ImgSrc" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="false" />
+    <Property Name="Link" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+    <Property Name="Flag" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" />
+    <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="le_admin">
+    <Key>
+      <PropertyRef Name="AdminID" />
+    </Key>
+    <Property Name="AdminID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="loginname" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="nickname" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="telephone" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="password" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+    <Property Name="salt" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="status" Type="Int32" Nullable="false" />
+    <Property Name="Roleid" Type="Int32" Nullable="false" />
+    <Property Name="AdminRoleStr" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Createtime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsUrgent" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_orders_headschangerecord" Relationship="leerledbtestModel.FK_le_orders_headschangerecord_le_admin" FromRole="le_admin" ToRole="le_orders_headschangerecord" />
+    <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_admin" FromRole="le_admin" ToRole="le_orders_lines" />
+  </EntityType>
+  <EntityType Name="le_admin_role">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="enable" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="le_admin_role_mapping">
+    <Key>
+      <PropertyRef Name="RoleMappingID" />
+    </Key>
+    <Property Name="RoleMappingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AdminRoleID" Type="Int32" Nullable="false" />
+    <Property Name="NavigationID" Type="Int32" Nullable="false" />
+    <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="le_admin_role_value">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AdminRoleID" Type="Int32" Nullable="false" />
+    <Property Name="NavigationID" Type="Int32" Nullable="false" />
+    <Property Name="ActionType" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_navigation" Relationship="leerledbtestModel.FK_fa_admin_role_value_fa_navigation" FromRole="le_admin_role_value" ToRole="le_navigation" />
+  </EntityType>
+  <EntityType Name="le_goods">
+    <Key>
+      <PropertyRef Name="GoodsID" />
+    </Key>
+    <Property Name="GoodsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GoodsGroups_ID" Type="Int32" Nullable="false" />
+    <Property Name="SerialNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="GoodsName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Image" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="OriginalPrice" Type="Decimal" Nullable="false" />
+    <Property Name="SpecialOffer" Type="Decimal" Nullable="false" />
+    <Property Name="Specifications" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="IsShelves" Type="Int32" Nullable="false" />
+    <Property Name="IsRecommend" Type="Int32" Nullable="false" />
+    <Property Name="IsNewGoods" Type="Int32" Nullable="false" />
+    <Property Name="IsHot" Type="Int32" Nullable="false" />
+    <Property Name="Describe" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Sort" Type="Int32" Nullable="false" />
+    <Property Name="ShelfLife" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SupplierID" Type="Int32" Nullable="false" />
+    <Property Name="PackingNumber" Type="Int32" />
+    <NavigationProperty Name="le_goods_img" Relationship="leerledbtestModel.FK_le_goods_img_le_goods" FromRole="le_goods" ToRole="le_goods_img" />
+    <NavigationProperty Name="le_goodsgroups" Relationship="leerledbtestModel.FK_le_goods_le_goodsgroups" FromRole="le_goods" ToRole="le_goodsgroups" />
+    <NavigationProperty Name="le_suppliers" Relationship="leerledbtestModel.FK_le_goods_le_suppliers" FromRole="le_goods" ToRole="le_suppliers" />
+    <NavigationProperty Name="le_goods_suppliers" Relationship="leerledbtestModel.FK_le_goods_suppliers_le_goods" FromRole="le_goods" ToRole="le_goods_suppliers" />
+    <NavigationProperty Name="le_goods_value_mapping" Relationship="leerledbtestModel.FK_le_goods_value_mapping_le_goods" FromRole="le_goods" ToRole="le_goods_value_mapping" />
+    <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods" FromRole="le_goods" ToRole="le_orders_lines" />
+    <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods" FromRole="le_goods" ToRole="le_shop_cart" />
+  </EntityType>
+  <EntityType Name="le_goods_img">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Src" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="CreatTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GoodsID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_img_le_goods" FromRole="le_goods_img" ToRole="le_goods" />
+  </EntityType>
+  <EntityType Name="le_goods_operationrecord">
+    <Key>
+      <PropertyRef Name="OperationRecordID" />
+    </Key>
+    <Property Name="OperationRecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AdminID" Type="Int32" Nullable="false" />
+    <Property Name="GoodsID" Type="Int32" Nullable="false" />
+    <Property Name="PreGoodsName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="AfterGoodsName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PreOriginalPrice" Type="Decimal" Nullable="false" />
+    <Property Name="AfterOriginalPrice" Type="Decimal" Nullable="false" />
+    <Property Name="PreSpecialOffer" Type="Decimal" Nullable="false" />
+    <Property Name="AfterSpecialOffer" Type="Decimal" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="le_goods_suppliers">
+    <Key>
+      <PropertyRef Name="GoodsMappingID" />
+    </Key>
+    <Property Name="GoodsMappingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GoodsID" Type="Int32" Nullable="false" />
+    <Property Name="SuppliersID" Type="Int32" Nullable="false" />
+    <Property Name="Supplyprice" Type="Decimal" Nullable="false" />
+    <Property Name="IsDeleted" Type="Int32" Nullable="false" />
+    <Property Name="CreatTime" Type="DateTime" Nullable="false" />
+    <Property Name="UpdateTime" Type="DateTime" />
+    <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_suppliers_le_goods" FromRole="le_goods_suppliers" ToRole="le_goods" />
+    <NavigationProperty Name="le_suppliers" Relationship="leerledbtestModel.FK_le_goods_suppliers_le_suppliers" FromRole="le_goods_suppliers" ToRole="le_suppliers" />
+  </EntityType>
+  <EntityType Name="le_goods_value">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CoodsValueMappingID" Type="Int32" Nullable="false" />
+    <Property Name="GoodsValue" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Enable" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_goods_value_mapping" Relationship="leerledbtestModel.FK_le_goods_value_le_goods_value_mapping" FromRole="le_goods_value" ToRole="le_goods_value_mapping" />
+    <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value" FromRole="le_goods_value" ToRole="le_orders_lines" />
+    <NavigationProperty Name="le_orders_lines1" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_2" FromRole="le_goods_value" ToRole="le_orders_lines" />
+    <NavigationProperty Name="le_orders_lines2" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_3" FromRole="le_goods_value" ToRole="le_orders_lines" />
+    <NavigationProperty Name="le_orders_lines3" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_4" FromRole="le_goods_value" ToRole="le_orders_lines" />
+    <NavigationProperty Name="le_orders_lines4" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_5" FromRole="le_goods_value" ToRole="le_orders_lines" />
+    <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value" FromRole="le_goods_value" ToRole="le_shop_cart" />
+    <NavigationProperty Name="le_shop_cart1" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_2" FromRole="le_goods_value" ToRole="le_shop_cart" />
+    <NavigationProperty Name="le_shop_cart2" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_3" FromRole="le_goods_value" ToRole="le_shop_cart" />
+    <NavigationProperty Name="le_shop_cart3" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_4" FromRole="le_goods_value" ToRole="le_shop_cart" />
+    <NavigationProperty Name="le_shop_cart4" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_5" FromRole="le_goods_value" ToRole="le_shop_cart" />
+    <Property Name="SerialNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="le_goods_value_mapping">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GoodsID" Type="Int32" Nullable="false" />
+    <Property Name="CategoryType" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_value_mapping_le_goods" FromRole="le_goods_value_mapping" ToRole="le_goods" />
+    <NavigationProperty Name="le_goods_value" Relationship="leerledbtestModel.FK_le_goods_value_le_goods_value_mapping" FromRole="le_goods_value_mapping" ToRole="le_goods_value" />
+  </EntityType>
+  <EntityType Name="le_goodsgroups">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Level" Type="Int32" Nullable="false" />
+    <Property Name="Sort" Type="Int32" Nullable="false" />
+    <Property Name="ParentID" Type="Int32" Nullable="false" />
+    <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_le_goodsgroups" FromRole="le_goodsgroups" ToRole="le_goods" />
+  </EntityType>
+  <EntityType Name="le_navigation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="LinkUrl" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Remark" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ParentID" Type="Int32" Nullable="false" />
+    <Property Name="Sort" Type="Int32" Nullable="false" />
+    <Property Name="Flag" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_admin_role_value" Relationship="leerledbtestModel.FK_fa_admin_role_value_fa_navigation" FromRole="le_navigation" ToRole="le_admin_role_value" />
+  </EntityType>
+  <EntityType Name="le_orders_head">
+    <Key>
+      <PropertyRef Name="Orders_Head_ID" />
+    </Key>
+    <Property Name="Orders_Head_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Out_Trade_No" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="RcAddr" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="RcName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="RcPhone" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+    <Property Name="Money" Type="Decimal" Nullable="false" />
+    <Property Name="SupplyMoney" Type="Decimal" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="AdminID" Type="Int32" />
+    <Property Name="UsersID" Type="Int32" Nullable="false" />
+    <Property Name="Head_Notes" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="CompleteTime" Type="DateTime" />
+    <Property Name="UpdateTime" Type="DateTime" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PickupTime" Type="DateTime" />
+    <Property Name="PickUpMan" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PickUpPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CarNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="LinesCount" Type="Int32" Nullable="false" />
+    <Property Name="OrderType" Type="Int32" Nullable="false" />
+    <Property Name="ExpressType" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_users" Relationship="leerledbtestModel.FK_le_orders_head_le_users" FromRole="le_orders_head" ToRole="le_users" />
+    <NavigationProperty Name="le_orders_headschangerecord" Relationship="leerledbtestModel.FK_le_orders_headschangerecord_le_orders_head" FromRole="le_orders_head" ToRole="le_orders_headschangerecord" />
+  </EntityType>
+  <EntityType Name="le_orders_headschangerecord">
+    <Key>
+      <PropertyRef Name="HeadRecordID" />
+    </Key>
+    <Property Name="HeadRecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrderHeadID" Type="Int32" Nullable="false" />
+    <Property Name="BeforeCount" Type="Int32" Nullable="false" />
+    <Property Name="AfterCount" Type="Int32" Nullable="false" />
+    <Property Name="BeforeMoney" Type="Decimal" Nullable="false" />
+    <Property Name="AfterMoney" Type="Decimal" Nullable="false" />
+    <Property Name="AdminID" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="le_admin" Relationship="leerledbtestModel.FK_le_orders_headschangerecord_le_admin" FromRole="le_orders_headschangerecord" ToRole="le_admin" />
+    <NavigationProperty Name="le_orders_head" Relationship="leerledbtestModel.FK_le_orders_headschangerecord_le_orders_head" FromRole="le_orders_headschangerecord" ToRole="le_orders_head" />
+  </EntityType>
+  <EntityType Name="le_orders_lines">
+    <Key>
+      <PropertyRef Name="Orders_Lines_ID" />
+    </Key>
+    <Property Name="Orders_Lines_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Out_Trade_No" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Goods_ID" Type="Int32" Nullable="false" />
+    <Property Name="Money" Type="Decimal" Nullable="false" />
+    <Property Name="SupplyPrice" Type="Decimal" Nullable="false" />
+    <Property Name="GoodsCount" Type="Int32" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="AdminID" Type="Int32" />
+    <Property Name="UsersID" Type="Int32" Nullable="false" />
+    <Property Name="SuppliersID" Type="Int32" Nullable="false" />
+    <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Category1" Type="Int32" />
+    <Property Name="Category2" Type="Int32" />
+    <Property Name="Category3" Type="Int32" />
+    <Property Name="Category4" Type="Int32" />
+    <Property Name="Category5" Type="Int32" />
+    <NavigationProperty Name="le_admin" Relationship="leerledbtestModel.FK_le_orders_lines_le_admin" FromRole="le_orders_lines" ToRole="le_admin" />
+    <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods" FromRole="le_orders_lines" ToRole="le_goods" />
+    <NavigationProperty Name="le_goods_value" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value" FromRole="le_orders_lines" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value1" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_2" FromRole="le_orders_lines" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value2" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_3" FromRole="le_orders_lines" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value3" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_4" FromRole="le_orders_lines" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value4" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods_value_5" FromRole="le_orders_lines" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_suppliers" Relationship="leerledbtestModel.FK_le_orders_lines_le_suppliers" FromRole="le_orders_lines" ToRole="le_suppliers" />
+    <NavigationProperty Name="le_users" Relationship="leerledbtestModel.FK_le_orders_lines_le_users" FromRole="le_orders_lines" ToRole="le_users" />
+    <NavigationProperty Name="le_orders_lineschangerecord" Relationship="leerledbtestModel.FK_le_orders_lineschangerecord_le_orders_lines" FromRole="le_orders_lines" ToRole="le_orders_lineschangerecord" />
+  </EntityType>
+  <EntityType Name="le_orders_lineschangerecord">
+    <Key>
+      <PropertyRef Name="LinesRecordID" />
+    </Key>
+    <Property Name="LinesRecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrderLineID" Type="Int32" Nullable="false" />
+    <Property Name="BeforeCount" Type="Int32" Nullable="false" />
+    <Property Name="AfterCount" Type="Int32" Nullable="false" />
+    <Property Name="BeforeMoney" Type="Decimal" Nullable="false" />
+    <Property Name="AfterMoney" Type="Decimal" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="UserType" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lineschangerecord_le_orders_lines" FromRole="le_orders_lineschangerecord" ToRole="le_orders_lines" />
+  </EntityType>
+  <EntityType Name="le_orders_operationrecord">
+    <Key>
+      <PropertyRef Name="OperationRecordID" />
+    </Key>
+    <Property Name="OperationRecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AdminID" Type="Int32" Nullable="false" />
+    <Property Name="Orders_Head_ID" Type="Int32" Nullable="false" />
+    <Property Name="OperationAction" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="le_pushmsg">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+    <Property Name="MsgCount" Type="Int32" Nullable="false" />
+    <Property Name="OrderNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="UserType" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="IsDeleted" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="le_shop_cart">
+    <Key>
+      <PropertyRef Name="CartID" />
+    </Key>
+    <Property Name="CartID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GoodsID" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="GoodsCount" Type="Int32" Nullable="false" />
+    <Property Name="Category1" Type="Int32" />
+    <Property Name="Category2" Type="Int32" />
+    <Property Name="Category3" Type="Int32" />
+    <Property Name="Category4" Type="Int32" />
+    <Property Name="Category5" Type="Int32" />
+    <Property Name="Price" Type="Decimal" Nullable="false" />
+    <Property Name="Createtime" Type="DateTime" />
+    <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods" FromRole="le_shop_cart" ToRole="le_goods" />
+    <NavigationProperty Name="le_goods_value" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value" FromRole="le_shop_cart" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value1" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_2" FromRole="le_shop_cart" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value2" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_3" FromRole="le_shop_cart" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value3" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_4" FromRole="le_shop_cart" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_goods_value4" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods_value_5" FromRole="le_shop_cart" ToRole="le_goods_value" />
+    <NavigationProperty Name="le_users" Relationship="leerledbtestModel.FK_le_shop_cart_le_users" FromRole="le_shop_cart" ToRole="le_users" />
+  </EntityType>
+  <EntityType Name="le_sms">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+    <Property Name="CreatTime" Type="DateTime" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="NonceStr" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+    <Property Name="VerifyTime" Type="DateTime" />
+    <Property Name="Phone" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="le_suppliers">
+    <Key>
+      <PropertyRef Name="SuppliersID" />
+    </Key>
+    <Property Name="SuppliersID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SuppliersName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersResponPeople" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersPassWord" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersSalt" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersHeadImage" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersImgA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersImgB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersImgC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersImgD" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersImgE" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersMobilePhone" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersAddr" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersLoginTime" Type="DateTime" />
+    <Property Name="SuppliersStatus" Type="Int32" Nullable="false" />
+    <Property Name="UpdateTime" Type="DateTime" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_le_suppliers" FromRole="le_suppliers" ToRole="le_goods" />
+    <NavigationProperty Name="le_goods_suppliers" Relationship="leerledbtestModel.FK_le_goods_suppliers_le_suppliers" FromRole="le_suppliers" ToRole="le_goods_suppliers" />
+    <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_suppliers" FromRole="le_suppliers" ToRole="le_orders_lines" />
+  </EntityType>
+  <EntityType Name="le_sys_address">
+    <Key>
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="AddressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ReceiveName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ReceivePhone" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ReceiveArea" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ReceiveAddress" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="Sort" Type="Int32" Nullable="false" />
+    <Property Name="Longitude" Type="Double" />
+    <Property Name="Latitude" Type="Double" />
+  </EntityType>
+  <EntityType Name="le_user_address">
+    <Key>
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="AddressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="ReceiveName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ReceivePhone" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ReceiveArea" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ReceiveAddress" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="DefaultAddr" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="le_users" Relationship="leerledbtestModel.FK_le_user_address_le_users" FromRole="le_user_address" ToRole="le_users" />
+  </EntityType>
+  <EntityType Name="le_users">
+    <Key>
+      <PropertyRef Name="Users_ID" />
+    </Key>
+    <Property Name="Users_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UsersName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="UsersNickname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="UsersPassWord" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Salt" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="UsersEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="UsersImage" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="UsersIDImgA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="UsersIDImgB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="UsersBusinessImg" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="UsersMobilePhone" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+    <Property Name="UsersLandline" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+    <Property Name="UsersLoginTime" Type="DateTime" />
+    <Property Name="UpdateTime" Type="DateTime" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UsersStatus" Type="Int32" Nullable="false" />
+    <Property Name="UsersAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="CarNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="le_orders_head" Relationship="leerledbtestModel.FK_le_orders_head_le_users" FromRole="le_users" ToRole="le_orders_head" />
+    <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_users" FromRole="le_users" ToRole="le_orders_lines" />
+    <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_users" FromRole="le_users" ToRole="le_shop_cart" />
+    <NavigationProperty Name="le_user_address" Relationship="leerledbtestModel.FK_le_user_address_le_users" FromRole="le_users" ToRole="le_user_address" />
+  </EntityType>
+  <Association Name="FK_le_orders_headschangerecord_le_admin">
+    <End Type="leerledbtestModel.le_admin" Role="le_admin" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_orders_headschangerecord" Role="le_orders_headschangerecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_admin">
+        <PropertyRef Name="AdminID" />
+      </Principal>
+      <Dependent Role="le_orders_headschangerecord">
+        <PropertyRef Name="AdminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_admin">
+    <End Type="leerledbtestModel.le_admin" Role="le_admin" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_admin">
+        <PropertyRef Name="AdminID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="AdminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_fa_admin_role_value_fa_navigation">
+    <End Type="leerledbtestModel.le_navigation" Role="le_navigation" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_admin_role_value" Role="le_admin_role_value" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_navigation">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_admin_role_value">
+        <PropertyRef Name="NavigationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_goods_img_le_goods">
+    <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_goods_img" Role="le_goods_img" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods">
+        <PropertyRef Name="GoodsID" />
+      </Principal>
+      <Dependent Role="le_goods_img">
+        <PropertyRef Name="GoodsID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_goods_le_goodsgroups">
+    <End Type="leerledbtestModel.le_goodsgroups" Role="le_goodsgroups" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goodsgroups">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_goods">
+        <PropertyRef Name="GoodsGroups_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_goods_le_suppliers">
+    <End Type="leerledbtestModel.le_suppliers" Role="le_suppliers" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_suppliers">
+        <PropertyRef Name="SuppliersID" />
+      </Principal>
+      <Dependent Role="le_goods">
+        <PropertyRef Name="SupplierID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_goods_suppliers_le_goods">
+    <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_goods_suppliers" Role="le_goods_suppliers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods">
+        <PropertyRef Name="GoodsID" />
+      </Principal>
+      <Dependent Role="le_goods_suppliers">
+        <PropertyRef Name="GoodsID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_goods_value_mapping_le_goods">
+    <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_goods_value_mapping" Role="le_goods_value_mapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods">
+        <PropertyRef Name="GoodsID" />
+      </Principal>
+      <Dependent Role="le_goods_value_mapping">
+        <PropertyRef Name="GoodsID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_goods">
+    <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods">
+        <PropertyRef Name="GoodsID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="Goods_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_shop_cart_le_goods">
+    <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_shop_cart" Role="le_shop_cart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods">
+        <PropertyRef Name="GoodsID" />
+      </Principal>
+      <Dependent Role="le_shop_cart">
+        <PropertyRef Name="GoodsID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_goods_suppliers_le_suppliers">
+    <End Type="leerledbtestModel.le_suppliers" Role="le_suppliers" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_goods_suppliers" Role="le_goods_suppliers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_suppliers">
+        <PropertyRef Name="SuppliersID" />
+      </Principal>
+      <Dependent Role="le_goods_suppliers">
+        <PropertyRef Name="SuppliersID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_goods_value_le_goods_value_mapping">
+    <End Type="leerledbtestModel.le_goods_value_mapping" Role="le_goods_value_mapping" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value_mapping">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_goods_value">
+        <PropertyRef Name="CoodsValueMappingID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_goods_value">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="Category1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_goods_value_2">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="Category2" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_goods_value_3">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="Category3" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_goods_value_4">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="Category4" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_goods_value_5">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="Category5" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_shop_cart_le_goods_value">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_shop_cart" Role="le_shop_cart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_shop_cart">
+        <PropertyRef Name="Category1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_shop_cart_le_goods_value_2">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_shop_cart" Role="le_shop_cart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_shop_cart">
+        <PropertyRef Name="Category2" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_shop_cart_le_goods_value_3">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_shop_cart" Role="le_shop_cart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_shop_cart">
+        <PropertyRef Name="Category3" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_shop_cart_le_goods_value_4">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_shop_cart" Role="le_shop_cart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_shop_cart">
+        <PropertyRef Name="Category4" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_shop_cart_le_goods_value_5">
+    <End Type="leerledbtestModel.le_goods_value" Role="le_goods_value" Multiplicity="0..1" />
+    <End Type="leerledbtestModel.le_shop_cart" Role="le_shop_cart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_goods_value">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="le_shop_cart">
+        <PropertyRef Name="Category5" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_head_le_users">
+    <End Type="leerledbtestModel.le_users" Role="le_users" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_orders_head" Role="le_orders_head" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_users">
+        <PropertyRef Name="Users_ID" />
+      </Principal>
+      <Dependent Role="le_orders_head">
+        <PropertyRef Name="UsersID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_headschangerecord_le_orders_head">
+    <End Type="leerledbtestModel.le_orders_head" Role="le_orders_head" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_orders_headschangerecord" Role="le_orders_headschangerecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_orders_head">
+        <PropertyRef Name="Orders_Head_ID" />
+      </Principal>
+      <Dependent Role="le_orders_headschangerecord">
+        <PropertyRef Name="OrderHeadID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_suppliers">
+    <End Type="leerledbtestModel.le_suppliers" Role="le_suppliers" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_suppliers">
+        <PropertyRef Name="SuppliersID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="SuppliersID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lines_le_users">
+    <End Type="leerledbtestModel.le_users" Role="le_users" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_users">
+        <PropertyRef Name="Users_ID" />
+      </Principal>
+      <Dependent Role="le_orders_lines">
+        <PropertyRef Name="UsersID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_orders_lineschangerecord_le_orders_lines">
+    <End Type="leerledbtestModel.le_orders_lines" Role="le_orders_lines" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_orders_lineschangerecord" Role="le_orders_lineschangerecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_orders_lines">
+        <PropertyRef Name="Orders_Lines_ID" />
+      </Principal>
+      <Dependent Role="le_orders_lineschangerecord">
+        <PropertyRef Name="OrderLineID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_shop_cart_le_users">
+    <End Type="leerledbtestModel.le_users" Role="le_users" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_shop_cart" Role="le_shop_cart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_users">
+        <PropertyRef Name="Users_ID" />
+      </Principal>
+      <Dependent Role="le_shop_cart">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_le_user_address_le_users">
+    <End Type="leerledbtestModel.le_users" Role="le_users" Multiplicity="1" />
+    <End Type="leerledbtestModel.le_user_address" Role="le_user_address" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="le_users">
+        <PropertyRef Name="Users_ID" />
+      </Principal>
+      <Dependent Role="le_user_address">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
