@@ -141,7 +141,7 @@ namespace Service
         }
 
         /// <summary>
-        /// 用户注册
+        /// 用户供应商注册
         /// </summary>
         /// <param name="LoginName"></param>
         /// <param name="PWD"></param>

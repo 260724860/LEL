@@ -265,7 +265,7 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [Route("AddGoodsValue")]
         [HttpPost]
-        public IHttpActionResult AddGoodsValue(List<GoodsValues> List)
+        public IHttpActionResult AddGoodsValue(List<GoodsValues> List,int IsBulkCargo)
         {
             try
             {
@@ -273,7 +273,7 @@ namespace LELAdmin.Controllers
                 {
                     return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
                 }
-                var result = GService.AddGoodsValueList(List, out string Msg);
+                var result = GService.AddGoodsValueList(List, IsBulkCargo,out string Msg);
                 if (result)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = "添加成功", result = Msg });

@@ -1385,9 +1385,15 @@ where lg.GoodsID=@GoodsID");
                     if (model.OrderType != 3 && Status == 4)
                     {
                         msg = "非加急单,无直接接单权限";
+                        return false;
                     }
                     if (Status == 1)//已完成
                     {
+                       if( OrderlineList.Any(s=>s.Status==1)||OrderlineList.Any(s=>s.Status==0))
+                        {
+                            msg = "该订单内还有未接单或未派单订单,无法确认完成";
+                            return false;
+                        }
                         new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1); //推送消息给用户
                     }
 
@@ -1403,6 +1409,7 @@ where lg.GoodsID=@GoodsID");
                             OrderLineLogModel.CreateTime = DateTime.Now;
                             OrderLineLogModel.AfterStatus = 2;
                             OrderLineLogModel.AdminID = loginInfo.UserID;
+                            OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
                             orderline.Status = 2;
                             orderline.UpdateTime = DateTime.Now;
                             ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;

@@ -291,70 +291,73 @@ namespace Service
                     }).ToList(),
                     SupplierID = o.SuppliersID
                 });
-                var tmepGroup = tempJoin.Join(ctx.lel_admin_suppliers, s => s.SupplierID, p => p.SupplierID, (s, p) => new GroodsModelDto
-                {
-                    GoodsID = s.GoodsID,
-                    GoodsName = s.GoodsName,
-                    GoodsGroups_ID = s.GoodsGroups_ID,
-                    Sort = s.Sort,
-                    Specifications = s.Specifications,
-                    Describe = s.Describe,
-                    IsShelves = s.IsShelves,
-                    Image = s.Image,
-                    IsHot = s.IsHot,
-                    IsNewGoods = s.IsNewGoods,
-                    IsRecommend = s.IsRecommend,
-                    IsSeckill = s.IsSeckill,
-                    CreateTime = s.CreateTime,
-                    SpecialOffer = s.SpecialOffer,
-                    OriginalPrice = s.OriginalPrice,
-                    GoodsGroupName = s.GoodsGroupName,
-                    PackingNumber = s.PackingNumber,
-                    SalesVolumes = s.SalesVolumes,
-                    TotalSalesVolumes = s.TotalSalesVolumes,
-                    Stock = s.Stock,
-                    Quota = s.Quota,
-                    MSRP = s.MSRP,
-                    GoodsValueList = s.GoodsValueList,
-                    SupplierID = 0
-                }).GroupBy(s => s.GoodsID).Select(k => k.ToList());
-
+                var AdminRoleSupplier = ctx.lel_admin_suppliers.Where(s => s.AdminID == AdminID).Select(s => s.SupplierID).ToList();
+                var tmepGroup = tempJoin.Where(s => AdminRoleSupplier.Contains(s.SupplierID));//.ToList();
+              
+                //var tmepGroup = tempJoin.Join(ctx.lel_admin_suppliers, s => s.SupplierID, p => p.SupplierID, (s, p) => new GroodsModelDto
+                //{
+                //    GoodsID = s.GoodsID,
+                //    GoodsName = s.GoodsName,
+                //    GoodsGroups_ID = s.GoodsGroups_ID,
+                //    Sort = s.Sort,
+                //    Specifications = s.Specifications,
+                //    Describe = s.Describe,
+                //    IsShelves = s.IsShelves,
+                //    Image = s.Image,
+                //    IsHot = s.IsHot,
+                //    IsNewGoods = s.IsNewGoods,
+                //    IsRecommend = s.IsRecommend,
+                //    IsSeckill = s.IsSeckill,
+                //    CreateTime = s.CreateTime,
+                //    SpecialOffer = s.SpecialOffer,
+                //    OriginalPrice = s.OriginalPrice,
+                //    GoodsGroupName = s.GoodsGroupName,
+                //    PackingNumber = s.PackingNumber,
+                //    SalesVolumes = s.SalesVolumes,
+                //    TotalSalesVolumes = s.TotalSalesVolumes,
+                //    Stock = s.Stock,
+                //    Quota = s.Quota,
+                //    MSRP = s.MSRP,
+                //    GoodsValueList = s.GoodsValueList,
+                //    SupplierID = 0
+                //}).GroupBy(s => s.GoodsID).Select(k => k.ToList());
+               
                 list.PageCount = await tmepGroup.CountAsync();
                 #region 排序              
                 switch (options.SortKey)
                 {
                     case GoodsSeachOrderByType.CreateTimeAsc:
-                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.CreateTime));
+                        tmepGroup = tmepGroup.OrderBy(s => s.CreateTime);
                         break;
                     case GoodsSeachOrderByType.CreateTimeDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.CreateTime));
+                        tmepGroup = tmepGroup.OrderByDescending(s => s.CreateTime);
                         break;
                     case GoodsSeachOrderByType.OriginalPriceAsc:
-                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.SpecialOffer));
+                        tmepGroup = tmepGroup.OrderBy(s => s.SpecialOffer);
                         break;
                     case GoodsSeachOrderByType.OriginalPriceDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.SpecialOffer));
+                        tmepGroup = tmepGroup.OrderByDescending(s => s.SpecialOffer);
                         break;
                     case GoodsSeachOrderByType.SortAsc:
-                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.Sort));
+                        tmepGroup = tmepGroup.OrderBy(s => s.Sort);
                         break;
                     case GoodsSeachOrderByType.SortDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.Sort));
+                        tmepGroup = tmepGroup.OrderByDescending(s => s.Sort);
                         break;
                     case GoodsSeachOrderByType.SalesVolumesASC:
-                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.SalesVolumes));
+                        tmepGroup = tmepGroup.OrderBy(s => s.SalesVolumes);
                         break;
                     case GoodsSeachOrderByType.SalesVolumesDesc:
-                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.SalesVolumes));
+                        tmepGroup = tmepGroup.OrderByDescending(s => s.SalesVolumes);
                         break;
                     case GoodsSeachOrderByType.TotalSalesVolumesASC:
-                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.TotalSalesVolumes));
+                        tmepGroup = tmepGroup.OrderBy(s => s.TotalSalesVolumes);
                         break;
                     case GoodsSeachOrderByType.TotalSalesVolumesDESC:
-                        tmepGroup = tmepGroup.OrderByDescending(k => k.Max(s => s.TotalSalesVolumes));
+                        tmepGroup = tmepGroup.OrderByDescending(s => s.TotalSalesVolumes);
                         break;
                     default:
-                        tmepGroup = tmepGroup.OrderBy(k => k.Max(s => s.Sort));
+                        tmepGroup = tmepGroup.OrderBy(s => s.Sort);
                         break;
                 }
                 #endregion
@@ -362,15 +365,15 @@ namespace Service
                 tmepGroup = tmepGroup.Skip(options.Offset).Take(options.Rows);
                 var kk = await tmepGroup.ToListAsync();
 
-                List<GroodsModelDto> result = new List<GroodsModelDto>();
-                foreach (var index in kk)
-                {
-                    foreach (var sub in index.ToList<GroodsModelDto>())
-                    {
-                        result.Add(sub);
-                    }
-                }
-                list.GoodsModel = result;
+                //List<GroodsModelDto> result = new List<GroodsModelDto>();
+                //foreach (var index in kk)
+                //{
+                //    foreach (var sub in index.ToList<GroodsModelDto>())
+                //    {
+                //        result.Add(sub);
+                //    }
+                //}
+                list.GoodsModel = kk;//tempii;
                 return list;
 
                 //list.PageCount = result.Count();
@@ -716,6 +719,7 @@ namespace Service
                         goods_Value.GoodsID = dto.GoodsID;
                         goods_Value.SerialNumber = index.SerialNumber;
                         goods_Value.IsBulkCargo = model.IsBulkCargo;
+
                         if (string.IsNullOrEmpty(goods_Value.SerialNumber))
                         {
                             goods_Value.IsAuto = 1;
@@ -1253,7 +1257,7 @@ namespace Service
 
         #region 商品属性操作
 
-        public bool AddGoodsValueList(List<GoodsValues> List, out string Msg)
+        public bool AddGoodsValueList(List<GoodsValues> List,int IsBulkCargo, out string Msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -1268,9 +1272,23 @@ namespace Service
                 {
                     foreach (var index in List)
                     {
+                        
                         var exitModel = ctx.le_goods_value.Where(s => s.GoodsValueID == index.GoodsValueID).FirstOrDefault();
                         if (exitModel != null)
                         {
+                            if (string.IsNullOrEmpty(index.SerialNumber))
+                            {
+                                exitModel.IsAuto = 1;
+                                if (IsBulkCargo == 0)
+                                {
+
+                                    index.SerialNumber = BarcodeGeneration(0);
+                                }
+                                else
+                                {
+                                    index.SerialNumber = BarcodeGeneration(1);
+                                }
+                            }
                             exitModel.GoodsID = index.GoodsID;
                             exitModel.GoodsValue = index.GoodsValueName;
                             exitModel.UpdateTime = DateTime.Now;
@@ -1285,7 +1303,21 @@ namespace Service
                         }
                         else
                         {
+                          
                             le_goods_value goods_Value = new le_goods_value();
+                            if (string.IsNullOrEmpty(index.SerialNumber))
+                            {
+                                goods_Value.IsAuto = 1;
+                                if (IsBulkCargo == 0)
+                                {
+
+                                    index.SerialNumber = BarcodeGeneration(0);
+                                }
+                                else
+                                {
+                                    index.SerialNumber = BarcodeGeneration(1);
+                                }
+                            }
                             goods_Value.GoodsID = index.GoodsID;
                             goods_Value.GoodsValue = index.GoodsValueName;
                             //exitModel.Enable=
