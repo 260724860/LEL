@@ -254,7 +254,7 @@ namespace Service
                 }
                 if (options.SupplierID != null)
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID));
+                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID&&k.IsDeleted==0));
                 }
 
                 var tempJoin = tempIq.Join(ctx.le_goods_suppliers, o => o.GoodsID, p => p.GoodsID, (p, o) => new GroodsModelDto
