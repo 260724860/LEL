@@ -83,14 +83,14 @@ namespace Service
                 {
                     tempIq = tempIq.Where(s => s.GoodsName.Contains(options.KeyWords)
                       || s.GoodsID.ToString().Contains(options.KeyWords)
-                      || s.Describe.Contains(options.KeyWords)
-                      || s.GoodsGroupsID.ToString() == options.KeyWords
-                      || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords))
-                      );
+                       || s.Describe.Contains(options.KeyWords)
+                      || s.GoodsGroupsID.ToString().Contains(options.KeyWords)
+                      || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords) && k.Enable == 1)
+                      ); ;
                 }
                 if (!string.IsNullOrEmpty(options.SerialNumber))
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber)));
+                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber) && k.Enable == 1));
                 }
                 if (options.SupplierID != null)
                 {
@@ -242,15 +242,15 @@ namespace Service
                 if (!string.IsNullOrEmpty(options.KeyWords)) //搜索
                 {
                     tempIq = tempIq.Where(s => s.GoodsName.Contains(options.KeyWords)
-                      || s.GoodsID.ToString().Contains(options.KeyWords)
-                      || s.Describe.Contains(options.KeyWords)
-                      || s.GoodsGroupsID.ToString() == options.KeyWords
-                      || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords))
-                      );
+                       || s.GoodsID.ToString().Contains(options.KeyWords)
+                       || s.Describe.Contains(options.KeyWords)
+                       || s.GoodsGroupsID.ToString().Contains(options.KeyWords)
+                       || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords) && k.Enable == 1)
+                       ); ;
                 }
                 if (!string.IsNullOrEmpty(options.SerialNumber))
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber)));
+                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber)&&k.Enable==1));
                 }
                 if (options.SupplierID != null)
                 {
@@ -1257,7 +1257,7 @@ namespace Service
 
         #region 商品属性操作
 
-        public bool AddGoodsValueList(List<GoodsValues> List,int IsBulkCargo, out string Msg)
+        public le_goods_value AddGoodsValueList(List<GoodsValues> List,int IsBulkCargo, out string Msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -1266,7 +1266,7 @@ namespace Service
                 if (List.Count <= 0)
                 {
                     Msg = "参数错误，未获取到有效值";
-                    return false;
+                    return null;
                 }
                 try
                 {
@@ -1278,6 +1278,7 @@ namespace Service
                         {
                             if (string.IsNullOrEmpty(index.SerialNumber))
                             {
+                                exitModel.IsBulkCargo = IsBulkCargo;
                                 exitModel.IsAuto = 1;
                                 if (IsBulkCargo == 0)
                                 {
@@ -1299,6 +1300,8 @@ namespace Service
                             if (ctx.SaveChanges() <= 0)
                             {
                                 log.Error(string.Format("属性修改失败id={0}", exitModel.GoodsValueID));
+                                Msg = "SUCCESS";
+                                return exitModel;
                             }
                         }
                         else
@@ -1318,6 +1321,7 @@ namespace Service
                                     index.SerialNumber = BarcodeGeneration(1);
                                 }
                             }
+                            goods_Value.IsBulkCargo = IsBulkCargo;
                             goods_Value.GoodsID = index.GoodsID;
                             goods_Value.GoodsValue = index.GoodsValueName;
                             //exitModel.Enable=
@@ -1331,15 +1335,17 @@ namespace Service
                             {
                                 log.Error(string.Format("属性添加失败GoodsValue={0}", index.GoodsValueName));
                             }
+                            Msg = "SUCCESS";
+                            return goods_Value;
                         }
                     }
                     Msg = "SUCCESS";
-                    return true;
+                    return null;
                 }
                 catch (Exception ex)
                 {
                     Msg = ex.Message;
-                    return false;
+                    return null;
                 }
                 //Object group = new Object();
                 //List<GoodsValue> Valuelist = new List<GoodsValue>();

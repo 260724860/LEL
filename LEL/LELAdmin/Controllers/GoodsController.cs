@@ -274,9 +274,9 @@ namespace LELAdmin.Controllers
                     return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
                 }
                 var result = GService.AddGoodsValueList(List, IsBulkCargo,out string Msg);
-                if (result)
+                if (result!=null)
                 {
-                    return Json(new { code = 0, msg = "SUCCESS", content = "添加成功", result = Msg });
+                    return Json(new { code = 0, msg = "SUCCESS", content = result, result = Msg });
                 }
                 return Json(new { code = 1, msg = "ERROR", content = "添加失败" });
             }

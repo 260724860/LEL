@@ -250,6 +250,7 @@ namespace Service
                                 GVmodel.SerialNumber = new GoodsService().BarcodeGeneration(GoodsModel.IsBulkCargo);
                                
                             }
+                            GVmodel.IsBulkCargo = GoodsModel.IsBulkCargo;
                             GoodsModel.le_goods_value.Add(GVmodel);
                             k++;
                             //ctx.le_goods_value.Add(model);

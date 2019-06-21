@@ -203,7 +203,7 @@
     <Property Name="LoginName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
     <Property Name="Nickname" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
     <Property Name="TelePhone" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
-    <Property Name="Password" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
     <Property Name="Salt" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
     <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="Status" Type="Int32" Nullable="false" />
@@ -672,7 +672,7 @@
     <Property Name="UsersID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="UsersName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="UsersNickname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-    <Property Name="UsersPassWord" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="UsersPassWord" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
     <Property Name="UsersMobilePhone" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
     <Property Name="Salt" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
     <Property Name="UsersEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />

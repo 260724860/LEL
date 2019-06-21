@@ -21,7 +21,7 @@
     <Property Name="LoginName" Type="varchar" MaxLength="30" Nullable="false" />
     <Property Name="Nickname" Type="varchar" MaxLength="255" />
     <Property Name="TelePhone" Type="varchar" MaxLength="16" Nullable="false" />
-    <Property Name="Password" Type="varchar" MaxLength="32" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="64" Nullable="false" />
     <Property Name="Salt" Type="varchar" MaxLength="30" Nullable="false" />
     <Property Name="Email" Type="varchar" MaxLength="100" />
     <Property Name="Status" Type="int" Nullable="false" />
@@ -425,7 +425,7 @@
     <Property Name="UsersID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="UsersName" Type="varchar" MaxLength="100" />
     <Property Name="UsersNickname" Type="varchar" MaxLength="100" />
-    <Property Name="UsersPassWord" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="UsersPassWord" Type="varchar" MaxLength="64" Nullable="false" />
     <Property Name="UsersMobilePhone" Type="varchar" MaxLength="11" />
     <Property Name="Salt" Type="varchar" MaxLength="10" Nullable="false" />
     <Property Name="UsersEmail" Type="varchar" MaxLength="50" />

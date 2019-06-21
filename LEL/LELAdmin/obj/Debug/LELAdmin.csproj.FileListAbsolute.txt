@@ -195,7 +195,6 @@ D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.AccessControl.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.Claims.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.Cryptography.Algorithms.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.Cryptography.Encoding.dll
-D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.Cryptography.Primitives.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.Principal.Windows.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Text.Encoding.CodePages.dll
@@ -320,3 +319,4 @@ D:\260724860GIT\LEL\LEL\LELAdmin\obj\Debug\LELAdmin.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\obj\Debug\LELAdmin.pdb
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.IO.FileSystem.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.Cryptography.Primitives.dll
