@@ -1190,6 +1190,22 @@ where lg.GoodsID=@GoodsID");
                 OrderLineLogName.BeforeMoney = CurrentLine.Money;
                 OrderLineLogName.BeforeStatus = CurrentLine.Status;
                 OrderLineLogName.CreateTime = DateTime.Now;
+
+                le_orders_head_log OrderHeadLog = new le_orders_head_log();
+                OrderHeadLog.BeforeCount = OrderHeadModel.GoodsCount;
+                OrderHeadLog.BeforeMoney = OrderHeadModel.Money;
+                OrderHeadLog.AfterMoney = OrderHeadModel.Money; //比对
+                OrderHeadLog.BeforeStatus = OrderHeadModel.Status;
+                OrderHeadLog.CreateTime = DateTime.Now;
+                if (AdminID != 0)
+                {
+                    OrderHeadLog.AdminID = AdminID;
+                }
+                if (SuppliersID != 0)
+                {
+                    OrderHeadLog.SupplierID = SuppliersID ;
+                }
+             
                 //if(AdminID!=0&& SuppliersID != 0)
                 //{
                 //    OrderLineLogName.AdminID = AdminID ;
@@ -1202,11 +1218,17 @@ where lg.GoodsID=@GoodsID");
                 {
                     if (Status == 1 && AdminID != 0) //派发订单只有总部有权限
                     {
-                        if (CurrentLine.Status == 3) //重新派单。 修改销量和库存
+                        if (CurrentLine.Status == 3) //取消的订单重新派单。 修改销量和库存
                         {
                             CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
+
+                            OrderHeadModel.Money += CurrentLine.GoodsCount * CurrentLine.Money;
+                            OrderHeadModel.SupplyMoney+= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                            OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
+                            OrderHeadLog.AfterMoney = OrderHeadModel.Money;
+                            OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
                         }
                         OrderLineLogName.AdminID = AdminID;
 
@@ -1234,7 +1256,7 @@ where lg.GoodsID=@GoodsID");
 
                         }
                         OrderHeadModel.AdminID = AdminID;
-                        ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
+                       // ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                         //总部派发订单 推送消息给供货商
                         new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
 
@@ -1258,8 +1280,12 @@ where lg.GoodsID=@GoodsID");
                             CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
-                            //Msg = "接单失败,订单已被取消或数量为0";
-                            //return false;
+
+                            OrderHeadModel.Money += CurrentLine.GoodsCount * CurrentLine.Money;
+                            OrderHeadModel.SupplyMoney += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                            OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
+                            OrderHeadLog.AfterMoney = OrderHeadModel.Money;
+                            OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
                         }
 
                         //此处使用多次查询 待优化 使用原生SQL？
@@ -1277,10 +1303,10 @@ where lg.GoodsID=@GoodsID");
                         var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
 
                         if (IsComplete || LinesList.Count == 1) //全部已接单,更新订单头状态
-                        {
-                            //var OrderHead = ctx.le_orders_head.Where(s => s.OutTradeNo == CurrentLine.OutTradeNo).FirstOrDefault();
+                        {                           
                             OrderHeadModel.Status = 4;//修改订单头状态为已结单
-                            ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
+                            OrderHeadLog.AfterStatus = 4;
+                            
                         }
                         //供货商完成接单 推送消息给总部
                         new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
@@ -1302,11 +1328,25 @@ where lg.GoodsID=@GoodsID");
                         CurrentLine.UpdateTime = DateTime.Now;
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
 
-                        new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+                        OrderHeadModel.Money -= CurrentLine.GoodsCount * CurrentLine.Money;
+                        OrderHeadModel.SupplyMoney -= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                        OrderHeadModel.DeliverCount -= CurrentLine.GoodsCount;
 
+                        OrderHeadLog.AfterMoney = OrderHeadModel.Money;
+                        OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
+
+                        new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
                         new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
                        
                     }
+
+                    ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
+
+                    if(OrderHeadLog.BeforeMoney!=OrderHeadLog.AfterMoney)
+                    {
+                        ctx.Entry<le_orders_head_log>(OrderHeadLog).State = EntityState.Modified;
+                    }
+
                     OrderLineLogName.AfterCount = CurrentLine.DeliverCount;
                     OrderLineLogName.AfterStatus = Status;
                     OrderLineLogName.OrderLineID = CurrentLine.OrdersLinesID;
