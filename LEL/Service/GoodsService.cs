@@ -165,6 +165,12 @@ namespace Service
                     case GoodsSeachOrderByType.TotalSalesVolumesDESC:
                         result = result.OrderByDescending(k => k.TotalSalesVolumes);
                         break;
+                    case GoodsSeachOrderByType.GoodsIDAsc:
+                        result = result.OrderBy(k => k.GoodsID);
+                        break;
+                    case GoodsSeachOrderByType.GoodsIDDesc:
+                        result = result.OrderByDescending(k => k.GoodsID);
+                        break;
                     default:
                         result = result.OrderBy(k => k.Sort);
                         break;

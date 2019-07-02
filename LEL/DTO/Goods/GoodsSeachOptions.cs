@@ -43,7 +43,8 @@
         SalesVolumesDesc = 8,
         TotalSalesVolumesASC = 9,
         TotalSalesVolumesDESC = 10,
-
+        GoodsIDAsc=11,
+        GoodsIDDesc=12,
     }
 
 }
