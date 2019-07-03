@@ -23,15 +23,15 @@ namespace DTO.Suppliers
 
         public string Suppliers_MobilePhone { get; set; }
 
-        public string Suppliers_ImgA { get; set; }
+        public string Suppliers_IDImgA { get; set; }
 
-        public string Suppliers_ImgB { get; set; }
+        public string Suppliers_IDIDImgB { get; set; }
 
-        public string Suppliers_ImgC { get; set; }
+        public string Suppliers_BusinessImg { get; set; }
 
-        public string Suppliers_ImgD { get; set; }
+        public string Suppliers_AttachImg1 { get; set; }
 
-        public string Suppliers_ImgE { get; set; }
+        public string Suppliers_AttachImg2 { get; set; }
 
         public string Suppliers_Addr { get; set; }
 

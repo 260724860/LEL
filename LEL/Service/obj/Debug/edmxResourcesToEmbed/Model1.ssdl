@@ -367,11 +367,11 @@
     <Property Name="Salt" Type="varchar" MaxLength="10" Nullable="false" />
     <Property Name="Email" Type="varchar" MaxLength="50" />
     <Property Name="HeadImage" Type="varchar" MaxLength="1000" />
-    <Property Name="ImgA" Type="varchar" MaxLength="200" />
-    <Property Name="ImgB" Type="varchar" MaxLength="200" />
-    <Property Name="ImgC" Type="varchar" MaxLength="200" />
-    <Property Name="ImgD" Type="varchar" MaxLength="200" />
-    <Property Name="ImgE" Type="varchar" MaxLength="200" />
+    <Property Name="IDImgA" Type="varchar" MaxLength="200" />
+    <Property Name="IDImgB" Type="varchar" MaxLength="200" />
+    <Property Name="BusinessImg" Type="varchar" MaxLength="200" />
+    <Property Name="AttachImg1" Type="varchar" MaxLength="200" />
+    <Property Name="AttachImg2" Type="varchar" MaxLength="200" />
     <Property Name="Addr" Type="text" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="UpdateTime" Type="datetime" Precision="0" />

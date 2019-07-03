@@ -112,7 +112,7 @@ namespace Service
         public bool InsetDb(string fileName, out string Msg)
         {
             //DataColumn[] GoodsColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
-            //DataColumn[] GoodsImgColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
+            //DataColumn[] GoodsBusinessImgolumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
             //DataColumn[] GoodsValueColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
             //DataColumn[] GoodsSupperColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
             try
@@ -120,7 +120,7 @@ namespace Service
 
                 string GoodsNumber;
                 var GoodsDT = ExcelHelper.DataReaderExcelFile(fileName, "商品录入");
-                var GoodsImgDT = ExcelHelper.DataReaderExcelFile(fileName, "商品图片");
+                var GoodsAttachImg1T = ExcelHelper.DataReaderExcelFile(fileName, "商品图片");
                 var GoodsValueDT = ExcelHelper.DataReaderExcelFile(fileName, "商品属性");
                 var GoodsSupperDT = ExcelHelper.DataReaderExcelFile(fileName, "供应商价格表");
                 Random rd = new Random();
@@ -159,7 +159,7 @@ namespace Service
 
 
                         //获取商品图片
-                        DataRow[] FileterImg = GoodsImgDT.Select("商品序列号= '" + GoodsNumber + "'");
+                        DataRow[] FileterImg = GoodsAttachImg1T.Select("商品序列号= '" + GoodsNumber + "'");
                         if (FileterImg == null || FileterImg.Length <= 0) //为设置图片
                         {
                             le_goods_img GoodsImg = new le_goods_img();
@@ -303,14 +303,21 @@ namespace Service
             {
                 for (int i = 0; i < GoodSupplierDT.Rows.Count; i++) //跳过第一行示例
                 {
+                   
                     le_goods_suppliers model = new le_goods_suppliers();
+
                     model.Supplyprice = Convert.ToDecimal(GoodSupplierDT.Rows[i]["供应价格"]);
                     model.IsDefalut = Convert.ToInt32(GoodSupplierDT.Rows[i]["是否为默认供应商（1 为默认）"]);
                     model.SuppliersID = Convert.ToInt32(GoodSupplierDT.Rows[i]["供应商ID"]);
                     model.GoodsID = Convert.ToInt32(GoodSupplierDT.Rows[i]["商品ID"]);
                     model.CreatTime = DateTime.Now;
                     model.UpdateTime = DateTime.Now;
-
+                    if (ctx.le_goods_suppliers.Any(s => s.GoodsID == model.GoodsID&&s.SuppliersID== model.SuppliersID))
+                    {
+                        Msg = string.Format("商品ID为[{0}]得商品已存在相同得供应商，请检查数据源", model.GoodsID);
+                        return false;
+                           
+                    }
                     ctx.le_goods_suppliers.Add(model);
 
                 }

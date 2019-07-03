@@ -96,7 +96,17 @@ namespace Service
                 {
                     tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID));
                 }
-
+                if(options.GoodsID!=null&&options.PageTurning!=null)
+                {
+                    if (options.PageTurning == 1)
+                    {
+                        tempIq = tempIq.Where(s => s.GoodsID < options.GoodsID.Value);
+                    }
+                    if (options.PageTurning == 2)
+                    {
+                        tempIq = tempIq.Where(s => s.GoodsID > options.GoodsID.Value);
+                    }
+                }
                 IQueryable<GroodsModelDto> result = null;
                 result = tempIq.Select(s => new GroodsModelDto
                 {
@@ -1128,7 +1138,7 @@ namespace Service
         /// <summary>
         /// 添加商品图片
         /// </summary>        
-        public int AddGoodsImage(List<AddGoodsImgDto> List, out string msg)
+        public int AddGoodsImage(List<AddGoodsAttachImg1to> List, out string msg)
         {
             using (Entities ctx = new Entities())
             {

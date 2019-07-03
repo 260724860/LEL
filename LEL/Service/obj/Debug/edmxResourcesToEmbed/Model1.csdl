@@ -607,11 +607,11 @@
     <Property Name="Salt" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
     <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="HeadImage" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-    <Property Name="ImgA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="ImgB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="ImgC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="ImgD" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="ImgE" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="IDImgA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="IDImgB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="BusinessImg" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="AttachImg1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="AttachImg2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
     <Property Name="Addr" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="UpdateTime" Type="DateTime" />

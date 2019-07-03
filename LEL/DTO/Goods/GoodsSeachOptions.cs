@@ -29,6 +29,14 @@
         public int? SupplierID { get; set; }
 
         public string SerialNumber { get; set; }
+
+        //商品ID
+        public int? GoodsID { get; set; }
+        /// <summary>
+        /// 翻页类型，1上一个 2下一个
+        /// </summary>
+        public int? PageTurning { get; set; }
+
     }
 
     public enum GoodsSeachOrderByType

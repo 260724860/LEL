@@ -85,11 +85,11 @@ namespace Service
                     Suppliers_Email = s.Email,
                     Suppliers_HeadImage = s.HeadImage,
                     Suppliers_MobilePhone = s.MobilePhone,
-                    Suppliers_ImgA = s.ImgA,
-                    Suppliers_ImgB = s.ImgB,
-                    Suppliers_ImgC = s.ImgC,
-                    Suppliers_ImgD = s.ImgD,
-                    Suppliers_ImgE = s.ImgE,
+                    Suppliers_IDImgA = s.IDImgA,
+                    Suppliers_IDImgB = s.IDImgB,
+                    Suppliers_BusinessImg = s.BusinessImg,
+                    Suppliers_AttachImg1 = s.AttachImg1,
+                    Suppliers_AttachImg2 = s.AttachImg2,
                     Suppliers_Addr = s.Addr,
                     Suppliers_Status = s.Status,
 
@@ -128,11 +128,11 @@ namespace Service
                 model.Addr = dto.Suppliers_Addr;
                 model.Status = dto.Suppliers_Status;
                 model.MobilePhone = dto.Suppliers_MobilePhone;
-                model.ImgA = dto.Suppliers_ImgA;
-                model.ImgB = dto.Suppliers_ImgB;
-                model.ImgC = dto.Suppliers_ImgC;
-                model.ImgD = dto.Suppliers_ImgD;
-                model.ImgE = dto.Suppliers_ImgE;
+                model.IDImgA = dto.Suppliers_IDImgA;
+                model.IDImgB = dto.Suppliers_IDImgB;
+                model.BusinessImg = dto.Suppliers_BusinessImg;
+                model.AttachImg1 = dto.Suppliers_AttachImg1;
+                model.AttachImg2 = dto.Suppliers_AttachImg2;
                 model.HeadImage = dto.Suppliers_HeadImage;
                 model.HeadImage = dto.Suppliers_HeadImage;
                 model.IDCardNo = dto.IDCardNo;

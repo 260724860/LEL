@@ -90,7 +90,7 @@ namespace DTO.Goods
         #endregion
     }
 
-    public class AddGoodsImgDto
+    public class AddGoodsAttachImg1to
     {
         public int GoodsID { get; set; }
         public int ImgID { get; set; }

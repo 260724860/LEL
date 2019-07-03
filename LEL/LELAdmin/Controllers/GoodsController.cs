@@ -197,7 +197,7 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [Route("AddGoodsImage")]
         [HttpPost]
-        public IHttpActionResult AddGoodsImage(List<AddGoodsImgDto> List)
+        public IHttpActionResult AddGoodsImage(List<AddGoodsAttachImg1to> List)
         {
             try
             {

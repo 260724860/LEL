@@ -189,7 +189,6 @@ D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Diagnostics.StackTrace.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.IO.Compression.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.IO.FileSystem.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
-D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.IO.FileSystem.Primitives.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.IO.Pipes.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Reflection.Metadata.dll
 D:\260724860GIT\LEL\LEL\LELAdmin\bin\roslyn\System.Security.AccessControl.dll

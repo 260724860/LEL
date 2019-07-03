@@ -259,6 +259,11 @@
             供应商ID
             </summary>
         </member>
+        <member name="P:DTO.Goods.GoodsSeachOptions.PageTurning">
+            <summary>
+            翻页类型，1上一个 2下一个
+            </summary>
+        </member>
         <member name="P:DTO.Goods.GroodsModelDto.Image">
             <summary>
             货号

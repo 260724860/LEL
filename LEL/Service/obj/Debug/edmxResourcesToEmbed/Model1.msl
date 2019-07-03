@@ -390,11 +390,11 @@
           <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="Addr" ColumnName="Addr" />
-          <ScalarProperty Name="ImgE" ColumnName="ImgE" />
-          <ScalarProperty Name="ImgD" ColumnName="ImgD" />
-          <ScalarProperty Name="ImgC" ColumnName="ImgC" />
-          <ScalarProperty Name="ImgB" ColumnName="ImgB" />
-          <ScalarProperty Name="ImgA" ColumnName="ImgA" />
+          <ScalarProperty Name="AttachImg2" ColumnName="AttachImg2" />
+          <ScalarProperty Name="AttachImg1" ColumnName="AttachImg1" />
+          <ScalarProperty Name="BusinessImg" ColumnName="BusinessImg" />
+          <ScalarProperty Name="IDImgB" ColumnName="IDImgB" />
+          <ScalarProperty Name="IDImgA" ColumnName="IDImgA" />
           <ScalarProperty Name="HeadImage" ColumnName="HeadImage" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Salt" ColumnName="Salt" />

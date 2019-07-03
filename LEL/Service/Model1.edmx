@@ -372,11 +372,11 @@
           <Property Name="Salt" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="50" />
           <Property Name="HeadImage" Type="varchar" MaxLength="1000" />
-          <Property Name="ImgA" Type="varchar" MaxLength="200" />
-          <Property Name="ImgB" Type="varchar" MaxLength="200" />
-          <Property Name="ImgC" Type="varchar" MaxLength="200" />
-          <Property Name="ImgD" Type="varchar" MaxLength="200" />
-          <Property Name="ImgE" Type="varchar" MaxLength="200" />
+          <Property Name="IDImgA" Type="varchar" MaxLength="200" />
+          <Property Name="IDImgB" Type="varchar" MaxLength="200" />
+          <Property Name="BusinessImg" Type="varchar" MaxLength="200" />
+          <Property Name="AttachImg1" Type="varchar" MaxLength="200" />
+          <Property Name="AttachImg2" Type="varchar" MaxLength="200" />
           <Property Name="Addr" Type="text" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Precision="0" />
@@ -1712,11 +1712,11 @@
           <Property Name="Salt" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="HeadImage" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="ImgA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ImgB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ImgC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ImgD" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ImgE" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IDImgA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IDImgB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessImg" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="AttachImg1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="AttachImg2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Addr" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="UpdateTime" Type="DateTime" />
@@ -2670,11 +2670,11 @@
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Addr" ColumnName="Addr" />
-                <ScalarProperty Name="ImgE" ColumnName="ImgE" />
-                <ScalarProperty Name="ImgD" ColumnName="ImgD" />
-                <ScalarProperty Name="ImgC" ColumnName="ImgC" />
-                <ScalarProperty Name="ImgB" ColumnName="ImgB" />
-                <ScalarProperty Name="ImgA" ColumnName="ImgA" />
+                <ScalarProperty Name="AttachImg2" ColumnName="AttachImg2" />
+                <ScalarProperty Name="AttachImg1" ColumnName="AttachImg1" />
+                <ScalarProperty Name="BusinessImg" ColumnName="BusinessImg" />
+                <ScalarProperty Name="IDImgB" ColumnName="IDImgB" />
+                <ScalarProperty Name="IDImgA" ColumnName="IDImgA" />
                 <ScalarProperty Name="HeadImage" ColumnName="HeadImage" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Salt" ColumnName="Salt" />

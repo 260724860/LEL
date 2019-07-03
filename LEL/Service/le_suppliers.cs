@@ -33,11 +33,11 @@ namespace Service
         public string Salt { get; set; }
         public string Email { get; set; }
         public string HeadImage { get; set; }
-        public string ImgA { get; set; }
-        public string ImgB { get; set; }
-        public string ImgC { get; set; }
-        public string ImgD { get; set; }
-        public string ImgE { get; set; }
+        public string IDImgA { get; set; }
+        public string IDImgB { get; set; }
+        public string BusinessImg { get; set; }
+        public string AttachImg1 { get; set; }
+        public string AttachImg2 { get; set; }
         public string Addr { get; set; }
         public int Status { get; set; }
         public Nullable<System.DateTime> UpdateTime { get; set; }
