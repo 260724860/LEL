@@ -90,7 +90,7 @@
           </Key>
           <Property Name="GoodsID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="GoodsGroupsID" Type="int" Nullable="false" />
-          <Property Name="GoodsName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="GoodsName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Image" Type="varchar" MaxLength="1000" Nullable="false" />
           <Property Name="OriginalPrice" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="SpecialOffer" Type="decimal" Precision="9" Scale="2" Nullable="false" />
@@ -920,38 +920,38 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="leerledbtestModelStoreContainer">
-          <EntitySet Name="le_ad" EntityType="Self.le_ad" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_admin" EntityType="Self.le_admin" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_admin_re_users" EntityType="Self.le_admin_re_users" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_admin_role" EntityType="Self.le_admin_role" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_admin_role_mapping" EntityType="Self.le_admin_role_mapping" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_admin_role_value" EntityType="Self.le_admin_role_value" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_cart_goodsvalue" EntityType="Self.le_cart_goodsvalue" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_goods" EntityType="Self.le_goods" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_goods_img" EntityType="Self.le_goods_img" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_goods_log" EntityType="Self.le_goods_log" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_goods_suppliers" EntityType="Self.le_goods_suppliers" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_goods_value" EntityType="Self.le_goods_value" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_goodsgroups" EntityType="Self.le_goodsgroups" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_navigation" EntityType="Self.le_navigation" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_order_pack" EntityType="Self.le_order_pack" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_orderline_goodsvalue" EntityType="Self.le_orderline_goodsvalue" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_orders_head" EntityType="Self.le_orders_head" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_orders_head_log" EntityType="Self.le_orders_head_log" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_orders_lines" EntityType="Self.le_orders_lines" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_orders_lines_log" EntityType="Self.le_orders_lines_log" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_orders_modify_record" EntityType="Self.le_orders_modify_record" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_orders_operationrecord" EntityType="Self.le_orders_operationrecord" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_pushmsg" EntityType="Self.le_pushmsg" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_shop_cart" EntityType="Self.le_shop_cart" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_sms" EntityType="Self.le_sms" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_suppliers" EntityType="Self.le_suppliers" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_sys_address" EntityType="Self.le_sys_address" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_sysconfig" EntityType="Self.le_sysconfig" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest" store:Type="Tables" />
-          <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_ad" EntityType="Self.le_ad" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_admin" EntityType="Self.le_admin" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_admin_re_users" EntityType="Self.le_admin_re_users" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_admin_role" EntityType="Self.le_admin_role" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_admin_role_mapping" EntityType="Self.le_admin_role_mapping" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_admin_role_value" EntityType="Self.le_admin_role_value" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_cart_goodsvalue" EntityType="Self.le_cart_goodsvalue" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_goods" EntityType="Self.le_goods" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_goods_img" EntityType="Self.le_goods_img" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_goods_log" EntityType="Self.le_goods_log" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_goods_suppliers" EntityType="Self.le_goods_suppliers" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_goods_value" EntityType="Self.le_goods_value" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_goodsgroups" EntityType="Self.le_goodsgroups" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_navigation" EntityType="Self.le_navigation" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_order_pack" EntityType="Self.le_order_pack" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_orderline_goodsvalue" EntityType="Self.le_orderline_goodsvalue" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_orders_head" EntityType="Self.le_orders_head" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_orders_head_log" EntityType="Self.le_orders_head_log" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_orders_lines" EntityType="Self.le_orders_lines" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_orders_lines_log" EntityType="Self.le_orders_lines_log" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_orders_modify_record" EntityType="Self.le_orders_modify_record" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_orders_operationrecord" EntityType="Self.le_orders_operationrecord" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_pushmsg" EntityType="Self.le_pushmsg" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_shop_cart" EntityType="Self.le_shop_cart" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_sms" EntityType="Self.le_sms" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_suppliers" EntityType="Self.le_suppliers" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_sys_address" EntityType="Self.le_sys_address" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_sysconfig" EntityType="Self.le_sysconfig" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest2" store:Type="Tables" />
           <AssociationSet Name="FK__le_orders_head" Association="Self.FK__le_orders_head">
             <End Role="le_orders_head" EntitySet="le_orders_head" />
             <End Role="le_orders_modify_record" EntitySet="le_orders_modify_record" />
@@ -1384,7 +1384,7 @@
           </Key>
           <Property Name="GoodsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="GoodsGroupsID" Type="Int32" Nullable="false" />
-          <Property Name="GoodsName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GoodsName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Image" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="OriginalPrice" Type="Decimal" Nullable="false" />
           <Property Name="SpecialOffer" Type="Decimal" Nullable="false" />

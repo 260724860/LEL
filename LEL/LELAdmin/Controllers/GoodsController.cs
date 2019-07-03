@@ -398,23 +398,32 @@ namespace LELAdmin.Controllers
         }
 
         /// <summary>
-        /// 检查商品条码重复
+        /// 检查商品条码是否已经存在
         /// </summary>
         /// <param name="SerialNumber"></param>
         /// <returns></returns>
-        //[Route("IsSerialNumberExit")]
-        //[HttpGet]
-        //public IHttpActionResult IsSerialNumberExit(string SerialNumber)
-        //{
-        //    var Exit = GService.IsSerialNumberExit(SerialNumber);
-        //    if(Exit)
-        //    {
-        //        return Json(JRpcHelper.AjaxResult(1, "已存在相同的条码", SerialNumber));
-        //    }
-        //    return Json(JRpcHelper.AjaxResult(0, "SUCCESS", SerialNumber));
-
-        //}
-
+        [AllowAnonymous]
+        [Route("IsSerialNumberExit")]
+        [HttpGet]
+        public IHttpActionResult IsSerialNumberExit(string SerialNumber)
+        {
+            var Exit = GService.IsSerialNumberExit(SerialNumber);
+            if (Exit)
+            {
+                return Json(JRpcHelper.AjaxResult(100, "已存在相同的条码", SerialNumber));
+            }
+            return Json(JRpcHelper.AjaxResult(200, "当前条码不存在", SerialNumber));
+        }
+        /// <summary>
+        /// 获取当前商品中最大排序数，自动加一
+        /// </summary>
+        [AllowAnonymous]
+        [Route("GetGoodsMaxSort")]
+        [HttpGet]
+        public IHttpActionResult GetGoodsMaxSort()
+        {
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", GService.GetGoodsMaxSort()));
+        }
 
 
 

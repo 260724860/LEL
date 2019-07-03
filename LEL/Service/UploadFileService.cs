@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.Data;
+using System.Data.Entity.Validation;
 using System.Linq;
 
 namespace Service
@@ -143,7 +144,7 @@ namespace Service
                         GoodsModel.OriginalPrice = Convert.ToDecimal(GoodsDT.Rows[i]["划线价"].ToString());
                         GoodsModel.MSRP = Convert.ToDecimal(GoodsDT.Rows[i]["特价"].ToString());
                         GoodsModel.PackingNumber = Convert.ToInt32(GoodsDT.Rows[i]["装箱数"].ToString());
-                        GoodsModel.ShelfLife = GoodsDT.Rows[i]["保质期"].ToString();
+                        GoodsModel.ShelfLife = string.IsNullOrEmpty(GoodsDT.Rows[i]["保质期"].ToString())?"0": GoodsDT.Rows[i]["保质期"].ToString();
                         GoodsModel.Sort = 999;
                         GoodsModel.Specifications = GoodsDT.Rows[i]["商品规格（例：盒/箱/件/个）"].ToString();
                         GoodsModel.Stock = Convert.ToInt32(GoodsDT.Rows[i]["库存"].ToString());
@@ -270,6 +271,11 @@ namespace Service
                         return false;
                     }
                 }
+            }
+            catch(DbEntityValidationException ex)
+            {
+               Msg="数据类型错误:"+  ExceptionHelper.GetInnerExceptionMsg(ex);
+                return false;
             }
             catch (Exception ex)
             {

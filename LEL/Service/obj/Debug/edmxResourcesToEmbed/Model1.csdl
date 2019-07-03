@@ -279,7 +279,7 @@
     </Key>
     <Property Name="GoodsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="GoodsGroupsID" Type="Int32" Nullable="false" />
-    <Property Name="GoodsName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="GoodsName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="Image" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
     <Property Name="OriginalPrice" Type="Decimal" Nullable="false" />
     <Property Name="SpecialOffer" Type="Decimal" Nullable="false" />

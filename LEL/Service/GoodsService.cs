@@ -1669,6 +1669,18 @@ namespace Service
 
         }
 
+        /// <summary>
+        /// 获取商品当前最大排序数自动加一
+        /// </summary>
+        /// <returns></returns>
+        public int GetGoodsMaxSort()
+        {
+            using (Entities ctx=new Entities())
+            {
+                int result = ctx.le_goods.Max(s => s.Sort);
+                return result + 1;
+            }
+        }
 
         /// <summary>
         /// 清空月销量
