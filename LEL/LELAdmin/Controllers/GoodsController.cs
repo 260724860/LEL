@@ -422,10 +422,25 @@ namespace LELAdmin.Controllers
         [HttpGet]
         public IHttpActionResult GetGoodsMaxSort()
         {
+
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", GService.GetGoodsMaxSort()));
         }
-
-
+        /// <summary>
+        /// 判断当前序号是否存在,返回当前商品中最大排序数，自动加一
+        /// </summary>
+        [AllowAnonymous]
+        [Route("IsExitGetGoodsSort")]
+        [HttpGet]
+        public IHttpActionResult IsExitGetGoodsSort(int Sort)
+        {
+            var IsExit = GService.IsExitGetGoodsSort(Sort);
+            int MaxSort=  GService.GetGoodsMaxSort();
+            if (IsExit)
+            {
+                return Json(JRpcHelper.AjaxResult(100, "已存在相同的排序", MaxSort));
+            }
+            return Json(JRpcHelper.AjaxResult(200, "当前排序不存在", MaxSort));
+        }
 
 
         /// <summary>

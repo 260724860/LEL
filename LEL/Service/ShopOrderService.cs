@@ -6,6 +6,7 @@ using DTO.Suppliers;
 using DTO.User;
 using log4net;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -1197,6 +1198,7 @@ where lg.GoodsID=@GoodsID");
                 OrderHeadLog.AfterMoney = OrderHeadModel.Money; //比对
                 OrderHeadLog.BeforeStatus = OrderHeadModel.Status;
                 OrderHeadLog.CreateTime = DateTime.Now;
+                OrderHeadLog.OrderHeadID = OrderHeadModel.OrdersHeadID;
                 if (AdminID != 0)
                 {
                     OrderHeadLog.AdminID = AdminID;
@@ -1320,13 +1322,14 @@ where lg.GoodsID=@GoodsID");
                         CurrentLine.le_goods.SalesVolumes -= CurrentLine.GoodsCount;
                         CurrentLine.le_goods.TotalSalesVolume -= CurrentLine.GoodsCount;
                         CurrentLine.DeliverCount = 0;
-                        ctx.Entry<le_goods>(CurrentLine.le_goods).State = EntityState.Modified;
+                       
                         if (!string.IsNullOrEmpty(Notes))
                         {
                             CurrentLine.Notes = Notes;
                         }
                         CurrentLine.UpdateTime = DateTime.Now;
-                        ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+                       
+                        //ctx.Entry<le_goods>(CurrentLine.le_goods).State = EntityState.Modified;
 
                         OrderHeadModel.Money -= CurrentLine.GoodsCount * CurrentLine.Money;
                         OrderHeadModel.SupplyMoney -= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
@@ -1339,18 +1342,22 @@ where lg.GoodsID=@GoodsID");
                         new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
                        
                     }
-
-                    ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
+                   
 
                     if(OrderHeadLog.BeforeMoney!=OrderHeadLog.AfterMoney)
                     {
-                        ctx.Entry<le_orders_head_log>(OrderHeadLog).State = EntityState.Modified;
+                        //ctx.Entry<le_orders_head_log>(OrderHeadLog).State = EntityState.Modified;
+                        ctx.le_orders_head_log.Add(OrderHeadLog);
                     }
 
                     OrderLineLogName.AfterCount = CurrentLine.DeliverCount;
                     OrderLineLogName.AfterStatus = Status;
                     OrderLineLogName.OrderLineID = CurrentLine.OrdersLinesID;
+
                     ctx.le_orders_lines_log.Add(OrderLineLogName);
+                  
+                    ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+                    ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                     if (ctx.SaveChanges() > 0)
                     {
                         Msg = "修改状态为已接单成功";
@@ -1365,6 +1372,9 @@ where lg.GoodsID=@GoodsID");
                 catch (Exception ex)
                 {
                     Msg = ex.Message;
+                    log.Error(OrdersLinesID.ToString() + "|" + Status.ToString(), ex);
+                    return false;
+
                 }
                 Msg = "FAIL";
                 return false;
@@ -1686,6 +1696,9 @@ where lg.GoodsID=@GoodsID");
             }
             catch (Exception ex)
             {
+                var json= JsonConvert.SerializeObject(goodsStocks);
+                
+                log.Error(json, ex);
                 return false;
             }
         }

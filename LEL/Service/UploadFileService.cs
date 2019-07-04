@@ -115,22 +115,41 @@ namespace Service
             //DataColumn[] GoodsBusinessImgolumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
             //DataColumn[] GoodsValueColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
             //DataColumn[] GoodsSupperColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
-            try
+
+            string GoodsNumber;
+            var GoodsDT = ExcelHelper.DataReaderExcelFile(fileName, "商品录入");
+            var GoodsAttachImg1T = ExcelHelper.DataReaderExcelFile(fileName, "商品图片");
+            var GoodsValueDT = ExcelHelper.DataReaderExcelFile(fileName, "商品属性");
+            var GoodsSupperDT = ExcelHelper.DataReaderExcelFile(fileName, "供应商价格表");
+            Random rd = new Random();
+            using (Entities ctx = new Entities())
             {
-
-                string GoodsNumber;
-                var GoodsDT = ExcelHelper.DataReaderExcelFile(fileName, "商品录入");
-                var GoodsAttachImg1T = ExcelHelper.DataReaderExcelFile(fileName, "商品图片");
-                var GoodsValueDT = ExcelHelper.DataReaderExcelFile(fileName, "商品属性");
-                var GoodsSupperDT = ExcelHelper.DataReaderExcelFile(fileName, "供应商价格表");
-                Random rd = new Random();
-                using (Entities ctx = new Entities())
+                for (int i = 1; i < GoodsDT.Rows.Count; i++) //跳过第一行示例
                 {
-                    for (int i = 1; i < GoodsDT.Rows.Count; i++) //跳过第一行示例
+                    GoodsNumber = GoodsDT.Rows[i]["商品序列号"].ToString();
+                    try
                     {
-
                         le_goods GoodsModel = new le_goods();
-                        GoodsNumber = GoodsDT.Rows[i]["商品序列号"].ToString();
+
+                        #region 数据格式检查
+
+                        if (!int.TryParse(GoodsDT.Rows[i]["装箱数"].ToString(), out int a))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的装箱数格式错误", GoodsNumber);
+                            return false;
+                        }
+                        if (!Decimal.TryParse(GoodsDT.Rows[i]["建议零售价"].ToString(), out decimal bb))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的建议零售价格式错误", GoodsNumber);
+                            return false;
+                        }
+                        if (!Decimal.TryParse(GoodsDT.Rows[i]["划线价"].ToString(), out decimal c))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的划线价格式错误", GoodsNumber);
+                            return false;
+                        }
+                        #endregion
+
                         GoodsModel.Describe = GoodsDT.Rows[i]["商品描述"].ToString();
                         if (string.IsNullOrEmpty(GoodsModel.Describe))
                         {
@@ -144,7 +163,7 @@ namespace Service
                         GoodsModel.OriginalPrice = Convert.ToDecimal(GoodsDT.Rows[i]["划线价"].ToString());
                         GoodsModel.MSRP = Convert.ToDecimal(GoodsDT.Rows[i]["特价"].ToString());
                         GoodsModel.PackingNumber = Convert.ToInt32(GoodsDT.Rows[i]["装箱数"].ToString());
-                        GoodsModel.ShelfLife = string.IsNullOrEmpty(GoodsDT.Rows[i]["保质期"].ToString())?"0": GoodsDT.Rows[i]["保质期"].ToString();
+                        GoodsModel.ShelfLife = string.IsNullOrEmpty(GoodsDT.Rows[i]["保质期"].ToString()) ? "0" : GoodsDT.Rows[i]["保质期"].ToString();
                         GoodsModel.Sort = 999;
                         GoodsModel.Specifications = GoodsDT.Rows[i]["商品规格（例：盒/箱/件/个）"].ToString();
                         GoodsModel.Stock = Convert.ToInt32(GoodsDT.Rows[i]["库存"].ToString());
@@ -156,7 +175,6 @@ namespace Service
                         GoodsModel.IsRecommend = Convert.ToInt32(GoodsDT.Rows[i]["是否推荐(0否/1是)"].ToString()) == 1 ? 1 : 0;
                         GoodsModel.IsHot = Convert.ToInt32(GoodsDT.Rows[i]["是否热门(0否/1是)"].ToString()) == 1 ? 1 : 0;
                         GoodsModel.IsSeckill = Convert.ToInt32(GoodsDT.Rows[i]["是否秒杀(0否/1是)"].ToString()) == 1 ? 1 : 0;
-
 
                         //获取商品图片
                         DataRow[] FileterImg = GoodsAttachImg1T.Select("商品序列号= '" + GoodsNumber + "'");
@@ -196,8 +214,8 @@ namespace Service
                             Msg = string.Format("必须且只能有一个默认供货商！在【供应商价格表】,商品序列号为{0}", GoodsNumber);
                             return false;
                         }
-                        var result= FileterSupplier.GroupBy(s => s["供应商ID"]).Select(s => s.ToList()).Count();
-                        if (FileterSupplier.GroupBy(s=>s["供应商ID"]).Select(s=>s.ToList()).Count()>1)
+                        var result = FileterSupplier.GroupBy(s => s["供应商ID"]).Select(s => s.ToList()).Count();
+                        if (FileterSupplier.GroupBy(s => s["供应商ID"]).Select(s => s.ToList()).Count() > 1)
                         {
                             Msg = string.Format("同商品供应商不可重复！在【供应商价格表】,商品序列号为{0}", GoodsNumber);
                             return false;
@@ -205,7 +223,7 @@ namespace Service
 
                         foreach (var GoodsValue in FileterSupplier)
                         {
-                            string SupplierID=  GoodsValue["供应商ID"].ToString();
+                            string SupplierID = GoodsValue["供应商ID"].ToString();
                             int Count = FileterSupplier.Where(s => s.Field<string>("供应商ID") == SupplierID).ToArray().Count();
                             if (Count > 1)
                             {
@@ -249,7 +267,7 @@ namespace Service
                             {
                                 GVmodel.IsAuto = 1;
                                 GVmodel.SerialNumber = new GoodsService().BarcodeGeneration(GoodsModel.IsBulkCargo);
-                               
+
                             }
                             GVmodel.IsBulkCargo = GoodsModel.IsBulkCargo;
                             GoodsModel.le_goods_value.Add(GVmodel);
@@ -258,10 +276,18 @@ namespace Service
                         }
                         ctx.le_goods.Add(GoodsModel);
                     }
-
+                  
+                    catch (Exception ex)
+                    {
+                        Msg = "数据格式错误请检查数据源,请勿随意添加修改列,详细：" + ex.Message + "| 在【商品录入】中商品序列号为:"+ GoodsNumber + "";
+                        return false;
+                        ///throw ex;
+                    }
+                }
+                try
+                {
                     if (ctx.SaveChanges() > 0)
                     {
-
                         Msg = "SUCCESS";
                         return true;
                     }
@@ -271,19 +297,19 @@ namespace Service
                         return false;
                     }
                 }
+                catch (DbEntityValidationException ex)
+                {
+                    Msg = "数据类型错误:" + ExceptionHelper.GetInnerExceptionMsg(ex);
+                    return false;
+                }
+                catch(Exception ex)
+                {
+                    Msg ="数据库保存失败:" + ExceptionHelper.GetInnerExceptionMsg(ex);
+                    return false;
+                }
             }
-            catch(DbEntityValidationException ex)
-            {
-               Msg="数据类型错误:"+  ExceptionHelper.GetInnerExceptionMsg(ex);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Msg ="数据格式错误请检查数据源,请勿随意添加修改列,详细：" +ex.Message+"| ";
-                return false;
-                ///throw ex;
-            }
-            
+
+
 
             return true;
         }
@@ -303,7 +329,7 @@ namespace Service
             {
                 for (int i = 0; i < GoodSupplierDT.Rows.Count; i++) //跳过第一行示例
                 {
-                   
+
                     le_goods_suppliers model = new le_goods_suppliers();
 
                     model.Supplyprice = Convert.ToDecimal(GoodSupplierDT.Rows[i]["供应价格"]);
@@ -312,11 +338,11 @@ namespace Service
                     model.GoodsID = Convert.ToInt32(GoodSupplierDT.Rows[i]["商品ID"]);
                     model.CreatTime = DateTime.Now;
                     model.UpdateTime = DateTime.Now;
-                    if (ctx.le_goods_suppliers.Any(s => s.GoodsID == model.GoodsID&&s.SuppliersID== model.SuppliersID))
+                    if (ctx.le_goods_suppliers.Any(s => s.GoodsID == model.GoodsID && s.SuppliersID == model.SuppliersID))
                     {
                         Msg = string.Format("商品ID为[{0}]得商品已存在相同得供应商，请检查数据源", model.GoodsID);
                         return false;
-                           
+
                     }
                     ctx.le_goods_suppliers.Add(model);
 

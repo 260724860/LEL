@@ -1691,6 +1691,18 @@ namespace Service
                 return result + 1;
             }
         }
+        /// <summary>
+        /// 判断当前排序是否存在
+        /// </summary>
+        /// <returns></returns>
+        public bool IsExitGetGoodsSort(int Sort)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var result = ctx.le_goods.Any(s=>s.Sort== Sort);
+                return result;
+            }
+        }
 
         /// <summary>
         /// 清空月销量
