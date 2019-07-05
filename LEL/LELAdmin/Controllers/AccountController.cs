@@ -38,7 +38,7 @@ namespace LELAdmin.Controllers
                 var dto = AdService.Login(LoginName, PWD);
                 if (dto.code != 0)
                 {
-                    return Json(new { code = 1, msg = "ERROR", content = "" });
+                    return Json(JRpcHelper.AjaxResult(1, dto.msg, null));
                 }
                 var tokenExpiration = TimeSpan.FromHours(2);
                 ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);

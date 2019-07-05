@@ -24,7 +24,7 @@ namespace Service
                 var TDresult = tempIq.Select(s => new IndexDTO
                 {
                     // Out_Trade_No = s.Out_Trade_No,
-                    Money = s.Money,
+                    Money = s.GoodsPrice,
                     UpdateTime = s.UpdateTime,
                     CreateTime = s.CreateTime
                 }).ToList();

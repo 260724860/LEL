@@ -9,11 +9,18 @@ namespace DTO.ShopOrder
         public string RcAddr { get; set; }
         public string RcName { get; set; }
         public string RcPhone { get; set; }
-        public decimal Money { get; set; }
+      //  public decimal Money { get; set; }
         public int Status { get; set; }
         public string Head_Notes { get; set; }
         public DateTime? UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
+
+        public decimal RealAmount { get; set; }
+        public decimal OrderAmout { get; set; }
+        public decimal OrderSupplyAmount { get; set; }
+     
+        public decimal RealSupplyAmount { get; set; }
+
         public int? AdminID { get; set; }
         public int UsersID { get; set; }
         public string UserName { get; set; }
@@ -42,7 +49,7 @@ namespace DTO.ShopOrder
         /// <summary>
         /// 供应商价格
         /// </summary>
-        public decimal SupplyMoney { get; set; }
+       // public decimal SupplyMoney { get; set; }
 
         public string AdminName { get; set; }
 

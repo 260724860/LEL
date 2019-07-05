@@ -28,8 +28,10 @@ namespace Service
         public string RcAddr { get; set; }
         public string RcName { get; set; }
         public string RcPhone { get; set; }
-        public decimal Money { get; set; }
-        public decimal SupplyMoney { get; set; }
+        public decimal OrderSupplyAmount { get; set; }
+        public decimal OrderAmout { get; set; }
+        public decimal RealAmount { get; set; }
+        public decimal RealSupplyAmount { get; set; }
         public int Status { get; set; }
         public Nullable<int> AdminID { get; set; }
         public int UsersID { get; set; }

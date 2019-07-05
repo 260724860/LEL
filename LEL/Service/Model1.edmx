@@ -229,8 +229,10 @@
           <Property Name="RcAddr" Type="text" Nullable="false" />
           <Property Name="RcName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="RcPhone" Type="varchar" MaxLength="11" Nullable="false" />
-          <Property Name="Money" Type="decimal" Precision="9" Scale="2" Nullable="false" />
-          <Property Name="SupplyMoney" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="OrderSupplyAmount" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="OrderAmout" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="RealAmount" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="RealSupplyAmount" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="AdminID" Type="int" />
           <Property Name="UsersID" Type="int" Nullable="false" />
@@ -271,7 +273,7 @@
           <Property Name="OrdersLinesID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderHeadID" Type="int" Nullable="false" />
           <Property Name="GoodsID" Type="int" Nullable="false" />
-          <Property Name="Money" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="GoodsPrice" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="SupplyPrice" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="GoodsCount" Type="int" Nullable="false" />
           <Property Name="DeliverCount" Type="int" Nullable="false" />
@@ -920,38 +922,38 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="leerledbtestModelStoreContainer">
-          <EntitySet Name="le_ad" EntityType="Self.le_ad" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_admin" EntityType="Self.le_admin" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_admin_re_users" EntityType="Self.le_admin_re_users" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_admin_role" EntityType="Self.le_admin_role" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_admin_role_mapping" EntityType="Self.le_admin_role_mapping" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_admin_role_value" EntityType="Self.le_admin_role_value" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_cart_goodsvalue" EntityType="Self.le_cart_goodsvalue" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_goods" EntityType="Self.le_goods" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_goods_img" EntityType="Self.le_goods_img" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_goods_log" EntityType="Self.le_goods_log" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_goods_suppliers" EntityType="Self.le_goods_suppliers" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_goods_value" EntityType="Self.le_goods_value" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_goodsgroups" EntityType="Self.le_goodsgroups" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_navigation" EntityType="Self.le_navigation" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_order_pack" EntityType="Self.le_order_pack" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_orderline_goodsvalue" EntityType="Self.le_orderline_goodsvalue" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_orders_head" EntityType="Self.le_orders_head" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_orders_head_log" EntityType="Self.le_orders_head_log" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_orders_lines" EntityType="Self.le_orders_lines" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_orders_lines_log" EntityType="Self.le_orders_lines_log" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_orders_modify_record" EntityType="Self.le_orders_modify_record" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_orders_operationrecord" EntityType="Self.le_orders_operationrecord" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_pushmsg" EntityType="Self.le_pushmsg" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_shop_cart" EntityType="Self.le_shop_cart" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_sms" EntityType="Self.le_sms" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_suppliers" EntityType="Self.le_suppliers" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_sys_address" EntityType="Self.le_sys_address" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_sysconfig" EntityType="Self.le_sysconfig" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest2" store:Type="Tables" />
-          <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest2" store:Type="Tables" />
+          <EntitySet Name="le_ad" EntityType="Self.le_ad" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_admin" EntityType="Self.le_admin" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_admin_re_users" EntityType="Self.le_admin_re_users" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_admin_role" EntityType="Self.le_admin_role" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_admin_role_mapping" EntityType="Self.le_admin_role_mapping" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_admin_role_value" EntityType="Self.le_admin_role_value" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_cart_goodsvalue" EntityType="Self.le_cart_goodsvalue" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_goods" EntityType="Self.le_goods" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_goods_img" EntityType="Self.le_goods_img" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_goods_log" EntityType="Self.le_goods_log" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_goods_suppliers" EntityType="Self.le_goods_suppliers" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_goods_value" EntityType="Self.le_goods_value" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_goodsgroups" EntityType="Self.le_goodsgroups" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_navigation" EntityType="Self.le_navigation" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_order_pack" EntityType="Self.le_order_pack" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orderline_goodsvalue" EntityType="Self.le_orderline_goodsvalue" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orders_head" EntityType="Self.le_orders_head" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orders_head_log" EntityType="Self.le_orders_head_log" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orders_lines" EntityType="Self.le_orders_lines" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orders_lines_log" EntityType="Self.le_orders_lines_log" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orders_modify_record" EntityType="Self.le_orders_modify_record" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orders_operationrecord" EntityType="Self.le_orders_operationrecord" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_pushmsg" EntityType="Self.le_pushmsg" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_shop_cart" EntityType="Self.le_shop_cart" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_sms" EntityType="Self.le_sms" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_suppliers" EntityType="Self.le_suppliers" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_sys_address" EntityType="Self.le_sys_address" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_sysconfig" EntityType="Self.le_sysconfig" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest3" store:Type="Tables" />
           <AssociationSet Name="FK__le_orders_head" Association="Self.FK__le_orders_head">
             <End Role="le_orders_head" EntitySet="le_orders_head" />
             <End Role="le_orders_modify_record" EntitySet="le_orders_modify_record" />
@@ -1544,8 +1546,10 @@
           <Property Name="RcAddr" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
           <Property Name="RcName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="RcPhone" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
-          <Property Name="Money" Type="Decimal" Nullable="false" />
-          <Property Name="SupplyMoney" Type="Decimal" Nullable="false" />
+          <Property Name="OrderSupplyAmount" Type="Decimal" Nullable="false" />
+          <Property Name="OrderAmout" Type="Decimal" Nullable="false" />
+          <Property Name="RealAmount" Type="Decimal" Nullable="false" />
+          <Property Name="RealSupplyAmount" Type="Decimal" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="AdminID" Type="Int32" />
           <Property Name="UsersID" Type="Int32" Nullable="false" />
@@ -1596,7 +1600,7 @@
           <Property Name="OrdersLinesID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OrderHeadID" Type="Int32" Nullable="false" />
           <Property Name="GoodsID" Type="Int32" Nullable="false" />
-          <Property Name="Money" Type="Decimal" Nullable="false" />
+          <Property Name="GoodsPrice" Type="Decimal" Nullable="false" />
           <Property Name="SupplyPrice" Type="Decimal" Nullable="false" />
           <Property Name="GoodsCount" Type="Int32" Nullable="false" />
           <Property Name="DeliverCount" Type="Int32" Nullable="false" />
@@ -2530,8 +2534,10 @@
                 <ScalarProperty Name="UsersID" ColumnName="UsersID" />
                 <ScalarProperty Name="AdminID" ColumnName="AdminID" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="SupplyMoney" ColumnName="SupplyMoney" />
-                <ScalarProperty Name="Money" ColumnName="Money" />
+                <ScalarProperty Name="RealSupplyAmount" ColumnName="RealSupplyAmount" />
+                <ScalarProperty Name="RealAmount" ColumnName="RealAmount" />
+                <ScalarProperty Name="OrderAmout" ColumnName="OrderAmout" />
+                <ScalarProperty Name="OrderSupplyAmount" ColumnName="OrderSupplyAmount" />
                 <ScalarProperty Name="RcPhone" ColumnName="RcPhone" />
                 <ScalarProperty Name="RcName" ColumnName="RcName" />
                 <ScalarProperty Name="RcAddr" ColumnName="RcAddr" />
@@ -2572,7 +2578,7 @@
                 <ScalarProperty Name="DeliverCount" ColumnName="DeliverCount" />
                 <ScalarProperty Name="GoodsCount" ColumnName="GoodsCount" />
                 <ScalarProperty Name="SupplyPrice" ColumnName="SupplyPrice" />
-                <ScalarProperty Name="Money" ColumnName="Money" />
+                <ScalarProperty Name="GoodsPrice" ColumnName="GoodsPrice" />
                 <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
                 <ScalarProperty Name="OrderHeadID" ColumnName="OrderHeadID" />
                 <ScalarProperty Name="OrdersLinesID" ColumnName="OrdersLinesID" />

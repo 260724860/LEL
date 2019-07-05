@@ -341,7 +341,7 @@ namespace Service
                     linesModel.CreateTime = DateTime.Now;
                     linesModel.GoodsCount = goodsModel.GoodsCount;
                     linesModel.DeliverCount = goodsModel.GoodsCount;
-                    linesModel.Money = goodsModel.SpecialOffer;
+                    linesModel.GoodsPrice = goodsModel.SpecialOffer;
                     linesModel.SupplyPrice = DefaulSuplier.Price;
                     linesModel.Profit = goodsModel.Price - DefaulSuplier.Price;
 
@@ -362,7 +362,12 @@ namespace Service
                     le_Orders_Head.le_orders_lines.Add(linesModel);
                 }
                 le_Orders_Head.CreateTime = DateTime.Now;
-                le_Orders_Head.Money = OrderLinesList.Sum(s => s.Money * s.GoodsCount);
+
+                le_Orders_Head.OrderAmout = OrderLinesList.Sum(s => s.GoodsPrice * s.GoodsCount);
+                le_Orders_Head.RealAmount = le_Orders_Head.OrderAmout;
+                le_Orders_Head.OrderSupplyAmount = OrderLinesList.Sum(s => s.SupplyPrice * s.GoodsCount);
+                le_Orders_Head.RealSupplyAmount = le_Orders_Head.OrderSupplyAmount;
+
                 le_Orders_Head.OutTradeNo = Trade_no;
                 le_Orders_Head.RcAddr = AddressModel.ReceiveArea + "-" + AddressModel.ReceiveAddress;
                 le_Orders_Head.RcName = AddressModel.ReceiveName;
@@ -379,7 +384,8 @@ namespace Service
                 le_Orders_Head.PickUpPhone = ParamasData.PickUpPhone;
                 le_Orders_Head.PickupTime = ParamasData.PickupTime;
                 le_Orders_Head.PickUpMan = ParamasData.PickUpMan;
-                le_Orders_Head.SupplyMoney = OrderLinesList.Sum(s => s.SupplyPrice * s.GoodsCount);
+                
+
                 ctx.le_orders_head.Add(le_Orders_Head);
 
                 //去重复
@@ -472,7 +478,24 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                var tempIq = ctx.le_orders_head.Where(s => s.CreateTime >= seachParams.BeginTime && s.CreateTime <= seachParams.EndTime);
+                var tempIq = ctx.le_orders_head.Where(s=>true);
+
+                if(seachParams.BeginTime != null&& seachParams.EndTime != null&&string.IsNullOrEmpty(seachParams.Out_Trade_No))
+                {
+
+                    seachParams.BeginTime = DateTime.Now.AddDays(-3);
+                    seachParams.EndTime = DateTime.Now;
+                }
+
+                if (seachParams.BeginTime!=null)
+                {
+                    tempIq = tempIq.Where(s => s.CreateTime >= seachParams.BeginTime);
+                }
+                if (seachParams.EndTime != null)
+                {
+                    tempIq = tempIq.Where(s => s.CreateTime <= seachParams.EndTime);
+                }
+
                 if (seachParams.Status != null)
                 {
                     tempIq = tempIq.Where(s => s.Status == seachParams.Status);
@@ -490,10 +513,10 @@ namespace Service
                 {
                     tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
                 }
-                if (seachParams.Status != null)
-                {
-                    tempIq = tempIq.Where(s => s.Status == seachParams.Status);
-                }
+                //if (seachParams.Status != null)
+                //{
+                //    tempIq = tempIq.Where(s => s.Status == seachParams.Status);
+                //}
                 if (seachParams.UserID != null)
                 {
                     tempIq = tempIq.Where(s => s.UsersID == seachParams.UserID);
@@ -518,7 +541,14 @@ namespace Service
                     CreateTime = p.CreateTime,
                     Head_Notes = p.Head_Notes,
                     LinesCount = p.GoodsCount,
-                    Money = p.Money,
+
+                    RealAmount = p.RealAmount,
+                    OrderAmout=p.OrderAmout,
+
+                    OrderSupplyAmount = p.OrderSupplyAmount,
+                    RealSupplyAmount=p.RealSupplyAmount,
+                   
+
                     Orders_Head_ID = p.OrdersHeadID,
                     Out_Trade_No = p.OutTradeNo,
                     RcAddr = p.RcAddr,
@@ -534,7 +564,7 @@ namespace Service
                     PickUpMan = p.PickUpMan,
                     PickupTime = p.PickupTime,
                     PickUpPhone = p.PickUpPhone,
-                    SupplyMoney = p.SupplyMoney,
+                 
                     DeliverCount = p.DeliverCount,
 
                 }).Distinct();
@@ -701,7 +731,7 @@ namespace Service
                     Orders_Lines_ID = s.OrdersLinesID,
                     SupplierPhone = s.le_suppliers.MobilePhone,
                     SupplyPrice = s.SupplyPrice,
-                    Money = s.Money,
+                    GoodsPrice = s.GoodsPrice,
                     OriginalPrice = s.le_goods.OriginalPrice,
                     Specifications = s.le_goods.Specifications,
                     PackingNumber = s.le_goods.PackingNumber,
@@ -837,7 +867,7 @@ namespace Service
                     OrderHeadLogModel.UserID = info.UserID;
                 }
                 OrderHeadLogModel.BeforeCount = modhead.GoodsCount;
-                OrderHeadLogModel.BeforeMoney = modhead.Money;
+                OrderHeadLogModel.BeforeMoney = modhead.RealAmount;
                 OrderHeadLogModel.BeforeStatus = modhead.Status;
                 OrderHeadLogModel.CreateTime = DateTime.Now;
                 OrderHeadLogModel.OrderHeadID = modhead.OrdersHeadID;
@@ -865,7 +895,7 @@ namespace Service
                             OrderLineLogModel.UserID = info.UserID;
                         }
                         OrderLineLogModel.BeforeCount = Linemodel.GoodsCount;
-                        OrderLineLogModel.BeforeMoney = Linemodel.Money;
+                        OrderLineLogModel.BeforeMoney = Linemodel.GoodsPrice;
                         OrderLineLogModel.BeforeStatus = Linemodel.Status;
                         OrderLineLogModel.CreateTime = DateTime.Now;
                         OrderLineLogModel.OrderLineID = Linemodel.OrdersLinesID;
@@ -884,7 +914,7 @@ namespace Service
                             SupplyPrice = ctx.le_goods_suppliers.Where(s => s.SuppliersID == data.SuppliersID && s.GoodsID == Linemodel.GoodsID).Select(s => s.Supplyprice).FirstOrDefault();
                             Linemodel.SuppliersID = data.SuppliersID;
                             Linemodel.SupplyPrice = SupplyPrice;
-                            Linemodel.Profit = Linemodel.Money - SupplyPrice;
+                            Linemodel.Profit = Linemodel.GoodsPrice - SupplyPrice;
                         }
                         if (Linemodel.DeliverCount != data.GoodsCount)//更改商品数量
                         {
@@ -894,7 +924,7 @@ namespace Service
                                 Linemodel.DeliverCount = 0;
                             }
                             OrderLineLogModel.AfterCount = Linemodel.DeliverCount;
-                            OrderLineLogModel.AfterMoney = Linemodel.Money;
+                            OrderLineLogModel.AfterMoney = Linemodel.GoodsPrice;
                             OrderLineLogModel.AfterStatus = Linemodel.Status;
                             ctx.le_orders_lines_log.Add(OrderLineLogModel);
 
@@ -911,15 +941,15 @@ namespace Service
                     }
 
                     modhead.DeliverCount = OrderLineList.Sum(s => s.DeliverCount);
-                    modhead.SupplyMoney = OrderLineList.Sum(s => s.SupplyPrice * s.DeliverCount);
-                    modhead.Money = OrderLineList.Sum(s => s.Money * s.DeliverCount);
+                    modhead.RealSupplyAmount = OrderLineList.Sum(s => s.SupplyPrice * s.DeliverCount);
+                    modhead.RealAmount = OrderLineList.Sum(s => s.GoodsPrice * s.DeliverCount);
 
                     if (modhead.DeliverCount < 0)
                     {
                         modhead.DeliverCount = 0;
                     }
                     OrderHeadLogModel.AfterCount = modhead.DeliverCount;
-                    OrderHeadLogModel.AfterMoney = modhead.Money;
+                    OrderHeadLogModel.AfterMoney = modhead.RealAmount;
                     OrderHeadLogModel.AfterStatus = modhead.Status;
 
                     ctx.le_orders_head_log.Add(OrderHeadLogModel);
@@ -951,34 +981,34 @@ namespace Service
         /// <param name="GoodsID"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public List<GoodsSuppliersInfoDto> GetGoodsSuppliersList(int GoodsID, out string msg)
-        {
-            using (Entities ctx = new Entities())
-            {
-                try
-                {
-                    string sql = string.Format(@"select lg.GoodsID,lg.GoodsName,ls.Suppliers_Name,lgs.Price,ls.SuppliersID from le_suppliers ls 
-left join le_goods_suppliers lgs on lgs.SuppliersID = ls.SuppliersID
-left join le_goods lg on lg.GoodsID=lgs.GoodsID
-where lg.GoodsID=@GoodsID");
+//        public List<GoodsSuppliersInfoDto> GetGoodsSuppliersList(int GoodsID, out string msg)
+//        {
+//            using (Entities ctx = new Entities())
+//            {
+//                try
+//                {
+//                    string sql = string.Format(@"select lg.GoodsID,lg.GoodsName,ls.Suppliers_Name,lgs.Price,ls.SuppliersID from le_suppliers ls 
+//left join le_goods_suppliers lgs on lgs.SuppliersID = ls.SuppliersID
+//left join le_goods lg on lg.GoodsID=lgs.GoodsID
+//where lg.GoodsID=@GoodsID");
 
-                    MySqlParameter[] parameters =
-                    {
-                    new MySqlParameter("@GoodsID", MySqlDbType.Int32),
-                    };
-                    parameters[0].Value = GoodsID;
+//                    MySqlParameter[] parameters =
+//                    {
+//                    new MySqlParameter("@GoodsID", MySqlDbType.Int32),
+//                    };
+//                    parameters[0].Value = GoodsID;
 
-                    var resule = ctx.Database.SqlQuery<GoodsSuppliersInfoDto>(sql, parameters).ToList();
-                    msg = "SUCCESS";
-                    return resule;
-                }
-                catch (Exception ex)
-                {
-                    msg = "查询异常，信息：" + ex.ToString();
-                    return null;
-                }
-            }
-        }
+//                    var resule = ctx.Database.SqlQuery<GoodsSuppliersInfoDto>(sql, parameters).ToList();
+//                    msg = "SUCCESS";
+//                    return resule;
+//                }
+//                catch (Exception ex)
+//                {
+//                    msg = "查询异常，信息：" + ex.ToString();
+//                    return null;
+//                }
+//            }
+//        }
 
         /// <summary>
         /// 用户取消订单
@@ -1186,16 +1216,16 @@ where lg.GoodsID=@GoodsID");
                     return false;
                 }
 
-                le_orders_lines_log OrderLineLogName = new le_orders_lines_log();
-                OrderLineLogName.BeforeCount = CurrentLine.GoodsCount;
-                OrderLineLogName.BeforeMoney = CurrentLine.Money;
-                OrderLineLogName.BeforeStatus = CurrentLine.Status;
-                OrderLineLogName.CreateTime = DateTime.Now;
+                le_orders_lines_log OrderLineLog = new le_orders_lines_log();
+                OrderLineLog.BeforeCount = CurrentLine.GoodsCount;
+                OrderLineLog.BeforeMoney = CurrentLine.GoodsPrice;
+                OrderLineLog.BeforeStatus = CurrentLine.Status;
+                OrderLineLog.CreateTime = DateTime.Now;
 
                 le_orders_head_log OrderHeadLog = new le_orders_head_log();
                 OrderHeadLog.BeforeCount = OrderHeadModel.GoodsCount;
-                OrderHeadLog.BeforeMoney = OrderHeadModel.Money;
-                OrderHeadLog.AfterMoney = OrderHeadModel.Money; //比对
+                OrderHeadLog.BeforeMoney = OrderHeadModel.RealAmount;
+                OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount; //比对
                 OrderHeadLog.BeforeStatus = OrderHeadModel.Status;
                 OrderHeadLog.CreateTime = DateTime.Now;
                 OrderHeadLog.OrderHeadID = OrderHeadModel.OrdersHeadID;
@@ -1226,13 +1256,13 @@ where lg.GoodsID=@GoodsID");
                             CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
 
-                            OrderHeadModel.Money += CurrentLine.GoodsCount * CurrentLine.Money;
-                            OrderHeadModel.SupplyMoney+= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                            OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                            OrderHeadModel.RealSupplyAmount+= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
                             OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
-                            OrderHeadLog.AfterMoney = OrderHeadModel.Money;
+                            OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
                             OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
                         }
-                        OrderLineLogName.AdminID = AdminID;
+                        OrderLineLog.AdminID = AdminID;
 
                         if (Status == 2 || Status == 3)
                         {
@@ -1271,11 +1301,11 @@ where lg.GoodsID=@GoodsID");
                     {
                         if (AdminID != 0)  //总部加急单也有接单权限
                         {
-                            OrderLineLogName.AdminID = AdminID;
+                            OrderLineLog.AdminID = AdminID;
                         }
                         if (AdminID == 0 && SuppliersID != 0)
                         {
-                            OrderLineLogName.SupplierID = SuppliersID;
+                            OrderLineLog.SupplierID = SuppliersID;
                         }
                         if (CurrentLine.Status == 3) //之前是已取消 现在改为已结单修改销量库存
                         {
@@ -1283,10 +1313,11 @@ where lg.GoodsID=@GoodsID");
                             CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
                             CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
 
-                            OrderHeadModel.Money += CurrentLine.GoodsCount * CurrentLine.Money;
-                            OrderHeadModel.SupplyMoney += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                            OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                            OrderHeadModel.RealSupplyAmount += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
                             OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
-                            OrderHeadLog.AfterMoney = OrderHeadModel.Money;
+
+                            OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
                             OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
                         }
 
@@ -1299,7 +1330,7 @@ where lg.GoodsID=@GoodsID");
 
                         CurrentLine.UpdateTime = DateTime.Now;
 
-                        ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+                       // ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
 
 
                         var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
@@ -1315,7 +1346,7 @@ where lg.GoodsID=@GoodsID");
                     }
                     if (Status == 3)//取消订单
                     {
-                        OrderLineLogName.SupplierID = SuppliersID;
+                        OrderLineLog.SupplierID = SuppliersID;
                        
                         CurrentLine.Status = 3;
                         CurrentLine.le_goods.Stock += CurrentLine.GoodsCount;
@@ -1331,11 +1362,11 @@ where lg.GoodsID=@GoodsID");
                        
                         //ctx.Entry<le_goods>(CurrentLine.le_goods).State = EntityState.Modified;
 
-                        OrderHeadModel.Money -= CurrentLine.GoodsCount * CurrentLine.Money;
-                        OrderHeadModel.SupplyMoney -= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                        OrderHeadModel.RealAmount -= CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                        OrderHeadModel.RealSupplyAmount -= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
                         OrderHeadModel.DeliverCount -= CurrentLine.GoodsCount;
 
-                        OrderHeadLog.AfterMoney = OrderHeadModel.Money;
+                        OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
                         OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
 
                         new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
@@ -1350,12 +1381,19 @@ where lg.GoodsID=@GoodsID");
                         ctx.le_orders_head_log.Add(OrderHeadLog);
                     }
 
-                    OrderLineLogName.AfterCount = CurrentLine.DeliverCount;
-                    OrderLineLogName.AfterStatus = Status;
-                    OrderLineLogName.OrderLineID = CurrentLine.OrdersLinesID;
+                    OrderLineLog.AfterCount = CurrentLine.DeliverCount;
+                    OrderLineLog.AfterStatus = Status;
+                    OrderLineLog.OrderLineID = CurrentLine.OrdersLinesID;
 
-                    ctx.le_orders_lines_log.Add(OrderLineLogName);
+                    ctx.le_orders_lines_log.Add(OrderLineLog);
                   
+                    if(CurrentLine.le_goods.TotalSalesVolume<0|| CurrentLine.le_goods.SalesVolumes<0)
+                    {
+                        Msg =string.Format("计算错误,月销量不可为负数.订单行ID:{0}", CurrentLine.OrdersLinesID);
+                        log.Error(Msg, null);
+                        return false;
+                    }
+                    
                     ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
                     ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                     if (ctx.SaveChanges() > 0)
@@ -1399,7 +1437,7 @@ where lg.GoodsID=@GoodsID");
                 {
                     var model = ctx.le_orders_head.Where(s => s.OutTradeNo == OutTradeNo).FirstOrDefault();
                     OrderHeadLogModel.BeforeCount = model.GoodsCount;
-                    OrderHeadLogModel.BeforeMoney = model.Money;
+                    OrderHeadLogModel.BeforeMoney = model.RealAmount;
                     OrderHeadLogModel.BeforeStatus = model.Status;
                     if (loginInfo.UserType == 3)
                     {
@@ -1454,7 +1492,7 @@ where lg.GoodsID=@GoodsID");
                         {
                             le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
                             OrderLineLogModel.BeforeCount = orderline.GoodsCount;
-                            OrderLineLogModel.BeforeMoney = orderline.Money;
+                            OrderLineLogModel.BeforeMoney = orderline.SupplyPrice;
                             OrderLineLogModel.BeforeStatus = orderline.Status;
                             OrderLineLogModel.CreateTime = DateTime.Now;
                             OrderLineLogModel.AfterStatus = 2;
@@ -1484,7 +1522,7 @@ where lg.GoodsID=@GoodsID");
                             }
                             le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
                             OrderLineLogModel.BeforeCount = orderline.GoodsCount;
-                            OrderLineLogModel.BeforeMoney = orderline.Money;
+                            OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
                             OrderLineLogModel.BeforeStatus = orderline.Status;
                             OrderLineLogModel.AfterStatus = 3;
                             OrderLineLogModel.CreateTime = DateTime.Now;

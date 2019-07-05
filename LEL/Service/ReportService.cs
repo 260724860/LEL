@@ -25,7 +25,7 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(" select b.GoodsName,c.Name GoodsGroupName, b.GoodsGroupsID, b.GoodsID , sum(a.Money * a.DeliverCount) SalesAmount , sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes,sum(a.profit) profitsum");
+                sb.Append(" select b.GoodsName,c.Name GoodsGroupName, b.GoodsGroupsID, b.GoodsID , sum(a.RealAmount * a.DeliverCount) SalesAmount , sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes,sum(a.profit) profitsum");
                 sb.Append(" from le_orders_lines a");
                 sb.Append(" left join le_goods b on a.GoodsID = b.GoodsID");
                 sb.Append(" left join le_goodsgroups c on b.GoodsGroupsID = c.ID ");
@@ -79,10 +79,10 @@ namespace Service
                         sb.Append(" order by sum(a.profit) Desc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesAmountAsc:
-                        sb.Append(" order by sum(a.Money * a.DeliverCount) Asc ");
+                        sb.Append(" order by sum(a.GoodsPrice * a.DeliverCount) Asc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesAmountDesc:
-                        sb.Append(" order by sum(a.Money * a.DeliverCount) Desc ");
+                        sb.Append(" order by sum(a.GoodsPrice * a.DeliverCount) Desc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesCountAsc:
                         sb.Append(" order by sum(a.GoodsCount) Asc ");
@@ -141,7 +141,7 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(" select sum(a.Money* a.GoodsCount ) SalesAmount ,sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes, a.usersid,b.UsersName,b.UsersNickname,b.UsersMobilePhone,sum(a.profit) profitsum");
+                sb.Append(" select sum(a.GoodsPrice* a.GoodsCount ) SalesAmount ,sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes, a.usersid,b.UsersName,b.UsersNickname,b.UsersMobilePhone,sum(a.profit) profitsum");
                 sb.Append(" from le_orders_lines a");
                 sb.Append(" left join le_users b on  a.UsersID = b.UsersID ");
                 sb.Append(" left join le_orders_head c on a.OrderHeadID=c.OrdersHeadID ");
@@ -173,10 +173,10 @@ namespace Service
                         sb.Append(" order by sum(a.profit) Desc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesAmountAsc:
-                        sb.Append(" order by sum(a.Money * a.DeliverCount) Asc ");
+                        sb.Append(" order by sum(a.GoodsPrice * a.DeliverCount) Asc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesAmountDesc:
-                        sb.Append(" order by sum(a.Money * a.DeliverCount) Desc ");
+                        sb.Append(" order by sum(a.GoodsPrice * a.DeliverCount) Desc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesCountAsc:
                         sb.Append(" order by sum(a.DeliverCount) Asc ");
@@ -232,7 +232,7 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(" select sum(a.Money* a.DeliverCount ) SalesAmount ,sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes,b.SuppliersID,");
+                sb.Append(" select sum(a.GoodsPrice* a.DeliverCount ) SalesAmount ,sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes,b.SuppliersID,");
                 sb.Append(" b.ResponPeople,b.SuppliersName,b.MobilePhone,sum(a.profit) profitsum");
                 sb.Append(" from le_orders_lines a ");
                 sb.Append(" left join le_suppliers b on a.SuppliersID = b.SuppliersID");
@@ -258,10 +258,10 @@ namespace Service
                         sb.Append(" order by sum(a.profit) Desc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesAmountAsc:
-                        sb.Append(" order by sum(a.Money * a.DeliverCount) Asc ");
+                        sb.Append(" order by sum(a.GoodsPrice * a.DeliverCount) Asc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesAmountDesc:
-                        sb.Append(" order by sum(a.Money * a.DeliverCount) Desc ");
+                        sb.Append(" order by sum(a.GoodsPrice * a.DeliverCount) Desc ");
                         break;
                     case GoodsSalesReportOrderByType.SalesCountAsc:
                         sb.Append(" order by sum(a.DeliverCount) Asc ");

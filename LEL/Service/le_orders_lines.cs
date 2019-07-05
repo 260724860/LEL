@@ -24,7 +24,7 @@ namespace Service
         public int OrdersLinesID { get; set; }
         public int OrderHeadID { get; set; }
         public int GoodsID { get; set; }
-        public decimal Money { get; set; }
+        public decimal GoodsPrice { get; set; }
         public decimal SupplyPrice { get; set; }
         public int GoodsCount { get; set; }
         public int DeliverCount { get; set; }

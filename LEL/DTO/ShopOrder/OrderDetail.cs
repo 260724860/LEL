@@ -29,7 +29,7 @@ namespace DTO.ShopOrder
         /// <summary>
         /// 价格
         /// </summary>
-        public decimal Money { get; set; }
+        public decimal GoodsPrice { get; set; }
 
         public decimal OriginalPrice { get; set; }
 

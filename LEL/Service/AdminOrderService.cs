@@ -20,65 +20,65 @@ namespace Service
         /// <param name="seachParams"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public List<OrderDto> GetListOrder(OrderSeachParams seachParams, out int Count)
-        {
-            using (Entities ctx = new Entities())
-            {
-                var tempIq = ctx.le_orders_head.Where(s => s.CreateTime >= seachParams.BeginTime && s.CreateTime <= seachParams.EndTime);
-                if (seachParams.Status != null)
-                {
-                    tempIq = tempIq.Where(s => s.Status == seachParams.Status);
-                }
-                if (!string.IsNullOrEmpty(seachParams.KeyWords))
-                {
-                    tempIq = tempIq.Where(s => s.RcName.Contains(seachParams.KeyWords)
-                      || s.RcPhone.Contains(seachParams.KeyWords)
-                      || s.Head_Notes.Contains(seachParams.KeyWords)
-                      || s.RcAddr.Contains(seachParams.KeyWords)
-                      || s.le_users.UsersNickname.Contains(seachParams.KeyWords)
-                    );
-                }
-                if (!string.IsNullOrEmpty(seachParams.Out_Trade_No))
-                {
-                    tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
-                }
-                if (seachParams.Status != null)
-                {
-                    tempIq = tempIq.Where(s => s.Status == seachParams.Status);
-                }
-                if (seachParams.UserID != null)
-                {
-                    tempIq = tempIq.Where(s => s.UsersID == seachParams.UserID);
-                }
-                var result = tempIq.Select(s => new OrderDto
-                {
-                    AdminID = s.AdminID,
-                    CompleteTime = s.CompleteTime,
-                    CreateTime = s.CreateTime,
-                    Head_Notes = s.Head_Notes,
-                    LinesCount = s.GoodsCount,
-                    DeliverCount = s.DeliverCount,
-                    Money = s.Money,
-                    Orders_Head_ID = s.OrdersHeadID,
-                    Out_Trade_No = s.OutTradeNo,
-                    RcAddr = s.RcAddr,
-                    Status = s.Status,
-                    RcName = s.RcName,
-                    RcPhone = s.RcPhone,
-                    UpdateTime = s.UpdateTime,
-                    UserName = s.le_users.UsersNickname,
-                    UsersID = s.UsersID,
-                    ExpressType = s.ExpressType,
-                    OrderType = s.OrderType
-                }
-                );
-                result = result.OrderByDescending(s => s.CreateTime);
-                Count = result.Count();
-                result = result.Skip(seachParams.Offset).Take(seachParams.Rows);
+        //public List<OrderDto> GetListOrder(OrderSeachParams seachParams, out int Count)
+        //{
+        //    using (Entities ctx = new Entities())
+        //    {
+        //        var tempIq = ctx.le_orders_head.Where(s => s.CreateTime >= seachParams.BeginTime && s.CreateTime <= seachParams.EndTime);
+        //        if (seachParams.Status != null)
+        //        {
+        //            tempIq = tempIq.Where(s => s.Status == seachParams.Status);
+        //        }
+        //        if (!string.IsNullOrEmpty(seachParams.KeyWords))
+        //        {
+        //            tempIq = tempIq.Where(s => s.RcName.Contains(seachParams.KeyWords)
+        //              || s.RcPhone.Contains(seachParams.KeyWords)
+        //              || s.Head_Notes.Contains(seachParams.KeyWords)
+        //              || s.RcAddr.Contains(seachParams.KeyWords)
+        //              || s.le_users.UsersNickname.Contains(seachParams.KeyWords)
+        //            );
+        //        }
+        //        if (!string.IsNullOrEmpty(seachParams.Out_Trade_No))
+        //        {
+        //            tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
+        //        }
+        //        if (seachParams.Status != null)
+        //        {
+        //            tempIq = tempIq.Where(s => s.Status == seachParams.Status);
+        //        }
+        //        if (seachParams.UserID != null)
+        //        {
+        //            tempIq = tempIq.Where(s => s.UsersID == seachParams.UserID);
+        //        }
+        //        var result = tempIq.Select(s => new OrderDto
+        //        {
+        //            AdminID = s.AdminID,
+        //            CompleteTime = s.CompleteTime,
+        //            CreateTime = s.CreateTime,
+        //            Head_Notes = s.Head_Notes,
+        //            LinesCount = s.GoodsCount,
+        //            DeliverCount = s.DeliverCount,
+        //            Money = s.Money,
+        //            Orders_Head_ID = s.OrdersHeadID,
+        //            Out_Trade_No = s.OutTradeNo,
+        //            RcAddr = s.RcAddr,
+        //            Status = s.Status,
+        //            RcName = s.RcName,
+        //            RcPhone = s.RcPhone,
+        //            UpdateTime = s.UpdateTime,
+        //            UserName = s.le_users.UsersNickname,
+        //            UsersID = s.UsersID,
+        //            ExpressType = s.ExpressType,
+        //            OrderType = s.OrderType
+        //        }
+        //        );
+        //        result = result.OrderByDescending(s => s.CreateTime);
+        //        Count = result.Count();
+        //        result = result.Skip(seachParams.Offset).Take(seachParams.Rows);
 
-                return result.ToList();
-            }
-        }
+        //        return result.ToList();
+        //    }
+        //}
 
         /// <summary>
         /// 修改订单收货信息
@@ -288,120 +288,120 @@ namespace Service
         /// <param name="List"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool BatchEditLinesInfo(List<EditLinesInfo> List, out string msg)
-        {
-            using (Entities ctx = new Entities())
-            {
-                msg = "";
-                if (List.Count <= 0)
-                {
-                    msg = "请确认需要编辑的信息";
-                    return false;
-                }
-                try
-                {
-                    foreach (var data in List)
-                    {
-                        decimal BeforeMoney = 0; decimal AfterMoney = 0; int BeforeCount = 0; int AfterCount = 0;
+        //public bool BatchEditLinesInfo(List<EditLinesInfo> List, out string msg)
+        //{
+        //    using (Entities ctx = new Entities())
+        //    {
+        //        msg = "";
+        //        if (List.Count <= 0)
+        //        {
+        //            msg = "请确认需要编辑的信息";
+        //            return false;
+        //        }
+        //        try
+        //        {
+        //            foreach (var data in List)
+        //            {
+        //                decimal BeforeMoney = 0; decimal AfterMoney = 0; int BeforeCount = 0; int AfterCount = 0;
 
-                        decimal SupplyPrice;//供货价格
+        //                decimal SupplyPrice;//供货价格
 
-                        var Linemodel = ctx.le_orders_lines.Where(s => s.OrdersLinesID == data.Orders_Lines_ID).FirstOrDefault();
+        //                var Linemodel = ctx.le_orders_lines.Where(s => s.OrdersLinesID == data.Orders_Lines_ID).FirstOrDefault();
 
-                        if (Linemodel == null)
-                        {
-                            msg = data.Orders_Lines_ID + "订单不存在，请确认后重试";
-                            return false;
-                        }
-                        if (!string.IsNullOrEmpty(data.Notes))
-                        {
-                            Linemodel.Notes = data.Notes;
-                        }
-                        if (Linemodel.SuppliersID != data.SuppliersID)
-                        {
-                            SupplyPrice = ctx.le_goods_suppliers.Where(s => s.SuppliersID == data.SuppliersID && s.GoodsID == Linemodel.GoodsID).Select(s => s.Supplyprice).FirstOrDefault();
-                            Linemodel.SuppliersID = data.SuppliersID;
-                        }
-                        if (Linemodel.GoodsCount != data.GoodsCount)
-                        {
+        //                if (Linemodel == null)
+        //                {
+        //                    msg = data.Orders_Lines_ID + "订单不存在，请确认后重试";
+        //                    return false;
+        //                }
+        //                if (!string.IsNullOrEmpty(data.Notes))
+        //                {
+        //                    Linemodel.Notes = data.Notes;
+        //                }
+        //                if (Linemodel.SuppliersID != data.SuppliersID)
+        //                {
+        //                    SupplyPrice = ctx.le_goods_suppliers.Where(s => s.SuppliersID == data.SuppliersID && s.GoodsID == Linemodel.GoodsID).Select(s => s.Supplyprice).FirstOrDefault();
+        //                    Linemodel.SuppliersID = data.SuppliersID;
+        //                }
+        //                if (Linemodel.GoodsCount != data.GoodsCount)
+        //                {
 
-                            //更新订单行商品数，需要重新计算订单行价格                       
-                            BeforeCount = Linemodel.GoodsCount;//更新前订单行数量
-                            AfterCount = data.GoodsCount; //更新之后订单行金额
-                            Linemodel.GoodsCount = AfterCount;
-                            // var modgood = ctx.le_goods.Where(s => s.GoodsID == Linemodel.Goods_ID).FirstOrDefault();
+        //                    //更新订单行商品数，需要重新计算订单行价格                       
+        //                    BeforeCount = Linemodel.GoodsCount;//更新前订单行数量
+        //                    AfterCount = data.GoodsCount; //更新之后订单行金额
+        //                    Linemodel.GoodsCount = AfterCount;
+        //                    // var modgood = ctx.le_goods.Where(s => s.GoodsID == Linemodel.Goods_ID).FirstOrDefault();
 
-                            //更新订单头金额
-                            var modhead = Linemodel.le_orders_head;// ctx.le_orders_head.Where(s => s.Out_Trade_No == Linemodel.Out_Trade_No).FirstOrDefault();
+        //                    //更新订单头金额
+        //                    var modhead = Linemodel.le_orders_head;// ctx.le_orders_head.Where(s => s.Out_Trade_No == Linemodel.Out_Trade_No).FirstOrDefault();
 
-                            BeforeMoney = modhead.Money;//更新前订单金额
+        //                    BeforeMoney = modhead.Money;//更新前订单金额
 
-                            if (modhead != null)
-                            {
-                                if (Linemodel.GoodsCount <= 0)  //判断所有订单是否为已取消状态 是 改变订单头为已取消
-                                {
-                                    var LineList = modhead.le_orders_lines.Where(s => s.OrdersLinesID != Linemodel.OrdersLinesID).ToArray();
-                                    if (LineList.Count(s => s.Status == 3) == LineList.Count())
-                                    {
-                                        modhead.Status = 5;
-                                    }
-                                    Linemodel.GoodsCount = 0;
-                                    Linemodel.Status = 3;
-                                }
+        //                    if (modhead != null)
+        //                    {
+        //                        if (Linemodel.GoodsCount <= 0)  //判断所有订单是否为已取消状态 是 改变订单头为已取消
+        //                        {
+        //                            var LineList = modhead.le_orders_lines.Where(s => s.OrdersLinesID != Linemodel.OrdersLinesID).ToArray();
+        //                            if (LineList.Count(s => s.Status == 3) == LineList.Count())
+        //                            {
+        //                                modhead.Status = 5;
+        //                            }
+        //                            Linemodel.GoodsCount = 0;
+        //                            Linemodel.Status = 3;
+        //                        }
 
-                                modhead.SupplyMoney = modhead.SupplyMoney + (AfterCount - BeforeCount) * Linemodel.Money;
-                                modhead.Money = BeforeMoney + (AfterCount - BeforeCount) * Linemodel.Money;
-                                modhead.DeliverCount = AfterCount; // modhead.LinesCount + (model.GoodsCount - BeforeCount);
-                                if (modhead.DeliverCount < 0)
-                                {
-                                    modhead.DeliverCount = 0;
-                                }
-                                ctx.Entry<le_orders_head>(modhead).State = EntityState.Modified;
-                            }
+        //                        modhead.SupplyMoney = modhead.SupplyMoney + (AfterCount - BeforeCount) * Linemodel.Money;
+        //                        modhead.Money = BeforeMoney + (AfterCount - BeforeCount) * Linemodel.Money;
+        //                        modhead.DeliverCount = AfterCount; // modhead.LinesCount + (model.GoodsCount - BeforeCount);
+        //                        if (modhead.DeliverCount < 0)
+        //                        {
+        //                            modhead.DeliverCount = 0;
+        //                        }
+        //                        ctx.Entry<le_orders_head>(modhead).State = EntityState.Modified;
+        //                    }
 
-                            #region 添加订单行变动记录
-                            //OrderLineChangeRecordDTO dto = new OrderLineChangeRecordDTO();
-                            //dto.OrderLineID = data.Orders_Lines_ID;
-                            //dto.BeforeCount = BeforeCount;
-                            //dto.AfterCount = AfterCount;
-                            //dto.BeforeMoney = Linemodel.Money * BeforeCount;
-                            //dto.AfterMoney = Linemodel.Money * AfterCount;
-                            //dto.UserID = data.UserID;
-                            //dto.UserType = data.UserType;
-                            //var bol = ORservice.AddOrderLineChangeRecord(dto, out string MSG);
+        //                    #region 添加订单行变动记录
+        //                    //OrderLineChangeRecordDTO dto = new OrderLineChangeRecordDTO();
+        //                    //dto.OrderLineID = data.Orders_Lines_ID;
+        //                    //dto.BeforeCount = BeforeCount;
+        //                    //dto.AfterCount = AfterCount;
+        //                    //dto.BeforeMoney = Linemodel.Money * BeforeCount;
+        //                    //dto.AfterMoney = Linemodel.Money * AfterCount;
+        //                    //dto.UserID = data.UserID;
+        //                    //dto.UserType = data.UserType;
+        //                    //var bol = ORservice.AddOrderLineChangeRecord(dto, out string MSG);
 
-                            //if (!bol)
-                            //{
-                            //    msg = MSG;
-                            //    return false;
-                            //}
+        //                    //if (!bol)
+        //                    //{
+        //                    //    msg = MSG;
+        //                    //    return false;
+        //                    //}
 
-                            #endregion
-                        }
+        //                    #endregion
+        //                }
 
-                        ctx.Entry<le_orders_lines>(Linemodel).State = EntityState.Modified;
+        //                ctx.Entry<le_orders_lines>(Linemodel).State = EntityState.Modified;
 
 
-                    }
+        //            }
 
-                    if (ctx.SaveChanges() > 0)
-                    {
-                        msg = "SUCCESS";
-                        return true;
-                    }
-                    else
-                    {
-                        msg = "修改失败，请稍后重试";
-                        return false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    msg = "修改异常，异常信息：" + ex.ToString();
-                    return false;
-                }
-            }
-        }
+        //            if (ctx.SaveChanges() > 0)
+        //            {
+        //                msg = "SUCCESS";
+        //                return true;
+        //            }
+        //            else
+        //            {
+        //                msg = "修改失败，请稍后重试";
+        //                return false;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            msg = "修改异常，异常信息：" + ex.ToString();
+        //            return false;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 查询商品的供货商信息

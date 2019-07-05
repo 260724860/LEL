@@ -208,5 +208,21 @@ namespace LELAdmin.Controllers
             var DbPwd = DESEncrypt.Decrypt(EncrypPwd, salt);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", DbPwd));
         }
+        /// <summary>
+        /// 系统后门,获取用户账号密码. 正式上线请务必删除此接口！！！
+        /// </summary>
+        /// <param name="EncrypPwd"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        [HttpGet, Route("api/Other/GetUserPWD/")]
+        public IHttpActionResult GetUserPWD(string Loginname,int UserType)
+        {
+            return Json(JRpcHelper.AjaxResult(1, "接口废除", Loginname));
+            //if(UserType==1)
+            //{
+
+            //    return Json(JRpcHelper.AjaxResult(0, "SUCCESS", DbPwd));
+            //}
+        }
     }
 }
