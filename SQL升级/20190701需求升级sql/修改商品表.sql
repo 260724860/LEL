@@ -18,3 +18,9 @@ ALTER TABLE `le_goods`
 	ADD COLUMN `GoodsBarand` INT(11) NULL COMMENT '商品品牌' ,
 	ADD CONSTRAINT `FK_le_goods_le_goods_brand` FOREIGN KEY (`GoodsBarand`) REFERENCES `le_goods_brand` (`ID`);
 
+ALTER TABLE `le_goods`
+	ADD COLUMN `PriceFull` DECIMAL(9,2) NOT NULL DEFAULT '0' COMMENT '满减（满）' ,
+	ADD COLUMN `PriceReduction` DECIMAL(9,2) NOT NULL DEFAULT '0' COMMENT '满减（减）' ,
+	ADD COLUMN `TermOfValidity` VARCHAR(50) NOT NULL DEFAULT '0' COMMENT '有效期' ;
+
+

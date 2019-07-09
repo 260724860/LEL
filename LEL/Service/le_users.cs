@@ -46,6 +46,20 @@ namespace Service
         public string CarNumber { get; set; }
         public string BusinessNo { get; set; }
         public string IDCardNo { get; set; }
+        public string Province { get; set; }
+        public string City { get; set; }
+        public string Area { get; set; }
+        public string Address { get; set; }
+        public string Longitude { get; set; }
+        public string Latitude { get; set; }
+        public string IMEI { get; set; }
+        public string Initial { get; set; }
+        public string Email { get; set; }
+        public string Landline { get; set; }
+        public string FinanceName { get; set; }
+        public string FinancePhone { get; set; }
+        public string AuthCode { get; set; }
+        public string Remarks { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_admin_re_users> le_admin_re_users { get; set; }

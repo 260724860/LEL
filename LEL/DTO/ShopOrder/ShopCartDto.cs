@@ -57,7 +57,33 @@ namespace DTO.ShopOrder
 
         public List<SupplierGoods> SupplierGoodsList { get; set; }
 
+        /// <summary>
+        /// 最小起配数
+        /// </summary>
         public int MinimumPurchase { get; set; }
+
+        /// <summary>
+        /// 装箱数
+        /// </summary>
+        public int? PackingNumber { get; set; }
+
+        /// <summary>
+        /// 折扣
+        /// </summary>
+        public decimal Discount { get; set; }
+        /// <summary>
+        /// 满减（满）
+        /// </summary>
+        public decimal PriceFull { get; set; }
+        /// <summary>
+        /// 满减（减）
+        /// </summary>
+        public decimal PriceReduction { get; set; }
+
+        /// <summary>
+        /// 积分
+        /// </summary>
+        public int Integral { get; set; }
     }
 
 }

@@ -24,5 +24,8 @@ namespace Service
         public int Sort { get; set; }
         public Nullable<double> Longitude { get; set; }
         public Nullable<double> Latitude { get; set; }
+        public string Img { get; set; }
+        public string EmergencyContactPhone { get; set; }
+        public string Remarks { get; set; }
     }
 }

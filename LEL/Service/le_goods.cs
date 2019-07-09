@@ -52,9 +52,28 @@ namespace Service
         public System.DateTime RowVersion { get; set; }
         public int Quota { get; set; }
         public int MinimumPurchase { get; set; }
+        public int Integral { get; set; }
+        public int IsCrossdomain { get; set; }
+        public int IsReturn { get; set; }
+        public string UrgentOrder { get; set; }
+        public Nullable<System.DateTime> SeckillBeginTime { get; set; }
+        public Nullable<System.DateTime> SeckillEndTime { get; set; }
+        public string Initial { get; set; }
+        public string PlaceofOrigin { get; set; }
+        public Nullable<System.DateTime> ProductionDate { get; set; }
+        public int VirtualNumber { get; set; }
+        public int SupplierCount { get; set; }
+        public string Remarks { get; set; }
+        public int GoodsType { get; set; }
+        public Nullable<int> GoodsBarand { get; set; }
+        public decimal PriceFull { get; set; }
+        public decimal PriceReduction { get; set; }
+        public decimal Discount { get; set; }
+        public string TermOfValidity { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }
+        public virtual le_goods_brand le_goods_brand { get; set; }
         public virtual le_goodsgroups le_goodsgroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_log> le_goods_log { get; set; }

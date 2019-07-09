@@ -115,6 +115,9 @@
     <Compile Include="le_goodsgroups.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="le_goods_brand.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="le_goods_img.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

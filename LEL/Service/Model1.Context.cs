@@ -33,6 +33,7 @@ namespace Service
         public virtual DbSet<le_admin_role_value> le_admin_role_value { get; set; }
         public virtual DbSet<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }
         public virtual DbSet<le_goods> le_goods { get; set; }
+        public virtual DbSet<le_goods_brand> le_goods_brand { get; set; }
         public virtual DbSet<le_goods_img> le_goods_img { get; set; }
         public virtual DbSet<le_goods_log> le_goods_log { get; set; }
         public virtual DbSet<le_goods_suppliers> le_goods_suppliers { get; set; }

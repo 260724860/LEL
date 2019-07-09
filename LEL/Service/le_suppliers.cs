@@ -44,6 +44,23 @@ namespace Service
         public System.DateTime CreateTime { get; set; }
         public string IDCardNo { get; set; }
         public string BusinessNo { get; set; }
+        public string FinanceName { get; set; }
+        public string FinancePhone { get; set; }
+        public string AuthCode { get; set; }
+        public string Remarks { get; set; }
+        public string Province { get; set; }
+        public string City { get; set; }
+        public string Area { get; set; }
+        public string Address { get; set; }
+        public string Longitude { get; set; }
+        public string Latitude { get; set; }
+        public string IMEI { get; set; }
+        public string Initial { get; set; }
+        public string Landline { get; set; }
+        public string Deliverer { get; set; }
+        public string DelivererPhone { get; set; }
+        public string Category { get; set; }
+        public string ManagingBrands { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }

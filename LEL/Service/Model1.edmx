@@ -115,6 +115,32 @@
           <Property Name="RowVersion" Type="timestamp" Precision="3" Nullable="false" />
           <Property Name="Quota" Type="int" Nullable="false" />
           <Property Name="MinimumPurchase" Type="int" Nullable="false" />
+          <Property Name="Integral" Type="int" Nullable="false" />
+          <Property Name="IsCrossdomain" Type="int" Nullable="false" />
+          <Property Name="IsReturn" Type="int" Nullable="false" />
+          <Property Name="UrgentOrder" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SeckillBeginTime" Type="datetime" Precision="0" />
+          <Property Name="SeckillEndTime" Type="datetime" Precision="0" />
+          <Property Name="Initial" Type="varchar" MaxLength="20" />
+          <Property Name="PlaceofOrigin" Type="varchar" MaxLength="20" />
+          <Property Name="ProductionDate" Type="date" />
+          <Property Name="VirtualNumber" Type="int" Nullable="false" />
+          <Property Name="SupplierCount" Type="int" Nullable="false" />
+          <Property Name="Remarks" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="GoodsType" Type="int" Nullable="false" />
+          <Property Name="GoodsBarand" Type="int" />
+          <Property Name="PriceFull" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="PriceReduction" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="Discount" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="TermOfValidity" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="le_goods_brand">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="BrandName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreateTime" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="le_goods_img">
           <Key>
@@ -187,6 +213,8 @@
           <Property Name="ParentID" Type="int" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Img" Type="varchar" MaxLength="50" />
+          <Property Name="Remarks" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="le_navigation">
           <Key>
@@ -277,7 +305,7 @@
           <Property Name="SupplyPrice" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="GoodsCount" Type="int" Nullable="false" />
           <Property Name="DeliverCount" Type="int" Nullable="false" />
-          <Property Name="Profit" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="Profit" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="Notes" Type="text" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="AdminID" Type="int" />
@@ -385,6 +413,23 @@
           <Property Name="CreateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IDCardNo" Type="varchar" MaxLength="20" />
           <Property Name="BusinessNo" Type="varchar" MaxLength="20" />
+          <Property Name="FinanceName" Type="varchar" MaxLength="20" />
+          <Property Name="FinancePhone" Type="varchar" MaxLength="20" />
+          <Property Name="AuthCode" Type="varchar" MaxLength="20" />
+          <Property Name="Remarks" Type="varchar" MaxLength="20" />
+          <Property Name="Province" Type="varchar" MaxLength="20" />
+          <Property Name="City" Type="varchar" MaxLength="20" />
+          <Property Name="Area" Type="varchar" MaxLength="20" />
+          <Property Name="Address" Type="varchar" MaxLength="20" />
+          <Property Name="Longitude" Type="varchar" MaxLength="20" />
+          <Property Name="Latitude" Type="varchar" MaxLength="20" />
+          <Property Name="IMEI" Type="varchar" MaxLength="20" />
+          <Property Name="Initial" Type="varchar" MaxLength="20" />
+          <Property Name="Landline" Type="varchar" MaxLength="20" />
+          <Property Name="Deliverer" Type="varchar" MaxLength="20" />
+          <Property Name="DelivererPhone" Type="varchar" MaxLength="20" />
+          <Property Name="Category" Type="varchar" MaxLength="20" />
+          <Property Name="ManagingBrands" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="le_sys_address">
           <Key>
@@ -400,6 +445,9 @@
           <Property Name="Sort" Type="int" Nullable="false" />
           <Property Name="Longitude" Type="double" />
           <Property Name="Latitude" Type="double" />
+          <Property Name="Img" Type="varchar" MaxLength="100" />
+          <Property Name="EmergencyContactPhone" Type="varchar" MaxLength="50" />
+          <Property Name="Remarks" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="le_sysconfig">
           <Key>
@@ -449,6 +497,20 @@
           <Property Name="CarNumber" Type="varchar" MaxLength="20" />
           <Property Name="BusinessNo" Type="varchar" MaxLength="20" />
           <Property Name="IDCardNo" Type="varchar" MaxLength="20" />
+          <Property Name="Province" Type="varchar" MaxLength="20" />
+          <Property Name="City" Type="varchar" MaxLength="20" />
+          <Property Name="Area" Type="varchar" MaxLength="20" />
+          <Property Name="Address" Type="varchar" MaxLength="20" />
+          <Property Name="Longitude" Type="varchar" MaxLength="20" />
+          <Property Name="Latitude" Type="varchar" MaxLength="20" />
+          <Property Name="IMEI" Type="varchar" MaxLength="20" />
+          <Property Name="Initial" Type="varchar" MaxLength="20" />
+          <Property Name="Email" Type="varchar" MaxLength="20" />
+          <Property Name="Landline" Type="varchar" MaxLength="20" />
+          <Property Name="FinanceName" Type="varchar" MaxLength="20" />
+          <Property Name="FinancePhone" Type="varchar" MaxLength="20" />
+          <Property Name="AuthCode" Type="varchar" MaxLength="20" />
+          <Property Name="Remarks" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="lel_admin_suppliers">
           <Key>
@@ -558,6 +620,18 @@
             </Principal>
             <Dependent Role="le_goods_img">
               <PropertyRef Name="GoodsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_le_goods_le_goods_brand">
+          <End Role="le_goods_brand" Type="Self.le_goods_brand" Multiplicity="0..1" />
+          <End Role="le_goods" Type="Self.le_goods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_goods_brand">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="le_goods">
+              <PropertyRef Name="GoodsBarand" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -930,6 +1004,7 @@
           <EntitySet Name="le_admin_role_value" EntityType="Self.le_admin_role_value" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_cart_goodsvalue" EntityType="Self.le_cart_goodsvalue" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_goods" EntityType="Self.le_goods" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_goods_brand" EntityType="Self.le_goods_brand" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_goods_img" EntityType="Self.le_goods_img" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_goods_log" EntityType="Self.le_goods_log" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_goods_suppliers" EntityType="Self.le_goods_suppliers" Schema="leerledbtest3" store:Type="Tables" />
@@ -981,6 +1056,10 @@
           <AssociationSet Name="FK_le_goods_img_le_goods" Association="Self.FK_le_goods_img_le_goods">
             <End Role="le_goods" EntitySet="le_goods" />
             <End Role="le_goods_img" EntitySet="le_goods_img" />
+          </AssociationSet>
+          <AssociationSet Name="FK_le_goods_le_goods_brand" Association="Self.FK_le_goods_le_goods_brand">
+            <End Role="le_goods_brand" EntitySet="le_goods_brand" />
+            <End Role="le_goods" EntitySet="le_goods" />
           </AssociationSet>
           <AssociationSet Name="FK_le_goods_le_goodsgroups" Association="Self.FK_le_goods_le_goodsgroups">
             <End Role="le_goodsgroups" EntitySet="le_goodsgroups" />
@@ -1116,6 +1195,7 @@
           <EntitySet Name="le_admin_role_value" EntityType="leerledbtestModel.le_admin_role_value" />
           <EntitySet Name="le_cart_goodsvalue" EntityType="leerledbtestModel.le_cart_goodsvalue" />
           <EntitySet Name="le_goods" EntityType="leerledbtestModel.le_goods" />
+          <EntitySet Name="le_goods_brand" EntityType="leerledbtestModel.le_goods_brand" />
           <EntitySet Name="le_goods_img" EntityType="leerledbtestModel.le_goods_img" />
           <EntitySet Name="le_goods_log" EntityType="leerledbtestModel.le_goods_log" />
           <EntitySet Name="le_goods_suppliers" EntityType="leerledbtestModel.le_goods_suppliers" />
@@ -1187,6 +1267,10 @@
           <AssociationSet Name="FK_le_goods_img_le_goods" Association="leerledbtestModel.FK_le_goods_img_le_goods">
             <End Role="le_goods" EntitySet="le_goods" />
             <End Role="le_goods_img" EntitySet="le_goods_img" />
+          </AssociationSet>
+          <AssociationSet Name="FK_le_goods_le_goods_brand" Association="leerledbtestModel.FK_le_goods_le_goods_brand">
+            <End Role="le_goods_brand" EntitySet="le_goods_brand" />
+            <End Role="le_goods" EntitySet="le_goods" />
           </AssociationSet>
           <AssociationSet Name="FK_le_goods_le_goodsgroups" Association="leerledbtestModel.FK_le_goods_le_goodsgroups">
             <End Role="le_goodsgroups" EntitySet="le_goodsgroups" />
@@ -1411,13 +1495,41 @@
           <Property Name="RowVersion" Type="DateTime" Nullable="false" />
           <Property Name="Quota" Type="Int32" Nullable="false" />
           <Property Name="MinimumPurchase" Type="Int32" Nullable="false" />
+          <Property Name="Integral" Type="Int32" Nullable="false" />
+          <Property Name="IsCrossdomain" Type="Int32" Nullable="false" />
+          <Property Name="IsReturn" Type="Int32" Nullable="false" />
+          <Property Name="UrgentOrder" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SeckillBeginTime" Type="DateTime" />
+          <Property Name="SeckillEndTime" Type="DateTime" />
+          <Property Name="Initial" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PlaceofOrigin" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ProductionDate" Type="DateTime" />
+          <Property Name="VirtualNumber" Type="Int32" Nullable="false" />
+          <Property Name="SupplierCount" Type="Int32" Nullable="false" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="GoodsType" Type="Int32" Nullable="false" />
+          <Property Name="GoodsBarand" Type="Int32" />
+          <Property Name="PriceFull" Type="Decimal" Nullable="false" />
+          <Property Name="PriceReduction" Type="Decimal" Nullable="false" />
+          <Property Name="Discount" Type="Decimal" Nullable="false" />
+          <Property Name="TermOfValidity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="le_goods_img" Relationship="leerledbtestModel.FK_le_goods_img_le_goods" FromRole="le_goods" ToRole="le_goods_img" />
+          <NavigationProperty Name="le_goods_brand" Relationship="leerledbtestModel.FK_le_goods_le_goods_brand" FromRole="le_goods" ToRole="le_goods_brand" />
           <NavigationProperty Name="le_goodsgroups" Relationship="leerledbtestModel.FK_le_goods_le_goodsgroups" FromRole="le_goods" ToRole="le_goodsgroups" />
           <NavigationProperty Name="le_goods_log" Relationship="leerledbtestModel.FK_le_goods_Log_le_goods" FromRole="le_goods" ToRole="le_goods_log" />
           <NavigationProperty Name="le_goods_suppliers" Relationship="leerledbtestModel.FK_le_goods_suppliers_le_goods" FromRole="le_goods" ToRole="le_goods_suppliers" />
           <NavigationProperty Name="le_goods_value" Relationship="leerledbtestModel.FK_le_goods_value_le_goods" FromRole="le_goods" ToRole="le_goods_value" />
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods" FromRole="le_goods" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods" FromRole="le_goods" ToRole="le_shop_cart" />
+        </EntityType>
+        <EntityType Name="le_goods_brand">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="BrandName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_le_goods_brand" FromRole="le_goods_brand" ToRole="le_goods" />
         </EntityType>
         <EntityType Name="le_goods_img">
           <Key>
@@ -1498,6 +1610,8 @@
           <Property Name="ParentID" Type="Int32" Nullable="false" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Img" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_le_goodsgroups" FromRole="le_goodsgroups" ToRole="le_goods" />
         </EntityType>
         <EntityType Name="le_navigation">
@@ -1604,7 +1718,7 @@
           <Property Name="SupplyPrice" Type="Decimal" Nullable="false" />
           <Property Name="GoodsCount" Type="Int32" Nullable="false" />
           <Property Name="DeliverCount" Type="Int32" Nullable="false" />
-          <Property Name="Profit" Type="Decimal" />
+          <Property Name="Profit" Type="Decimal" Nullable="false" />
           <Property Name="Notes" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="AdminID" Type="Int32" />
@@ -1727,6 +1841,23 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IDCardNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="BusinessNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FinanceName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FinancePhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AuthCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Province" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Area" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IMEI" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Initial" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Landline" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Deliverer" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DelivererPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Category" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ManagingBrands" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="le_goods_suppliers" Relationship="leerledbtestModel.FK_le_goods_suppliers_le_suppliers" FromRole="le_suppliers" ToRole="le_goods_suppliers" />
           <NavigationProperty Name="le_order_pack" Relationship="leerledbtestModel.FK_le_order_pack_le_suppliers" FromRole="le_suppliers" ToRole="le_order_pack" />
           <NavigationProperty Name="le_orders_head_log" Relationship="leerledbtestModel.FK_le_orders_headschangerecord_le_suppliers" FromRole="le_suppliers" ToRole="le_orders_head_log" />
@@ -1748,6 +1879,9 @@
           <Property Name="Sort" Type="Int32" Nullable="false" />
           <Property Name="Longitude" Type="Double" />
           <Property Name="Latitude" Type="Double" />
+          <Property Name="Img" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EmergencyContactPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="le_sysconfig">
           <Key>
@@ -1798,6 +1932,20 @@
           <Property Name="CarNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="BusinessNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="IDCardNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Province" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Area" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IMEI" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Initial" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Landline" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FinanceName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FinancePhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AuthCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="le_admin_re_users" Relationship="leerledbtestModel.FK_le_admin_re_users_le_users" FromRole="le_users" ToRole="le_admin_re_users" />
           <NavigationProperty Name="le_orders_head" Relationship="leerledbtestModel.FK_le_orders_head_le_users" FromRole="le_users" ToRole="le_orders_head" />
           <NavigationProperty Name="le_orders_head_log" Relationship="leerledbtestModel.FK_le_orders_headschangerecord_le_users" FromRole="le_users" ToRole="le_orders_head_log" />
@@ -1976,6 +2124,18 @@
             </Principal>
             <Dependent Role="le_goods_img">
               <PropertyRef Name="GoodsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_le_goods_le_goods_brand">
+          <End Type="leerledbtestModel.le_goods_brand" Role="le_goods_brand" Multiplicity="0..1" />
+          <End Type="leerledbtestModel.le_goods" Role="le_goods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_goods_brand">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="le_goods">
+              <PropertyRef Name="GoodsBarand" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2374,6 +2534,24 @@
           <EntitySetMapping Name="le_goods">
             <EntityTypeMapping TypeName="leerledbtestModel.le_goods">
               <MappingFragment StoreEntitySet="le_goods">
+                <ScalarProperty Name="TermOfValidity" ColumnName="TermOfValidity" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="PriceReduction" ColumnName="PriceReduction" />
+                <ScalarProperty Name="PriceFull" ColumnName="PriceFull" />
+                <ScalarProperty Name="GoodsBarand" ColumnName="GoodsBarand" />
+                <ScalarProperty Name="GoodsType" ColumnName="GoodsType" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SupplierCount" ColumnName="SupplierCount" />
+                <ScalarProperty Name="VirtualNumber" ColumnName="VirtualNumber" />
+                <ScalarProperty Name="ProductionDate" ColumnName="ProductionDate" />
+                <ScalarProperty Name="PlaceofOrigin" ColumnName="PlaceofOrigin" />
+                <ScalarProperty Name="Initial" ColumnName="Initial" />
+                <ScalarProperty Name="SeckillEndTime" ColumnName="SeckillEndTime" />
+                <ScalarProperty Name="SeckillBeginTime" ColumnName="SeckillBeginTime" />
+                <ScalarProperty Name="UrgentOrder" ColumnName="UrgentOrder" />
+                <ScalarProperty Name="IsReturn" ColumnName="IsReturn" />
+                <ScalarProperty Name="IsCrossdomain" ColumnName="IsCrossdomain" />
+                <ScalarProperty Name="Integral" ColumnName="Integral" />
                 <ScalarProperty Name="MinimumPurchase" ColumnName="MinimumPurchase" />
                 <ScalarProperty Name="Quota" ColumnName="Quota" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
@@ -2401,6 +2579,15 @@
                 <ScalarProperty Name="GoodsName" ColumnName="GoodsName" />
                 <ScalarProperty Name="GoodsGroupsID" ColumnName="GoodsGroupsID" />
                 <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="le_goods_brand">
+            <EntityTypeMapping TypeName="leerledbtestModel.le_goods_brand">
+              <MappingFragment StoreEntitySet="le_goods_brand">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="BrandName" ColumnName="BrandName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2471,6 +2658,8 @@
           <EntitySetMapping Name="le_goodsgroups">
             <EntityTypeMapping TypeName="leerledbtestModel.le_goodsgroups">
               <MappingFragment StoreEntitySet="le_goodsgroups">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Img" ColumnName="Img" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
@@ -2670,6 +2859,23 @@
           <EntitySetMapping Name="le_suppliers">
             <EntityTypeMapping TypeName="leerledbtestModel.le_suppliers">
               <MappingFragment StoreEntitySet="le_suppliers">
+                <ScalarProperty Name="ManagingBrands" ColumnName="ManagingBrands" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="DelivererPhone" ColumnName="DelivererPhone" />
+                <ScalarProperty Name="Deliverer" ColumnName="Deliverer" />
+                <ScalarProperty Name="Landline" ColumnName="Landline" />
+                <ScalarProperty Name="Initial" ColumnName="Initial" />
+                <ScalarProperty Name="IMEI" ColumnName="IMEI" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="AuthCode" ColumnName="AuthCode" />
+                <ScalarProperty Name="FinancePhone" ColumnName="FinancePhone" />
+                <ScalarProperty Name="FinanceName" ColumnName="FinanceName" />
                 <ScalarProperty Name="BusinessNo" ColumnName="BusinessNo" />
                 <ScalarProperty Name="IDCardNo" ColumnName="IDCardNo" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
@@ -2695,6 +2901,9 @@
           <EntitySetMapping Name="le_sys_address">
             <EntityTypeMapping TypeName="leerledbtestModel.le_sys_address">
               <MappingFragment StoreEntitySet="le_sys_address">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="EmergencyContactPhone" ColumnName="EmergencyContactPhone" />
+                <ScalarProperty Name="Img" ColumnName="Img" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="Sort" ColumnName="Sort" />
@@ -2737,6 +2946,20 @@
           <EntitySetMapping Name="le_users">
             <EntityTypeMapping TypeName="leerledbtestModel.le_users">
               <MappingFragment StoreEntitySet="le_users">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="AuthCode" ColumnName="AuthCode" />
+                <ScalarProperty Name="FinancePhone" ColumnName="FinancePhone" />
+                <ScalarProperty Name="FinanceName" ColumnName="FinanceName" />
+                <ScalarProperty Name="Landline" ColumnName="Landline" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Initial" ColumnName="Initial" />
+                <ScalarProperty Name="IMEI" ColumnName="IMEI" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
                 <ScalarProperty Name="IDCardNo" ColumnName="IDCardNo" />
                 <ScalarProperty Name="BusinessNo" ColumnName="BusinessNo" />
                 <ScalarProperty Name="CarNumber" ColumnName="CarNumber" />

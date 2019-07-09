@@ -442,7 +442,24 @@ namespace Service
                     s.MinimumPurchase,
                     s.IsBulkCargo,
                     s.IsDeliverHome,
-                    s.MSRP
+                    s.MSRP,
+                    s.GoodsBarand,
+                    s.Initial,
+                    s.Integral,
+                    s.IsCrossdomain,
+                  
+                    s.IsReturn,
+                    s.PlaceofOrigin,
+                    s.PriceFull,
+                    s.PriceReduction,
+                    s.ProductionDate,
+                    s.Remarks,
+                    s.SeckillBeginTime,
+                    s.SeckillEndTime,
+                    s.VirtualNumber,
+                    s.UrgentOrder,
+                    s.Discount,
+                    s.TermOfValidity,
                 }).FirstOrDefaultAsync();
                 if (result == null || result.GoodsID == 0)
                 {
@@ -472,6 +489,26 @@ namespace Service
                 GDetailed.Image = BasePath + result.Image;
                 GDetailed.SalesVolumes = result.SalesVolumes;
                 GDetailed.TotalSalesVolumes = result.TotalSalesVolume;
+
+
+                GDetailed.GoodsBarand       = result.GoodsBarand;
+                GDetailed.Initial           = result.Initial;
+                GDetailed.Integral          = result.Integral;
+                GDetailed.IsCrossdomain     = result.IsCrossdomain;
+                GDetailed.IsDeliverHome     = result.IsDeliverHome;
+                GDetailed.IsReturn          = result.IsReturn;
+                GDetailed.PlaceofOrigin     = result.PlaceofOrigin;
+                GDetailed.PriceFull         = result.PriceFull;
+                GDetailed.PriceReduction    = result.PriceReduction;
+                GDetailed.ProductionDate    = result.ProductionDate;
+                GDetailed.Remarks           = result.Remarks;
+                GDetailed.SeckillBeginTime  = result.SeckillBeginTime;
+                GDetailed.SeckillEndTime    = result.SeckillEndTime;
+                GDetailed.VirtualNumber     = result.VirtualNumber;
+                GDetailed.UrgentOrder       = result.UrgentOrder;
+                GDetailed.Discount          = result.Discount;
+                GDetailed.TermOfValidity    = result.TermOfValidity;
+
                 //GDetailed.SupplierID = result.SuppliersID;
                 //GDetailed.SupplierName = result.SuppliersName; //GetSupplierByID(GDetailed.SupplierID);
 
@@ -697,11 +734,28 @@ namespace Service
                         //model.Image = AttachmentUrl(dto.HeadImageFlow);
                         model.Image = dto.HeadImage;
                     }
+                    model.GoodsBarand = dto.GoodsBarand;
+                    model.Initial = dto.Initial;
+                    model.Integral = dto.Integral;
+                    model.IsCrossdomain = dto.IsCrossdomain;
+                    model.IsDeliverHome = dto.IsDeliverHome;
+                    model.IsReturn = dto.IsReturn;
+                    model.PlaceofOrigin = dto.PlaceofOrigin;
+                    model.PriceFull = dto.PriceFull;
+                    model.PriceReduction = dto.PriceReduction;
+                    model.ProductionDate = dto.ProductionDate;
+                    model.Remarks = dto.Remarks;
+                    model.SeckillBeginTime = dto.SeckillBeginTime;
+                    model.SeckillEndTime = dto.SeckillEndTime;
+                    model.VirtualNumber = dto.VirtualNumber;
+                    model.UrgentOrder = dto.UrgentOrder;
+                    model.Discount = dto.Discount;
+                    model.TermOfValidity = dto.TermOfValidity;
+                    
                     model.Describe = dto.Describe;
                     model.GoodsGroupsID = dto.GoodsGroups_ID;
                     model.GoodsName = dto.GoodsName;
-                    model.SpecialOffer = dto.SpecialOffer;
-                    model.OriginalPrice = dto.OriginalPrice;
+                    model.SpecialOffer = dto.SpecialOffer;                
                     model.IsHot = dto.IsHot;
                     model.IsNewGoods = dto.IsNewGoods;
                     model.IsRecommend = dto.IsRecommend;
@@ -915,6 +969,25 @@ namespace Service
                 model.IsDeliverHome = dto.IsDeliverHome;
                 model.IsBulkCargo = dto.IsBulkCargo;
                 model.MinimumPurchase = dto.MinimumPurchase;
+
+                model.GoodsBarand = dto.GoodsBarand;
+                model.Initial = dto.Initial;
+                model.Integral = dto.Integral;
+                model.IsCrossdomain = dto.IsCrossdomain;
+                model.IsDeliverHome = dto.IsDeliverHome;
+                model.IsReturn = dto.IsReturn;
+                model.PlaceofOrigin = dto.PlaceofOrigin;
+                model.PriceFull = dto.PriceFull;
+                model.PriceReduction = dto.PriceReduction;
+                model.ProductionDate = dto.ProductionDate;
+                model.Remarks = dto.Remarks;
+                model.SeckillBeginTime = dto.SeckillBeginTime;
+                model.SeckillEndTime = dto.SeckillEndTime;
+                model.VirtualNumber = dto.VirtualNumber;
+                model.UrgentOrder = dto.UrgentOrder;
+                model.Discount = dto.Discount;
+                model.TermOfValidity = dto.TermOfValidity;
+
 
                 GoodLogModel.AfterGoodsName = model.GoodsName;
                 GoodLogModel.AfterQuota = model.Quota;

@@ -16,6 +16,20 @@
             ProfitSumAsc = 7,
             ProfitSumDesc = 8,
         }
+        /// <summary>
+        /// 订单详细排序
+        /// </summary>
+        public enum OrderDetailOrderByType
+        {
+            UpdateTimeAsc=1,
+            UpdateTimeDesc=2,
+            GoodsID=3,
+            GoodsPriceAsc=4,
+            GoodsPriceDesc=5,
+            ProfitAsc=6,
+            ProfitDesc=7
+
+        }
 
     }
 }

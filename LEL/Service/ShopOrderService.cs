@@ -204,6 +204,12 @@ namespace Service
                     RowVersion = s.le_goods.RowVersion,
                     //Supplyprice=s.le_goods.le_goods_suppliers.Where(k => k.IsDefalut == 1).FirstOrDefault().Supplyprice,
                     SpecialOffer = s.le_goods.SpecialOffer,
+                    PackingNumber=s.le_goods.PackingNumber,
+                    Discount=s.le_goods.Discount,
+                    Integral=s.le_goods.Integral,
+                    PriceFull=s.le_goods.PriceFull,
+                    PriceReduction=s.le_goods.PriceReduction,
+                    
                     GoodsValueList = s.le_cart_goodsvalue
                     .Select(k => new GoodsValues
                     {
@@ -344,7 +350,7 @@ namespace Service
                     linesModel.GoodsPrice = goodsModel.SpecialOffer;
                     linesModel.SupplyPrice = DefaulSuplier.Price;
                     linesModel.Profit = goodsModel.Price - DefaulSuplier.Price;
-
+                 
                     linesModel.Status = 0;
                     linesModel.UpdateTime = DateTime.Now;
                     linesModel.UsersID = ParamasData.UserID;
@@ -719,6 +725,11 @@ namespace Service
                     GoodsName = s.le_goods.GoodsName,
                     Notes = s.Notes,
                     SpecialOffer = s.le_goods.SpecialOffer,
+                    Discount=s.le_goods.Discount,
+                    PriceReduction=s.le_goods.PriceReduction,
+                    PriceFull=s.le_goods.PriceFull,
+                    Integral=s.le_goods.Integral,
+                    
                     Status = s.Status,
                     SuppliersName = s.le_suppliers.SuppliersName,
                     GoodsValuesList = s.le_orderline_goodsvalue.Select(k => new GoodsValues()
@@ -1205,6 +1216,11 @@ namespace Service
                 if (OrderHeadModel.Status == 5)
                 {
                     Msg = "订单已被取消,操作失败";
+                    return false;
+                }
+                if (OrderHeadModel.Status == 1)
+                {
+                    Msg = "订单已完成,操作失败";
                     return false;
                 }
                 var LinesList = OrderHeadModel.le_orders_lines.ToList();

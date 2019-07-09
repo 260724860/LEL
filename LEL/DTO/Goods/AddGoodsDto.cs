@@ -70,6 +70,76 @@ namespace DTO.Goods
         /// 最小采购量
         /// </summary>
         public int MinimumPurchase { get; set; } = 1;
+
+        /// <summary>
+        /// 积分
+        /// </summary>
+        public int Integral { get; set; }
+        /// <summary>
+        /// 是否可以跨区进货
+        /// </summary>
+        public int IsCrossdomain { get; set; }
+        /// <summary>
+        /// 是否可以退货
+        /// </summary>
+        public int IsReturn { get; set; }
+        /// <summary>
+        /// 急单码
+        /// </summary>
+        public string UrgentOrder { get; set; }
+        /// <summary>
+        /// 秒杀开始时间
+        /// </summary>
+        public DateTime? SeckillBeginTime { get; set; }
+        /// <summary>
+        /// 秒杀结束时间
+        /// </summary>
+        public DateTime? SeckillEndTime { get; set; }
+
+        /// <summary>
+        /// 商品首字母
+        /// </summary>
+        public string Initial { get; set; }
+        /// <summary>
+        /// 产地
+        /// </summary>
+        public string PlaceofOrigin { get; set; } = "未知";
+        /// <summary>
+        /// 生产
+        /// </summary>
+        public DateTime? ProductionDate { get; set; }
+        /// <summary>
+        /// 虚拟数
+        /// </summary>
+        public int VirtualNumber { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remarks { get; set; }
+        /// <summary>
+        /// 商品类型（1有条码2无条码3散货）
+        /// </summary>
+        public int GoodsType { get; set; }
+        /// <summary>
+        /// 商品品牌
+        /// </summary>
+        public int? GoodsBarand { get; set; }
+        /// <summary>
+        /// 满减（满）
+        /// </summary>
+        public decimal PriceFull { get; set; }
+        /// <summary>
+        /// 满减（减）
+        /// </summary>
+        public decimal PriceReduction { get; set; }
+        /// <summary>
+        /// 折扣
+        /// </summary>
+        public decimal Discount { get; set; }
+        /// <summary>
+        /// 有效期
+        /// </summary>
+        public string TermOfValidity { get; set; }
     }
 
     public class GoodsImage
