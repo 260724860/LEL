@@ -62,6 +62,10 @@ namespace DTO.Goods
         /// </summary>
         public int? Stock { get; set; }
         public IList<GoodsValues> GoodsValueList { get; set; }
+        /// <summary>
+        /// 最小采购量
+        /// </summary>
+        public int MinimumPurchase { get; set; } = 1;
     }
     public class GoodsListDto
     {

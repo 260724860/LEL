@@ -486,7 +486,7 @@ namespace Service
             {
                 var tempIq = ctx.le_orders_head.Where(s=>true);
 
-                if(seachParams.BeginTime != null&& seachParams.EndTime != null&&string.IsNullOrEmpty(seachParams.Out_Trade_No))
+                if (seachParams.BeginTime == null && seachParams.EndTime == null && string.IsNullOrEmpty(seachParams.Out_Trade_No))
                 {
 
                     seachParams.BeginTime = DateTime.Now.AddDays(-3);

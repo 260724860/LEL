@@ -297,6 +297,7 @@ namespace Service
                     Stock = p.Stock,
                     Quota = p.Quota,
                     MSRP = p.MSRP,
+                    MinimumPurchase=p.MinimumPurchase,
                     GoodsValueList = p.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
                     {
                         SerialNumber = k.SerialNumber,

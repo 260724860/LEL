@@ -25,7 +25,7 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(" select b.GoodsName,c.Name GoodsGroupName, b.GoodsGroupsID, b.GoodsID , sum(a.RealAmount * a.DeliverCount) SalesAmount , sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes,sum(a.profit) profitsum");
+                sb.Append(" select b.GoodsName,c.Name GoodsGroupName, b.GoodsGroupsID, b.GoodsID , sum(a.GoodsPrice * a.DeliverCount) SalesAmount , sum(a.DeliverCount) SalesCount,Count(a.OrdersLinesID) Transactiontimes,sum(a.profit) profitsum");
                 sb.Append(" from le_orders_lines a");
                 sb.Append(" left join le_goods b on a.GoodsID = b.GoodsID");
                 sb.Append(" left join le_goodsgroups c on b.GoodsGroupsID = c.ID ");

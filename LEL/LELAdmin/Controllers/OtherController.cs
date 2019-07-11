@@ -224,5 +224,44 @@ namespace LELAdmin.Controllers
             //    return Json(JRpcHelper.AjaxResult(0, "SUCCESS", DbPwd));
             //}
         }
+
+        /// <summary>
+        /// 创建或修改当前系统版本
+        /// </summary>
+        /// <param name="id">为0或者空时新增否则修改</param>
+        /// <param name="MajorVersion">主要版本号</param>
+        /// <param name="ViversionNumber">次版本号</param>
+        /// <param name="Description">说明</param>
+        /// <param name="LeftoverBug">遗留问题</param>
+        /// <param name="Remarks">备注</param>
+        /// <returns></returns>
+        [HttpGet, Route("api/Other/CreateOrUpdateSysSversion/")]
+        public IHttpActionResult CreateOrUpdateSysSversion(int? id, string MajorVersion, string ViversionNumber, string Description, string LeftoverBug, string Remarks )
+        {
+            var result = new SysSversionService().CreateOrUpdate(id,  MajorVersion,  ViversionNumber,  Description,  LeftoverBug,  Remarks, out string msg);
+
+            if(result)
+            {
+                return   Json(JRpcHelper.AjaxResult(0, msg, ""));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, msg, ""));
+            }
+        }
+
+        /// <summary>
+        /// 获取当前版本更新记录
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("api/Other/GetSysVersionList/")]
+        public IHttpActionResult GetSysVersionList()
+        {
+            var result = new SysSversionService().GetSysVersionList();
+
+          
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+           
+        }
     }
 }

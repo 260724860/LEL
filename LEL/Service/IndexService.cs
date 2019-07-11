@@ -77,7 +77,7 @@ namespace Service
             {
                 SalesChartDTO DTO = new SalesChartDTO();
 
-                string sql = string.Format(@"select count(loh.OrdersHeadID) OrderCount,round(sum(loh.Money),2) OrderMoney,date_format(loh.CompleteTime, '%Y-%m-%d') OrderTime from le_orders_head loh 
+                string sql = string.Format(@"select count(loh.OrdersHeadID) OrderCount,round(sum(loh.RealAmount),2) OrderMoney,date_format(loh.CompleteTime, '%Y-%m-%d') OrderTime from le_orders_head loh 
 where loh.`Status`=1 and loh.CompleteTime between @StartTime and @EndTime
 group by OrderTime");
 
