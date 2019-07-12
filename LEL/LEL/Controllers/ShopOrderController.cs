@@ -38,9 +38,10 @@ namespace LEL.Controllers
         /// <param name="GoodValueID">商品属性ID</param>
         /// <param name="GoodsCount">商品数量</param>
         /// <param name="cumulation">商品数量是否累加</param>
+        /// <param name="ReturnCount">购物车退货数量</param>
         /// <returns></returns>
         [HttpPost, Route("api/ShopOrder/AddCart/")]
-        public IHttpActionResult AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, bool cumulation)
+        public IHttpActionResult AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, bool cumulation,int? ReturnCount=0)
         {
             if (GetUserID() == -1)
             {
@@ -51,7 +52,7 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "GoodsCount 参数错误", GoodsCount));
             }
             string Msg;
-            var result = shopOrderService.AddCart(GoodsID, GoodValueID, GoodsCount, GetUserID(), cumulation, out Msg);
+            var result = shopOrderService.AddCart(GoodsID, GoodValueID, GoodsCount, GetUserID(), cumulation, out Msg, ReturnCount);
             if (result > 0)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));

@@ -28,7 +28,7 @@ namespace Service
         /// <param name="Mes"></param>
         /// <param name="cumulation">是否累加</param>
         /// <returns></returns>
-        public int AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, int UserID, bool cumulation, out string Mes)
+        public int AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, int UserID, bool cumulation, out string Mes, int? ReturnCount = 0)
         {
             using (Entities ctx = new Entities())
             {
@@ -59,8 +59,7 @@ namespace Service
                     var GoodsModel = ctx.le_goods.Where(s => s.GoodsID == GoodsID).Select(s => new
                     {
                         s.SpecialOffer,
-                        s
-                    .Stock,
+                        s.Stock,
                         s.Quota
                     }).FirstOrDefault();
 
@@ -74,6 +73,7 @@ namespace Service
                         model.GoodsID = GoodsID;
                         model.Price = GoodsModel.SpecialOffer;
                         model.UserID = UserID;
+                        model.ReturnCount = ReturnCount.Value;
                         foreach (var inde in GoodValueID)
                         {
                             le_cart_goodsvalue le_Cart_Goodsvalue = new le_cart_goodsvalue();
@@ -100,10 +100,12 @@ namespace Service
                         if (cumulation)//是否累加
                         {
                             ShopCarModel.GoodsCount += GoodsCount;
+                            ShopCarModel.ReturnCount = ReturnCount.Value;
                         }
                         else
                         {
                             ShopCarModel.GoodsCount = GoodsCount;
+                            ShopCarModel.ReturnCount = ReturnCount.Value;
                         }
                         if (GoodsModel.Quota != -1 && ShopCarModel.GoodsCount > GoodsModel.Quota)
                         {
@@ -209,7 +211,7 @@ namespace Service
                     Integral=s.le_goods.Integral,
                     PriceFull=s.le_goods.PriceFull,
                     PriceReduction=s.le_goods.PriceReduction,
-                    
+                    ReturnCount=s.ReturnCount,
                     GoodsValueList = s.le_cart_goodsvalue
                     .Select(k => new GoodsValues
                     {
@@ -260,6 +262,9 @@ namespace Service
                     FailCartList = null;
                     return 0;
                 }
+                
+               
+
                 AddressDto AddressModel = new AddressDto();
                 if (ParamasData.ExpressType == 1)
                 {
@@ -335,7 +340,15 @@ namespace Service
                         log.Debug(Msg);
                         return 0;
                     }
-
+                    int OrderGoodsCount=0;//下单商品数量
+                    if (ParamasData.OrderType==1|| ParamasData.OrderType==3)
+                    {
+                        OrderGoodsCount = goodsModel.GoodsCount;
+                    }
+                    if (ParamasData.OrderType ==2)
+                    {
+                        OrderGoodsCount = goodsModel.ReturnCount.Value;
+                    }
                     GoodsStock goodsStock = new GoodsStock();
                     goodsStock.Stock = goodsModel.Stock;
                     goodsStock.RowVersion = goodsModel.RowVersion;
@@ -345,8 +358,8 @@ namespace Service
 
                     le_orders_lines linesModel = new le_orders_lines();
                     linesModel.CreateTime = DateTime.Now;
-                    linesModel.GoodsCount = goodsModel.GoodsCount;
-                    linesModel.DeliverCount = goodsModel.GoodsCount;
+                    linesModel.GoodsCount = OrderGoodsCount;//goodsModel.GoodsCount;
+                    linesModel.DeliverCount = OrderGoodsCount;// goodsModel.GoodsCount;
                     linesModel.GoodsPrice = goodsModel.SpecialOffer;
                     linesModel.SupplyPrice = DefaulSuplier.Price;
                     linesModel.Profit = goodsModel.Price - DefaulSuplier.Price;

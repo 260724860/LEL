@@ -12,15 +12,16 @@ namespace Service
     using System;
     using System.Collections.Generic;
     
-    public partial class lel_imei
+    public partial class le_store_bulkcargo
     {
         public int ID { get; set; }
         public int UserID { get; set; }
-        public string Imei { get; set; }
+        public string BarCode { get; set; }
+        public string StoreCode { get; set; }
         public string Name { get; set; }
-        public string Phone { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime UpdateTime { get; set; }
+        public int GoodsID { get; set; }
         public string a { get; set; }
         public string b { get; set; }
         public string c { get; set; }

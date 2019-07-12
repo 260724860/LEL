@@ -12,25 +12,19 @@ namespace Service
     using System;
     using System.Collections.Generic;
     
-    public partial class le_shop_cart
+    public partial class le_goods_brand
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public le_shop_cart()
+        public le_goods_brand()
         {
-            this.le_cart_goodsvalue = new HashSet<le_cart_goodsvalue>();
+            this.le_goods = new HashSet<le_goods>();
         }
     
-        public int CartID { get; set; }
-        public int GoodsID { get; set; }
-        public int UserID { get; set; }
-        public int GoodsCount { get; set; }
-        public decimal Price { get; set; }
-        public Nullable<int> ReturnCount { get; set; }
-        public Nullable<System.DateTime> Createtime { get; set; }
+        public int ID { get; set; }
+        public string BrandName { get; set; }
+        public int CreateTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }
-        public virtual le_goods le_goods { get; set; }
-        public virtual le_users le_users { get; set; }
+        public virtual ICollection<le_goods> le_goods { get; set; }
     }
 }
