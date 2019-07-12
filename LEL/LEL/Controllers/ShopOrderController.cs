@@ -102,10 +102,7 @@ namespace LEL.Controllers
         /// <summary>
         /// 保存订单 （从购物车获取）
         /// </summary>
-        /// <param name="AddressID">地址ID</param>
-        /// <param name="Notes">备注</param>
-        /// <param name="OrderType">订单类型/ 1订货单 2 退货单</param>
-        /// <param name="ExpressType">快递类型/1快递物流 2 自提</param>
+      
         /// <returns></returns>
         [HttpPost, Route("api/ShopOrder/OrderSave/")]
         public IHttpActionResult OrderSave(OrderSaveParams Data)
