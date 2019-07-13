@@ -84,11 +84,11 @@ namespace DTO.ShopOrder
         /// 积分
         /// </summary>
         public int Integral { get; set; }
-        
+
         /// <summary>
         /// 退货数量
         /// </summary>
-        public int? ReturnCount { get; set; }
+        public int? ReturnCount { get; set; } = 1;
     }
 
 }

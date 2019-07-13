@@ -41,7 +41,7 @@ namespace LEL.Controllers
         /// <param name="ReturnCount">购物车退货数量</param>
         /// <returns></returns>
         [HttpPost, Route("api/ShopOrder/AddCart/")]
-        public IHttpActionResult AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, bool cumulation,int? ReturnCount=0)
+        public IHttpActionResult AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, bool cumulation,int? ReturnCount=1)
         {
             if (GetUserID() == -1)
             {

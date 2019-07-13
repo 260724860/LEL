@@ -354,6 +354,18 @@
           <Property Name="OperationAction" Type="text" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
+        <EntityType Name="le_orders_timelimit">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdminID" Type="int" Nullable="false" />
+          <Property Name="UpdateTime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="TimeSlot" Type="int" Nullable="false" />
+          <Property Name="LimitOrderCount" Type="int" Nullable="false" />
+          <Property Name="CurrentOrderCount" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="le_pushmsg">
           <Key>
             <PropertyRef Name="ID" />
@@ -950,6 +962,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_le_orders_timelimit_le_admin">
+          <End Role="le_admin" Type="Self.le_admin" Multiplicity="1" />
+          <End Role="le_orders_timelimit" Type="Self.le_orders_timelimit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_admin">
+              <PropertyRef Name="AdminID" />
+            </Principal>
+            <Dependent Role="le_orders_timelimit">
+              <PropertyRef Name="AdminID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_le_shop_cart_le_goods">
           <End Role="le_goods" Type="Self.le_goods" Multiplicity="1" />
           <End Role="le_shop_cart" Type="Self.le_shop_cart" Multiplicity="*" />
@@ -1034,6 +1058,7 @@
           <EntitySet Name="le_orders_lines_log" EntityType="Self.le_orders_lines_log" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_orders_modify_record" EntityType="Self.le_orders_modify_record" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_orders_operationrecord" EntityType="Self.le_orders_operationrecord" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_orders_timelimit" EntityType="Self.le_orders_timelimit" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_pushmsg" EntityType="Self.le_pushmsg" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_shop_cart" EntityType="Self.le_shop_cart" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_sms" EntityType="Self.le_sms" Schema="leerledbtest3" store:Type="Tables" />
@@ -1176,6 +1201,10 @@
           <AssociationSet Name="FK_le_orders_lineschangerecord_le_users" Association="Self.FK_le_orders_lineschangerecord_le_users">
             <End Role="le_users" EntitySet="le_users" />
             <End Role="le_orders_lines_log" EntitySet="le_orders_lines_log" />
+          </AssociationSet>
+          <AssociationSet Name="FK_le_orders_timelimit_le_admin" Association="Self.FK_le_orders_timelimit_le_admin">
+            <End Role="le_admin" EntitySet="le_admin" />
+            <End Role="le_orders_timelimit" EntitySet="le_orders_timelimit" />
           </AssociationSet>
           <AssociationSet Name="FK_le_shop_cart_le_goods" Association="Self.FK_le_shop_cart_le_goods">
             <End Role="le_goods" EntitySet="le_goods" />
@@ -1389,6 +1418,11 @@
             <End Role="le_users" EntitySet="le_users" />
             <End Role="le_user_address" EntitySet="le_user_address" />
           </AssociationSet>
+          <EntitySet Name="le_orders_timelimit" EntityType="leerledbtest3Model.le_orders_timelimit" />
+          <AssociationSet Name="FK_le_orders_timelimit_le_admin" Association="leerledbtest3Model.FK_le_orders_timelimit_le_admin">
+            <End Role="le_admin" EntitySet="le_admin" />
+            <End Role="le_orders_timelimit" EntitySet="le_orders_timelimit" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="le_ad">
           <Key>
@@ -1428,6 +1462,7 @@
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtest3Model.FK_le_orders_lines_le_admin" FromRole="le_admin" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_orders_lines_log" Relationship="leerledbtest3Model.FK_le_orders_lineschangerecord_le_admin" FromRole="le_admin" ToRole="le_orders_lines_log" />
           <NavigationProperty Name="lel_admin_suppliers" Relationship="leerledbtest3Model.FK_lel_admin_suppliers_le_admin" FromRole="le_admin" ToRole="lel_admin_suppliers" />
+          <NavigationProperty Name="le_orders_timelimit" Relationship="leerledbtest3Model.FK_le_orders_timelimit_le_admin" FromRole="le_admin" ToRole="le_orders_timelimit" />
         </EntityType>
         <EntityType Name="le_admin_re_users">
           <Key>
@@ -2471,6 +2506,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="le_orders_timelimit">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdminID" Type="Int32" Nullable="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <Property Name="TimeSlot" Type="Int32" Nullable="false" />
+          <Property Name="LimitOrderCount" Type="Int32" Nullable="false" />
+          <Property Name="CurrentOrderCount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="le_admin" Relationship="leerledbtest3Model.FK_le_orders_timelimit_le_admin" FromRole="le_orders_timelimit" ToRole="le_admin" />
+        </EntityType>
+        <Association Name="FK_le_orders_timelimit_le_admin">
+          <End Type="leerledbtest3Model.le_admin" Role="le_admin" Multiplicity="1" />
+          <End Type="leerledbtest3Model.le_orders_timelimit" Role="le_orders_timelimit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_admin">
+              <PropertyRef Name="AdminID" />
+            </Principal>
+            <Dependent Role="le_orders_timelimit">
+              <PropertyRef Name="AdminID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3056,6 +3116,19 @@
                 <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
                 <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
                 <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="le_orders_timelimit">
+            <EntityTypeMapping TypeName="leerledbtest3Model.le_orders_timelimit">
+              <MappingFragment StoreEntitySet="le_orders_timelimit">
+                <ScalarProperty Name="CurrentOrderCount" ColumnName="CurrentOrderCount" />
+                <ScalarProperty Name="LimitOrderCount" ColumnName="LimitOrderCount" />
+                <ScalarProperty Name="TimeSlot" ColumnName="TimeSlot" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

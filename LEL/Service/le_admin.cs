@@ -24,6 +24,7 @@ namespace Service
             this.le_orders_lines = new HashSet<le_orders_lines>();
             this.le_orders_lines_log = new HashSet<le_orders_lines_log>();
             this.lel_admin_suppliers = new HashSet<lel_admin_suppliers>();
+            this.le_orders_timelimit = new HashSet<le_orders_timelimit>();
         }
     
         public int AdminID { get; set; }
@@ -55,5 +56,7 @@ namespace Service
         public virtual ICollection<le_orders_lines_log> le_orders_lines_log { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<lel_admin_suppliers> lel_admin_suppliers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_timelimit> le_orders_timelimit { get; set; }
     }
 }

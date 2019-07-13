@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="727a04dd849c4bfa96a428aef632dd73" Name="Diagram1" ZoomLevel="116">
+      <Diagram DiagramId="727a04dd849c4bfa96a428aef632dd73" Name="Diagram1" ZoomLevel="59">
         <EntityTypeShape EntityType="leerledbtest3Model.le_ad" Width="1.5" PointX="11.75" PointY="5.875" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_admin" Width="1.5" PointX="6" PointY="4.625" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_admin_re_users" Width="1.5" PointX="8.25" PointY="2.875" />
@@ -77,6 +77,8 @@
         <AssociationConnector Association="leerledbtest3Model.FK_le_shop_cart_le_users" />
         <AssociationConnector Association="leerledbtest3Model.FK_lel_admin_suppliers_le_suppliers" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_user_address_le_users" />
+        <EntityTypeShape EntityType="leerledbtest3Model.le_orders_timelimit" Width="1.5" PointX="11.375" PointY="9.75" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_timelimit_le_admin" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,0 +1,109 @@
+﻿using DTO.ShopOrder;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Service
+{
+    public class OrdersTimeLimitService
+    {
+        public List<OrdersTimeLimitDto> GetOrdersTimeLimitList()
+        {
+            using (Entities ctx=new Entities())
+            {
+                var temp = ctx.le_orders_timelimit.Where(s => true).Select(s=>new OrdersTimeLimitDto {
+                    AdminID=s.AdminID,
+                    TimeSlot=s.TimeSlot,
+                    CreateTime=s.CreateTime,
+                    CurrentOrderCount=s.CurrentOrderCount,
+                    LimitOrderCount=s.LimitOrderCount,
+                    UpdateTime=s.UpdateTime,
+                    ID=s.ID,
+                    AdminName=s.le_admin.Nickname
+
+                }).ToList();
+                return temp;
+            }
+        }
+
+        public bool CreateOrUpdate(int AdminID,OrdersTimeLimitEditDto dto,out string Msg)
+        {
+            using (Entities ctx = new Entities())
+            {
+                if (dto.ID == 0 || dto.ID == null)
+                {
+                    var temp = ctx.le_orders_timelimit.Any(s => s.TimeSlot == dto.TimeSlot);
+                    if(temp)
+                    {
+                        Msg = "已存在相同得时间段设置";
+                        return false;
+                    }
+                    else
+                    {
+                        le_orders_timelimit model = new le_orders_timelimit();
+                        model.LimitOrderCount = model.LimitOrderCount;
+                        model.TimeSlot = model.TimeSlot;
+                        model.CreateTime = DateTime.Now;
+                        model.UpdateTime = DateTime.Now;
+                        model.AdminID = AdminID;
+                        model.CurrentOrderCount = 0;
+                        ctx.le_orders_timelimit.Add(model);
+                    }
+                }
+                else
+                {
+                    var model = ctx.le_orders_timelimit.Where(s => s.ID == dto.ID).FirstOrDefault();
+                    if(model==null)
+                    {
+                        Msg = string.Format("ID：{0}错误,请检查",dto.ID);
+                        return false;
+                    }
+                    var temp = ctx.le_orders_timelimit.Any(s => s.TimeSlot == dto.TimeSlot);
+                    if (temp)
+                    {
+                        Msg = "已存在相同得时间段设置";
+                        return false;
+                    }
+                    model.UpdateTime = DateTime.Now;
+                    model.TimeSlot = dto.TimeSlot;
+                    model.LimitOrderCount = dto.LimitOrderCount;
+                    model.AdminID = AdminID;
+                    ctx.Entry<le_orders_timelimit>(model).State = System.Data.Entity.EntityState.Modified;
+
+                }
+                try
+                {
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        Msg = "SUCCESS";
+                        return true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    
+                    Msg = ex.Message;
+                    return false;
+                }
+                Msg = "未知错误";
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取当前下单时间限制
+        /// </summary>
+        /// <param name="TimeSlot"></param>
+        /// <returns></returns>
+        public int GetTimeLimitCount(int TimeSlot)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var temp = ctx.le_orders_timelimit.Where(s => s.TimeSlot == TimeSlot).Select(s=>s.LimitOrderCount).FirstOrDefault();
+                return temp;
+            }
+        }
+    }
+}

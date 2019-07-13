@@ -77,6 +77,8 @@
     <Compile Include="ShopOrder\OrderPackCount.cs" />
     <Compile Include="ShopOrder\OrderSaveParams.cs" />
     <Compile Include="ShopOrder\OrderSeachParams.cs" />
+    <Compile Include="ShopOrder\OrdersTimeLimitDto.cs" />
+    <Compile Include="ShopOrder\OrdersTimeLimitEditDto.cs" />
     <Compile Include="ShopOrder\ShopCartDto.cs" />
     <Compile Include="Suppliers\SuppliersDto.cs" />
     <Compile Include="Suppliers\UpdateOrderLineParamas.cs" />

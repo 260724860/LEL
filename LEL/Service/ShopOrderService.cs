@@ -28,7 +28,7 @@ namespace Service
         /// <param name="Mes"></param>
         /// <param name="cumulation">是否累加</param>
         /// <returns></returns>
-        public int AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, int UserID, bool cumulation, out string Mes, int? ReturnCount = 0)
+        public int AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, int UserID, bool cumulation, out string Mes, int? ReturnCount = 1)
         {
             using (Entities ctx = new Entities())
             {

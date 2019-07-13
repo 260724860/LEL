@@ -137,7 +137,8 @@ namespace LEL.Controllers
             //ssh.SendSingleSms(Phone, content, out returnmsg);
             var str = TenCentSmsHelper.RandomCode();
             string[] parm = new string[] { str };
-            TenCentSmsHelper.SmsSingleSender(Phone, 334320, parm, "蘑菇侠");
+            //  TenCentSmsHelper.SmsSingleSender(Phone, 334320, parm, "蘑菇侠");
+            TenCentSmsHelper.SmsSingleSender(Phone, 334320, parm, "乐尔乐");
             if (returnmsg.result == 0)
             {
                 OtherService.AddSmsRecord(parm[0], Phone, CookieStr);
