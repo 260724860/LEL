@@ -300,6 +300,7 @@ namespace Service
                 }
                 catch (DbEntityValidationException ex)
                 {
+                   
                     Msg = "数据类型错误:" + ExceptionHelper.GetInnerExceptionMsg(ex);
                     return false;
                 }

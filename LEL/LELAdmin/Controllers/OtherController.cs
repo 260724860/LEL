@@ -1,13 +1,17 @@
 ﻿using Common;
 using DTO.Common;
+using DTO.ShopOrder;
 using Service;
+using System;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
 {
-    public class OtherController : ApiController
+    [Authorize]
+    public class OtherController : BaseController
     {
         OtherService OtherBLL = new OtherService();
+        [AllowAnonymous]
         [HttpGet, Route("api/Other/AddSysAddress/")]
         public IHttpActionResult AddSysAddress(string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort, double? Longitude, double? Latitude)
         {
@@ -33,6 +37,7 @@ namespace LELAdmin.Controllers
         /// <param name="DefaultAddr"></param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/UpdateSysAddress/")]
+
         public IHttpActionResult UpdateSysAddress(int AddressID, string ReceiveName, string ReceivePhone, string ReceiveArea, string ReceiveAddress, int Sort, int Status, double? Longitude, double? Latitude)
         {
             var result = OtherBLL.UpdateSysAddress(AddressID, ReceiveName, ReceivePhone, ReceiveArea, ReceiveAddress, Sort, Status, Longitude, Latitude);
@@ -52,6 +57,7 @@ namespace LELAdmin.Controllers
         /// <param name="UserID"></param>
         /// <returns></returns>
         [HttpPost, Route("api/Other/GetSysAddressList/")]
+        [AllowAnonymous]
         public IHttpActionResult GetSysAddressList(SeachOptions options)
         {
             int Count;
@@ -67,6 +73,7 @@ namespace LELAdmin.Controllers
         /// <param name="AdName"></param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/AddAd/")]
+        [AllowAnonymous]
         public IHttpActionResult AddAd(string Img, string Link, int Sort, string AdName)
         {
             var result = OtherBLL.AddAd(Img, Link, Sort, AdName);
@@ -90,6 +97,7 @@ namespace LELAdmin.Controllers
         /// <param name="falag"></param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/UpdateAd/")]
+        [AllowAnonymous]
         public IHttpActionResult UpdateAd(int AdId, string Img, string Link, int Sort, string AdName, int falag)
         {
             var result = OtherBLL.UpdateAd(AdId, Img, Link, Sort, AdName, falag);
@@ -108,6 +116,7 @@ namespace LELAdmin.Controllers
         /// <param name="AdId"></param>
         /// <returns></returns>
         [HttpDelete, Route("api/Other/DeleteAd/")]
+        [AllowAnonymous]
         public IHttpActionResult DeleteAd(int AdId)
         {
             var result = OtherBLL.DeleteAd(AdId);
@@ -127,6 +136,7 @@ namespace LELAdmin.Controllers
         /// <param name="AddressID"></param>
         /// <returns></returns>
         [HttpDelete, Route("api/Other/DeleteSysAddress/")]
+        [AllowAnonymous]
         public IHttpActionResult DeleteSysAddress(int AddressID)
         {
             var result = OtherBLL.DeleteSysAddress(AddressID);
@@ -149,6 +159,7 @@ namespace LELAdmin.Controllers
         /// <param name="Flag"></param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/GetAdList/")]
+        [AllowAnonymous]
         public IHttpActionResult GetAdList(int offset, int rows, string Keywords, int Flag)
         {
             int Count;
@@ -203,6 +214,7 @@ namespace LELAdmin.Controllers
         /// <param name="salt"></param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/GetPWD/")]
+        [AllowAnonymous]
         public IHttpActionResult GetPWD(string EncrypPwd, string salt)
         {
             var DbPwd = DESEncrypt.Decrypt(EncrypPwd, salt);
@@ -215,6 +227,7 @@ namespace LELAdmin.Controllers
         /// <param name="salt"></param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/GetUserPWD/")]
+        [AllowAnonymous]
         public IHttpActionResult GetUserPWD(string Loginname,int UserType)
         {
             return Json(JRpcHelper.AjaxResult(1, "接口废除", Loginname));
@@ -263,5 +276,39 @@ namespace LELAdmin.Controllers
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
            
         }
+
+        /// <summary>
+        /// 获取下单时间限制
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("api/Other/GetOrdersTimeLimitList/")]
+        public IHttpActionResult GetOrdersTimeLimitList()
+        {
+            var result=  new OrdersTimeLimitService().GetOrdersTimeLimitList();
+
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+
+      /// <summary>
+      /// 设置或者修改下单时间设置
+      /// </summary>
+      /// <param name="dto">ID未空或者0表示新增否则修改</param>
+      /// <returns></returns>
+        [HttpPost, Route("api/Other/CreateOrUpdate/")]
+        public IHttpActionResult CreateOrUpdate(OrdersTimeLimitEditDto dto)
+        {
+           
+            var result = new OrdersTimeLimitService().CreateOrUpdate(GetLoginInfo().UserID,dto,out string msg);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, msg, result));
+
+            }
+        }
+
     }
 }

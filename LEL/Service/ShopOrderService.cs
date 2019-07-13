@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 
 namespace Service
@@ -268,6 +269,7 @@ namespace Service
                 AddressDto AddressModel = new AddressDto();
                 if (ParamasData.ExpressType == 1)
                 {
+                   
                     AddressModel = ctx.le_user_address.Where(s => s.AddressID == ParamasData.AddressID && s.UserID == ParamasData.UserID && s.Status == 1).
                         Select(k => new AddressDto
                         {
@@ -283,9 +285,16 @@ namespace Service
                         FailCartList = null;
                         return 0;
                     }
+                  
                 }
                 if (ParamasData.ExpressType == 2)
                 {
+                    if (!ParamasData.PickupTime.HasValue)
+                    {
+                        Msg = "请选择下单时间";
+                        FailCartList = null;
+                        return 0;
+                    }
                     AddressModel = ctx.le_sys_address.Where(s => s.AddressID == ParamasData.AddressID && s.Status == 1).
                      Select(k => new AddressDto
                      {
@@ -299,6 +308,24 @@ namespace Service
                     {
                         Msg = "地址输入错误";
                         FailCartList = null;
+                        return 0;
+                    }
+                    //判断当前时间内的下单数
+                   
+                    string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
+                    string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
+
+                    DateTime BeginTime = Convert.ToDateTime(BeginStr);
+                    DateTime EndTime = Convert.ToDateTime(EndStr);
+                    var hour = ParamasData.PickupTime.Value.Hour;
+                    var CurrentTime = DateTime.Now;
+                    var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
+
+                    var CurrentOrderCount = ctx.le_orders_head.Where( s => s.Status != 5 && s.Status != 1 && s.PickupTime >= BeginTime && s.PickupTime <= EndTime).Count();
+                    if (CurrentOrderCountSetting <= CurrentOrderCount)
+                    {
+                        Msg = "当前时间下单数已满,请选择其他时间";
+                        //  log.Debug(Msg);
                         return 0;
                     }
                 }
@@ -380,13 +407,14 @@ namespace Service
 
                     le_Orders_Head.le_orders_lines.Add(linesModel);
                 }
-                le_Orders_Head.CreateTime = DateTime.Now;
 
+              
+
+                le_Orders_Head.CreateTime = DateTime.Now;
                 le_Orders_Head.OrderAmout = OrderLinesList.Sum(s => s.GoodsPrice * s.GoodsCount);
                 le_Orders_Head.RealAmount = le_Orders_Head.OrderAmout;
                 le_Orders_Head.OrderSupplyAmount = OrderLinesList.Sum(s => s.SupplyPrice * s.GoodsCount);
                 le_Orders_Head.RealSupplyAmount = le_Orders_Head.OrderSupplyAmount;
-
                 le_Orders_Head.OutTradeNo = Trade_no;
                 le_Orders_Head.RcAddr = AddressModel.ReceiveArea + "-" + AddressModel.ReceiveAddress;
                 le_Orders_Head.RcName = AddressModel.ReceiveName;
@@ -1601,11 +1629,31 @@ namespace Service
                         return false;
                     }
                 }
+                catch (DbEntityValidationException exception)
+                {
+                    var errorMessages =
+                        exception.EntityValidationErrors
+                            .SelectMany(validationResult => validationResult.ValidationErrors)
+                            .Select(m => m.ErrorMessage);
+
+                    var fullErrorMessage = string.Join(", ", errorMessages);
+                   
+                    var exceptionMessage = string.Concat(exception.Message, " 验证异常消息是：", fullErrorMessage);
+
+                    log.Error(exceptionMessage, exception);
+
+                    msg = exceptionMessage;
+                    return false;
+
+                }
                 catch (Exception ex)
                 {
                     msg = "修改异常，异常信息：" + ex.ToString();
+
+                    log.Error(ExceptionHelper.GetInnerExceptionMsg(ex), ex);
                     return false;
                 }
+                
             }
         }
         /// <summary>

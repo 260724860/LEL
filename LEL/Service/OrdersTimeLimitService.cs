@@ -17,7 +17,7 @@ namespace Service
                     AdminID=s.AdminID,
                     TimeSlot=s.TimeSlot,
                     CreateTime=s.CreateTime,
-                    CurrentOrderCount=s.CurrentOrderCount,
+                   // CurrentOrderCount=s.CurrentOrderCount,
                     LimitOrderCount=s.LimitOrderCount,
                     UpdateTime=s.UpdateTime,
                     ID=s.ID,
@@ -43,8 +43,8 @@ namespace Service
                     else
                     {
                         le_orders_timelimit model = new le_orders_timelimit();
-                        model.LimitOrderCount = model.LimitOrderCount;
-                        model.TimeSlot = model.TimeSlot;
+                        model.LimitOrderCount = dto.LimitOrderCount;
+                        model.TimeSlot = dto.TimeSlot;
                         model.CreateTime = DateTime.Now;
                         model.UpdateTime = DateTime.Now;
                         model.AdminID = AdminID;

@@ -235,5 +235,13 @@ namespace LEL.Controllers
             var result = SysConfig.RefreshSysConfig();
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
+
+        public IHttpActionResult GetHours()
+        {
+            string start = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
+            string end = DateTime.Now.ToString("yyyy-MM-dd ") + "23:59:59";
+            var result = Convert.ToDateTime(start);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
     }
 }
