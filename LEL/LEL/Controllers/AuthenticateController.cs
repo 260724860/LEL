@@ -32,7 +32,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, UserDto.Msg, null));
             }
-            var tokenExpiration = TimeSpan.FromHours(2);
+            var tokenExpiration = TimeSpan.FromHours(24);
             ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, Loginname + "," + UserDto.UserID.ToString() + "," + UserDto.status.ToString()));
             identity.AddClaim(new Claim("UserID", UserDto.UserID.ToString()));
@@ -76,7 +76,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, SupplierUser.Msg, null));
             }
-            var tokenExpiration = TimeSpan.FromHours(2);
+            var tokenExpiration = TimeSpan.FromHours(24);
             ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, Loginname + "," + SupplierUser.SuppliersID.ToString() + "," + SupplierUser.Suppliers_Status.ToString()));
             identity.AddClaim(new Claim("UserID", SupplierUser.SuppliersID.ToString()));

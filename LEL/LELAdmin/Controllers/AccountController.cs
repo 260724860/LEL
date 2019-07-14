@@ -40,7 +40,7 @@ namespace LELAdmin.Controllers
                 {
                     return Json(JRpcHelper.AjaxResult(1, dto.msg, null));
                 }
-                var tokenExpiration = TimeSpan.FromHours(2);
+                var tokenExpiration = TimeSpan.FromHours(24);
                 ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
                 identity.AddClaim(new Claim(ClaimTypes.Name, LoginName));
                 identity.AddClaim(new Claim("UserID", dto.AdminID.ToString()));

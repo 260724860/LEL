@@ -302,8 +302,7 @@ namespace Service
                          ReceivePhone = k.ReceivePhone,
                          ReceiveArea = k.ReceiveArea,
                          ReceiveName = k.ReceiveName
-                     }).
-                     FirstOrDefault();
+                     }).FirstOrDefault();
                     if (AddressModel == null)
                     {
                         Msg = "地址输入错误";
@@ -315,13 +314,15 @@ namespace Service
                     string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
                     string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
 
-                    DateTime BeginTime = Convert.ToDateTime(BeginStr);
-                    DateTime EndTime = Convert.ToDateTime(EndStr);
+                    //DateTime BeginTime = Convert.ToDateTime(BeginStr);
+                    //DateTime EndTime = Convert.ToDateTime(EndStr);
+
+                    DateTime EndTime = ParamasData.PickupTime.Value.AddHours(1);
                     var hour = ParamasData.PickupTime.Value.Hour;
                     var CurrentTime = DateTime.Now;
                     var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
 
-                    var CurrentOrderCount = ctx.le_orders_head.Where( s => s.Status != 5 && s.Status != 1 && s.PickupTime >= BeginTime && s.PickupTime <= EndTime).Count();
+                    var CurrentOrderCount = ctx.le_orders_head.Where( s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
                     if (CurrentOrderCountSetting <= CurrentOrderCount)
                     {
                         Msg = "当前时间下单数已满,请选择其他时间";
@@ -343,13 +344,14 @@ namespace Service
                     var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
                     int AlreadyBuyCount = 0;
 
+                    //已经购买的数量
                     var BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID).Select(k => new { k.GoodsCount }).ToList();
                     if (BuyCountIquery != null)
                     {
                         AlreadyBuyCount = BuyCountIquery.Sum(g => g.GoodsCount);
                     }
 
-                    if ((QuotaGoods != null && goodsModel.Quota != -1 && goodsModel.Quota - AlreadyBuyCount < 0) || (goodsModel.Quota - QuotaGoods.GoodsCount < 0 && goodsModel.Quota != -1))
+                    if ((QuotaGoods != null && goodsModel.Quota != -1 && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - QuotaGoods.GoodsCount < 0 && goodsModel.Quota != -1))
                     {
                         Msg = string.Format("该商品没人限购{0}件", goodsModel.Quota);
                         log.Debug(Msg);
