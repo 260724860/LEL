@@ -173,6 +173,7 @@ namespace LELAdmin.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("api/Other/GetSysConfig/")]
+        [AllowAnonymous]
         public IHttpActionResult GetSysConfig()
         {
             var result = SysConfig.Get().values;

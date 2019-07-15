@@ -19,11 +19,11 @@ namespace DTO.ShopOrder
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime BeginTime { get; set; }
+        public DateTime? BeginTime { get; set; }
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
         /// <summary>
         ///订单状态(0.未确认；1.已完成；2.已审核；3.待接单；4.已接单；5.已取消)
         /// </summary>

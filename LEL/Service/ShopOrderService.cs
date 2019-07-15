@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using static DTO.Common.Enum;
 
 namespace Service
 {
@@ -322,13 +323,13 @@ namespace Service
                     var CurrentTime = DateTime.Now;
                     var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
 
-                    var CurrentOrderCount = ctx.le_orders_head.Where( s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
-                    if (CurrentOrderCountSetting <= CurrentOrderCount)
-                    {
-                        Msg = "当前时间下单数已满,请选择其他时间";
-                        //  log.Debug(Msg);
-                        return 0;
-                    }
+                    //var CurrentOrderCount = ctx.le_orders_head.Where( s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
+                    //if (CurrentOrderCountSetting <= CurrentOrderCount)
+                    //{
+                    //    Msg = "当前时间下单数已满,请选择其他时间";
+                    //    //  log.Debug(Msg);
+                    //    return 0;
+                    //}
                 }
 
                 var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
@@ -772,7 +773,7 @@ namespace Service
                     PriceReduction=s.le_goods.PriceReduction,
                     PriceFull=s.le_goods.PriceFull,
                     Integral=s.le_goods.Integral,
-                    
+                 
                     Status = s.Status,
                     SuppliersName = s.le_suppliers.SuppliersName,
                     GoodsValuesList = s.le_orderline_goodsvalue.Select(k => new GoodsValues()
@@ -791,7 +792,7 @@ namespace Service
                     PackingNumber = s.le_goods.PackingNumber,
                     DeliverCount = s.DeliverCount,
                     MinimumPurchase=s.le_goods.MinimumPurchase
-                });
+                }).OrderBy(s=>s.SupplierID).OrderBy(s=>s.GoodsID);
 
                 return result.ToList();
             }
@@ -1246,10 +1247,11 @@ namespace Service
         /// <param name="SuppliersID"></param>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        public bool UpdateOrderLineStatus(int Status, int OrdersLinesID, string OrderNo, string Notes, out string Msg, int AdminID = 0, int SuppliersID = 0)
+        public bool UpdateOrderLineStatus(OrderLineStatus Status, int OrdersLinesID, string OrderNo, string Notes, out string Msg, int AdminID = 0, int SuppliersID = 0)
         {
             using (Entities ctx = new Entities())
             {
+                
                 var OrderHeadModel = ctx.le_orders_head.Where(s => s.OutTradeNo == OrderNo).FirstOrDefault();
                 if (OrderHeadModel == null)
                 {
@@ -1266,8 +1268,20 @@ namespace Service
                     Msg = "订单已完成,操作失败";
                     return false;
                 }
+                if (Status == OrderLineStatus.DaiJieDan && AdminID == 0)
+                {                  
+                    Msg = "非法操作,无权限.只有总部人员可派单";
+                    return false;
+                }
+                if (!ctx.le_admin_re_users.Any(s => s.AdminID == AdminID && s.UserID == OrderHeadModel.UsersID)&& AdminID!=0)
+                {
+                    Msg = "非法操作,无操作该门店订单权限";
+                    return false;
+                }
+
                 var LinesList = OrderHeadModel.le_orders_lines.ToList();
                 var CurrentLine = LinesList.Where(s => s.OrdersLinesID == OrdersLinesID).FirstOrDefault();
+                var CurrentLineStatue = (OrderLineStatus)CurrentLine.Status;
 
                 if (SuppliersID != 0 && CurrentLine.SuppliersID != SuppliersID && AdminID == 0)
                 {
@@ -1296,152 +1310,247 @@ namespace Service
                 {
                     OrderHeadLog.SupplierID = SuppliersID ;
                 }
-             
-                //if(AdminID!=0&& SuppliersID != 0)
-                //{
-                //    OrderLineLogName.AdminID = AdminID ;
-                //}
-                //if(SuppliersID!=0)
-                //{
-                //    OrderLineLogName.SupplierID = SuppliersID;
-                //}
+                          
                 try
                 {
-                    if (Status == 1 && AdminID != 0) //派发订单只有总部有权限
+                    switch (Status)
                     {
-                        if (CurrentLine.Status == 3) //取消的订单重新派单。 修改销量和库存
-                        {
-                            CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
-                            CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
-                            CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
+                        
+                        case OrderLineStatus.DaiJieDan: 
+                            if (CurrentLineStatue == OrderLineStatus.YiQuXiao) //取消的订单重新派单。 修改销量和库存
+                            {
+                                CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
+                                CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
+                                CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
 
-                            OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
-                            OrderHeadModel.RealSupplyAmount+= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
-                            OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
-                            OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
-                            OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
-                        }
-                        OrderLineLog.AdminID = AdminID;
-
-                        if (Status == 2 || Status == 3)
-                        {
-                            Msg = "订单已经运行,无法修改派单";
-                            return false;
-                        }
-
-                        CurrentLine.AdminID = AdminID;
-                        CurrentLine.Status = 1;
-                        CurrentLine.SuppliersID = SuppliersID;
-
-                        if (!string.IsNullOrEmpty(Notes))
-                        {
-                            CurrentLine.Notes = Notes;
-                        }
-
-                        var IsComplete = LinesList.Any(s => s.Status != 3 && s.Status != 2 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
-
-                        if (IsComplete || LinesList.Count == 1) //全部派单 更新订单头状态为待接单
-                        {
-                            // var OrderHead = ctx.le_orders_head.Where(s => s.OutTradeNo == CurrentLine.OutTradeNo).FirstOrDefault();
-                            OrderHeadModel.Status = 3;//修改订单头状态为待接单
-
-                        }
-                        OrderHeadModel.AdminID = AdminID;
-                       // ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
-                        //总部派发订单 推送消息给供货商
-                        new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
-
-                        CurrentLine.UpdateTime = DateTime.Now;
-                        ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
-
-
-                    }
-                    if (Status == 2)//已接单
-                    {
-                        if (AdminID != 0)  //总部加急单也有接单权限
-                        {
+                                OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                                OrderHeadModel.RealSupplyAmount += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                                OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
+                                OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
+                                OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
+                            }
                             OrderLineLog.AdminID = AdminID;
-                        }
-                        if (AdminID == 0 && SuppliersID != 0)
-                        {
-                            OrderLineLog.SupplierID = SuppliersID;
-                        }
-                        if (CurrentLine.Status == 3) //之前是已取消 现在改为已结单修改销量库存
-                        {
-                            CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
-                            CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
-                            CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
 
-                            OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
-                            OrderHeadModel.RealSupplyAmount += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
-                            OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
+                            if (CurrentLine.Status == 2 || CurrentLine.Status == 3)
+                            {
+                                Msg = "订单已经运行,无法修改派单";
+                                return false;
+                            }
 
-                            OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
-                            OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
-                        }
+                            CurrentLine.AdminID = AdminID;
+                            CurrentLine.Status = 1;
+                            CurrentLine.SuppliersID = SuppliersID;
 
-                        //此处使用多次查询 待优化 使用原生SQL？
-                        CurrentLine.Status = 2;
-                        if (!string.IsNullOrEmpty(Notes))
-                        {
-                            CurrentLine.Notes = Notes;
-                        }
+                            if (!string.IsNullOrEmpty(Notes))
+                            {
+                                CurrentLine.Notes = Notes;
+                            }
+                            var IsComplete = LinesList.Any(s => s.Status != 3 && s.Status != 2 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
 
-                        CurrentLine.UpdateTime = DateTime.Now;
+                            if (IsComplete || LinesList.Count == 1) //全部派单 更新订单头状态为待接单
+                            {
+                                // var OrderHead = ctx.le_orders_head.Where(s => s.OutTradeNo == CurrentLine.OutTradeNo).FirstOrDefault();
+                                OrderHeadModel.Status = (int)OrderStatus.DaiJieDan;//修改订单头状态为待接单
 
-                       // ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+                            }
+                            OrderHeadModel.AdminID = AdminID;
+                            // ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
+                            //总部派发订单 推送消息给供货商
+                            new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
+
+                            CurrentLine.UpdateTime = DateTime.Now;
+                            ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
 
 
-                        var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
+                            break;
 
-                        if (IsComplete || LinesList.Count == 1) //全部已接单,更新订单头状态
-                        {                           
-                            OrderHeadModel.Status = 4;//修改订单头状态为已结单
-                            OrderHeadLog.AfterStatus = 4;
+                        case OrderLineStatus.YiJieDan: //已结单
+                            if (AdminID != 0)  //总部加急单也有接单权限
+                            {
+                                OrderLineLog.AdminID = AdminID;
+                            }
+                            if (AdminID == 0 && SuppliersID != 0)
+                            {
+                                OrderLineLog.SupplierID = SuppliersID;
+                            }
+                            if (CurrentLine.Status == (int)OrderLineStatus.YiQuXiao) //之前是已取消 现在改为已结单修改销量库存
+                            {
+                                CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
+                                CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
+                                CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
+
+                                OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                                OrderHeadModel.RealSupplyAmount += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                                OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
+
+                                OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
+                                OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
+                            }
+
+                            //此处使用多次查询 待优化 使用原生SQL？
+                            CurrentLine.Status = 2;
+                            if (!string.IsNullOrEmpty(Notes))
+                            {
+                                CurrentLine.Notes = Notes;
+                            }
+
+                            CurrentLine.UpdateTime = DateTime.Now;
+
+                            // ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+
+
+                            var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
+
+                            if (IsComplete || LinesList.Count == 1) //全部已接单,更新订单头状态
+                            {
+                                OrderHeadModel.Status = 4;//修改订单头状态为已结单
+                                OrderHeadLog.AfterStatus = 4;
+
+                            }
+                            //供货商完成接单 推送消息给总部
+                            new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+
+                            break;
+
+                        case OrderLineStatus.YiQuXiao:
+
+                            break;
+                    }
+                    #region 即将废弃代码
+                    //if (Status == 1 && AdminID != 0) //派发订单只有总部有权限
+                    //{
+                    //    if (CurrentLine.Status == 3) //取消的订单重新派单。 修改销量和库存
+                    //    {
+                    //        CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
+                    //        CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
+                    //        CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
+
+                    //        OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                    //        OrderHeadModel.RealSupplyAmount+= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                    //        OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
+                    //        OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
+                    //        OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
+                    //    }
+                    //    OrderLineLog.AdminID = AdminID;
+
+                    //    if (Status == 2 || Status == 3)
+                    //    {
+                    //        Msg = "订单已经运行,无法修改派单";
+                    //        return false;
+                    //    }
+
+                    //    CurrentLine.AdminID = AdminID;
+                    //    CurrentLine.Status = 1;
+                    //    CurrentLine.SuppliersID = SuppliersID;
+
+                    //    if (!string.IsNullOrEmpty(Notes))
+                    //    {
+                    //        CurrentLine.Notes = Notes;
+                    //    }
+
+                    //    var IsComplete = LinesList.Any(s => s.Status != 3 && s.Status != 2 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
+
+                    //    if (IsComplete || LinesList.Count == 1) //全部派单 更新订单头状态为待接单
+                    //    {
+                    //        // var OrderHead = ctx.le_orders_head.Where(s => s.OutTradeNo == CurrentLine.OutTradeNo).FirstOrDefault();
+                    //        OrderHeadModel.Status = 3;//修改订单头状态为待接单
+
+                    //    }
+                    //    OrderHeadModel.AdminID = AdminID;
+                    //   // ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
+                    //    //总部派发订单 推送消息给供货商
+                    //    new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
+
+                    //    CurrentLine.UpdateTime = DateTime.Now;
+                    //    ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+
+                    //}
+                    //if (Status == 2)//已接单
+                    //{
+                    //    if (AdminID != 0)  //总部加急单也有接单权限
+                    //    {
+                    //        OrderLineLog.AdminID = AdminID;
+                    //    }
+                    //    if (AdminID == 0 && SuppliersID != 0)
+                    //    {
+                    //        OrderLineLog.SupplierID = SuppliersID;
+                    //    }
+                    //    if (CurrentLine.Status == 3) //之前是已取消 现在改为已结单修改销量库存
+                    //    {
+                    //        CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
+                    //        CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
+                    //        CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
+
+                    //        OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                    //        OrderHeadModel.RealSupplyAmount += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                    //        OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
+
+                    //        OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
+                    //        OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
+                    //    }
+
+                    //    //此处使用多次查询 待优化 使用原生SQL？
+                    //    CurrentLine.Status = 2;
+                    //    if (!string.IsNullOrEmpty(Notes))
+                    //    {
+                    //        CurrentLine.Notes = Notes;
+                    //    }
+
+                    //    CurrentLine.UpdateTime = DateTime.Now;
+
+                    //   // ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
+
+
+                    //    var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
+
+                    //    if (IsComplete || LinesList.Count == 1) //全部已接单,更新订单头状态
+                    //    {                           
+                    //        OrderHeadModel.Status = 4;//修改订单头状态为已结单
+                    //        OrderHeadLog.AfterStatus = 4;
                             
-                        }
-                        //供货商完成接单 推送消息给总部
-                        new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-                    }
-                    if (Status == 3)//取消订单
-                    {
-                        OrderLineLog.SupplierID = SuppliersID;
+                    //    }
+                    //    //供货商完成接单 推送消息给总部
+                    //    new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+                    //}
+                    //if (Status == 3)//取消订单
+                    //{
+                    //    OrderLineLog.SupplierID = SuppliersID;
                        
-                        CurrentLine.Status = 3;
-                        CurrentLine.le_goods.Stock += CurrentLine.GoodsCount;
-                        CurrentLine.le_goods.SalesVolumes -= CurrentLine.GoodsCount;
-                        CurrentLine.le_goods.TotalSalesVolume -= CurrentLine.GoodsCount;
-                        CurrentLine.DeliverCount = 0;
+                    //    CurrentLine.Status = 3;
+                    //    CurrentLine.le_goods.Stock += CurrentLine.GoodsCount;
+                    //    CurrentLine.le_goods.SalesVolumes -= CurrentLine.GoodsCount;
+                    //    CurrentLine.le_goods.TotalSalesVolume -= CurrentLine.GoodsCount;
+                    //    CurrentLine.DeliverCount = 0;
                        
-                        if (!string.IsNullOrEmpty(Notes))
-                        {
-                            CurrentLine.Notes = Notes;
-                        }
-                        CurrentLine.UpdateTime = DateTime.Now;
+                    //    if (!string.IsNullOrEmpty(Notes))
+                    //    {
+                    //        CurrentLine.Notes = Notes;
+                    //    }
+                    //    CurrentLine.UpdateTime = DateTime.Now;
                        
-                        //ctx.Entry<le_goods>(CurrentLine.le_goods).State = EntityState.Modified;
+                    //    //ctx.Entry<le_goods>(CurrentLine.le_goods).State = EntityState.Modified;
 
-                        OrderHeadModel.RealAmount -= CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
-                        OrderHeadModel.RealSupplyAmount -= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
-                        OrderHeadModel.DeliverCount -= CurrentLine.GoodsCount;
+                    //    OrderHeadModel.RealAmount -= CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
+                    //    OrderHeadModel.RealSupplyAmount -= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
+                    //    OrderHeadModel.DeliverCount -= CurrentLine.GoodsCount;
 
-                        OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
-                        OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
+                    //    OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
+                    //    OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
 
-                        new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-                        new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
+                    //    new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+                    //    new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
                        
-                    }
-                   
+                    //}
+                    #endregion
 
-                    if(OrderHeadLog.BeforeMoney!=OrderHeadLog.AfterMoney)
+                    if (OrderHeadLog.BeforeMoney!=OrderHeadLog.AfterMoney)
                     {
                         //ctx.Entry<le_orders_head_log>(OrderHeadLog).State = EntityState.Modified;
                         ctx.le_orders_head_log.Add(OrderHeadLog);
                     }
 
                     OrderLineLog.AfterCount = CurrentLine.DeliverCount;
-                    OrderLineLog.AfterStatus = Status;
+                    OrderLineLog.AfterStatus = (int)Status;
                     OrderLineLog.OrderLineID = CurrentLine.OrdersLinesID;
 
                     ctx.le_orders_lines_log.Add(OrderLineLog);
@@ -1782,7 +1891,7 @@ namespace Service
         /// </summary>
         /// <param name="goodsStocks"></param>
         /// <returns></returns>
-        public bool CheckStock(List<GoodsStock> goodsStocks)
+        private bool CheckStock(List<GoodsStock> goodsStocks)
         {
 
             List<CommandInfo> sqllist = new List<CommandInfo>();
@@ -1820,7 +1929,7 @@ namespace Service
             }
         }
 
-        public bool IsEqual(List<AddGoodsValues> a, List<AddGoodsValues> b)
+        private bool IsEqual(List<AddGoodsValues> a, List<AddGoodsValues> b)
         {
             a = a.OrderBy(p => p.CategoryType).ToList();
             b = b.OrderBy(p => p.GoodsValueID).ToList();
