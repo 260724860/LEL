@@ -1316,7 +1316,7 @@ namespace Service
                     switch (Status)
                     {
                         
-                        case OrderLineStatus.DaiJieDan: 
+                        case OrderLineStatus.DaiJieDan: //待接单
                             if (CurrentLineStatue == OrderLineStatus.YiQuXiao) //取消的订单重新派单。 修改销量和库存
                             {
                                 CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
@@ -1361,7 +1361,7 @@ namespace Service
                             CurrentLine.UpdateTime = DateTime.Now;
                             ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
 
-
+               
                             break;
 
                         case OrderLineStatus.YiJieDan: //已结单
@@ -1396,10 +1396,7 @@ namespace Service
 
                             CurrentLine.UpdateTime = DateTime.Now;
 
-                            // ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
-
-
-                            var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
+                            var IsComplete = LinesList.Any(s => s.Status == 2 && s.Status != 3 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
 
                             if (IsComplete || LinesList.Count == 1) //全部已接单,更新订单头状态
                             {
