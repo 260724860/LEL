@@ -60,10 +60,16 @@
             /// 5.已取消
             /// </summary>
             YiQuXiao = 5,
+
+            /// <summary>
+            /// 待发货
+            /// </summary>
+            DaiFaHuo=6,
+
             /// <summary>
             /// 6已结算
             /// </summary>
-            YiJieSuan = 6
+            YiJieSuan = 7
         }
 
         /// <summary>
