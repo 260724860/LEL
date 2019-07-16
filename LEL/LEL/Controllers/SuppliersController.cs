@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using static DTO.Common.Enum;
 
 namespace LEL.Controllers
 {
@@ -84,18 +85,17 @@ namespace LEL.Controllers
         public IHttpActionResult UpdateOrderLineStatus(List<UpdateOrderLineParamas> lineParamas)
         {
             int[] StatusAttr = { 2, 3 };
-            foreach (var index in lineParamas)
+            //if (!StatusAttr.Contains(index.Status) || index.OrderLineID <= 0)
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "参数错误", index.OrderLineID));
+            //}
+          
+            var result = ShopOrderBLL.UpdateOrderLineStatus(lineParamas, out string Msg, 0, GetUserID());
+            if (!result)
             {
-                if (!StatusAttr.Contains(index.Status) || index.OrderLineID <= 0)
-                {
-                    return Json(JRpcHelper.AjaxResult(1, "参数错误", index.OrderLineID));
-                }
-                var result = ShopOrderBLL.UpdateOrderLineStatus(index.Status, index.OrderLineID, index.OrderNo, index.Notes, out string Msg, 0, GetUserID());
-                if (!result)
-                {
-                    return Json(JRpcHelper.AjaxResult(1, "FAIL", index.OrderLineID));
-                }
+                return Json(JRpcHelper.AjaxResult(1, Msg, null));
             }
+
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", lineParamas));
         }
 

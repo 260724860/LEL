@@ -1,9 +1,11 @@
 ﻿using Common;
 using DTO.ShopOrder;
+using DTO.Suppliers;
 using LELAdmin.Models;
 using Service;
 using System.Collections.Generic;
 using System.Web.Http;
+using static DTO.Common.Enum;
 
 namespace LELAdmin.Controllers
 {
@@ -85,24 +87,20 @@ namespace LELAdmin.Controllers
         /// <param name="UserID"></param>
         /// <returns></returns>
         [HttpPost, Route("api/OrderHandle/UpdateOrderLineStatus/")]
-        public IHttpActionResult UpdateOrderLineStatus(List<UpdateOrderLineParams> UpdateParams)
+        public IHttpActionResult UpdateOrderLineStatus(List<UpdateOrderLineParamas> UpdateParams)
         {
+            
             int AdminID = GetLoginInfo().UserID;
             int ErrCount = 0;
-            foreach (var indexModel in UpdateParams)
-            {
-                var result = ShopOrderBLL.UpdateOrderLineStatus(indexModel.Status, indexModel.OrdersLinesID, indexModel.OrderNo, indexModel.Notes, out string Msg, AdminID, indexModel.SuppliersID);
+           
+                var result = ShopOrderBLL.UpdateOrderLineStatus(UpdateParams, out string Msg, AdminID, 0);
                 if (!result)
                 {
                     ErrCount++;
                     return Json(JRpcHelper.AjaxResult(1, Msg, UpdateParams));
                 }
 
-            }
-            if (ErrCount == UpdateParams.Count)
-            {
-                return Json(JRpcHelper.AjaxResult(1, "FAIL", UpdateParams));
-            }
+     
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", UpdateParams));
         }
 
