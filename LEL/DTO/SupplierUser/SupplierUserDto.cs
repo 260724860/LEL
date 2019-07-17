@@ -54,5 +54,72 @@ namespace DTO.SupplierUser
 
         public string IDCardNo { get; set; }
         public string BusinessNo { get; set; }
+
+        /// <summary>
+        /// 省
+        /// </summary>
+        public string Province { get; set; }
+        /// <summary>
+        /// 市区
+        /// </summary>
+        public string City { get; set; }
+        /// <summary>
+        /// 区
+        /// </summary>
+        public string Area { get; set; }
+
+        /// <summary>
+        /// 经度
+        /// </summary>
+        public string Longitude { get; set; }
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        public string Latitude { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string IMEI { get; set; }
+        /// <summary>
+        /// 首字母
+        /// </summary>
+        public string Initial { get; set; }
+
+        /// <summary>
+        /// 座机
+        /// </summary>
+        public string Landline { get; set; }
+        /// <summary>
+        /// 财务人员名
+        /// </summary>
+        public string FinanceName { get; set; }
+        /// <summary>
+        /// 财务人员联系电话
+        /// </summary>
+        public string FinancePhone { get; set; }
+        /// <summary>
+        /// 授权码
+        /// </summary>
+        public string AuthCode { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remarks { get; set; }
+        /// <summary>
+        /// 送货人
+        /// </summary>
+        public string Deliverer { get; set; }
+        /// <summary>
+        /// 送货人电话
+        /// </summary>
+        public string DelivererPhone { get; set; }
+        /// <summary>
+        /// 经营品类
+        /// </summary>
+        public string Category { get; set; }
+        /// <summary>
+        /// 经营品牌
+        /// </summary>
+        public string ManagingBrands { get; set; }
     }
 }

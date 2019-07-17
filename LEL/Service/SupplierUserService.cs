@@ -44,7 +44,25 @@ namespace Service
                     MsgCount = b.MsgCount,
                     UserType = b.UserType,
                     BusinessNo = a.BusinessNo,
-                    IDCardNo = a.IDCardNo
+                    IDCardNo = a.IDCardNo,
+                     Province = a.Province,
+                    City = a.City,
+                    Area = a.Area,
+                    Longitude = a.Longitude,
+                    Latitude = a.Latitude,
+                    IMEI = a.IMEI,
+                    Initial = a.Initial,
+                    Landline = a.Landline,
+                    FinanceName = a.FinanceName,
+                    FinancePhone = a.FinancePhone,
+                    AuthCode = a.AuthCode,
+                    Remarks = a.Remarks,
+                    Deliverer = a.Deliverer,
+                    DelivererPhone = a.DelivererPhone,
+                    Category = a.Category,
+                    ManagingBrands = a.ManagingBrands,
+                    // Suppliers_LoginTime = s.LoginTime,
+                   
                 }).Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
 
                 if (User != null)
@@ -101,8 +119,7 @@ namespace Service
                 UserModel.SuppliersName = dTO.Suppliers_Name;
                 UserModel.ResponPeople = dTO.Suppliers_ResponPeople;
 
-                //UserModel.Suppliers_PassWord = dTO.Suppliers_PassWord;
-                //UserModel.Suppliers_Salt = dTO.Suppliers_Salt;
+               
                 UserModel.Email = dTO.Suppliers_Email;
                 UserModel.HeadImage = dTO.Suppliers_HeadImage;
                 UserModel.MobilePhone = dTO.Suppliers_MobilePhone;
@@ -112,12 +129,29 @@ namespace Service
                 UserModel.AttachImg1 = dTO.Suppliers_AttachImg1;
                 UserModel.AttachImg2 = dTO.Suppliers_AttachImg2;
                 UserModel.Addr = dTO.Suppliers_Addr;
-                //UserModel.Status = dTO.Suppliers_Status;
-                // UserModel.LoginTime = dTO.Suppliers_LoginTime;
+              
                 UserModel.UpdateTime = dTO.UpdateTime;
-                //  UserModel.CreateTime = dTO.CreateTime.Value;
+               
                 UserModel.IDCardNo = dTO.IDCardNo;
                 UserModel.BusinessNo = dTO.BusinessNo;
+
+                UserModel.Province = dTO.Province;
+                UserModel.City = dTO.City;
+                UserModel.Area = dTO.Area;
+                UserModel.Longitude = dTO.Longitude;
+                UserModel.Latitude = dTO.Latitude;
+                UserModel.IMEI = dTO.IMEI;
+                UserModel.Initial = dTO.Initial;
+                UserModel.Landline = dTO.Landline;
+                UserModel.FinanceName = dTO.FinanceName;
+                UserModel.FinancePhone = dTO.FinancePhone;
+                UserModel.AuthCode = dTO.AuthCode;
+                UserModel.Remarks = dTO.Remarks;
+                UserModel.Deliverer = dTO.Deliverer;
+                UserModel.DelivererPhone= dTO.DelivererPhone;
+                UserModel.  Category = dTO.Category;
+                UserModel.    ManagingBrands = dTO.ManagingBrands;
+
                 if (!oneself)
                 {
                     UserModel.Status = dTO.Suppliers_Status;

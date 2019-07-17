@@ -125,13 +125,22 @@ namespace DTO.Goods
         /// </summary>
         public int? GoodsBarand { get; set; }
         /// <summary>
-        /// 满减（满）
+        /// 满减（满）金额
         /// </summary>
         public decimal PriceFull { get; set; }
         /// <summary>
-        /// 满减（减）
+        /// 满减（减）金额
         /// </summary>
         public decimal PriceReduction { get; set; }
+
+        /// <summary>
+        /// 满减（满）数量
+        /// </summary>
+        public decimal CountFull {get;set;}
+        /// <summary>
+        /// 满减（减）数量
+        /// </summary>
+        public decimal CountReduction { get; set; }
         /// <summary>
         /// 折扣
         /// </summary>

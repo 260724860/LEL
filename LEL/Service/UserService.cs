@@ -46,8 +46,22 @@ namespace Service
                     CarNumber = a.CarNumber,
                     BusinessNo = a.BusinessNo,
                     IDCardNo = a.IDCardNo,
+                    Province = a.Province,
+                    City = a.City,
+                    Area = a.Area,
 
-                }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
+                    Longitude = a.Longitude,
+                    Latitude = a.Latitude,
+                    IMEI = a.IMEI,
+                    Initial = a.Initial,
+
+                    Landline = a.Landline,
+                    FinanceName = a.FinanceName,
+                    FinancePhone = a.FinancePhone,
+                    AuthCode = a.AuthCode,
+                    Remarks = a.Remarks,
+
+            }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
 
                 if (User != null)
                 {
@@ -161,6 +175,22 @@ namespace Service
                 UserModel.CarNumber = dTO.CarNumber;
                 UserModel.BusinessNo = dTO.BusinessNo;
                 UserModel.IDCardNo = dTO.IDCardNo;
+
+                UserModel.Province = dTO.Province;
+                UserModel.City = dTO.City;
+                UserModel.Area = dTO.Area;
+                UserModel.Address = dTO.Address;
+                UserModel.Longitude = dTO.Longitude;
+                UserModel.Latitude = dTO.Latitude;
+                UserModel.IMEI = dTO.IMEI;
+                UserModel.Initial = dTO.Initial;
+                UserModel.Email = dTO.Email;
+                UserModel.Landline = dTO.Landline;
+                UserModel.FinanceName = dTO.FinanceName;
+                UserModel.FinancePhone = dTO.FinancePhone;
+                UserModel.AuthCode = dTO.AuthCode;
+                UserModel.Remarks = dTO.Remarks;
+
                 if (!oneself)
                 {
                     UserModel.UsersStatus = dTO.status;
@@ -343,8 +373,20 @@ namespace Service
                     BusinessNo = s.BusinessNo,
                     CarNumber = s.CarNumber,
                     IDCardNo = s.IDCardNo,
+                    Province = s.Province,
+                    City = s.City,
+                    Area = s.Area,
+                    Longitude = s.Longitude,
+                    Latitude = s.Latitude,
+                    IMEI = s.IMEI,
+                    Initial = s.Initial,
+                    Landline = s.Landline,
+                    FinanceName = s.FinanceName,
+                    FinancePhone = s.FinancePhone,
+                    AuthCode = s.AuthCode,
+                    Remarks = s.Remarks,
 
-                }).ToList();
+            }).ToList();
 
                 return result;
             }

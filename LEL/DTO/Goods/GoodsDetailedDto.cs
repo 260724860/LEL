@@ -150,6 +150,10 @@ namespace DTO.Goods
         /// 有效期
         /// </summary>
         public string TermOfValidity { get; set; }
+
+       public decimal CountFull { get; set; }
+                  
+       public decimal CountReduction { get; set; }
     }
     public class GoodsValues
     {

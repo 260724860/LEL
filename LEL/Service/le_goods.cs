@@ -68,6 +68,8 @@ namespace Service
         public Nullable<int> GoodsBarand { get; set; }
         public decimal PriceFull { get; set; }
         public decimal PriceReduction { get; set; }
+        public decimal CountFull { get; set; }
+        public decimal CountReduction { get; set; }
         public decimal Discount { get; set; }
         public string TermOfValidity { get; set; }
     

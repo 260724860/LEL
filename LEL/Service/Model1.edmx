@@ -131,6 +131,8 @@
           <Property Name="GoodsBarand" Type="int" />
           <Property Name="PriceFull" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="PriceReduction" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="CountFull" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="CountReduction" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="Discount" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="TermOfValidity" Type="varchar" MaxLength="50" />
         </EntityType>
@@ -565,6 +567,22 @@
           <Property Name="IsDelete" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="lel_imei">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Imei" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="UpdateTime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="a" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="b" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="c" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="d" Type="varchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <Association Name="FK__le_orders_head">
           <End Role="le_orders_head" Type="Self.le_orders_head" Multiplicity="1" />
@@ -1070,6 +1088,7 @@
           <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest3" store:Type="Tables" />
           <AssociationSet Name="FK__le_orders_head" Association="Self.FK__le_orders_head">
             <End Role="le_orders_head" EntitySet="le_orders_head" />
             <End Role="le_orders_modify_record" EntitySet="le_orders_modify_record" />
@@ -1255,6 +1274,7 @@
           <EntitySet Name="le_orders_lines_log" EntityType="leerledbtest3Model.le_orders_lines_log" />
           <EntitySet Name="le_orders_modify_record" EntityType="leerledbtest3Model.le_orders_modify_record" />
           <EntitySet Name="le_orders_operationrecord" EntityType="leerledbtest3Model.le_orders_operationrecord" />
+          <EntitySet Name="le_orders_timelimit" EntityType="leerledbtest3Model.le_orders_timelimit" />
           <EntitySet Name="le_pushmsg" EntityType="leerledbtest3Model.le_pushmsg" />
           <EntitySet Name="le_shop_cart" EntityType="leerledbtest3Model.le_shop_cart" />
           <EntitySet Name="le_sms" EntityType="leerledbtest3Model.le_sms" />
@@ -1266,6 +1286,7 @@
           <EntitySet Name="le_user_address" EntityType="leerledbtest3Model.le_user_address" />
           <EntitySet Name="le_users" EntityType="leerledbtest3Model.le_users" />
           <EntitySet Name="lel_admin_suppliers" EntityType="leerledbtest3Model.lel_admin_suppliers" />
+          <EntitySet Name="lel_imei" EntityType="leerledbtest3Model.lel_imei" />
           <AssociationSet Name="FK_le_admin_re_users_le_admin" Association="leerledbtest3Model.FK_le_admin_re_users_le_admin">
             <End Role="le_admin" EntitySet="le_admin" />
             <End Role="le_admin_re_users" EntitySet="le_admin_re_users" />
@@ -1289,6 +1310,10 @@
           <AssociationSet Name="FK_le_orders_lineschangerecord_le_admin" Association="leerledbtest3Model.FK_le_orders_lineschangerecord_le_admin">
             <End Role="le_admin" EntitySet="le_admin" />
             <End Role="le_orders_lines_log" EntitySet="le_orders_lines_log" />
+          </AssociationSet>
+          <AssociationSet Name="FK_le_orders_timelimit_le_admin" Association="leerledbtest3Model.FK_le_orders_timelimit_le_admin">
+            <End Role="le_admin" EntitySet="le_admin" />
+            <End Role="le_orders_timelimit" EntitySet="le_orders_timelimit" />
           </AssociationSet>
           <AssociationSet Name="FK_lel_admin_suppliers_le_admin" Association="leerledbtest3Model.FK_lel_admin_suppliers_le_admin">
             <End Role="le_admin" EntitySet="le_admin" />
@@ -1418,11 +1443,6 @@
             <End Role="le_users" EntitySet="le_users" />
             <End Role="le_user_address" EntitySet="le_user_address" />
           </AssociationSet>
-          <EntitySet Name="le_orders_timelimit" EntityType="leerledbtest3Model.le_orders_timelimit" />
-          <AssociationSet Name="FK_le_orders_timelimit_le_admin" Association="leerledbtest3Model.FK_le_orders_timelimit_le_admin">
-            <End Role="le_admin" EntitySet="le_admin" />
-            <End Role="le_orders_timelimit" EntitySet="le_orders_timelimit" />
-          </AssociationSet>
         </EntityContainer>
         <EntityType Name="le_ad">
           <Key>
@@ -1461,8 +1481,8 @@
           <NavigationProperty Name="le_orders_head_log" Relationship="leerledbtest3Model.FK_le_orders_headschangerecord_le_admin" FromRole="le_admin" ToRole="le_orders_head_log" />
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtest3Model.FK_le_orders_lines_le_admin" FromRole="le_admin" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_orders_lines_log" Relationship="leerledbtest3Model.FK_le_orders_lineschangerecord_le_admin" FromRole="le_admin" ToRole="le_orders_lines_log" />
-          <NavigationProperty Name="lel_admin_suppliers" Relationship="leerledbtest3Model.FK_lel_admin_suppliers_le_admin" FromRole="le_admin" ToRole="lel_admin_suppliers" />
           <NavigationProperty Name="le_orders_timelimit" Relationship="leerledbtest3Model.FK_le_orders_timelimit_le_admin" FromRole="le_admin" ToRole="le_orders_timelimit" />
+          <NavigationProperty Name="lel_admin_suppliers" Relationship="leerledbtest3Model.FK_lel_admin_suppliers_le_admin" FromRole="le_admin" ToRole="lel_admin_suppliers" />
         </EntityType>
         <EntityType Name="le_admin_re_users">
           <Key>
@@ -1563,6 +1583,8 @@
           <Property Name="GoodsBarand" Type="Int32" />
           <Property Name="PriceFull" Type="Decimal" Nullable="false" />
           <Property Name="PriceReduction" Type="Decimal" Nullable="false" />
+          <Property Name="CountFull" Type="Decimal" Nullable="false" />
+          <Property Name="CountReduction" Type="Decimal" Nullable="false" />
           <Property Name="Discount" Type="Decimal" Nullable="false" />
           <Property Name="TermOfValidity" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="le_goods_img" Relationship="leerledbtest3Model.FK_le_goods_img_le_goods" FromRole="le_goods" ToRole="le_goods_img" />
@@ -1831,6 +1853,19 @@
           <Property Name="OperationAction" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
+        <EntityType Name="le_orders_timelimit">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdminID" Type="Int32" Nullable="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <Property Name="TimeSlot" Type="Int32" Nullable="false" />
+          <Property Name="LimitOrderCount" Type="Int32" Nullable="false" />
+          <Property Name="CurrentOrderCount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="le_admin" Relationship="leerledbtest3Model.FK_le_orders_timelimit_le_admin" FromRole="le_orders_timelimit" ToRole="le_admin" />
+        </EntityType>
         <EntityType Name="le_pushmsg">
           <Key>
             <PropertyRef Name="ID" />
@@ -2050,6 +2085,22 @@
           <NavigationProperty Name="le_admin" Relationship="leerledbtest3Model.FK_lel_admin_suppliers_le_admin" FromRole="lel_admin_suppliers" ToRole="le_admin" />
           <NavigationProperty Name="le_suppliers" Relationship="leerledbtest3Model.FK_lel_admin_suppliers_le_suppliers" FromRole="lel_admin_suppliers" ToRole="le_suppliers" />
         </EntityType>
+        <EntityType Name="lel_imei">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Imei" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <Property Name="a" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="b" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="c" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="d" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+        </EntityType>
         <Association Name="FK_le_admin_re_users_le_admin">
           <End Type="leerledbtest3Model.le_admin" Role="le_admin" Multiplicity="1" />
           <End Type="leerledbtest3Model.le_admin_re_users" Role="le_admin_re_users" Multiplicity="*" />
@@ -2118,6 +2169,18 @@
               <PropertyRef Name="AdminID" />
             </Principal>
             <Dependent Role="le_orders_lines_log">
+              <PropertyRef Name="AdminID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_le_orders_timelimit_le_admin">
+          <End Type="leerledbtest3Model.le_admin" Role="le_admin" Multiplicity="1" />
+          <End Type="leerledbtest3Model.le_orders_timelimit" Role="le_orders_timelimit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_admin">
+              <PropertyRef Name="AdminID" />
+            </Principal>
+            <Dependent Role="le_orders_timelimit">
               <PropertyRef Name="AdminID" />
             </Dependent>
           </ReferentialConstraint>
@@ -2506,32 +2569,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="le_orders_timelimit">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AdminID" Type="Int32" Nullable="false" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
-          <Property Name="TimeSlot" Type="Int32" Nullable="false" />
-          <Property Name="LimitOrderCount" Type="Int32" Nullable="false" />
-          <Property Name="CurrentOrderCount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="le_admin" Relationship="leerledbtest3Model.FK_le_orders_timelimit_le_admin" FromRole="le_orders_timelimit" ToRole="le_admin" />
-        </EntityType>
-        <Association Name="FK_le_orders_timelimit_le_admin">
-          <End Type="leerledbtest3Model.le_admin" Role="le_admin" Multiplicity="1" />
-          <End Type="leerledbtest3Model.le_orders_timelimit" Role="le_orders_timelimit" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="le_admin">
-              <PropertyRef Name="AdminID" />
-            </Principal>
-            <Dependent Role="le_orders_timelimit">
-              <PropertyRef Name="AdminID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -2628,6 +2666,8 @@
               <MappingFragment StoreEntitySet="le_goods">
                 <ScalarProperty Name="TermOfValidity" ColumnName="TermOfValidity" />
                 <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="CountReduction" ColumnName="CountReduction" />
+                <ScalarProperty Name="CountFull" ColumnName="CountFull" />
                 <ScalarProperty Name="PriceReduction" ColumnName="PriceReduction" />
                 <ScalarProperty Name="PriceFull" ColumnName="PriceFull" />
                 <ScalarProperty Name="GoodsBarand" ColumnName="GoodsBarand" />
@@ -2909,6 +2949,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="le_orders_timelimit">
+            <EntityTypeMapping TypeName="leerledbtest3Model.le_orders_timelimit">
+              <MappingFragment StoreEntitySet="le_orders_timelimit">
+                <ScalarProperty Name="CurrentOrderCount" ColumnName="CurrentOrderCount" />
+                <ScalarProperty Name="LimitOrderCount" ColumnName="LimitOrderCount" />
+                <ScalarProperty Name="TimeSlot" ColumnName="TimeSlot" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="le_pushmsg">
             <EntityTypeMapping TypeName="leerledbtest3Model.le_pushmsg">
               <MappingFragment StoreEntitySet="le_pushmsg">
@@ -3120,15 +3173,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="le_orders_timelimit">
-            <EntityTypeMapping TypeName="leerledbtest3Model.le_orders_timelimit">
-              <MappingFragment StoreEntitySet="le_orders_timelimit">
-                <ScalarProperty Name="CurrentOrderCount" ColumnName="CurrentOrderCount" />
-                <ScalarProperty Name="LimitOrderCount" ColumnName="LimitOrderCount" />
-                <ScalarProperty Name="TimeSlot" ColumnName="TimeSlot" />
+          <EntitySetMapping Name="lel_imei">
+            <EntityTypeMapping TypeName="leerledbtest3Model.lel_imei">
+              <MappingFragment StoreEntitySet="lel_imei">
+                <ScalarProperty Name="d" ColumnName="d" />
+                <ScalarProperty Name="c" ColumnName="c" />
+                <ScalarProperty Name="b" ColumnName="b" />
+                <ScalarProperty Name="a" ColumnName="a" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Imei" ColumnName="Imei" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

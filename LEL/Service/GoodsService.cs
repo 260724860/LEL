@@ -264,6 +264,17 @@ namespace Service
                        || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords) && k.Enable == 1)
                        ); ;
                 }
+                 if(options.GoodsID!=null&&options.PageTurning!=null)
+                {
+                    if (options.PageTurning == 1)
+                    {
+                        tempIq = tempIq.Where(s => s.GoodsID < options.GoodsID.Value);
+                    }
+                    if (options.PageTurning == 2)
+                    {
+                        tempIq = tempIq.Where(s => s.GoodsID > options.GoodsID.Value);
+                    }
+                }
                 if (!string.IsNullOrEmpty(options.SerialNumber))
                 {
                     tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber)&&k.Enable==1));
@@ -311,34 +322,7 @@ namespace Service
                 var AdminRoleSupplier = ctx.lel_admin_suppliers.Where(s => s.AdminID == AdminID).Select(s => s.SupplierID).ToList();
                 var tmepGroup = tempJoin.Where(s => AdminRoleSupplier.Contains(s.SupplierID));//.ToList();
               
-                //var tmepGroup = tempJoin.Join(ctx.lel_admin_suppliers, s => s.SupplierID, p => p.SupplierID, (s, p) => new GroodsModelDto
-                //{
-                //    GoodsID = s.GoodsID,
-                //    GoodsName = s.GoodsName,
-                //    GoodsGroups_ID = s.GoodsGroups_ID,
-                //    Sort = s.Sort,
-                //    Specifications = s.Specifications,
-                //    Describe = s.Describe,
-                //    IsShelves = s.IsShelves,
-                //    Image = s.Image,
-                //    IsHot = s.IsHot,
-                //    IsNewGoods = s.IsNewGoods,
-                //    IsRecommend = s.IsRecommend,
-                //    IsSeckill = s.IsSeckill,
-                //    CreateTime = s.CreateTime,
-                //    SpecialOffer = s.SpecialOffer,
-                //    OriginalPrice = s.OriginalPrice,
-                //    GoodsGroupName = s.GoodsGroupName,
-                //    PackingNumber = s.PackingNumber,
-                //    SalesVolumes = s.SalesVolumes,
-                //    TotalSalesVolumes = s.TotalSalesVolumes,
-                //    Stock = s.Stock,
-                //    Quota = s.Quota,
-                //    MSRP = s.MSRP,
-                //    GoodsValueList = s.GoodsValueList,
-                //    SupplierID = 0
-                //}).GroupBy(s => s.GoodsID).Select(k => k.ToList());
-               
+              
                 list.PageCount = await tmepGroup.CountAsync();
                 #region 排序              
                 switch (options.SortKey)
@@ -372,6 +356,12 @@ namespace Service
                         break;
                     case GoodsSeachOrderByType.TotalSalesVolumesDESC:
                         tmepGroup = tmepGroup.OrderByDescending(s => s.TotalSalesVolumes);
+                        break;
+                    case GoodsSeachOrderByType.GoodsIDAsc:
+                        tmepGroup = tmepGroup.OrderBy(k => k.GoodsID);
+                        break;
+                    case GoodsSeachOrderByType.GoodsIDDesc:
+                        tmepGroup = tmepGroup.OrderByDescending(k => k.GoodsID);
                         break;
                     default:
                         tmepGroup = tmepGroup.OrderBy(s => s.Sort);
@@ -461,6 +451,8 @@ namespace Service
                     s.UrgentOrder,
                     s.Discount,
                     s.TermOfValidity,
+                    s.CountFull,
+                    s.CountReduction,
                 }).FirstOrDefaultAsync();
                 if (result == null || result.GoodsID == 0)
                 {
@@ -509,7 +501,8 @@ namespace Service
                 GDetailed.UrgentOrder       = result.UrgentOrder;
                 GDetailed.Discount          = result.Discount;
                 GDetailed.TermOfValidity    = result.TermOfValidity;
-
+                GDetailed.CountFull = result.CountFull;
+                GDetailed.CountReduction = result.CountReduction;
                 //GDetailed.SupplierID = result.SuppliersID;
                 //GDetailed.SupplierName = result.SuppliersName; //GetSupplierByID(GDetailed.SupplierID);
 
@@ -742,8 +735,13 @@ namespace Service
                     model.IsDeliverHome = dto.IsDeliverHome;
                     model.IsReturn = dto.IsReturn;
                     model.PlaceofOrigin = dto.PlaceofOrigin;
+
                     model.PriceFull = dto.PriceFull;
                     model.PriceReduction = dto.PriceReduction;
+
+                    model.CountFull = dto.CountFull;
+                    model.CountReduction = dto.CountReduction;
+
                     model.ProductionDate = dto.ProductionDate;
                     model.Remarks = dto.Remarks;
                     model.SeckillBeginTime = dto.SeckillBeginTime;
@@ -752,7 +750,9 @@ namespace Service
                     model.UrgentOrder = dto.UrgentOrder;
                     model.Discount = dto.Discount;
                     model.TermOfValidity = dto.TermOfValidity;
-                    
+                    model.CountFull = dto.CountFull;
+                    model.CountReduction = dto.CountReduction;
+
                     model.Describe = dto.Describe;
                     model.GoodsGroupsID = dto.GoodsGroups_ID;
                     model.GoodsName = dto.GoodsName;
@@ -776,6 +776,8 @@ namespace Service
                     model.IsDeliverHome = dto.IsDeliverHome;
                     model.MSRP = dto.MSRP;
                     model.MinimumPurchase = dto.MinimumPurchase;
+                   
+                    
 
 
                     #region 添加属性
@@ -988,7 +990,8 @@ namespace Service
                 model.UrgentOrder = dto.UrgentOrder;
                 model.Discount = dto.Discount;
                 model.TermOfValidity = dto.TermOfValidity;
-
+                model.CountFull = dto.CountFull;
+                model.CountReduction = dto.CountReduction;
 
                 GoodLogModel.AfterGoodsName = model.GoodsName;
                 GoodLogModel.AfterQuota = model.Quota;

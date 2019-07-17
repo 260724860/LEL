@@ -95,7 +95,22 @@ namespace Service
 
                     IDCardNo = s.IDCardNo,
                     BusinessNo = s.BusinessNo,
-
+                    Province = s.Province,
+                    City = s.City,
+                    Area = s.Area,
+                    Longitude = s.Longitude,
+                    Latitude = s.Latitude,
+                    IMEI = s.IMEI,
+                    Initial = s.Initial,
+                    Landline = s.Landline,
+                    FinanceName = s.FinanceName,
+                    FinancePhone = s.FinancePhone,
+                    AuthCode = s.AuthCode,
+                    Remarks = s.Remarks,
+                    Deliverer = s.Deliverer,
+                    DelivererPhone = s.DelivererPhone,
+                    Category = s.Category,
+                    ManagingBrands = s.ManagingBrands,
                     // Suppliers_LoginTime = s.LoginTime,
                     UpdateTime = s.UpdateTime.Value,
                     CreateTime = s.CreateTime,
@@ -137,6 +152,24 @@ namespace Service
                 model.HeadImage = dto.Suppliers_HeadImage;
                 model.IDCardNo = dto.IDCardNo;
                 model.BusinessNo = dto.BusinessNo;
+                model.Province = dto.Province;
+                model.City = dto.City;
+                model.Area = dto.Area;
+                model.Longitude = dto.Longitude;
+                model.Latitude = dto.Latitude;
+                model.IMEI = dto.IMEI;
+                model.Initial = dto.Initial;
+                model.Landline = dto.Landline;
+                model.FinanceName = dto.FinanceName;
+                model.FinancePhone = dto.FinancePhone;
+                model.AuthCode = dto.AuthCode;
+                model.Remarks = dto.Remarks;
+                model.Deliverer = dto.Deliverer;
+                model.DelivererPhone = dto.DelivererPhone;
+                model.Category = dto.Category;
+                model.ManagingBrands = dto.ManagingBrands;
+
+
                 if (dto.Suppliers_Status == 2)
                 {
                     var GoodsSupplierPriceList = model.le_goods_suppliers.ToList();
@@ -176,64 +209,7 @@ namespace Service
             }
         }
 
-        /// <summary>
-        /// 获取用户列表
-        /// </summary>
-        /// <param name="options"></param>
-        /// <param name="Count"></param>
-        /// <returns></returns>
-        public List<UserDTO> GetUserList(UserSeachOptions options, out int Count)
-        {
-            using (Entities ctx = new Entities())
-            {
-                var temp = ctx.le_users.Where(s => true);
-
-                if (!string.IsNullOrEmpty(options.KeyWords))
-                {
-                    temp = temp.Where(s => s.UsersNickname.Contains(options.KeyWords)
-                      || s.UsersName.Contains(options.KeyWords)
-                      || s.UsersMobilePhone.Contains(options.KeyWords)
-                      || s.UsersAddress.Contains(options.KeyWords));
-                }
-                if (options.BeginTime != null)
-                {
-                    temp = temp.Where(s => s.CreateTime > options.BeginTime.Value);
-                }
-                if (options.EndTime != null)
-                {
-                    temp = temp.Where(s => s.CreateTime < options.EndTime.Value);
-                }
-
-                temp = temp.OrderByDescending(s => s.UsersLoginTime);
-                Count = temp.Count();
-                temp = temp.Skip(options.Offset).Take(options.Rows);
-                var result = temp.Select(s => new UserDTO
-                {
-                    Address = s.UsersAddress,
-                    status = s.UsersStatus,
-                    Salt = s.Salt,
-                    BusinessImg = s.UsersBusinessImg,
-                    Email = s.UsersEmail,
-                    HeadImage = s.UsersImage,
-                    IDImgA = s.UsersIDImgA,
-                    IDImgB = s.UsersIDImgB,
-                    Mobile = s.UsersMobilePhone,
-                    NickName = s.UsersNickname,
-                    PWD = s.UsersPassWord,
-                    TrueName = s.UsersName,
-                    UserID = s.UsersID,
-                    BusinessNo = s.BusinessNo,
-                    CarNumber = s.CarNumber,
-                    IDCardNo = s.IDCardNo,
-
-
-                }).ToList();
-
-                return result;
-            }
-            return null;
-        }
-
+      
         /// <summary>
         /// 修改用户资料
         /// </summary>

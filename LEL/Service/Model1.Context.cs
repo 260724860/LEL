@@ -48,6 +48,7 @@ namespace Service
         public virtual DbSet<le_orders_lines_log> le_orders_lines_log { get; set; }
         public virtual DbSet<le_orders_modify_record> le_orders_modify_record { get; set; }
         public virtual DbSet<le_orders_operationrecord> le_orders_operationrecord { get; set; }
+        public virtual DbSet<le_orders_timelimit> le_orders_timelimit { get; set; }
         public virtual DbSet<le_pushmsg> le_pushmsg { get; set; }
         public virtual DbSet<le_shop_cart> le_shop_cart { get; set; }
         public virtual DbSet<le_sms> le_sms { get; set; }
@@ -59,6 +60,6 @@ namespace Service
         public virtual DbSet<le_user_address> le_user_address { get; set; }
         public virtual DbSet<le_users> le_users { get; set; }
         public virtual DbSet<lel_admin_suppliers> lel_admin_suppliers { get; set; }
-        public virtual DbSet<le_orders_timelimit> le_orders_timelimit { get; set; }
+        public virtual DbSet<lel_imei> lel_imei { get; set; }
     }
 }
