@@ -1,5 +1,6 @@
 ﻿using Common;
 using DTO.Common;
+using DTO.Others;
 using DTO.ShopOrder;
 using Service;
 using System;
@@ -24,6 +25,48 @@ namespace LELAdmin.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "FAIL", result));
             }
+        }
+
+   
+        /// <summary>
+        /// 新增门店散货
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/Other/AddStoreBulkCargo/")]
+        public IHttpActionResult AddStoreBulkCargo(StoreBulkCargoDto dto)
+        {
+            try
+            {
+                var result = new StoreBulkCargoService().AddStoreBulkCargo(dto);
+
+                if (result)
+                {
+                    return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+                }
+                else
+                {
+                    return Json(JRpcHelper.AjaxResult(1, "FAIL", result));
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
+            }
+           
+        }
+        /// <summary>
+        /// 查询门店散货表
+        /// </summary>
+        /// <param name="Barcode"></param>
+        /// <param name="Name"></param>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/Other/GetStoreBulkCargoDtos/")]
+        public IHttpActionResult GetStoreBulkCargoDtos(string Barcode, string Name, int? UserID)
+        {
+            var result = new StoreBulkCargoService(). GetStoreBulkCargoDtos(Barcode, Name, UserID);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
         /// <summary>

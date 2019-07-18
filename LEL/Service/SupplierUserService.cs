@@ -149,8 +149,8 @@ namespace Service
                 UserModel.Remarks = dTO.Remarks;
                 UserModel.Deliverer = dTO.Deliverer;
                 UserModel.DelivererPhone= dTO.DelivererPhone;
-                UserModel.  Category = dTO.Category;
-                UserModel.    ManagingBrands = dTO.ManagingBrands;
+                UserModel.Category = dTO.Category;
+                UserModel.ManagingBrands = dTO.ManagingBrands;
 
                 if (!oneself)
                 {
@@ -169,7 +169,9 @@ namespace Service
                 catch (Exception ex)
                 {
                     log.Error(ex);
+                    throw ex;
                     return false;
+
                 }
             }
         }

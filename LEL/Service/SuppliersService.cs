@@ -239,7 +239,20 @@ namespace Service
                 UserModel.BusinessNo = dTO.BusinessNo;
                 UserModel.CarNumber = dTO.CarNumber;
 
-                //UserModel.
+                UserModel.Province = dTO.Province;
+                UserModel.City = dTO.City;
+                UserModel.Area = dTO.Area;
+                UserModel.Address = dTO.Address;
+                UserModel.Longitude = dTO.Longitude;
+                UserModel.Latitude = dTO.Latitude;
+                UserModel.IMEI = dTO.IMEI;
+                UserModel.Initial = dTO.Initial;
+                UserModel.Email = dTO.Email;
+                UserModel.Landline = dTO.Landline;
+                UserModel.FinanceName = dTO.FinanceName;
+                UserModel.FinancePhone = dTO.FinancePhone;
+                UserModel.AuthCode = dTO.AuthCode;
+                UserModel.Remarks = dTO.Remarks;
 
                 ctx.Entry<le_users>(UserModel).State = EntityState.Modified;
                 if (ctx.SaveChanges() > 0)
