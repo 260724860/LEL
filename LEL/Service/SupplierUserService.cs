@@ -61,8 +61,16 @@ namespace Service
                     DelivererPhone = a.DelivererPhone,
                     Category = a.Category,
                     ManagingBrands = a.ManagingBrands,
-                    // Suppliers_LoginTime = s.LoginTime,
-                   
+
+                    CustomerService = a.CustomerService,
+                    CustomerServicePhone = a.CustomerServicePhone,
+                    Docker = a.Docker,
+                    DockerPhone = a.DockerPhone,
+                    Zoning = a.Zoning,
+                    CartModel = a.CartModel,
+                    Classify = a.Classify,
+                    AnotherName = a.AnotherName,
+
                 }).Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
 
                 if (User != null)
@@ -151,6 +159,15 @@ namespace Service
                 UserModel.DelivererPhone= dTO.DelivererPhone;
                 UserModel.Category = dTO.Category;
                 UserModel.ManagingBrands = dTO.ManagingBrands;
+
+                UserModel.CustomerService = dTO.CustomerService;
+                UserModel.CustomerServicePhone = dTO.CustomerServicePhone;
+                UserModel.Docker = dTO.Docker;
+                UserModel.DockerPhone = dTO.DockerPhone;
+                UserModel.Zoning = dTO.Zoning;
+                UserModel.CartModel = dTO.CartModel;
+                UserModel.Classify = dTO.Classify;
+                UserModel.AnotherName = dTO.AnotherName;
 
                 if (!oneself)
                 {

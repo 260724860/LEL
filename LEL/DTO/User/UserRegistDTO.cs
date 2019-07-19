@@ -123,5 +123,25 @@
         /// </summary>
         public string Remarks { get; set; }
 
+        /// <summary>
+        /// 划分区域
+        /// </summary>
+        public string Zoning { get; set; }
+        /// <summary>
+        /// 车型
+        /// </summary>
+        public string CartModel { get; set; }
+        /// <summary>
+        /// 合同编号
+        /// </summary>
+        public string ContractNumber { get; set; }
+        /// <summary>
+        /// 分类
+        /// </summary>
+        public string Classify { get; set; }
+        /// <summary>
+        /// 别名
+        /// </summary>
+        public string AnotherName { get; set; }
     }
 }

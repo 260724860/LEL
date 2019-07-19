@@ -115,7 +115,16 @@ namespace Service
                     UpdateTime = s.UpdateTime.Value,
                     CreateTime = s.CreateTime,
 
-                }).ToList();
+                    CustomerService = s.CustomerService,
+                    CustomerServicePhone = s.CustomerServicePhone,
+                    Docker = s.Docker,
+                    DockerPhone = s.DockerPhone,
+                    Zoning = s.Zoning,
+                    CartModel = s.CartModel,
+                    Classify = s.Classify,
+                    AnotherName = s.AnotherName,
+
+            }).ToList();
 
                 return result;
             }
@@ -238,6 +247,8 @@ namespace Service
                 UserModel.IDCardNo = dTO.IDCardNo;
                 UserModel.BusinessNo = dTO.BusinessNo;
                 UserModel.CarNumber = dTO.CarNumber;
+                UserModel.UsersEmail = dTO.Email;
+                UserModel.Email = dTO.Email;
 
                 UserModel.Province = dTO.Province;
                 UserModel.City = dTO.City;
@@ -254,6 +265,11 @@ namespace Service
                 UserModel.AuthCode = dTO.AuthCode;
                 UserModel.Remarks = dTO.Remarks;
 
+                UserModel.Zoning = dTO.Zoning;
+                UserModel.ContractNumber = dTO.ContractNumber;
+                UserModel.Classify = dTO.Classify;
+                UserModel.CartModel = dTO.CartModel;
+                UserModel.AnotherName = dTO.AnotherName;
                 ctx.Entry<le_users>(UserModel).State = EntityState.Modified;
                 if (ctx.SaveChanges() > 0)
                 {

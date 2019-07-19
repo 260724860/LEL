@@ -320,9 +320,10 @@ namespace Service
                         DateTime EndTime = ParamasData.PickupTime.Value.AddHours(1);
                         var hour = ParamasData.PickupTime.Value.Hour;
                         var CurrentTime = DateTime.Now;
-                        //  var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
 
-                        //var CurrentOrderCount = ctx.le_orders_head.Where( s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
+                        //var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
+
+                        //var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
                         //if (CurrentOrderCountSetting <= CurrentOrderCount)
                         //{
                         //    Msg = "当前时间下单数已满,请选择其他时间";

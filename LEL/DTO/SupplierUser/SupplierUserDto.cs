@@ -121,5 +121,37 @@ namespace DTO.SupplierUser
         /// 经营品牌
         /// </summary>
         public string ManagingBrands { get; set; }
+        /// <summary>
+        /// 客服
+        /// </summary>
+        public string CustomerService { get; set; }
+        /// <summary>
+        /// 客服电话
+        /// </summary>
+        public string CustomerServicePhone { get; set; }
+        /// <summary>
+        /// 对接人
+        /// </summary>
+        public string Docker { get; set; }
+        /// <summary>
+        /// 对接电话
+        /// </summary>
+        public string DockerPhone { get; set; }
+        /// <summary>
+        /// 划分区域
+        /// </summary>
+        public string Zoning { get; set; }
+        /// <summary>
+        /// 车型
+        /// </summary>
+        public string CartModel { get; set; }
+        /// <summary>
+        /// 分类
+        /// </summary>
+        public string Classify { get; set; }
+        /// <summary>
+        /// 别名
+        /// </summary>
+        public string AnotherName { get; set; }
     }
 }

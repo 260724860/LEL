@@ -35,7 +35,6 @@ namespace Service
         public virtual DbSet<le_goods> le_goods { get; set; }
         public virtual DbSet<le_goods_brand> le_goods_brand { get; set; }
         public virtual DbSet<le_goods_img> le_goods_img { get; set; }
-        public virtual DbSet<le_goods_log> le_goods_log { get; set; }
         public virtual DbSet<le_goods_suppliers> le_goods_suppliers { get; set; }
         public virtual DbSet<le_goods_value> le_goods_value { get; set; }
         public virtual DbSet<le_goodsgroups> le_goodsgroups { get; set; }
@@ -61,5 +60,6 @@ namespace Service
         public virtual DbSet<le_users> le_users { get; set; }
         public virtual DbSet<lel_admin_suppliers> lel_admin_suppliers { get; set; }
         public virtual DbSet<lel_imei> lel_imei { get; set; }
+        public virtual DbSet<le_goods_log> le_goods_log { get; set; }
     }
 }

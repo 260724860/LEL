@@ -162,8 +162,8 @@
           <Property Name="OperationRecordID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AdminID" Type="int" Nullable="false" />
           <Property Name="GoodsID" Type="int" Nullable="false" />
-          <Property Name="BeforeGoodsName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="AfterGoodsName" Type="varchar" MaxLength="50" />
+          <Property Name="BeforeGoodsName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="AfterGoodsName" Type="varchar" MaxLength="100" />
           <Property Name="BeforeSpecialOffer" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="AfterSpecialOffer" Type="decimal" Precision="9" Scale="2" />
           <Property Name="BeforeSheLvesStatus" Type="int" Nullable="false" />
@@ -460,8 +460,16 @@
           <Property Name="Landline" Type="varchar" MaxLength="20" />
           <Property Name="Deliverer" Type="varchar" MaxLength="20" />
           <Property Name="DelivererPhone" Type="varchar" MaxLength="20" />
+          <Property Name="CustomerService" Type="varchar" MaxLength="20" />
+          <Property Name="CustomerServicePhone" Type="varchar" MaxLength="20" />
+          <Property Name="Docker" Type="varchar" MaxLength="20" />
+          <Property Name="DockerPhone" Type="varchar" MaxLength="20" />
+          <Property Name="Zoning" Type="varchar" MaxLength="20" />
+          <Property Name="CartModel" Type="varchar" MaxLength="20" />
+          <Property Name="Classify" Type="varchar" MaxLength="20" />
           <Property Name="Category" Type="varchar" MaxLength="20" />
           <Property Name="ManagingBrands" Type="varchar" MaxLength="20" />
+          <Property Name="AnotherName" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="le_sys_address">
           <Key>
@@ -556,6 +564,11 @@
           <Property Name="FinancePhone" Type="varchar" MaxLength="20" />
           <Property Name="AuthCode" Type="varchar" MaxLength="20" />
           <Property Name="Remarks" Type="varchar" MaxLength="20" />
+          <Property Name="Zoning" Type="varchar" MaxLength="20" />
+          <Property Name="CartModel" Type="varchar" MaxLength="20" />
+          <Property Name="ContractNumber" Type="varchar" MaxLength="20" />
+          <Property Name="Classify" Type="varchar" MaxLength="20" />
+          <Property Name="AnotherName" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="lel_admin_suppliers">
           <Key>
@@ -1261,7 +1274,6 @@
           <EntitySet Name="le_goods" EntityType="leerledbtest3Model.le_goods" />
           <EntitySet Name="le_goods_brand" EntityType="leerledbtest3Model.le_goods_brand" />
           <EntitySet Name="le_goods_img" EntityType="leerledbtest3Model.le_goods_img" />
-          <EntitySet Name="le_goods_log" EntityType="leerledbtest3Model.le_goods_log" />
           <EntitySet Name="le_goods_suppliers" EntityType="leerledbtest3Model.le_goods_suppliers" />
           <EntitySet Name="le_goods_value" EntityType="leerledbtest3Model.le_goods_value" />
           <EntitySet Name="le_goodsgroups" EntityType="leerledbtest3Model.le_goodsgroups" />
@@ -1290,10 +1302,6 @@
           <AssociationSet Name="FK_le_admin_re_users_le_admin" Association="leerledbtest3Model.FK_le_admin_re_users_le_admin">
             <End Role="le_admin" EntitySet="le_admin" />
             <End Role="le_admin_re_users" EntitySet="le_admin_re_users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_le_goods_Log_le_admin" Association="leerledbtest3Model.FK_le_goods_Log_le_admin">
-            <End Role="le_admin" EntitySet="le_admin" />
-            <End Role="le_goods_log" EntitySet="le_goods_log" />
           </AssociationSet>
           <AssociationSet Name="FK_le_orders_head_le_admin" Association="leerledbtest3Model.FK_le_orders_head_le_admin">
             <End Role="le_admin" EntitySet="le_admin" />
@@ -1346,10 +1354,6 @@
           <AssociationSet Name="FK_le_goods_le_goodsgroups" Association="leerledbtest3Model.FK_le_goods_le_goodsgroups">
             <End Role="le_goodsgroups" EntitySet="le_goodsgroups" />
             <End Role="le_goods" EntitySet="le_goods" />
-          </AssociationSet>
-          <AssociationSet Name="FK_le_goods_Log_le_goods" Association="leerledbtest3Model.FK_le_goods_Log_le_goods">
-            <End Role="le_goods" EntitySet="le_goods" />
-            <End Role="le_goods_log" EntitySet="le_goods_log" />
           </AssociationSet>
           <AssociationSet Name="FK_le_goods_suppliers_le_goods" Association="leerledbtest3Model.FK_le_goods_suppliers_le_goods">
             <End Role="le_goods" EntitySet="le_goods" />
@@ -1443,6 +1447,15 @@
             <End Role="le_users" EntitySet="le_users" />
             <End Role="le_user_address" EntitySet="le_user_address" />
           </AssociationSet>
+          <EntitySet Name="le_goods_log" EntityType="leerledbtest3Model.le_goods_log" />
+          <AssociationSet Name="FK_le_goods_Log_le_admin" Association="leerledbtest3Model.FK_le_goods_Log_le_admin">
+            <End Role="le_admin" EntitySet="le_admin" />
+            <End Role="le_goods_log" EntitySet="le_goods_log" />
+          </AssociationSet>
+          <AssociationSet Name="FK_le_goods_Log_le_goods" Association="leerledbtest3Model.FK_le_goods_Log_le_goods">
+            <End Role="le_goods" EntitySet="le_goods" />
+            <End Role="le_goods_log" EntitySet="le_goods_log" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="le_ad">
           <Key>
@@ -1476,13 +1489,13 @@
           <Property Name="Createtime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IsUrgent" Type="Int32" Nullable="false" />
           <NavigationProperty Name="le_admin_re_users" Relationship="leerledbtest3Model.FK_le_admin_re_users_le_admin" FromRole="le_admin" ToRole="le_admin_re_users" />
-          <NavigationProperty Name="le_goods_log" Relationship="leerledbtest3Model.FK_le_goods_Log_le_admin" FromRole="le_admin" ToRole="le_goods_log" />
           <NavigationProperty Name="le_orders_head" Relationship="leerledbtest3Model.FK_le_orders_head_le_admin" FromRole="le_admin" ToRole="le_orders_head" />
           <NavigationProperty Name="le_orders_head_log" Relationship="leerledbtest3Model.FK_le_orders_headschangerecord_le_admin" FromRole="le_admin" ToRole="le_orders_head_log" />
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtest3Model.FK_le_orders_lines_le_admin" FromRole="le_admin" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_orders_lines_log" Relationship="leerledbtest3Model.FK_le_orders_lineschangerecord_le_admin" FromRole="le_admin" ToRole="le_orders_lines_log" />
           <NavigationProperty Name="le_orders_timelimit" Relationship="leerledbtest3Model.FK_le_orders_timelimit_le_admin" FromRole="le_admin" ToRole="le_orders_timelimit" />
           <NavigationProperty Name="lel_admin_suppliers" Relationship="leerledbtest3Model.FK_lel_admin_suppliers_le_admin" FromRole="le_admin" ToRole="lel_admin_suppliers" />
+          <NavigationProperty Name="le_goods_log" Relationship="leerledbtest3Model.FK_le_goods_Log_le_admin" FromRole="le_admin" ToRole="le_goods_log" />
         </EntityType>
         <EntityType Name="le_admin_re_users">
           <Key>
@@ -1590,11 +1603,11 @@
           <NavigationProperty Name="le_goods_img" Relationship="leerledbtest3Model.FK_le_goods_img_le_goods" FromRole="le_goods" ToRole="le_goods_img" />
           <NavigationProperty Name="le_goods_brand" Relationship="leerledbtest3Model.FK_le_goods_le_goods_brand" FromRole="le_goods" ToRole="le_goods_brand" />
           <NavigationProperty Name="le_goodsgroups" Relationship="leerledbtest3Model.FK_le_goods_le_goodsgroups" FromRole="le_goods" ToRole="le_goodsgroups" />
-          <NavigationProperty Name="le_goods_log" Relationship="leerledbtest3Model.FK_le_goods_Log_le_goods" FromRole="le_goods" ToRole="le_goods_log" />
           <NavigationProperty Name="le_goods_suppliers" Relationship="leerledbtest3Model.FK_le_goods_suppliers_le_goods" FromRole="le_goods" ToRole="le_goods_suppliers" />
           <NavigationProperty Name="le_goods_value" Relationship="leerledbtest3Model.FK_le_goods_value_le_goods" FromRole="le_goods" ToRole="le_goods_value" />
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtest3Model.FK_le_orders_lines_le_goods" FromRole="le_goods" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_shop_cart" Relationship="leerledbtest3Model.FK_le_shop_cart_le_goods" FromRole="le_goods" ToRole="le_shop_cart" />
+          <NavigationProperty Name="le_goods_log" Relationship="leerledbtest3Model.FK_le_goods_Log_le_goods" FromRole="le_goods" ToRole="le_goods_log" />
         </EntityType>
         <EntityType Name="le_goods_brand">
           <Key>
@@ -1616,27 +1629,6 @@
           <Property Name="IsDelete" Type="Int32" Nullable="false" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="le_goods" Relationship="leerledbtest3Model.FK_le_goods_img_le_goods" FromRole="le_goods_img" ToRole="le_goods" />
-        </EntityType>
-        <EntityType Name="le_goods_log">
-          <Key>
-            <PropertyRef Name="OperationRecordID" />
-          </Key>
-          <Property Name="OperationRecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AdminID" Type="Int32" Nullable="false" />
-          <Property Name="GoodsID" Type="Int32" Nullable="false" />
-          <Property Name="BeforeGoodsName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AfterGoodsName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BeforeSpecialOffer" Type="Decimal" Nullable="false" />
-          <Property Name="AfterSpecialOffer" Type="Decimal" />
-          <Property Name="BeforeSheLvesStatus" Type="Int32" Nullable="false" />
-          <Property Name="AfterSheLvesStatus" Type="Int32" />
-          <Property Name="BeforeStock" Type="Int32" Nullable="false" />
-          <Property Name="AfterStock" Type="Int32" />
-          <Property Name="BeforeQuota" Type="Int32" Nullable="false" />
-          <Property Name="AfterQuota" Type="Int32" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="le_admin" Relationship="leerledbtest3Model.FK_le_goods_Log_le_admin" FromRole="le_goods_log" ToRole="le_admin" />
-          <NavigationProperty Name="le_goods" Relationship="leerledbtest3Model.FK_le_goods_Log_le_goods" FromRole="le_goods_log" ToRole="le_goods" />
         </EntityType>
         <EntityType Name="le_goods_suppliers">
           <Key>
@@ -1969,6 +1961,14 @@
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtest3Model.FK_le_orders_lines_le_suppliers" FromRole="le_suppliers" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_orders_lines_log" Relationship="leerledbtest3Model.FK_le_orders_lineschangerecord_le_suppliers" FromRole="le_suppliers" ToRole="le_orders_lines_log" />
           <NavigationProperty Name="lel_admin_suppliers" Relationship="leerledbtest3Model.FK_lel_admin_suppliers_le_suppliers" FromRole="le_suppliers" ToRole="lel_admin_suppliers" />
+          <Property Name="CustomerService" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerServicePhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Docker" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DockerPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Zoning" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CartModel" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Classify" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AnotherName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="le_sys_address">
           <Key>
@@ -2071,6 +2071,11 @@
           <NavigationProperty Name="le_orders_lines_log" Relationship="leerledbtest3Model.FK_le_orders_lineschangerecord_le_users" FromRole="le_users" ToRole="le_orders_lines_log" />
           <NavigationProperty Name="le_shop_cart" Relationship="leerledbtest3Model.FK_le_shop_cart_le_users" FromRole="le_users" ToRole="le_shop_cart" />
           <NavigationProperty Name="le_user_address" Relationship="leerledbtest3Model.FK_le_user_address_le_users" FromRole="le_users" ToRole="le_user_address" />
+          <Property Name="Zoning" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CartModel" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ContractNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Classify" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AnotherName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="lel_admin_suppliers">
           <Key>
@@ -2109,18 +2114,6 @@
               <PropertyRef Name="AdminID" />
             </Principal>
             <Dependent Role="le_admin_re_users">
-              <PropertyRef Name="AdminID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_le_goods_Log_le_admin">
-          <End Type="leerledbtest3Model.le_admin" Role="le_admin" Multiplicity="1" />
-          <End Type="leerledbtest3Model.le_goods_log" Role="le_goods_log" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="le_admin">
-              <PropertyRef Name="AdminID" />
-            </Principal>
-            <Dependent Role="le_goods_log">
               <PropertyRef Name="AdminID" />
             </Dependent>
           </ReferentialConstraint>
@@ -2278,18 +2271,6 @@
             </Principal>
             <Dependent Role="le_goods">
               <PropertyRef Name="GoodsGroupsID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_le_goods_Log_le_goods">
-          <End Type="leerledbtest3Model.le_goods" Role="le_goods" Multiplicity="1" />
-          <End Type="leerledbtest3Model.le_goods_log" Role="le_goods_log" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="le_goods">
-              <PropertyRef Name="GoodsID" />
-            </Principal>
-            <Dependent Role="le_goods_log">
-              <PropertyRef Name="GoodsID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2569,6 +2550,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="le_goods_log">
+          <Key>
+            <PropertyRef Name="OperationRecordID" />
+          </Key>
+          <Property Name="OperationRecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdminID" Type="Int32" Nullable="false" />
+          <Property Name="GoodsID" Type="Int32" Nullable="false" />
+          <Property Name="BeforeGoodsName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AfterGoodsName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeforeSpecialOffer" Type="Decimal" Nullable="false" />
+          <Property Name="AfterSpecialOffer" Type="Decimal" />
+          <Property Name="BeforeSheLvesStatus" Type="Int32" Nullable="false" />
+          <Property Name="AfterSheLvesStatus" Type="Int32" />
+          <Property Name="BeforeStock" Type="Int32" Nullable="false" />
+          <Property Name="AfterStock" Type="Int32" />
+          <Property Name="BeforeQuota" Type="Int32" Nullable="false" />
+          <Property Name="AfterQuota" Type="Int32" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="le_admin" Relationship="leerledbtest3Model.FK_le_goods_Log_le_admin" FromRole="le_goods_log" ToRole="le_admin" />
+          <NavigationProperty Name="le_goods" Relationship="leerledbtest3Model.FK_le_goods_Log_le_goods" FromRole="le_goods_log" ToRole="le_goods" />
+        </EntityType>
+        <Association Name="FK_le_goods_Log_le_admin">
+          <End Type="leerledbtest3Model.le_admin" Role="le_admin" Multiplicity="1" />
+          <End Type="leerledbtest3Model.le_goods_log" Role="le_goods_log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_admin">
+              <PropertyRef Name="AdminID" />
+            </Principal>
+            <Dependent Role="le_goods_log">
+              <PropertyRef Name="AdminID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_le_goods_Log_le_goods">
+          <End Type="leerledbtest3Model.le_goods" Role="le_goods" Multiplicity="1" />
+          <End Type="leerledbtest3Model.le_goods_log" Role="le_goods_log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="le_goods">
+              <PropertyRef Name="GoodsID" />
+            </Principal>
+            <Dependent Role="le_goods_log">
+              <PropertyRef Name="GoodsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2732,26 +2758,6 @@
                 <ScalarProperty Name="CreatTime" ColumnName="CreatTime" />
                 <ScalarProperty Name="Src" ColumnName="Src" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="le_goods_log">
-            <EntityTypeMapping TypeName="leerledbtest3Model.le_goods_log">
-              <MappingFragment StoreEntitySet="le_goods_log">
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="AfterQuota" ColumnName="AfterQuota" />
-                <ScalarProperty Name="BeforeQuota" ColumnName="BeforeQuota" />
-                <ScalarProperty Name="AfterStock" ColumnName="AfterStock" />
-                <ScalarProperty Name="BeforeStock" ColumnName="BeforeStock" />
-                <ScalarProperty Name="AfterSheLvesStatus" ColumnName="AfterSheLvesStatus" />
-                <ScalarProperty Name="BeforeSheLvesStatus" ColumnName="BeforeSheLvesStatus" />
-                <ScalarProperty Name="AfterSpecialOffer" ColumnName="AfterSpecialOffer" />
-                <ScalarProperty Name="BeforeSpecialOffer" ColumnName="BeforeSpecialOffer" />
-                <ScalarProperty Name="AfterGoodsName" ColumnName="AfterGoodsName" />
-                <ScalarProperty Name="BeforeGoodsName" ColumnName="BeforeGoodsName" />
-                <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
-                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
-                <ScalarProperty Name="OperationRecordID" ColumnName="OperationRecordID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3023,6 +3029,14 @@
           <EntitySetMapping Name="le_suppliers">
             <EntityTypeMapping TypeName="leerledbtest3Model.le_suppliers">
               <MappingFragment StoreEntitySet="le_suppliers">
+                <ScalarProperty Name="AnotherName" ColumnName="AnotherName" />
+                <ScalarProperty Name="Classify" ColumnName="Classify" />
+                <ScalarProperty Name="CartModel" ColumnName="CartModel" />
+                <ScalarProperty Name="Zoning" ColumnName="Zoning" />
+                <ScalarProperty Name="DockerPhone" ColumnName="DockerPhone" />
+                <ScalarProperty Name="Docker" ColumnName="Docker" />
+                <ScalarProperty Name="CustomerServicePhone" ColumnName="CustomerServicePhone" />
+                <ScalarProperty Name="CustomerService" ColumnName="CustomerService" />
                 <ScalarProperty Name="ManagingBrands" ColumnName="ManagingBrands" />
                 <ScalarProperty Name="Category" ColumnName="Category" />
                 <ScalarProperty Name="DelivererPhone" ColumnName="DelivererPhone" />
@@ -3124,6 +3138,11 @@
           <EntitySetMapping Name="le_users">
             <EntityTypeMapping TypeName="leerledbtest3Model.le_users">
               <MappingFragment StoreEntitySet="le_users">
+                <ScalarProperty Name="AnotherName" ColumnName="AnotherName" />
+                <ScalarProperty Name="Classify" ColumnName="Classify" />
+                <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
+                <ScalarProperty Name="CartModel" ColumnName="CartModel" />
+                <ScalarProperty Name="Zoning" ColumnName="Zoning" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="AuthCode" ColumnName="AuthCode" />
                 <ScalarProperty Name="FinancePhone" ColumnName="FinancePhone" />
@@ -3187,6 +3206,26 @@
                 <ScalarProperty Name="Imei" ColumnName="Imei" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="le_goods_log">
+            <EntityTypeMapping TypeName="leerledbtest3Model.le_goods_log">
+              <MappingFragment StoreEntitySet="le_goods_log">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="AfterQuota" ColumnName="AfterQuota" />
+                <ScalarProperty Name="BeforeQuota" ColumnName="BeforeQuota" />
+                <ScalarProperty Name="AfterStock" ColumnName="AfterStock" />
+                <ScalarProperty Name="BeforeStock" ColumnName="BeforeStock" />
+                <ScalarProperty Name="AfterSheLvesStatus" ColumnName="AfterSheLvesStatus" />
+                <ScalarProperty Name="BeforeSheLvesStatus" ColumnName="BeforeSheLvesStatus" />
+                <ScalarProperty Name="AfterSpecialOffer" ColumnName="AfterSpecialOffer" />
+                <ScalarProperty Name="BeforeSpecialOffer" ColumnName="BeforeSpecialOffer" />
+                <ScalarProperty Name="AfterGoodsName" ColumnName="AfterGoodsName" />
+                <ScalarProperty Name="BeforeGoodsName" ColumnName="BeforeGoodsName" />
+                <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+                <ScalarProperty Name="OperationRecordID" ColumnName="OperationRecordID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -60,6 +60,11 @@ namespace Service
         public string FinancePhone { get; set; }
         public string AuthCode { get; set; }
         public string Remarks { get; set; }
+        public string Zoning { get; set; }
+        public string CartModel { get; set; }
+        public string ContractNumber { get; set; }
+        public string Classify { get; set; }
+        public string AnotherName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_admin_re_users> le_admin_re_users { get; set; }

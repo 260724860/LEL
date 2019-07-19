@@ -61,7 +61,15 @@ namespace Service
                     AuthCode = a.AuthCode,
                     Remarks = a.Remarks,
 
-            }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
+                    Zoning = a.Zoning,
+                    ContractNumber = a.ContractNumber,
+                    Classify = a.Classify,
+                    CartModel = a.CartModel,
+                    AnotherName = a.AnotherName,
+
+                   
+
+                }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
 
                 if (User != null)
                 {
@@ -191,6 +199,11 @@ namespace Service
                 UserModel.AuthCode = dTO.AuthCode;
                 UserModel.Remarks = dTO.Remarks;
 
+                UserModel.Zoning = dTO.Zoning;
+                UserModel.ContractNumber = dTO.ContractNumber;
+                UserModel.Classify = dTO.Classify;
+                UserModel.CartModel = dTO.CartModel;
+                UserModel.AnotherName = dTO.AnotherName;
                 if (!oneself)
                 {
                     UserModel.UsersStatus = dTO.status;
@@ -386,7 +399,13 @@ namespace Service
                     AuthCode = s.AuthCode,
                     Remarks = s.Remarks,
 
-            }).ToList();
+                    Zoning = s.Zoning,
+                    ContractNumber = s.ContractNumber,
+                    Classify = s.Classify,
+                    CartModel = s.CartModel,
+                    AnotherName = s.AnotherName,
+
+                }).ToList();
 
                 return result;
             }
