@@ -213,7 +213,7 @@ namespace Service
                 else
                 {
                     log.Debug(string.Format("用户名：{0},登陆失败)", LoginName));
-                    dto.code = 0;
+                    dto.code = 1;
                     dto.msg = "未查询到有效账号";
                     //return 0;
                     return dto;

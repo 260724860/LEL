@@ -95,12 +95,36 @@ namespace Service
 
                     IDCardNo = s.IDCardNo,
                     BusinessNo = s.BusinessNo,
-
+                    Province = s.Province,
+                    City = s.City,
+                    Area = s.Area,
+                    Longitude = s.Longitude,
+                    Latitude = s.Latitude,
+                    IMEI = s.IMEI,
+                    Initial = s.Initial,
+                    Landline = s.Landline,
+                    FinanceName = s.FinanceName,
+                    FinancePhone = s.FinancePhone,
+                    AuthCode = s.AuthCode,
+                    Remarks = s.Remarks,
+                    Deliverer = s.Deliverer,
+                    DelivererPhone = s.DelivererPhone,
+                    Category = s.Category,
+                    ManagingBrands = s.ManagingBrands,
                     // Suppliers_LoginTime = s.LoginTime,
                     UpdateTime = s.UpdateTime.Value,
                     CreateTime = s.CreateTime,
 
-                }).ToList();
+                    CustomerService = s.CustomerService,
+                    CustomerServicePhone = s.CustomerServicePhone,
+                    Docker = s.Docker,
+                    DockerPhone = s.DockerPhone,
+                    Zoning = s.Zoning,
+                    CartModel = s.CartModel,
+                    Classify = s.Classify,
+                    AnotherName = s.AnotherName,
+
+            }).ToList();
 
                 return result;
             }
@@ -137,6 +161,24 @@ namespace Service
                 model.HeadImage = dto.Suppliers_HeadImage;
                 model.IDCardNo = dto.IDCardNo;
                 model.BusinessNo = dto.BusinessNo;
+                model.Province = dto.Province;
+                model.City = dto.City;
+                model.Area = dto.Area;
+                model.Longitude = dto.Longitude;
+                model.Latitude = dto.Latitude;
+                model.IMEI = dto.IMEI;
+                model.Initial = dto.Initial;
+                model.Landline = dto.Landline;
+                model.FinanceName = dto.FinanceName;
+                model.FinancePhone = dto.FinancePhone;
+                model.AuthCode = dto.AuthCode;
+                model.Remarks = dto.Remarks;
+                model.Deliverer = dto.Deliverer;
+                model.DelivererPhone = dto.DelivererPhone;
+                model.Category = dto.Category;
+                model.ManagingBrands = dto.ManagingBrands;
+
+
                 if (dto.Suppliers_Status == 2)
                 {
                     var GoodsSupplierPriceList = model.le_goods_suppliers.ToList();
@@ -176,64 +218,7 @@ namespace Service
             }
         }
 
-        /// <summary>
-        /// 获取用户列表
-        /// </summary>
-        /// <param name="options"></param>
-        /// <param name="Count"></param>
-        /// <returns></returns>
-        public List<UserDTO> GetUserList(UserSeachOptions options, out int Count)
-        {
-            using (Entities ctx = new Entities())
-            {
-                var temp = ctx.le_users.Where(s => true);
-
-                if (!string.IsNullOrEmpty(options.KeyWords))
-                {
-                    temp = temp.Where(s => s.UsersNickname.Contains(options.KeyWords)
-                      || s.UsersName.Contains(options.KeyWords)
-                      || s.UsersMobilePhone.Contains(options.KeyWords)
-                      || s.UsersAddress.Contains(options.KeyWords));
-                }
-                if (options.BeginTime != null)
-                {
-                    temp = temp.Where(s => s.CreateTime > options.BeginTime.Value);
-                }
-                if (options.EndTime != null)
-                {
-                    temp = temp.Where(s => s.CreateTime < options.EndTime.Value);
-                }
-
-                temp = temp.OrderByDescending(s => s.UsersLoginTime);
-                Count = temp.Count();
-                temp = temp.Skip(options.Offset).Take(options.Rows);
-                var result = temp.Select(s => new UserDTO
-                {
-                    Address = s.UsersAddress,
-                    status = s.UsersStatus,
-                    Salt = s.Salt,
-                    BusinessImg = s.UsersBusinessImg,
-                    Email = s.UsersEmail,
-                    HeadImage = s.UsersImage,
-                    IDImgA = s.UsersIDImgA,
-                    IDImgB = s.UsersIDImgB,
-                    Mobile = s.UsersMobilePhone,
-                    NickName = s.UsersNickname,
-                    PWD = s.UsersPassWord,
-                    TrueName = s.UsersName,
-                    UserID = s.UsersID,
-                    BusinessNo = s.BusinessNo,
-                    CarNumber = s.CarNumber,
-                    IDCardNo = s.IDCardNo,
-
-
-                }).ToList();
-
-                return result;
-            }
-            return null;
-        }
-
+      
         /// <summary>
         /// 修改用户资料
         /// </summary>
@@ -262,9 +247,29 @@ namespace Service
                 UserModel.IDCardNo = dTO.IDCardNo;
                 UserModel.BusinessNo = dTO.BusinessNo;
                 UserModel.CarNumber = dTO.CarNumber;
+                UserModel.UsersEmail = dTO.Email;
+                UserModel.Email = dTO.Email;
 
-                //UserModel.
+                UserModel.Province = dTO.Province;
+                UserModel.City = dTO.City;
+                UserModel.Area = dTO.Area;
+                UserModel.Address = dTO.Address;
+                UserModel.Longitude = dTO.Longitude;
+                UserModel.Latitude = dTO.Latitude;
+                UserModel.IMEI = dTO.IMEI;
+                UserModel.Initial = dTO.Initial;
+                UserModel.Email = dTO.Email;
+                UserModel.Landline = dTO.Landline;
+                UserModel.FinanceName = dTO.FinanceName;
+                UserModel.FinancePhone = dTO.FinancePhone;
+                UserModel.AuthCode = dTO.AuthCode;
+                UserModel.Remarks = dTO.Remarks;
 
+                UserModel.Zoning = dTO.Zoning;
+                UserModel.ContractNumber = dTO.ContractNumber;
+                UserModel.Classify = dTO.Classify;
+                UserModel.CartModel = dTO.CartModel;
+                UserModel.AnotherName = dTO.AnotherName;
                 ctx.Entry<le_users>(UserModel).State = EntityState.Modified;
                 if (ctx.SaveChanges() > 0)
                 {

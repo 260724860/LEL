@@ -64,6 +64,8 @@
     <Compile Include="LogDto\OrderHeadLogDto.cs" />
     <Compile Include="LogDto\OrderLineLogDto.cs" />
     <Compile Include="Others\AddressDto.cs" />
+    <Compile Include="Others\StoreBulkCargoDto.cs" />
+    <Compile Include="Others\StoreBulkCargoDtoList.cs" />
     <Compile Include="Others\UserAddressDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\GoodsSaleDTO.cs" />
@@ -77,6 +79,8 @@
     <Compile Include="ShopOrder\OrderPackCount.cs" />
     <Compile Include="ShopOrder\OrderSaveParams.cs" />
     <Compile Include="ShopOrder\OrderSeachParams.cs" />
+    <Compile Include="ShopOrder\OrdersLimitCount.cs" />
+    <Compile Include="ShopOrder\OrdersLimitGroupby.cs" />
     <Compile Include="ShopOrder\OrdersTimeLimitDto.cs" />
     <Compile Include="ShopOrder\OrdersTimeLimitEditDto.cs" />
     <Compile Include="ShopOrder\ShopCartDto.cs" />

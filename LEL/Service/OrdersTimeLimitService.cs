@@ -1,6 +1,7 @@
 ﻿using DTO.ShopOrder;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,60 @@ namespace Service
 {
     public class OrdersTimeLimitService
     {
+
+        /// <summary>
+        /// 获取当前时间段内下单数
+        /// </summary>
+        /// <param name="TimeSlot"></param>
+        /// <returns></returns>
+        public async Task<List<OrdersLimitGroupby>>  GetOrderLimitForTimeSlot(DateTime TimeSlot)
+        {
+            using (Entities ctx=new Entities())
+            {
+                int hour = TimeSlot.Hour;
+                //   DateTime EndTime = TimeSlot.AddHours(1);
+              //  OrdersLimitCount result = new OrdersLimitCount();
+
+                var year = DateTime.Now.Year;
+                var month = DateTime.Now.Month;
+                var day = DateTime.Now.Day;
+                var BeginTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 0, 0, 0);
+                var EndTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 23, 59, 59);
+
+                var groupby = ctx.le_orders_head.Where(s => s.ExpressType == 2 && s.OrderType != 2 && s.PickupTime >= BeginTime && s.PickupTime <= EndTime)
+                    .GroupBy(k => new
+                    {                      
+                        k.PickupTime.Value.Hour 
+                    }).Select(b => new OrdersLimitGroupby
+                    {                       
+                        CurrentOrderCount = b.Count(a=> a.OrdersHeadID>0),
+                        TimeSlot = b.Key.Hour
+                    });
+                var list = groupby.ToList();
+                var CurrentCountList = list.Select(s => s.TimeSlot);
+                var LimitCountList = ctx.le_orders_timelimit.Where(s => CurrentCountList.Contains(s.TimeSlot))
+                    .Select(b => new OrdersLimitGroupby
+                    {
+                       TimeSlot= b.TimeSlot,
+                       LimitCount=  b.LimitOrderCount
+                    }).ToList();
+
+              var results= list.Join(LimitCountList, a => a.TimeSlot, b => b.TimeSlot, (a, b) =>
+                
+                    new OrdersLimitGroupby
+                    {   
+                        CurrentOrderCount=a.CurrentOrderCount,
+                        TimeSlot = b.TimeSlot,
+                        LimitCount = b.LimitCount
+                    }).ToList();
+            
+
+
+
+                return  results;
+            }
+        }
+
         public List<OrdersTimeLimitDto> GetOrdersTimeLimitList()
         {
             using (Entities ctx=new Entities())

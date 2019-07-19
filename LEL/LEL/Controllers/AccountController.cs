@@ -47,7 +47,7 @@ namespace LEL.Controllers
             }
 
             dTO.UserID = Convert.ToInt32(User.Identity.Name.Split(',')[1]);
-            var result = StoreUserService.Update(dTO, false);
+            var result = StoreUserService.Update(dTO, true);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));

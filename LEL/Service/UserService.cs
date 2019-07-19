@@ -46,6 +46,28 @@ namespace Service
                     CarNumber = a.CarNumber,
                     BusinessNo = a.BusinessNo,
                     IDCardNo = a.IDCardNo,
+                    Province = a.Province,
+                    City = a.City,
+                    Area = a.Area,
+
+                    Longitude = a.Longitude,
+                    Latitude = a.Latitude,
+                    IMEI = a.IMEI,
+                    Initial = a.Initial,
+
+                    Landline = a.Landline,
+                    FinanceName = a.FinanceName,
+                    FinancePhone = a.FinancePhone,
+                    AuthCode = a.AuthCode,
+                    Remarks = a.Remarks,
+
+                    Zoning = a.Zoning,
+                    ContractNumber = a.ContractNumber,
+                    Classify = a.Classify,
+                    CartModel = a.CartModel,
+                    AnotherName = a.AnotherName,
+
+                   
 
                 }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
 
@@ -161,6 +183,27 @@ namespace Service
                 UserModel.CarNumber = dTO.CarNumber;
                 UserModel.BusinessNo = dTO.BusinessNo;
                 UserModel.IDCardNo = dTO.IDCardNo;
+
+                UserModel.Province = dTO.Province;
+                UserModel.City = dTO.City;
+                UserModel.Area = dTO.Area;
+                UserModel.Address = dTO.Address;
+                UserModel.Longitude = dTO.Longitude;
+                UserModel.Latitude = dTO.Latitude;
+                UserModel.IMEI = dTO.IMEI;
+                UserModel.Initial = dTO.Initial;
+                UserModel.Email = dTO.Email;
+                UserModel.Landline = dTO.Landline;
+                UserModel.FinanceName = dTO.FinanceName;
+                UserModel.FinancePhone = dTO.FinancePhone;
+                UserModel.AuthCode = dTO.AuthCode;
+                UserModel.Remarks = dTO.Remarks;
+
+                UserModel.Zoning = dTO.Zoning;
+                UserModel.ContractNumber = dTO.ContractNumber;
+                UserModel.Classify = dTO.Classify;
+                UserModel.CartModel = dTO.CartModel;
+                UserModel.AnotherName = dTO.AnotherName;
                 if (!oneself)
                 {
                     UserModel.UsersStatus = dTO.status;
@@ -343,6 +386,24 @@ namespace Service
                     BusinessNo = s.BusinessNo,
                     CarNumber = s.CarNumber,
                     IDCardNo = s.IDCardNo,
+                    Province = s.Province,
+                    City = s.City,
+                    Area = s.Area,
+                    Longitude = s.Longitude,
+                    Latitude = s.Latitude,
+                    IMEI = s.IMEI,
+                    Initial = s.Initial,
+                    Landline = s.Landline,
+                    FinanceName = s.FinanceName,
+                    FinancePhone = s.FinancePhone,
+                    AuthCode = s.AuthCode,
+                    Remarks = s.Remarks,
+
+                    Zoning = s.Zoning,
+                    ContractNumber = s.ContractNumber,
+                    Classify = s.Classify,
+                    CartModel = s.CartModel,
+                    AnotherName = s.AnotherName,
 
                 }).ToList();
 

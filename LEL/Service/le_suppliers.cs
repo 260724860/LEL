@@ -61,6 +61,14 @@ namespace Service
         public string DelivererPhone { get; set; }
         public string Category { get; set; }
         public string ManagingBrands { get; set; }
+        public string CustomerService { get; set; }
+        public string CustomerServicePhone { get; set; }
+        public string Docker { get; set; }
+        public string DockerPhone { get; set; }
+        public string Zoning { get; set; }
+        public string CartModel { get; set; }
+        public string Classify { get; set; }
+        public string AnotherName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }

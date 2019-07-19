@@ -86,12 +86,12 @@ namespace LELAdmin.Controllers
         {
             try
             {
-                var result = SlService.EditSupplierUser(model, out string msg);
+                var result = new SupplierUserService().Update(model, false);
                 if (result)
                 {
-                    return Json(new { code = 0, msg = "SUCCESS", content = msg });
+                    return Json(new { code = 0, msg = "SUCCESS", content = "" });
                 }
-                return Json(new { code = 1, msg = "ERROR", content = msg });
+                return Json(new { code = 1, msg = "ERROR", content = "" });
             }
             catch (Exception ex)
             {

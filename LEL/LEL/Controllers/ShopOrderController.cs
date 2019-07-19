@@ -6,6 +6,7 @@ using Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace LEL.Controllers
@@ -270,5 +271,16 @@ namespace LEL.Controllers
         }
 
 
+        /// <summary>
+        /// 获取当前时间段内下单数
+        /// </summary>
+        /// <param name="TimeSlot"></param>
+        /// <returns></returns>
+         [HttpPost, Route("api/ShopOrder/GetOrderLimitByTimeSlot/")]
+        public async Task<IHttpActionResult> GetOrderLimitByTimeSlot(DateTime TimeSlot)
+        {
+            var result= await new OrdersTimeLimitService().GetOrderLimitForTimeSlot(TimeSlot);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
     }
 }

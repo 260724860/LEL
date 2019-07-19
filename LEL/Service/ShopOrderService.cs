@@ -287,7 +287,7 @@ namespace Service
                 }
                 if (ParamasData.ExpressType == 2)
                 {
-                    if (!ParamasData.PickupTime.HasValue)
+                    if (!ParamasData.PickupTime.HasValue&& ParamasData.OrderType!=2)
                     {
                         Msg = "请选择下单时间";
                         FailCartList = null;
@@ -307,26 +307,30 @@ namespace Service
                         FailCartList = null;
                         return 0;
                     }
-                    //判断当前时间内的下单数
-                   
-                    string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
-                    string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
+                    if (ParamasData.OrderType != 2)
+                    {
+                        //判断当前时间内的下单数
 
-                    //DateTime BeginTime = Convert.ToDateTime(BeginStr);
-                    //DateTime EndTime = Convert.ToDateTime(EndStr);
+                        string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
+                        string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
 
-                    DateTime EndTime = ParamasData.PickupTime.Value.AddHours(1);
-                    var hour = ParamasData.PickupTime.Value.Hour;
-                    var CurrentTime = DateTime.Now;
-                    //  var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
+                        //DateTime BeginTime = Convert.ToDateTime(BeginStr);
+                        //DateTime EndTime = Convert.ToDateTime(EndStr);
 
-                    //var CurrentOrderCount = ctx.le_orders_head.Where( s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
-                    //if (CurrentOrderCountSetting <= CurrentOrderCount)
-                    //{
-                    //    Msg = "当前时间下单数已满,请选择其他时间";
-                    //    //  log.Debug(Msg);
-                    //    return 0;
-                    //}
+                        DateTime EndTime = ParamasData.PickupTime.Value.AddHours(1);
+                        var hour = ParamasData.PickupTime.Value.Hour;
+                        var CurrentTime = DateTime.Now;
+
+                        //var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
+
+                        //var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
+                        //if (CurrentOrderCountSetting <= CurrentOrderCount)
+                        //{
+                        //    Msg = "当前时间下单数已满,请选择其他时间";
+                        //    //  log.Debug(Msg);
+                        //    return 0;
+                        //}
+                    }
                 }
 
                 var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
@@ -957,7 +961,7 @@ namespace Service
                         {
                             OrderLineLogModel.UserID = info.UserID;
                         }
-                        OrderLineLogModel.BeforeCount = Linemodel.GoodsCount;
+                        OrderLineLogModel.BeforeCount = Linemodel.DeliverCount;
                         OrderLineLogModel.BeforeMoney = Linemodel.GoodsPrice;
                         OrderLineLogModel.BeforeStatus = Linemodel.Status;
                         OrderLineLogModel.CreateTime = DateTime.Now;
@@ -992,7 +996,7 @@ namespace Service
                             {
                                 Linemodel.DeliverCount = 0;
                             }
-
+                         
                             OrderLineLogModel.AfterCount = Linemodel.DeliverCount;
                             OrderLineLogModel.AfterMoney = Linemodel.GoodsPrice;
                             OrderLineLogModel.AfterStatus = Linemodel.Status;
@@ -1001,11 +1005,10 @@ namespace Service
                             {
                                 ctx.le_orders_lines_log.Add(OrderLineLogModel);
                             }
-                                          
-                           
+                                                                     
                         }
                         OrderLineList.Add(Linemodel);
-
+                       
                         ctx.Entry<le_orders_lines>(Linemodel).State = EntityState.Modified;
 
                     }
@@ -1324,7 +1327,7 @@ namespace Service
 
                         var CurrentLine = LinesList.Where(s => s.OrdersLinesID == IndexLine.OrderLineID).FirstOrDefault();
                         var CurrentLineStatue = (OrderLineStatus)CurrentLine.Status;
-                        if (CurrentLine.DeliverCount <= 0)
+                        if (CurrentLine.DeliverCount <= 0&& Status!=OrderLineStatus.YiQuXiao)
                         {
                             Msg = "操作失败,必须商品数必须大于0";
                             return false;
@@ -1611,7 +1614,7 @@ namespace Service
                    
                     if (ctx.SaveChanges() > 0)
                     {
-                        Msg = "修改状态为已接单成功";
+                        Msg = "OK";
                         return true;
                     }
                     else
