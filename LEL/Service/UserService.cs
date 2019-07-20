@@ -66,7 +66,11 @@ namespace Service
                     Classify = a.Classify,
                     CartModel = a.CartModel,
                     AnotherName = a.AnotherName,
-
+                    ReceiveName=a.ReceiveName,
+                    ReceivePhone=a.ReceivePhone,
+                    CustomerService=a.CustomerService,
+                    CustomerServicePhone=a.CustomerServicePhone
+                    
                    
 
                 }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
@@ -204,6 +208,10 @@ namespace Service
                 UserModel.Classify = dTO.Classify;
                 UserModel.CartModel = dTO.CartModel;
                 UserModel.AnotherName = dTO.AnotherName;
+                UserModel.ReceiveName = dTO.ReceiveName; 
+                UserModel.ReceivePhone=dTO.ReceivePhone;
+                UserModel.CustomerService = dTO.CustomerService;
+                UserModel.CustomerServicePhone = dTO.CustomerServicePhone;
 
                 if (!oneself)
                 {

@@ -209,11 +209,15 @@ namespace Service
                     //Supplyprice=s.le_goods.le_goods_suppliers.Where(k => k.IsDefalut == 1).FirstOrDefault().Supplyprice,
                     SpecialOffer = s.le_goods.SpecialOffer,
                     PackingNumber=s.le_goods.PackingNumber,
+
                     Discount=s.le_goods.Discount,
                     Integral=s.le_goods.Integral,
                     PriceFull=s.le_goods.PriceFull,
                     PriceReduction=s.le_goods.PriceReduction,
                     ReturnCount=s.ReturnCount,
+                    CountFull=s.le_goods.CountFull,
+                    CountReduction=s.le_goods.CountReduction,
+
                     GoodsValueList = s.le_cart_goodsvalue
                     .Select(k => new GoodsValues
                     {
@@ -321,6 +325,8 @@ namespace Service
                         var hour = ParamasData.PickupTime.Value.Hour;
                         var CurrentTime = DateTime.Now;
 
+#pragma warning disable CS1030 // #warning 指令
+#warning 功能已经完成，暂时注释
                         //var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
 
                         //var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
@@ -331,6 +337,7 @@ namespace Service
                         //    return 0;
                         //}
                     }
+#pragma warning restore CS1030 // #warning 指令
                 }
 
                 var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
@@ -394,7 +401,14 @@ namespace Service
                     linesModel.GoodsPrice = goodsModel.SpecialOffer;
                     linesModel.SupplyPrice = DefaulSuplier.Price;
                     linesModel.Profit = goodsModel.Price - DefaulSuplier.Price;
-                 
+
+                    linesModel.CountFull = goodsModel.CountFull;
+                    linesModel.CountReduction = goodsModel.CountReduction;
+                    linesModel.PriceFull = goodsModel.PriceFull;
+                    linesModel.PriceReduction = goodsModel.PriceReduction;
+                    linesModel.Integral = goodsModel.Integral;
+                    linesModel.Discount = goodsModel.Discount;
+
                     linesModel.Status = 0;
                     linesModel.UpdateTime = DateTime.Now;
                     linesModel.UsersID = ParamasData.UserID;
@@ -774,7 +788,8 @@ namespace Service
                     PriceReduction=s.le_goods.PriceReduction,
                     PriceFull=s.le_goods.PriceFull,
                     Integral=s.le_goods.Integral,
-                 
+                    CountFull=s.CountFull,
+                    CountReduction=s.CountReduction,
                     Status = s.Status,
                     SuppliersName = s.le_suppliers.SuppliersName,
                     GoodsValuesList = s.le_orderline_goodsvalue.Select(k => new GoodsValues()

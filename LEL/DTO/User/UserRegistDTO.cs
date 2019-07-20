@@ -143,5 +143,23 @@
         /// 别名
         /// </summary>
         public string AnotherName { get; set; }
+
+        /// <summary>
+        /// 收货人
+        /// </summary>
+        public string ReceiveName { get; set; }
+        /// <summary>
+        /// 收货人电话
+        /// </summary>
+        public string ReceivePhone { get; set; }
+
+        /// <summary>
+        /// 客服
+        /// </summary>
+        public string CustomerService { get; set; }
+        /// <summary>
+        /// 客服电话
+        /// </summary>
+        public string CustomerServicePhone { get; set; }
     }
 }

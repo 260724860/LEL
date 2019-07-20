@@ -142,6 +142,15 @@ namespace DTO.Goods
         /// 满减（减）
         /// </summary>
         public decimal PriceReduction { get; set; }
+
+        /// <summary>
+        /// 满减数量（满）
+        /// </summary>
+        public decimal CountFull { get; set; }
+        /// <summary>
+        /// 满减数量（减）
+        /// </summary>
+        public decimal CountReduction { get; set; }
         /// <summary>
         /// 折扣
         /// </summary>
@@ -151,9 +160,58 @@ namespace DTO.Goods
         /// </summary>
         public string TermOfValidity { get; set; }
 
-       public decimal CountFull { get; set; }
-                  
-       public decimal CountReduction { get; set; }
+        /// <summary>
+        /// 省
+        /// </summary>
+        public string Province { get; set; }
+        /// <summary>
+        /// 市
+        /// </summary>
+        public string City { get; set; }
+        /// <summary>
+        /// 区
+        /// </summary>
+        public string Area { get; set; }
+        /// <summary>
+        /// 件价
+        /// </summary>
+        public Nullable<decimal> PiecePrice { get; set; }
+        /// <summary>
+        /// 最小起配价
+        /// </summary>
+        public Nullable<decimal> MinimumPrice { get; set; }
+        /// <summary>
+        /// 业务值
+        /// </summary>
+        public Nullable<int> BusinessValue { get; set; }
+        /// <summary>
+        /// 新品期
+        /// </summary>
+        public Nullable<int> NewPeriod { get; set; }
+        /// <summary>
+        /// 单位
+        /// </summary>
+        public string Unit { get; set; }
+        /// <summary>
+        /// 是否随机配货
+        /// </summary>
+        public int IsRandomDistribution { get; set; }
+        /// <summary>
+        /// 价格1
+        /// </summary>
+        public Nullable<decimal> PriceScheme1 { get; set; }
+        /// <summary>
+        /// 价格2
+        /// </summary>
+        public Nullable<decimal> PriceScheme2 { get; set; }
+        /// <summary>
+        /// 价格3
+        /// </summary>
+        public Nullable<decimal> PriceScheme3 { get; set; }
+        /// <summary>
+        /// 是否拼货
+        /// </summary>
+        public int IsParcel { get; set; }
     }
     public class GoodsValues
     {
