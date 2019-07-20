@@ -1,0 +1,4 @@
+ALTER TABLE `le_ad`
+	ADD COLUMN `PromotionBeginTime` DATETIME NULL DEFAULT NULL COMMENT '促销开始时间' AFTER `SupplierID`,
+	ADD COLUMN `PromotionEndTime` DATETIME NULL DEFAULT NULL COMMENT '促销结束时间' AFTER `PromotionBeginTime`,
+	ADD COLUMN `GoodsID` INT NULL DEFAULT NULL COMMENT '商品ID' AFTER `PromotionEndTime`;
