@@ -204,6 +204,7 @@ namespace Service
                 UserModel.Classify = dTO.Classify;
                 UserModel.CartModel = dTO.CartModel;
                 UserModel.AnotherName = dTO.AnotherName;
+
                 if (!oneself)
                 {
                     UserModel.UsersStatus = dTO.status;
@@ -220,7 +221,7 @@ namespace Service
                 catch (Exception ex)
                 {
                     log.Error(dTO, ex);
-                    return false;
+                    throw ex;
                 }
                 return false;
             }
@@ -339,7 +340,7 @@ namespace Service
         /// <param name="options"></param>
         /// <param name="Count"></param>
         /// <returns></returns>
-        public List<UserDTO> GetUserList(UserSeachOptions options, out int Count)
+        public List<UserDTO> GetUserList(UserSeachOptions options,out int Count,int AdminId= 0 )
         {
             using (Entities ctx = new Entities())
             {
@@ -364,7 +365,11 @@ namespace Service
                 {
                     temp = temp.Where(s => s.UsersStatus == options.Status);
                 }
-
+                if (AdminId != 0)
+                {
+                    var AdminReUser = ctx.le_admin_re_users.Where(s => s.AdminID == AdminId).Select(s=>s.UserID).ToList();
+                    temp = temp.Where(s => AdminReUser.Contains(s.UsersID));
+                }
                 temp = temp.OrderByDescending(s => s.UsersLoginTime);
                 Count = temp.Count();
                 temp = temp.Skip(options.Offset).Take(options.Rows);

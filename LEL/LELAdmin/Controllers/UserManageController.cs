@@ -3,6 +3,7 @@ using DTO.SupplierUser;
 using DTO.User;
 using Service;
 using System;
+using System.Data.Entity.Validation;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
@@ -100,7 +101,7 @@ namespace LELAdmin.Controllers
         }
 
         /// <summary>
-        /// 获取用户列表
+        /// 获取门店用户列表
         /// </summary>
         /// <param name="options"></param>
         /// <param name="Count"></param>
@@ -111,7 +112,7 @@ namespace LELAdmin.Controllers
         { 
             try
             {
-                var result = StoreSevice.GetUserList(options, out int Count);
+                var result = StoreSevice.GetUserList(options, out int Count,GetLoginInfo().UserID);
                 if (result.Count > 0)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = result, Count = Count });
@@ -136,12 +137,17 @@ namespace LELAdmin.Controllers
         {
             try
             {
-                var result = SlService.UpdateUserInfo(model, out string msg);
+                var result = new StoreUserService().Update(model, false);
                 if (result)
                 {
-                    return Json(new { code = 0, msg = "SUCCESS", content = msg });
+                    return Json(new { code = 0, msg = "SUCCESS", content = "修改成功" });
                 }
-                return Json(new { code = 1, msg = "ERROR", content = msg });
+                return Json(new { code = 1, msg = "ERROR", content = "修改失败" });
+            }
+            catch (DbEntityValidationException ex)
+            {
+                return Json(new { code = 1, msg = "数据类型错误:" + ExceptionHelper.GetInnerExceptionMsg(ex), content = ex.ToString() });
+
             }
             catch (Exception ex)
             {
