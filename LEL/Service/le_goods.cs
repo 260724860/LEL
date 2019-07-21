@@ -42,7 +42,8 @@ namespace Service
         public int IsDeliverHome { get; set; }
         public int IsCrossdomain { get; set; }
         public int IsReturn { get; set; }
-       
+        public int IsParcel { get; set; }
+        public int IsRandomDistribution { get; set; }
         public string Describe { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
@@ -81,12 +82,10 @@ namespace Service
         public Nullable<int> BusinessValue { get; set; }
         public Nullable<int> NewPeriod { get; set; }
         public string Unit { get; set; }
-        public int IsRandomDistribution { get; set; }
         public Nullable<decimal> PriceScheme1 { get; set; }
         public Nullable<decimal> PriceScheme2 { get; set; }
         public Nullable<decimal> PriceScheme3 { get; set; }
-        public int IsParcel { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }
         public virtual le_goods_brand le_goods_brand { get; set; }

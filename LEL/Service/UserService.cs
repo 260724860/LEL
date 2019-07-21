@@ -4,6 +4,7 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 
 namespace Service
@@ -225,6 +226,13 @@ namespace Service
                     {
                         return true;
                     }
+                }
+                catch (DbEntityValidationException ex)
+                {
+
+                    string msg  = "数据类型错误:" + ExceptionHelper.GetInnerExceptionMsg(ex);
+                    log.Error(msg, ex);
+                    return false;
                 }
                 catch (Exception ex)
                 {

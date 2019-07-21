@@ -23,7 +23,7 @@ namespace Service
         public System.DateTime CreatTime { get; set; }
         public Nullable<System.DateTime> UpdateTime { get; set; }
     
-        public virtual le_suppliers le_suppliers { get; set; }
         public virtual le_goods le_goods { get; set; }
+        public virtual le_suppliers le_suppliers { get; set; }
     }
 }

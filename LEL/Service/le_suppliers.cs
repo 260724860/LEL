@@ -59,8 +59,6 @@ namespace Service
         public string Landline { get; set; }
         public string Deliverer { get; set; }
         public string DelivererPhone { get; set; }
-        public string Category { get; set; }
-        public string ManagingBrands { get; set; }
         public string CustomerService { get; set; }
         public string CustomerServicePhone { get; set; }
         public string Docker { get; set; }
@@ -68,6 +66,8 @@ namespace Service
         public string Zoning { get; set; }
         public string CartModel { get; set; }
         public string Classify { get; set; }
+        public string Category { get; set; }
+        public string ManagingBrands { get; set; }
         public string AnotherName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
