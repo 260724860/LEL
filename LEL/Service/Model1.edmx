@@ -570,32 +570,32 @@
           <Property Name="CreateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UsersStatus" Type="int" Nullable="false" />
           <Property Name="UsersAddress" Type="varchar" MaxLength="100" />
-          <Property Name="CarNumber" Type="varchar" MaxLength="20" />
-          <Property Name="BusinessNo" Type="varchar" MaxLength="20" />
-          <Property Name="IDCardNo" Type="varchar" MaxLength="20" />
-          <Property Name="Province" Type="varchar" MaxLength="20" />
-          <Property Name="City" Type="varchar" MaxLength="20" />
-          <Property Name="Area" Type="varchar" MaxLength="20" />
-          <Property Name="Address" Type="varchar" MaxLength="20" />
-          <Property Name="Longitude" Type="varchar" MaxLength="20" />
-          <Property Name="Latitude" Type="varchar" MaxLength="20" />
-          <Property Name="IMEI" Type="varchar" MaxLength="20" />
-          <Property Name="Initial" Type="varchar" MaxLength="20" />
-          <Property Name="Email" Type="varchar" MaxLength="20" />
-          <Property Name="Landline" Type="varchar" MaxLength="20" />
-          <Property Name="FinanceName" Type="varchar" MaxLength="20" />
-          <Property Name="FinancePhone" Type="varchar" MaxLength="20" />
-          <Property Name="AuthCode" Type="varchar" MaxLength="20" />
-          <Property Name="Remarks" Type="varchar" MaxLength="20" />
-          <Property Name="Zoning" Type="varchar" MaxLength="20" />
-          <Property Name="CartModel" Type="varchar" MaxLength="20" />
-          <Property Name="ContractNumber" Type="varchar" MaxLength="20" />
-          <Property Name="Classify" Type="varchar" MaxLength="20" />
-          <Property Name="AnotherName" Type="varchar" MaxLength="20" />
-          <Property Name="ReceiveName" Type="varchar" MaxLength="20" />
-          <Property Name="ReceivePhone" Type="varchar" MaxLength="20" />
-          <Property Name="CustomerService" Type="varchar" MaxLength="20" />
-          <Property Name="CustomerServicePhone" Type="varchar" MaxLength="20" />
+          <Property Name="CarNumber" Type="varchar" MaxLength="50" />
+          <Property Name="BusinessNo" Type="varchar" MaxLength="50" />
+          <Property Name="IDCardNo" Type="varchar" MaxLength="50" />
+          <Property Name="Province" Type="varchar" MaxLength="50" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+          <Property Name="Area" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="varchar" MaxLength="50" />
+          <Property Name="Longitude" Type="varchar" MaxLength="50" />
+          <Property Name="Latitude" Type="varchar" MaxLength="50" />
+          <Property Name="IMEI" Type="varchar" MaxLength="50" />
+          <Property Name="Initial" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Landline" Type="varchar" MaxLength="50" />
+          <Property Name="FinanceName" Type="varchar" MaxLength="50" />
+          <Property Name="FinancePhone" Type="varchar" MaxLength="50" />
+          <Property Name="AuthCode" Type="varchar" MaxLength="50" />
+          <Property Name="Remarks" Type="varchar" MaxLength="50" />
+          <Property Name="Zoning" Type="varchar" MaxLength="50" />
+          <Property Name="CartModel" Type="varchar" MaxLength="50" />
+          <Property Name="ContractNumber" Type="varchar" MaxLength="50" />
+          <Property Name="Classify" Type="varchar" MaxLength="50" />
+          <Property Name="AnotherName" Type="varchar" MaxLength="50" />
+          <Property Name="ReceiveName" Type="varchar" MaxLength="50" />
+          <Property Name="ReceivePhone" Type="varchar" MaxLength="50" />
+          <Property Name="CustomerService" Type="varchar" MaxLength="50" />
+          <Property Name="CustomerServicePhone" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="lel_admin_suppliers">
           <Key>
@@ -1483,7 +1483,7 @@
             <End Role="le_goods" EntitySet="le_goods" />
             <End Role="le_shop_cart" EntitySet="le_shop_cart" />
           </AssociationSet>
-        </EntityContainer>
+          </EntityContainer>
         <EntityType Name="le_ad">
           <Key>
             <PropertyRef Name="ID" />

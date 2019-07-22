@@ -80,7 +80,7 @@
         <AssociationConnector Association="leerledbtest3Model.FK_le_goods_value_le_goods" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_goods" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_shop_cart_le_goods" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
