@@ -65,6 +65,10 @@ namespace Service
         public string ContractNumber { get; set; }
         public string Classify { get; set; }
         public string AnotherName { get; set; }
+        public string ReceiveName { get; set; }
+        public string ReceivePhone { get; set; }
+        public string CustomerService { get; set; }
+        public string CustomerServicePhone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_admin_re_users> le_admin_re_users { get; set; }

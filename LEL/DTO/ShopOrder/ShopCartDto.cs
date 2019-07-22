@@ -72,13 +72,23 @@ namespace DTO.ShopOrder
         /// </summary>
         public decimal Discount { get; set; }
         /// <summary>
-        /// 满减（满）
+        /// 满减金额（满）
         /// </summary>
         public decimal PriceFull { get; set; }
         /// <summary>
-        /// 满减（减）
+        /// 满减金额（减）
         /// </summary>
         public decimal PriceReduction { get; set; }
+
+        /// <summary>
+        /// 满减数量（满）
+        /// </summary>
+        public decimal CountFull { get; set; }
+
+        /// <summary>
+        /// 满减数量（减）
+        /// </summary>
+        public decimal CountReduction { get; set; }
 
         /// <summary>
         /// 积分

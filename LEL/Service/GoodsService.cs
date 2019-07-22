@@ -776,8 +776,21 @@ namespace Service
                     model.IsDeliverHome = dto.IsDeliverHome;
                     model.MSRP = dto.MSRP;
                     model.MinimumPurchase = dto.MinimumPurchase;
-                   
-                    
+
+                    model.Province = dto.Province;
+                    model.City = dto.City;
+                    model.Area = dto.Area;
+                    model.PiecePrice = dto.PiecePrice;
+                    model.MinimumPrice = dto.MinimumPrice;
+                    model.BusinessValue = dto.BusinessValue;
+                    model.NewPeriod = dto.NewPeriod;
+                    model.Unit = dto.Unit;
+                    model.IsRandomDistribution = dto.IsRandomDistribution;
+                    model.PriceScheme1 = dto.PriceScheme1;
+                    model.PriceScheme2 = dto.PriceScheme2;
+                    model.PriceScheme3 = dto.PriceScheme3;
+                    model.IsParcel = dto.IsParcel;
+
 
 
                     #region 添加属性
@@ -992,6 +1005,20 @@ namespace Service
                 model.TermOfValidity = dto.TermOfValidity;
                 model.CountFull = dto.CountFull;
                 model.CountReduction = dto.CountReduction;
+
+                model.Province = dto.Province;
+                model.City = dto.City;
+                model.Area = dto.Area;
+                model.PiecePrice = dto.PiecePrice;
+                model.MinimumPrice = dto.MinimumPrice;
+                model.BusinessValue = dto.BusinessValue;
+                model.NewPeriod = dto.NewPeriod;
+                model.Unit = dto.Unit;
+                model.IsRandomDistribution = dto.IsRandomDistribution;
+                model.PriceScheme1 = dto.PriceScheme1;
+                model.PriceScheme2 = dto.PriceScheme2;
+                model.PriceScheme3 = dto.PriceScheme3;
+                model.IsParcel = dto.IsParcel;
 
                 GoodLogModel.AfterGoodsName = model.GoodsName;
                 GoodLogModel.AfterQuota = model.Quota;

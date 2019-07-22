@@ -175,8 +175,21 @@ namespace Service
                         GoodsModel.IsRecommend = Convert.ToInt32(GoodsDT.Rows[i]["是否推荐(0否/1是)"].ToString()) == 1 ? 1 : 0;
                         GoodsModel.IsHot = Convert.ToInt32(GoodsDT.Rows[i]["是否热门(0否/1是)"].ToString()) == 1 ? 1 : 0;
                         GoodsModel.IsSeckill = Convert.ToInt32(GoodsDT.Rows[i]["是否秒杀(0否/1是)"].ToString()) == 1 ? 1 : 0;
-                        //GoodsModel.UrgentOrder = "无";
-                        //GoodsModel.Remarks = "无";
+
+                        //model.Province = dto.Province;
+                        //model.City = dto.City;
+                        //model.Area = dto.Area;
+                        //model.PiecePrice = dto.PiecePrice;
+                        //model.MinimumPrice = dto.MinimumPrice;
+                        //model.BusinessValue = dto.BusinessValue;
+                        //model.NewPeriod = dto.NewPeriod;
+                        //model.Unit = dto.Unit;
+                        //model.IsRandomDistribution = dto.IsRandomDistribution;
+                        GoodsModel.PriceScheme1 = 0;
+                        GoodsModel.PriceScheme2 =0;
+                        GoodsModel.PriceScheme3 = 0;
+                        //model.IsParcel = dto.IsParcel;
+
                         //获取商品图片
                         DataRow[] FileterImg = GoodsAttachImg1T.Select("商品序列号= '" + GoodsNumber + "'");
                         if (FileterImg == null || FileterImg.Length <= 0) //为设置图片

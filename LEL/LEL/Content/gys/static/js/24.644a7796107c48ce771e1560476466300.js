@@ -1,2 +1,0 @@
-webpackJsonp([24],{FulC:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r={render:function(){var e=this.$createElement;return(this._self._c||e)("div")},staticRenderFns:[]},l=n("VU/8")({name:"OrderDetails"},r,!1,null,null,null);t.default=l.exports}});
-//# sourceMappingURL=24.644a7796107c48ce771e1560476466300.js.map

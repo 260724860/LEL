@@ -18,11 +18,11 @@ namespace Service
         public le_goods()
         {
             this.le_goods_img = new HashSet<le_goods_img>();
+            this.le_goods_log = new HashSet<le_goods_log>();
             this.le_goods_suppliers = new HashSet<le_goods_suppliers>();
             this.le_goods_value = new HashSet<le_goods_value>();
             this.le_orders_lines = new HashSet<le_orders_lines>();
             this.le_shop_cart = new HashSet<le_shop_cart>();
-            this.le_goods_log = new HashSet<le_goods_log>();
         }
     
         public int GoodsID { get; set; }
@@ -40,6 +40,10 @@ namespace Service
         public int IsSeckill { get; set; }
         public int IsBulkCargo { get; set; }
         public int IsDeliverHome { get; set; }
+        public int IsCrossdomain { get; set; }
+        public int IsReturn { get; set; }
+        public int IsParcel { get; set; }
+        public int IsRandomDistribution { get; set; }
         public string Describe { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
@@ -53,8 +57,6 @@ namespace Service
         public int Quota { get; set; }
         public int MinimumPurchase { get; set; }
         public int Integral { get; set; }
-        public int IsCrossdomain { get; set; }
-        public int IsReturn { get; set; }
         public string UrgentOrder { get; set; }
         public Nullable<System.DateTime> SeckillBeginTime { get; set; }
         public Nullable<System.DateTime> SeckillEndTime { get; set; }
@@ -72,11 +74,24 @@ namespace Service
         public decimal CountReduction { get; set; }
         public decimal Discount { get; set; }
         public string TermOfValidity { get; set; }
+        public string Province { get; set; }
+        public string City { get; set; }
+        public string Area { get; set; }
+        public Nullable<decimal> PiecePrice { get; set; }
+        public Nullable<decimal> MinimumPrice { get; set; }
+        public Nullable<int> BusinessValue { get; set; }
+        public Nullable<int> NewPeriod { get; set; }
+        public string Unit { get; set; }
+        public Nullable<decimal> PriceScheme1 { get; set; }
+        public Nullable<decimal> PriceScheme2 { get; set; }
+        public Nullable<decimal> PriceScheme3 { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }
         public virtual le_goods_brand le_goods_brand { get; set; }
         public virtual le_goodsgroups le_goodsgroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_goods_log> le_goods_log { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -85,7 +100,5 @@ namespace Service
         public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_goods_log> le_goods_log { get; set; }
     }
 }

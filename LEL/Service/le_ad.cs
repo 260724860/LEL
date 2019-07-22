@@ -22,5 +22,9 @@ namespace Service
         public int Flag { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime UpdateTime { get; set; }
+        public Nullable<int> SupplierID { get; set; }
+        public Nullable<System.DateTime> PromotionBeginTime { get; set; }
+        public Nullable<System.DateTime> PromotionEndTime { get; set; }
+        public Nullable<int> GoodsID { get; set; }
     }
 }
