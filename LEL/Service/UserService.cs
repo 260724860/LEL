@@ -229,10 +229,15 @@ namespace Service
                 }
                 catch (DbEntityValidationException ex)
                 {
-
-                    string msg  = "数据类型错误:" + ExceptionHelper.GetInnerExceptionMsg(ex);
-                    log.Error(msg, ex);
-                    return false;
+                    throw ex;
+                    //string kk = "";
+                    //foreach (var index in ex.EntityValidationErrors)
+                    //{
+                    //    kk += index.ValidationErrors;
+                    //}
+                    //string msg  = "数据类型错误:" + ExceptionHelper.GetInnerExceptionMsg(ex);
+                    //log.Error(msg, ex);
+                    //return false;
                 }
                 catch (Exception ex)
                 {

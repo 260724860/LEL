@@ -146,7 +146,14 @@ namespace LELAdmin.Controllers
             }
             catch (DbEntityValidationException ex)
             {
-                return Json(new { code = 1, msg = "数据类型错误:" + ExceptionHelper.GetInnerExceptionMsg(ex), content = ex.ToString() });
+                string kk = "";
+                foreach (var index in ex.EntityValidationErrors)
+                {
+                    kk += index.ValidationErrors;
+                }
+                
+               
+                return Json(new { code = 1, msg = "数据类型错误:" + kk, content = ex.ToString() });
 
             }
             catch (Exception ex)
