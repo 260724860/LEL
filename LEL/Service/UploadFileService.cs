@@ -185,9 +185,9 @@ namespace Service
                         //model.NewPeriod = dto.NewPeriod;
                         //model.Unit = dto.Unit;
                         //model.IsRandomDistribution = dto.IsRandomDistribution;
-                        GoodsModel.PriceScheme1 = 0;
-                        GoodsModel.PriceScheme2 =0;
-                        GoodsModel.PriceScheme3 = 0;
+                        //model.PriceScheme1 = dto.PriceScheme1;
+                        //model.PriceScheme2 = dto.PriceScheme2;
+                        //model.PriceScheme3 = dto.PriceScheme3;
                         //model.IsParcel = dto.IsParcel;
 
                         //获取商品图片

@@ -30,7 +30,7 @@ namespace Service
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }
-        public virtual le_users le_users { get; set; }
         public virtual le_goods le_goods { get; set; }
+        public virtual le_users le_users { get; set; }
     }
 }

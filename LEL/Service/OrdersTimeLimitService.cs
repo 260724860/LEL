@@ -115,7 +115,7 @@ namespace Service
                         Msg = string.Format("ID：{0}错误,请检查",dto.ID);
                         return false;
                     }
-                    var temp = ctx.le_orders_timelimit.Any(s => s.TimeSlot == dto.TimeSlot);
+                    var temp = ctx.le_orders_timelimit.Any(s => s.TimeSlot == dto.TimeSlot&&s.ID!=dto.ID);
                     if (temp)
                     {
                         Msg = "已存在相同得时间段设置";
