@@ -432,6 +432,14 @@ namespace Service
                     AnotherName = s.AnotherName,
 
                 }).ToList();
+                foreach (var index in result)
+                {
+                    var DbPwd = DESEncrypt.Decrypt(index.PWD, index.Salt);
+                    var pwd = DESEncrypt.MD5Encrypt32(DbPwd + "SystemLEL");
+                    index.Salt = "******";
+                    index.PWD = pwd;
+                }
+
 
                 return result;
             }
