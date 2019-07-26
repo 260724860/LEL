@@ -57,7 +57,7 @@
             /// <summary>
             /// 已发货
             /// </summary>
-            YiFaHuo = 20,
+            YiFaHuo = 4,
 
             /// <summary>
             /// 已完成

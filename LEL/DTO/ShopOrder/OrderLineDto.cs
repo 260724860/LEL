@@ -52,6 +52,41 @@ namespace DTO.ShopOrder
         public DateTime? PickupTime { get; set; }
 
         public string AdminTelPhone { get; set; }
+
+        /// 订单状态(0：未派单 1：待接单 6：待发货 7：发货中 2：已发货 10：已完成 100：已结算 3：已取消)
+        /// <summary>
+        /// 未派发
+        /// </summary>
+        public int WeiPaiFaCount { get; set; }
+        /// <summary>
+        /// 待接单
+        /// </summary>
+        public int DaiJieDanCount { get; set; }
+        /// <summary>
+        /// 待发货
+        /// </summary>
+        public int DaiFaHuoCount { get; set; }
+        /// <summary>
+        /// 发货中
+        /// </summary>
+        public int FaHuoZhongCount { get; set; }
+        /// <summary>
+        /// 已发货
+        /// </summary>
+        public int YiFahuoCount { get; set; }
+        /// <summary>
+        /// 已完成
+        /// </summary>
+        public int YiWanChengCount { get; set; }
+        /// <summary>
+        /// 已结算
+        /// </summary>
+        public int YiJieSuanCount { get; set; }
+        /// <summary>
+        /// 已取消
+        /// </summary>
+        public int YiQuXiaoCount { get; set; }
+
         #endregion
     }
 }

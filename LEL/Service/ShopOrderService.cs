@@ -1212,6 +1212,13 @@ namespace Service
                     Out_Trade_No = s.le_orders_head.OutTradeNo,
                     PickupTime = s.le_orders_head.PickupTime,
 
+                    WeiPaiFaCount=s.Status,
+                    DaiJieDanCount=s.Status,
+                    DaiFaHuoCount =s.Status,
+                    FaHuoZhongCount = s.Status,
+                    YiFahuoCount = s.Status,
+                    YiWanChengCount = s.Status,
+                    YiJieSuanCount = s.Status,
                 });
                 result = result.OrderByDescending(s => s.CreateTime);
                 var GroupResult = result.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
@@ -1242,6 +1249,14 @@ namespace Service
 
                     Out_Trade_No = k.Max(p => p.Out_Trade_No),
                     PickupTime = k.Max(p => p.PickupTime),
+                    
+                    WeiPaiFaCount=k.Count(p=>p.WeiPaiFaCount==(int)OrderLineStatus.WeiPaiFa),
+                    DaiJieDanCount = k.Count(p => p.DaiJieDanCount == (int)OrderLineStatus.DaiJieDan),
+                    DaiFaHuoCount = k.Count(p => p.DaiFaHuoCount == (int)OrderLineStatus.DaiFaHuo),
+                    FaHuoZhongCount = k.Count(p => p.FaHuoZhongCount == (int)OrderLineStatus.FaHuoZhong),
+                    YiFahuoCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiFahuo),
+                    YiWanChengCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiWanCheng),
+                    YiJieSuanCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiJieSuan),
                 });
                 GroupResult = GroupResult.OrderByDescending(s => s.CreateTime);
                 Count = GroupResult.Count();
@@ -1342,11 +1357,11 @@ namespace Service
 
                         var CurrentLineStatue = (OrderLineStatus)CurrentLine.Status;
 
-                        if (Status != OrderLineStatus.YiFahuo && ((int)Status < (int)CurrentLineStatue)&& Status!=OrderLineStatus.YiQuXiao)
-                        {
-                            Msg = "状态顺序错误,当前状态【"+ CurrentLineStatue.ToString() + "】,预修改状态【"+ Status .ToString()+ "】";
-                            return false;
-                        }
+                        //if (Status != OrderLineStatus.YiFahuo && ((int)Status < (int)CurrentLineStatue)&& Status!=OrderLineStatus.YiQuXiao)
+                        //{
+                        //    Msg = "状态顺序错误,当前状态【"+ CurrentLineStatue.ToString() + "】,预修改状态【"+ Status .ToString()+ "】";
+                        //    return false;
+                        //}
                         if (CurrentLine.DeliverCount <= 0&& Status!=OrderLineStatus.YiQuXiao)
                         {
                             Msg = "操作失败,必须商品数必须大于0";
@@ -1617,11 +1632,22 @@ namespace Service
                     }
                     if (Status == 1)//已完成
                     {
-                       if( OrderlineList.Any(s=>s.Status==1)||OrderlineList.Any(s=>s.Status==0))
+                       if(OrderlineList.Any(s=>s.Status==(int)OrderLineStatus.DaiFaHuo)
+                            || OrderlineList.Any(s => s.Status == (int)OrderLineStatus.DaiJieDan)
+                            || OrderlineList.Any(s=>s.Status==(int)OrderLineStatus.FaHuoZhong)
+                            || OrderlineList.Any(s => s.Status == (int)OrderLineStatus.WeiPaiFa)
+                           )
                         {
                             msg = "该订单内还有未接单或未派单订单,无法确认完成";
                             return false;
                         }
+                        foreach (var index in OrderlineList)
+                        {
+                            index.UpdateTime = DateTime.Now;
+                            index.Status = (int)OrderLineStatus.YiWanCheng;
+                            ctx.Entry<le_orders_lines>(index).State = EntityState.Modified;
+                        }
+
                         model.CompleteTime = DateTime.Now;
                         new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1); //推送消息给用户
                     }
