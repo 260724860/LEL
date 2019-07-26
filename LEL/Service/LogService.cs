@@ -49,8 +49,10 @@ namespace Service
                     CreateTime = s.CreateTime,
                     UserID = s.UserID,
                     UserName = s.le_users.UsersNickname,
-                    OrderLineID = s.OrderLineID
-
+                    OrderLineID = s.OrderLineID,
+                    GoodsId=s.le_orders_lines.le_goods.GoodsID,
+                    GoodsName=s.le_orders_lines.le_goods.GoodsName
+                    
                 });
                 Count = result.Count();
                 result = result.OrderByDescending(s => s.CreateTime);

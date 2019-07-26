@@ -1720,9 +1720,19 @@ namespace Service
                         {
                             if (orderline.Status != 3)
                             {
-                                orderline.le_goods.Stock += orderline.GoodsCount;
-                                orderline.le_goods.SalesVolumes -= orderline.GoodsCount;
-                                orderline.le_goods.TotalSalesVolume -= orderline.GoodsCount;
+                                //orderline.le_goods.Stock += orderline.GoodsCount;
+                                //orderline.le_goods.SalesVolumes -= orderline.GoodsCount;
+                                //orderline.le_goods.TotalSalesVolume -= orderline.GoodsCount;
+
+
+                                orderline.le_goods.Stock += orderline.DeliverCount;
+                                orderline.le_goods.SalesVolumes -= orderline.DeliverCount;
+                                orderline.le_goods.TotalSalesVolume -= orderline.DeliverCount;
+
+                                model.RealAmount -= orderline.DeliverCount * orderline.GoodsPrice;
+                                model.RealSupplyAmount -= orderline.DeliverCount * orderline.SupplyPrice;
+                                model.DeliverCount -= orderline.DeliverCount;
+
                                 ctx.Entry<le_goods>(orderline.le_goods).State = EntityState.Modified;
                             }
                             le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();

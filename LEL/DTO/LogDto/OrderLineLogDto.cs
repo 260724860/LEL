@@ -18,5 +18,8 @@ namespace DTO.LogDto
         public int? UserID { get; set; }
         public DateTime CreateTime { get; set; }
         public int OrderLineID { get; set; }
+
+        public int GoodsId { get; set; }
+        public string GoodsName { get; set; }
     }
 }
