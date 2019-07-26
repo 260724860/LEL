@@ -32,48 +32,54 @@
         }
 
         /// <summary>
-        /// 订单状态(0.未确认；1.已完成；2.已审核；3.待接单；4.已接单；5.已取消;6已结算
+        /// 订单头状态(未派发(0),待接单(3),待发货(6),发货中(7),已发货(20),已完成(1),已结算(100),已取消(5))
         /// </summary>
-        public enum OrderStatus
+        public enum OrderHeadStatus
         {
             /// <summary>
-            /// 未确认
+            /// 未派发
             /// </summary>
-            WeiQueRen = 0,
+            WeiPaiFa = 0,
             /// <summary>
-            /// 2.已完成
-            /// </summary>
-            YiWanCheng = 1,
-            /// <summary>
-            /// 2.已审核
-            /// </summary>
-            YiShengHe = 2,
-            /// <summary>
-            /// 3.待接单
+            /// 待接单
             /// </summary>
             DaiJieDan = 3,
             /// <summary>
-            /// 4.已接单
+            /// 待发货
             /// </summary>
-            YiJieDan = 4,
+            DaiFaHuo = 6,
+
+            /// <summary>
+            /// 发货中
+            /// </summary>
+            FaHuoZhong = 7,
+
+            /// <summary>
+            /// 已发货
+            /// </summary>
+            YiFaHuo = 20,
+
+            /// <summary>
+            /// 已完成
+            /// </summary>
+            YiWanCheng = 1,
+
+            /// <summary>
+            /// 已结算
+            /// </summary>
+            YiJieSuan = 100,
+
             /// <summary>
             /// 5.已取消
             /// </summary>
             YiQuXiao = 5,
 
-            /// <summary>
-            /// 待发货
-            /// </summary>
-            DaiFaHuo=6,
+            
 
-            /// <summary>
-            /// 6已结算
-            /// </summary>
-            YiJieSuan = 7
         }
 
         /// <summary>
-        ///  订单行状态(0.未派发；1.待接单；2.已接单；3.已取消 4.待发货.5发货中6.已完成 7已结算)
+        ///  订单行状态(未派发(0),待接单(1),待发货(6),发货中(7),已发货(2),已完成(10),已结算(100),已取消(3))
         /// </summary>
         public enum OrderLineStatus
         {
@@ -82,33 +88,39 @@
             /// </summary>
             WeiPaiFa = 0,
             /// <summary>
-            /// 1.待接单 派发订单操作时
+            /// 待接单 
             /// </summary>
             DaiJieDan = 1,
+
             /// <summary>
-            /// 2.已接单
+            /// 待发货
             /// </summary>
-            YiJieDan = 2,
+            DaiFaHuo = 6,
+
+            /// <summary>
+            /// 发货中
+            /// </summary>
+            FaHuoZhong = 7,
+
+            /// <summary>
+            /// 已发货
+            /// </summary>
+            YiFahuo = 2,
+
+            /// <summary>
+            /// 已完成
+            /// </summary>
+            YiWanCheng = 10,
+
             /// <summary>
             /// 3.已取消
             /// </summary>
             YiQuXiao = 3,
-            /// <summary>
-            /// 4待发货
-            /// </summary>
-            DaiFaHuo = 4,
-            /// <summary>
-            /// 5发货中
-            /// </summary>
-            FaHuoZhong = 5,
-            /// <summary>
-            /// 6.已完成
-            /// </summary>
-            YiWanCheng = 6,
+
             /// <summary>
             /// 已结算
             /// </summary>
-            YiJieSuan = 7,
+            YiJieSuan = 100,
 
 
         }

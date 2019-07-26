@@ -1289,24 +1289,21 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 var OrderNo = OrderLineList.Select(s => s.OrderNo).FirstOrDefault();
-                var OrderHeadModel = ctx.le_orders_head.Where(s => s.OutTradeNo == OrderNo).FirstOrDefault();
-                OrderLineStatus Status=OrderLineStatus.WeiPaiFa;
+                var OrderHeadModel = ctx.le_orders_head.Where(s => s.OutTradeNo == OrderNo).FirstOrDefault();             
                 int OrderLinesId = 0;
                 if (OrderHeadModel == null)
                 {
                     Msg = "订单不存在";
                     return false;
                 }
-
                 if (OrderHeadModel.Status == 5)
                 {
                     Msg = "订单已被取消,操作失败";
                     return false;
-                }
-               
-                if (OrderHeadModel.Status == 1)
+                }              
+                if (OrderHeadModel.Status ==(int) OrderLineStatus.YiJieSuan)
                 {
-                    Msg = "订单已完成,操作失败";
+                    Msg = "订单已结算,操作失败";
                     return false;
                 }
                 try
@@ -1322,9 +1319,10 @@ namespace Service
                             }
                             SuppliersID = IndexLine.SuppliersID;
                         }
-
+                    
                         OrderLinesId = IndexLine.OrderLineID;
-                        Status =(OrderLineStatus)IndexLine.Status;
+                        OrderLineStatus Status =(OrderLineStatus)IndexLine.Status;
+                     
                         if (Status == OrderLineStatus.DaiJieDan && AdminID == 0)
                         {                  
                             Msg = "非法操作,无权限.只有总部人员可派单";
@@ -1334,24 +1332,26 @@ namespace Service
                         {
                             Msg = "非法操作,无操作该门店订单权限";
                             return false;
-                        }                
+                        }  
+                        
                         var LinesList = OrderHeadModel.le_orders_lines.ToList();                
-                        //var CurrentDaiJieDanCount = LinesList.Count(s => s.Status == 1); //待接单
-                        //var CurrentYiJieDanCount = LinesList.Count(s => s.Status == 2);//已结单
+                       
                         var CurrentYiQuXiaoCount= LinesList.Count(s => s.Status == 3);//已取消
 
                         var CurrentLine = LinesList.Where(s => s.OrdersLinesID == IndexLine.OrderLineID).FirstOrDefault();
+
                         var CurrentLineStatue = (OrderLineStatus)CurrentLine.Status;
+
+                        if (Status != OrderLineStatus.YiFahuo && ((int)Status < (int)CurrentLineStatue)&& Status!=OrderLineStatus.YiQuXiao)
+                        {
+                            Msg = "状态顺序错误,当前状态【"+ CurrentLineStatue.ToString() + "】,预修改状态【"+ Status .ToString()+ "】";
+                            return false;
+                        }
                         if (CurrentLine.DeliverCount <= 0&& Status!=OrderLineStatus.YiQuXiao)
                         {
                             Msg = "操作失败,必须商品数必须大于0";
                             return false;
-                        }
-                        //if (CurrentLine.Status == 2 || CurrentLine.Status == 3|| Status==OrderLineStatus.DaiJieDan)
-                        //{
-                        //    Msg = "订单已经运行,无法修改派单";
-                        //    return false;
-                        //}
+                        }                      
                         if (SuppliersID != 0 && CurrentLine.SuppliersID != SuppliersID && AdminID == 0)
                         {
                             Msg = "非法操作,无权限";
@@ -1399,38 +1399,32 @@ namespace Service
                        
                         switch (Status)
                         {
-                            case OrderLineStatus.DaiJieDan: //待接单            
-                                CurrentLine.Status = 1;
+                            case OrderLineStatus.DaiJieDan: //待接单 派单           
+                                CurrentLine.Status = (int)OrderLineStatus.DaiJieDan;
 
                                 OrderHeadModel.AdminID = AdminID;
                                 CurrentLine.AdminID = AdminID;
-                                CurrentLine.SuppliersID = SuppliersID;
-                                CurrentLine.UpdateTime = DateTime.Now;
-
-                                if (LinesList.Count(s => s.Status == 1) == LinesList.Count() - CurrentYiQuXiaoCount) //全部派单 更新订单头状态为待接单
-                                {
-                                    OrderHeadModel.Status = (int)OrderStatus.DaiJieDan;//修改订单头状态为待接单
-                                    OrderHeadLog.AfterStatus = 3;
-                                }
-                                new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
-
+                                CurrentLine.SuppliersID = SuppliersID;                                
                                 OrderLineLog.AdminID = AdminID;
+
+                                new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
 
                                 break;
                             case OrderLineStatus.DaiFaHuo: //待发货
                                 CurrentLine.Status = (int)OrderLineStatus.DaiFaHuo;
 
-                                if (LinesList.Count(s => s.Status == 4) == LinesList.Count() - CurrentYiQuXiaoCount) //全部待发货 更新订单头状态为待接单
-                                {
-                                    OrderHeadModel.Status = (int)OrderStatus.DaiFaHuo;//修改订单头状态为待接单
-                                    OrderHeadLog.AfterStatus = 3;
-                                }
-
-
+                                new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
 
                                 break;
-                            case OrderLineStatus.YiJieDan: //已结单
-                                CurrentLine.Status = 2;
+
+                            case OrderLineStatus.FaHuoZhong: //发货中
+                                CurrentLine.Status= (int)OrderLineStatus.DaiFaHuo;
+                                new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+
+                                break;
+
+                            case OrderLineStatus.YiFahuo: //已发货
+                                CurrentLine.Status = (int)OrderLineStatus.YiFahuo;
 
                                 if (AdminID != 0)  //总部加急单也有接单权限
                                 {
@@ -1440,15 +1434,20 @@ namespace Service
                                 {
                                     OrderLineLog.SupplierID = SuppliersID;
                                 }
-                                if (LinesList.Count(s => s.Status == 2) == LinesList.Count() - CurrentYiQuXiaoCount) //全部已接单,更新订单头状态
-                                {
-                                    OrderHeadModel.Status = 4;//修改订单头状态为已结单
-                                    OrderHeadLog.AfterStatus = 4;
-                                }
+                              
                                 //供货商完成接单 推送消息给总部
                                 new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
                                 break;
-                               
+                            case OrderLineStatus.YiWanCheng: //已完成
+                                CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
+
+
+                                break;
+                            case OrderLineStatus.YiJieSuan: //已结算
+                                CurrentLine.Status = (int)OrderLineStatus.YiJieSuan;
+                                new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
+
+                                break;
 
                             case OrderLineStatus.YiQuXiao:
                                 CurrentLine.Status = 3;
@@ -1473,135 +1472,38 @@ namespace Service
                                 CurrentLine.DeliverCount = 0;
 
                                 break;
+                            default:
+                                throw new Exception("订单状态错误，请检查");
+                                break;
                         }
-                        #region 即将废弃代码
-                        //if (Status == 1 && AdminID != 0) //派发订单只有总部有权限
-                        //{
-                        //    if (CurrentLine.Status == 3) //取消的订单重新派单。 修改销量和库存
-                        //    {
-                        //        CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
-                        //        CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
-                        //        CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
 
-                        //        OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
-                        //        OrderHeadModel.RealSupplyAmount+= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
-                        //        OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
-                        //        OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
-                        //        OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
-                        //    }
-                        //    OrderLineLog.AdminID = AdminID;
+                        if (LinesList.Count(s => s.Status == (int)OrderLineStatus.DaiJieDan) == LinesList.Count() - CurrentYiQuXiaoCount) //全部派单 更新订单头状态为待接单
+                        {
+                            OrderHeadModel.Status = (int)OrderHeadStatus.DaiJieDan;//修改订单头状态为待接单
+                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
+                        }
+                        if (LinesList.Count(s => s.Status == (int)OrderLineStatus.DaiFaHuo) == LinesList.Count() - CurrentYiQuXiaoCount) //全部待发货 更新订单头状态为待接单
+                        {
+                            OrderHeadModel.Status = (int)OrderHeadStatus.DaiFaHuo;//修改订单头状态为待发货
+                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
+                        }
+                        if (LinesList.Count(s => s.Status ==(int)OrderLineStatus.YiFahuo) == LinesList.Count() - CurrentYiQuXiaoCount) //全部已发货,更新订单头状态
+                        {
+                            OrderHeadModel.Status = (int)OrderHeadStatus.YiFaHuo;//修改订单头状态为已结单
+                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
+                        }
+                        if (LinesList.Count(s => s.Status == (int)OrderLineStatus.YiWanCheng) == LinesList.Count() - CurrentYiQuXiaoCount) //全部已发货,更新订单头状态
+                        {
+                            OrderHeadModel.Status = (int)OrderHeadStatus.YiWanCheng;
+                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
+                        }
+                        if (LinesList.Count(s => s.Status == (int)OrderLineStatus.YiJieSuan) == LinesList.Count() - CurrentYiQuXiaoCount) //全部已发货,更新订单头状态
+                        {
+                            OrderHeadModel.Status = (int)OrderHeadStatus.YiJieSuan;
+                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
+                        }
 
-                        //    if (Status == 2 || Status == 3)
-                        //    {
-                        //        Msg = "订单已经运行,无法修改派单";
-                        //        return false;
-                        //    }
-
-                        //    CurrentLine.AdminID = AdminID;
-                        //    CurrentLine.Status = 1;
-                        //    CurrentLine.SuppliersID = SuppliersID;
-
-                        //    if (!string.IsNullOrEmpty(Notes))
-                        //    {
-                        //        CurrentLine.Notes = Notes;
-                        //    }
-
-                        //    var IsComplete = LinesList.Any(s => s.Status != 3 && s.Status != 2 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
-
-                        //    if (IsComplete || LinesList.Count == 1) //全部派单 更新订单头状态为待接单
-                        //    {
-                        //        // var OrderHead = ctx.le_orders_head.Where(s => s.OutTradeNo == CurrentLine.OutTradeNo).FirstOrDefault();
-                        //        OrderHeadModel.Status = 3;//修改订单头状态为待接单
-
-                        //    }
-                        //    OrderHeadModel.AdminID = AdminID;
-                        //   // ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
-                        //    //总部派发订单 推送消息给供货商
-                        //    new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
-
-                        //    CurrentLine.UpdateTime = DateTime.Now;
-                        //    ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
-
-                        //}
-                        //if (Status == 2)//已接单
-                        //{
-                        //    if (AdminID != 0)  //总部加急单也有接单权限
-                        //    {
-                        //        OrderLineLog.AdminID = AdminID;
-                        //    }
-                        //    if (AdminID == 0 && SuppliersID != 0)
-                        //    {
-                        //        OrderLineLog.SupplierID = SuppliersID;
-                        //    }
-                        //    if (CurrentLine.Status == 3) //之前是已取消 现在改为已结单修改销量库存
-                        //    {
-                        //        CurrentLine.le_goods.SalesVolumes += CurrentLine.GoodsCount;
-                        //        CurrentLine.le_goods.TotalSalesVolume += CurrentLine.GoodsCount;
-                        //        CurrentLine.le_goods.Stock -= CurrentLine.GoodsCount;
-
-                        //        OrderHeadModel.RealAmount += CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
-                        //        OrderHeadModel.RealSupplyAmount += CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
-                        //        OrderHeadModel.DeliverCount += CurrentLine.GoodsCount;
-
-                        //        OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
-                        //        OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
-                        //    }
-
-                        //    //此处使用多次查询 待优化 使用原生SQL？
-                        //    CurrentLine.Status = 2;
-                        //    if (!string.IsNullOrEmpty(Notes))
-                        //    {
-                        //        CurrentLine.Notes = Notes;
-                        //    }
-
-                        //    CurrentLine.UpdateTime = DateTime.Now;
-
-                        //   // ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
-
-
-                        //    var IsComplete = LinesList.Any(s => s.Status != 1 && s.Status != 3 && s.Status != 0 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
-
-                        //    if (IsComplete || LinesList.Count == 1) //全部已接单,更新订单头状态
-                        //    {                           
-                        //        OrderHeadModel.Status = 4;//修改订单头状态为已结单
-                        //        OrderHeadLog.AfterStatus = 4;
-
-                        //    }
-                        //    //供货商完成接单 推送消息给总部
-                        //    new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-                        //}
-                        //if (Status == 3)//取消订单
-                        //{
-                        //    OrderLineLog.SupplierID = SuppliersID;
-
-                        //    CurrentLine.Status = 3;
-                        //    CurrentLine.le_goods.Stock += CurrentLine.GoodsCount;
-                        //    CurrentLine.le_goods.SalesVolumes -= CurrentLine.GoodsCount;
-                        //    CurrentLine.le_goods.TotalSalesVolume -= CurrentLine.GoodsCount;
-                        //    CurrentLine.DeliverCount = 0;
-
-                        //    if (!string.IsNullOrEmpty(Notes))
-                        //    {
-                        //        CurrentLine.Notes = Notes;
-                        //    }
-                        //    CurrentLine.UpdateTime = DateTime.Now;
-
-                        //    //ctx.Entry<le_goods>(CurrentLine.le_goods).State = EntityState.Modified;
-
-                        //    OrderHeadModel.RealAmount -= CurrentLine.GoodsCount * CurrentLine.GoodsPrice;
-                        //    OrderHeadModel.RealSupplyAmount -= CurrentLine.GoodsCount * CurrentLine.SupplyPrice;
-                        //    OrderHeadModel.DeliverCount -= CurrentLine.GoodsCount;
-
-                        //    OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
-                        //    OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
-
-                        //    new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-                        //    new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
-
-                        //}
-                        #endregion
-
-
+                        OrderHeadModel.UpdateTime = DateTime.Now;
                         CurrentLine.UpdateTime = DateTime.Now;
                         OrderHeadLog.AfterMoney = OrderHeadModel.RealAmount;
                         OrderHeadLog.AfterCount = OrderHeadModel.DeliverCount;
@@ -1641,7 +1543,7 @@ namespace Service
                 catch (Exception ex)
                 {
                     Msg = ex.Message;
-                    log.Error(OrderHeadModel.OutTradeNo.ToString() + "|" + Status.ToString(), ex);
+                    log.Error(OrderHeadModel.OutTradeNo.ToString() + "|", ex);
                     return false;
 
                 }
@@ -1649,6 +1551,11 @@ namespace Service
                 return false;
             }
         }
+        //private void SetOrderHeadStatus()
+        //{
+
+        //}
+
 
         /// <summary>
         /// 更新订单状态
