@@ -32,7 +32,6 @@ namespace Service
         public virtual DbSet<le_admin_role_mapping> le_admin_role_mapping { get; set; }
         public virtual DbSet<le_admin_role_value> le_admin_role_value { get; set; }
         public virtual DbSet<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }
-        public virtual DbSet<le_goods> le_goods { get; set; }
         public virtual DbSet<le_goods_brand> le_goods_brand { get; set; }
         public virtual DbSet<le_goods_img> le_goods_img { get; set; }
         public virtual DbSet<le_goods_log> le_goods_log { get; set; }
@@ -61,5 +60,6 @@ namespace Service
         public virtual DbSet<le_users> le_users { get; set; }
         public virtual DbSet<lel_admin_suppliers> lel_admin_suppliers { get; set; }
         public virtual DbSet<lel_imei> lel_imei { get; set; }
+        public virtual DbSet<le_goods> le_goods { get; set; }
     }
 }

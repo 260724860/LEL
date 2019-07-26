@@ -185,10 +185,10 @@ namespace Service
                         //model.NewPeriod = dto.NewPeriod;
                         //model.Unit = dto.Unit;
                         //model.IsRandomDistribution = dto.IsRandomDistribution;
-                        //model.PriceScheme1 = dto.PriceScheme1;
-                        //model.PriceScheme2 = dto.PriceScheme2;
-                        //model.PriceScheme3 = dto.PriceScheme3;
-                        //model.IsParcel = dto.IsParcel;
+                        GoodsModel.PriceScheme1 = 0;
+                        GoodsModel.PriceScheme2 = 0;
+                        GoodsModel.PriceScheme3 = 0;
+                        GoodsModel.IsParcel =0;
 
                         //获取商品图片
                         DataRow[] FileterImg = GoodsAttachImg1T.Select("商品序列号= '" + GoodsNumber + "'");

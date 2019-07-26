@@ -82,9 +82,9 @@ namespace Service
         public Nullable<int> BusinessValue { get; set; }
         public Nullable<int> NewPeriod { get; set; }
         public string Unit { get; set; }
-        public Nullable<decimal> PriceScheme1 { get; set; }
-        public Nullable<decimal> PriceScheme2 { get; set; }
-        public Nullable<decimal> PriceScheme3 { get; set; }
+        public decimal PriceScheme1 { get; set; }
+        public decimal PriceScheme2 { get; set; }
+        public decimal PriceScheme3 { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }

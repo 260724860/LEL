@@ -786,9 +786,11 @@ namespace Service
                     model.NewPeriod = dto.NewPeriod;
                     model.Unit = dto.Unit;
                     model.IsRandomDistribution = dto.IsRandomDistribution;
-                    model.PriceScheme1 = dto.PriceScheme1;
-                    model.PriceScheme2 = dto.PriceScheme2;
-                    model.PriceScheme3 = dto.PriceScheme3;
+
+                    model.PriceScheme1 = dto.PriceScheme1.HasValue ? dto.PriceScheme1.Value : 0;
+                    model.PriceScheme2 = dto.PriceScheme2.HasValue ? dto.PriceScheme2.Value : 0;
+                    model.PriceScheme3 = dto.PriceScheme3.HasValue ? dto.PriceScheme3.Value : 0;
+
                     model.IsParcel = dto.IsParcel;
 
 
@@ -1015,9 +1017,9 @@ namespace Service
                 model.NewPeriod = dto.NewPeriod;
                 model.Unit = dto.Unit;
                 model.IsRandomDistribution = dto.IsRandomDistribution;
-                model.PriceScheme1 = dto.PriceScheme1;
-                model.PriceScheme2 = dto.PriceScheme2;
-                model.PriceScheme3 = dto.PriceScheme3;
+                model.PriceScheme1 = dto.PriceScheme1.HasValue ? dto.PriceScheme1.Value : 0;
+                model.PriceScheme2 = dto.PriceScheme2.HasValue ? dto.PriceScheme2.Value : 0;
+                model.PriceScheme3 = dto.PriceScheme3.HasValue ? dto.PriceScheme3.Value : 0;
                 model.IsParcel = dto.IsParcel;
 
                 GoodLogModel.AfterGoodsName = model.GoodsName;
