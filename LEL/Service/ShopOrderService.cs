@@ -1417,7 +1417,18 @@ namespace Service
                                 OrderLineLog.AdminID = AdminID;
 
                                 break;
+                            case OrderLineStatus.DaiFaHuo: //待发货
+                                CurrentLine.Status = (int)OrderLineStatus.DaiFaHuo;
 
+                                if (LinesList.Count(s => s.Status == 4) == LinesList.Count() - CurrentYiQuXiaoCount) //全部待发货 更新订单头状态为待接单
+                                {
+                                    OrderHeadModel.Status = (int)OrderStatus.DaiFaHuo;//修改订单头状态为待接单
+                                    OrderHeadLog.AfterStatus = 3;
+                                }
+
+
+
+                                break;
                             case OrderLineStatus.YiJieDan: //已结单
                                 CurrentLine.Status = 2;
 
@@ -1429,9 +1440,6 @@ namespace Service
                                 {
                                     OrderLineLog.SupplierID = SuppliersID;
                                 }
-
-                                //var IsComplete1 = LinesList.Any(s => s.Status == 2 && s.Status != 3 && s.OrdersLinesID != CurrentLine.OrdersLinesID);
-
                                 if (LinesList.Count(s => s.Status == 2) == LinesList.Count() - CurrentYiQuXiaoCount) //全部已接单,更新订单头状态
                                 {
                                     OrderHeadModel.Status = 4;//修改订单头状态为已结单
@@ -1439,8 +1447,8 @@ namespace Service
                                 }
                                 //供货商完成接单 推送消息给总部
                                 new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-
                                 break;
+                               
 
                             case OrderLineStatus.YiQuXiao:
                                 CurrentLine.Status = 3;
