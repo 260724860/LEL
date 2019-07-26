@@ -1221,42 +1221,81 @@ namespace Service
                     YiJieSuanCount = s.Status,
                 });
                 result = result.OrderByDescending(s => s.CreateTime);
-                var GroupResult = result.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
+                //var GroupResult = result.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
+                //{
+                //    AdminName = k.Max(p => p.AdminName),
+                //    AdminTelPhone = k.Max(p => p.AdminTelPhone),
+                //    AdminID = k.Max(p => p.AdminID),
+                //    OrderHeadID = k.Max(p => p.OrderHeadID),
+                //    CreateTime = k.Max(p => p.CreateTime),
+                //    GoodsCount = k.Sum(p => p.GoodsCount),
+                //    DeliverCount = k.Sum(p => p.DeliverCount),
+                //    GoodsImage = k.Max(p => p.GoodsImage),
+                //    GoodsName = k.Max(p => p.GoodsName),
+                //    Goods_ID = k.Max(p => p.Goods_ID),
+                //    //RcName = k.Max(p => p.RcName),
+                //    //RcPhone = k.Max(p => p.RcPhone),
+                //    SupplyMoney = k.Sum(p => p.SupplyMoney * p.DeliverCount),
+                //    Notes = k.Max(p => p.Notes),
+                //    OrderLineID = k.Max(p => p.OrderLineID),
+                //    Status1 = k.Min(p => p.Status1),
+                //    Status2 = k.Max(p => p.Status1) - 1 == 0 ? 1 : 1,
+                //    Status3 = k.Max(p => p.Status1),
+                //    SuppliersID = k.Max(p => p.SuppliersID),
+                //    UpdateTime = k.Max(p => p.UpdateTime),
+                //    UsersID = k.Max(p => p.UsersID),
+
+                //    OrderType = k.Max(p => p.OrderType),
+
+                //    Out_Trade_No = k.Max(p => p.Out_Trade_No),
+                //    PickupTime = k.Max(p => p.PickupTime),
+
+                //    WeiPaiFaCount=k.Count(p=>p.WeiPaiFaCount==(int)OrderLineStatus.WeiPaiFa),
+                //    DaiJieDanCount = k.Count(p => p.DaiJieDanCount == (int)OrderLineStatus.DaiJieDan),
+                //    DaiFaHuoCount = k.Count(p => p.DaiFaHuoCount == (int)OrderLineStatus.DaiFaHuo),
+                //    FaHuoZhongCount = k.Count(p => p.FaHuoZhongCount == (int)OrderLineStatus.FaHuoZhong),
+                //    YiFahuoCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiFahuo),
+                //    YiWanChengCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiWanCheng),
+                //    YiJieSuanCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiJieSuan),
+                //});
+
+                var GroupResult = tempIq.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
                 {
-                    AdminName = k.Max(p => p.AdminName),
-                    AdminTelPhone = k.Max(p => p.AdminTelPhone),
+                    AdminName = k.Max(p => p.le_admin.Nickname),
+                    AdminTelPhone = k.Max(p => p.le_admin.TelePhone),
                     AdminID = k.Max(p => p.AdminID),
                     OrderHeadID = k.Max(p => p.OrderHeadID),
                     CreateTime = k.Max(p => p.CreateTime),
                     GoodsCount = k.Sum(p => p.GoodsCount),
                     DeliverCount = k.Sum(p => p.DeliverCount),
-                    GoodsImage = k.Max(p => p.GoodsImage),
-                    GoodsName = k.Max(p => p.GoodsName),
-                    Goods_ID = k.Max(p => p.Goods_ID),
+                    GoodsImage = k.Max(p => BasePath + p.le_goods.Image),
+                    GoodsName = k.Max(p => p.le_goods.GoodsName),
+                    Goods_ID = k.Max(p => p.GoodsID),
                     //RcName = k.Max(p => p.RcName),
                     //RcPhone = k.Max(p => p.RcPhone),
-                    SupplyMoney = k.Sum(p => p.SupplyMoney * p.DeliverCount),
+                    SupplyMoney = k.Sum(p => p.SupplyPrice * p.DeliverCount),
                     Notes = k.Max(p => p.Notes),
-                    OrderLineID = k.Max(p => p.OrderLineID),
-                    Status1 = k.Min(p => p.Status1),
-                    Status2 = k.Max(p => p.Status1) - 1 == 0 ? 1 : 1,
-                    Status3 = k.Max(p => p.Status1),
+                    OrderLineID = k.Max(p => p.OrdersLinesID),
+                    Status1 = k.Min(p => p.Status),
+                    Status2 = k.Max(p => p.Status) - 1 == 0 ? 1 : 1,
+                    Status3 = k.Max(p => p.Status),
                     SuppliersID = k.Max(p => p.SuppliersID),
                     UpdateTime = k.Max(p => p.UpdateTime),
                     UsersID = k.Max(p => p.UsersID),
 
-                    OrderType = k.Max(p => p.OrderType),
+                    OrderType = k.Max(p => p.le_orders_head.OrderType),
 
-                    Out_Trade_No = k.Max(p => p.Out_Trade_No),
-                    PickupTime = k.Max(p => p.PickupTime),
-                    
-                    WeiPaiFaCount=k.Count(p=>p.WeiPaiFaCount==(int)OrderLineStatus.WeiPaiFa),
-                    DaiJieDanCount = k.Count(p => p.DaiJieDanCount == (int)OrderLineStatus.DaiJieDan),
-                    DaiFaHuoCount = k.Count(p => p.DaiFaHuoCount == (int)OrderLineStatus.DaiFaHuo),
-                    FaHuoZhongCount = k.Count(p => p.FaHuoZhongCount == (int)OrderLineStatus.FaHuoZhong),
-                    YiFahuoCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiFahuo),
-                    YiWanChengCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiWanCheng),
-                    YiJieSuanCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiJieSuan),
+                    Out_Trade_No = k.Max(p => p.le_orders_head.OutTradeNo),
+                    PickupTime = k.Max(p => p.le_orders_head.PickupTime),
+
+                    WeiPaiFaCount = k.Count(p => p.Status == (int)OrderLineStatus.WeiPaiFa),
+                    DaiJieDanCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiJieDan),
+                    DaiFaHuoCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiFaHuo),
+                    FaHuoZhongCount = k.Count(p => p.Status == (int)OrderLineStatus.FaHuoZhong),
+                    YiFahuoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiFahuo),
+                    YiWanChengCount = k.Count(p => p.Status == (int)OrderLineStatus.YiWanCheng),
+                    YiJieSuanCount = k.Count(p => p.Status == (int)OrderLineStatus.YiJieSuan),
+                    YiQuXiaoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiQuXiao),
                 });
                 GroupResult = GroupResult.OrderByDescending(s => s.CreateTime);
                 Count = GroupResult.Count();
