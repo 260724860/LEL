@@ -39,8 +39,14 @@ namespace Service
                     bool IsAdd = true;
                     le_shop_cart ShopCarModel = new le_shop_cart();
                     var UserCartList = ctx.le_shop_cart.Where(s => s.GoodsID == GoodsID && s.UserID == UserID).ToList();
+                    
                     foreach (var CartModel in UserCartList)
                     {
+                        if(CartModel.le_goods.IsShelves==0)
+                        {
+                            Mes = string.Format("该商品已经下架，加入购物车失败");
+                            return 0;
+                        }
                         var existGoodsValue = CartModel
                         .le_cart_goodsvalue.Select(k => new AddGoodsValues { CategoryType = k.CategoryType, GoodsValueID = k.GoodsValueID }).ToList();
                         if (existGoodsValue != null)
@@ -217,7 +223,7 @@ namespace Service
                     ReturnCount=s.ReturnCount,
                     CountFull=s.le_goods.CountFull,
                     CountReduction=s.le_goods.CountReduction,
-
+                    IsShelves=s.le_goods.IsShelves,
                     GoodsValueList = s.le_cart_goodsvalue
                     .Select(k => new GoodsValues
                     {
@@ -286,8 +292,7 @@ namespace Service
                         Msg = "地址输入错误";
                         FailCartList = null;
                         return 0;
-                    }
-                  
+                    }                 
                 }
                 if (ParamasData.ExpressType == 2)
                 {
@@ -318,24 +323,21 @@ namespace Service
                         string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
                         string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
 
-                        //DateTime BeginTime = Convert.ToDateTime(BeginStr);
-                        //DateTime EndTime = Convert.ToDateTime(EndStr);
-
                         DateTime EndTime = ParamasData.PickupTime.Value.AddHours(1);
                         var hour = ParamasData.PickupTime.Value.Hour;
                         var CurrentTime = DateTime.Now;
 
 #pragma warning disable CS1030 // #warning 指令
 #warning 功能已经完成，暂时注释
-                        //var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
+                        var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
 
-                        //var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.Status != 1 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
-                        //if (CurrentOrderCountSetting <= CurrentOrderCount)
-                        //{
-                        //    Msg = "当前时间下单数已满,请选择其他时间";
-                        //    //  log.Debug(Msg);
-                        //    return 0;
-                        //}
+                        var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
+                        if (CurrentOrderCountSetting <= CurrentOrderCount)
+                        {
+                            Msg = "当前时间下单数已满,请选择其他时间";
+                            //  log.Debug(Msg);
+                            return 0;
+                        }
                     }
 #pragma warning restore CS1030 // #warning 指令
                 }
@@ -350,6 +352,11 @@ namespace Service
 
                 foreach (var goodsModel in CartList)
                 {
+                    if(goodsModel.IsShelves==0)
+                    {
+                        Msg = "该商品ID【"+goodsModel.GoodsName+"】已经下架，无法下单";
+                        return 0;
+                    }
                     var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
                     int AlreadyBuyCount = 0;
 

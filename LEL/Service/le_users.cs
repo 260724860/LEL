@@ -69,6 +69,7 @@ namespace Service
         public string ReceivePhone { get; set; }
         public string CustomerService { get; set; }
         public string CustomerServicePhone { get; set; }
+        public string Token { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_admin_re_users> le_admin_re_users { get; set; }

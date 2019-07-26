@@ -22,12 +22,13 @@ namespace Service
         /// <param name="LoginName"></param>
         /// <param name="PWD"></param>
         /// <returns></returns>
-        public UserDTO Login(string LoginName, string PWD)
+        public UserDTO Login(string LoginName, string PWD,string Token="")
         {
             using (Entities ctx = new Entities())
             {
                 UserDTO UserDto = new UserDTO();
-                var User = ctx.le_users.Join(ctx.le_pushmsg, a => a.UsersID, b => b.UserID, (a, b) => new UserDTO
+                var User = new UserDTO();
+                var temp = ctx.le_users.Join(ctx.le_pushmsg, a => a.UsersID, b => b.UserID, (a, b) => new UserDTO
                 {
                     Address = a.UsersAddress,
                     status = a.UsersStatus,
@@ -67,20 +68,27 @@ namespace Service
                     Classify = a.Classify,
                     CartModel = a.CartModel,
                     AnotherName = a.AnotherName,
-                    ReceiveName=a.ReceiveName,
-                    ReceivePhone=a.ReceivePhone,
-                    CustomerService=a.CustomerService,
-                    CustomerServicePhone=a.CustomerServicePhone
-                    
-                   
+                    ReceiveName = a.ReceiveName,
+                    ReceivePhone = a.ReceivePhone,
+                    CustomerService = a.CustomerService,
+                    CustomerServicePhone = a.CustomerServicePhone,
+                    Token = a.Token,
 
-                }).Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
 
+                });//.Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
+                if(!string.IsNullOrEmpty(Token))
+                {
+                    User = temp.Where(s => s.Token == Token).FirstOrDefault();
+                }
+                else
+                {
+                    User=temp.Where(s => s.Mobile == LoginName).Where(s => s.UserType == 1).FirstOrDefault();
+                }
                 if (User != null)
                 {
                     var DbPwd = DESEncrypt.Decrypt(User.PWD, User.Salt);
                     var result = DESEncrypt.MD5Encrypt32(DbPwd + "SystemLEL");
-                    if (result != PWD)
+                    if (result != PWD&&string.IsNullOrEmpty(Token))
                     {
                         User.Code = 1;
                         User.Msg = "账号或密码错误";
@@ -92,7 +100,10 @@ namespace Service
                         User.Msg = "账号被禁用";
                         return User;
                     }
-
+                    var update= ctx.le_users.Where(s => s.UsersID == User.UserID).FirstOrDefault();
+                    update.Token = Guid.NewGuid().ToString("N");
+                    ctx.Entry<le_users>(update).State=EntityState.Modified;
+                    ctx.SaveChanges();
                     User.Code = 0;
                     User.Salt = "******";
                     User.PWD = "*******";
@@ -109,6 +120,26 @@ namespace Service
             }
         }
 
+
+        public string GetUserToken(int UserID)
+        {
+            using (Entities ctx=new Entities())
+            {
+                var UserModel = ctx.le_users.Where(s => s.UsersID == UserID).FirstOrDefault();
+                if(UserModel==null)
+                {
+                    return "";
+                }
+                else
+                {
+                    string Token = Guid.NewGuid().ToString("N");
+                    UserModel.Token = Token;
+                    ctx.Entry<le_users>(UserModel).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                    return Token;
+                }
+            }
+        }
         /// <summary>
         /// 添加用户
         /// </summary>
@@ -430,6 +461,7 @@ namespace Service
                     Classify = s.Classify,
                     CartModel = s.CartModel,
                     AnotherName = s.AnotherName,
+                    Token=s.Token
 
                 }).ToList();
                 foreach (var index in result)
@@ -437,7 +469,7 @@ namespace Service
                     var DbPwd = DESEncrypt.Decrypt(index.PWD, index.Salt);
                     var pwd = DESEncrypt.MD5Encrypt32(DbPwd + "SystemLEL");
                     index.Salt = "******";
-                    index.PWD = pwd;
+                    index.PWD = "********";
                 }
 
 

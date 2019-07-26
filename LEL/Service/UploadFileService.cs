@@ -148,6 +148,61 @@ namespace Service
                             Msg = string.Format("在【商品录入】中商品序列号：{0}的划线价格式错误", GoodsNumber);
                             return false;
                         }
+                        if (!Decimal.TryParse(GoodsDT.Rows[i]["（金额满减）满"].ToString(), out decimal PriceFull))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的（金额满减）满格式错误", GoodsNumber);
+                            return false;
+                        }
+                        if (!Decimal.TryParse(GoodsDT.Rows[i]["（金额满减）减"].ToString(), out decimal PriceReduction))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的【（金额满减）减】格式错误", GoodsNumber);
+                            return false;
+                        }
+                        if (!Decimal.TryParse(GoodsDT.Rows[i]["（数量满减）满"].ToString(), out decimal CountFull))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的【（数量满减）满】格式错误", GoodsNumber);
+                            return false;
+                        }
+                        if (!Decimal.TryParse(GoodsDT.Rows[i]["（数量满减）减"].ToString(), out decimal CountReduction))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的（数量满减）减式错误", GoodsNumber);
+                            return false;
+                        }
+                        if (!int.TryParse(GoodsDT.Rows[i]["积分"].ToString(), out int Integral))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的【积分】格式错误", GoodsNumber);
+                            return false;
+                        }
+                        if (!Decimal.TryParse(GoodsDT.Rows[i]["折扣"].ToString(), out decimal Discount))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的【折扣】格式错误", GoodsNumber);
+                            return false;
+                        }
+                        DateTime? SeckillBeginTime = null;
+                        DateTime? SeckillEndTime = null;
+                        if(!string.IsNullOrEmpty(GoodsDT.Rows[i]["秒杀开始时间"].ToString()))
+                        {
+                            try {
+                                SeckillBeginTime = DateTime.ParseExact(GoodsDT.Rows[i]["秒杀开始时间"].ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
+                            }
+                            catch(Exception ex)
+                            {
+                                Msg = string.Format("在【商品录入】中商品序列号：{0}的【秒杀开始时间】格式错误", GoodsNumber);
+                                return false;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(GoodsDT.Rows[i]["秒杀结束时间"].ToString()))
+                        {
+                            try
+                            {
+                                SeckillEndTime = DateTime.ParseExact(GoodsDT.Rows[i]["秒杀结束时间"].ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                            }
+                            catch (Exception ex)
+                            {
+                                Msg = string.Format("在【商品录入】中商品序列号：{0}的【秒杀结束时间】格式错误", GoodsNumber);
+                                return false;
+                            }
+                        }
                         #endregion
 
                         GoodsModel.Describe = GoodsDT.Rows[i]["商品描述"].ToString();
@@ -175,6 +230,12 @@ namespace Service
                         GoodsModel.IsRecommend = Convert.ToInt32(GoodsDT.Rows[i]["是否推荐(0否/1是)"].ToString()) == 1 ? 1 : 0;
                         GoodsModel.IsHot = Convert.ToInt32(GoodsDT.Rows[i]["是否热门(0否/1是)"].ToString()) == 1 ? 1 : 0;
                         GoodsModel.IsSeckill = Convert.ToInt32(GoodsDT.Rows[i]["是否秒杀(0否/1是)"].ToString()) == 1 ? 1 : 0;
+                        GoodsModel.CountFull = CountFull;
+                        GoodsModel.CountReduction = CountReduction;
+                        GoodsModel.PriceFull = PriceFull;
+                        GoodsModel.PriceReduction = PriceReduction;
+                        GoodsModel.Integral = Integral;
+                        GoodsModel.Discount = Discount;
 
                         //model.Province = dto.Province;
                         //model.City = dto.City;
@@ -189,7 +250,8 @@ namespace Service
                         GoodsModel.PriceScheme2 = 0;
                         GoodsModel.PriceScheme3 = 0;
                         GoodsModel.IsParcel =0;
-
+                        GoodsModel.SeckillBeginTime = SeckillBeginTime;
+                        GoodsModel.SeckillEndTime = SeckillEndTime;
                         //获取商品图片
                         DataRow[] FileterImg = GoodsAttachImg1T.Select("商品序列号= '" + GoodsNumber + "'");
                         if (FileterImg == null || FileterImg.Length <= 0) //为设置图片

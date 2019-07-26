@@ -99,6 +99,8 @@ namespace DTO.ShopOrder
         /// 退货数量
         /// </summary>
         public int? ReturnCount { get; set; } = 1;
+
+        public int IsShelves { get; set; }
     }
 
 }

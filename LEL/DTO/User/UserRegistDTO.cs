@@ -161,5 +161,6 @@
         /// 客服电话
         /// </summary>
         public string CustomerServicePhone { get; set; }
+        public string Token { get; set; }
     }
 }

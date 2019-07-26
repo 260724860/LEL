@@ -25,9 +25,9 @@ namespace LEL.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult GetAccessToken(string Loginname, string PWD)
+        public IHttpActionResult GetAccessToken(string Loginname, string PWD,string Token="")
         {
-            var UserDto = userService.Login(Loginname, PWD);
+            var UserDto = userService.Login(Loginname, PWD, Token);
             if (UserDto.Code == 1)
             {
                 return Json(JRpcHelper.AjaxResult(1, UserDto.Msg, null));
