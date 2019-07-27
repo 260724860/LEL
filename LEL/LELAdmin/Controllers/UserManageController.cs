@@ -151,8 +151,6 @@ namespace LELAdmin.Controllers
                 {
                     kk += index.ValidationErrors;
                 }
-                
-               
                 return Json(new { code = 1, msg = "数据类型错误:" + kk, content = ex.ToString() });
 
             }

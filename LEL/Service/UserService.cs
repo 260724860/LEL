@@ -112,9 +112,12 @@ namespace Service
                 }
                 else if(!string.IsNullOrEmpty(Token))
                 {
-                    User.Code = 1;
-                    User.Msg = "Token失效";
-                    return User;
+                    UserDto.Code = 1;
+                    UserDto.Msg = "Token失效,请重新获取!";
+                    return UserDto;
+                    //User.Code = 1;
+                    //User.Msg = "Token失效,请重新获取";
+                    //return User;
                 }
                 else
                 {

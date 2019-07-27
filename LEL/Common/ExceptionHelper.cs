@@ -22,5 +22,10 @@ namespace Common
             }
             return str;
         }
+        //public static string GetEFValidationErrors(DbEntityValidationException)
+        //{
+
+        //}
+
     }
 }

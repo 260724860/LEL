@@ -34,7 +34,7 @@ namespace LEL.Controllers
             }
             var tokenExpiration = TimeSpan.FromHours(24);
             ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.Name, Loginname + "," + UserDto.UserID.ToString() + "," + UserDto.status.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.Name, UserDto.Mobile + "," + UserDto.UserID.ToString() + "," + UserDto.status.ToString()));
             identity.AddClaim(new Claim("UserID", UserDto.UserID.ToString()));
             identity.AddClaim(new Claim("UserType", "1"));
             identity.AddClaim(new Claim("Status", UserDto.status.ToString()));
@@ -49,7 +49,7 @@ namespace LEL.Controllers
             var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
             //userService.AddUserToken(UserID, accessToken);
             JObject tokenResponse = new JObject(
-                                        new JProperty("userName", Loginname),
+                                        new JProperty("userName", UserDto.Mobile),
                                         new JProperty("access_token", accessToken),
                                         new JProperty("token_type", "bearer"),
                                         new JProperty("expires_in", tokenExpiration.TotalSeconds.ToString()),
