@@ -178,9 +178,12 @@ namespace Service
                             Msg = string.Format("在【商品录入】中商品序列号：{0}的【折扣】格式错误", GoodsNumber);
                             return false;
                         }
+
                         DateTime? SeckillBeginTime = null;
                         DateTime? SeckillEndTime = null;
-                        if(!string.IsNullOrEmpty(GoodsDT.Rows[i]["秒杀开始时间"].ToString()))
+                        DateTime? QuotaBeginTime = null;
+                        DateTime? QuotaEndTime = null;
+                        if (!string.IsNullOrEmpty(GoodsDT.Rows[i]["秒杀开始时间"].ToString()))
                         {
                             try {
                                 SeckillBeginTime = DateTime.ParseExact(GoodsDT.Rows[i]["秒杀开始时间"].ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
@@ -200,6 +203,30 @@ namespace Service
                             catch (Exception ex)
                             {
                                 Msg = string.Format("在【商品录入】中商品序列号：{0}的【秒杀结束时间】格式错误", GoodsNumber);
+                                return false;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(GoodsDT.Rows[i]["限购开始时间"].ToString()))
+                        {
+                            try
+                            {
+                                QuotaBeginTime = DateTime.ParseExact(GoodsDT.Rows[i]["限购开始时间"].ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                            }
+                            catch (Exception ex)
+                            {
+                                Msg = string.Format("在【商品录入】中商品序列号：{0}的【限购开始时间】格式错误", GoodsNumber);
+                                return false;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(GoodsDT.Rows[i]["限购结束时间"].ToString()))
+                        {
+                            try
+                            {
+                                QuotaEndTime = DateTime.ParseExact(GoodsDT.Rows[i]["限购结束时间"].ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                            }
+                            catch (Exception ex)
+                            {
+                                Msg = string.Format("在【商品录入】中商品序列号：{0}的【限购结束时间】格式错误", GoodsNumber);
                                 return false;
                             }
                         }
@@ -252,6 +279,8 @@ namespace Service
                         GoodsModel.IsParcel =0;
                         GoodsModel.SeckillBeginTime = SeckillBeginTime;
                         GoodsModel.SeckillEndTime = SeckillEndTime;
+                        GoodsModel.QuotaBeginTime = QuotaBeginTime;
+                        GoodsModel.QuotaEndTime = QuotaEndTime;
                         //获取商品图片
                         DataRow[] FileterImg = GoodsAttachImg1T.Select("商品序列号= '" + GoodsNumber + "'");
                         if (FileterImg == null || FileterImg.Length <= 0) //为设置图片

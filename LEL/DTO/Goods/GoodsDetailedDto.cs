@@ -212,6 +212,17 @@ namespace DTO.Goods
         /// 是否拼货
         /// </summary>
         public int IsParcel { get; set; }
+
+        /// <summary>
+        /// 限购开始时间
+        /// </summary>
+        public Nullable<System.DateTime> QuotaBeginTime { get; set; }
+        /// <summary>
+        /// 限购结束时间
+        /// </summary>
+        public Nullable<System.DateTime> QuotaEndTime { get; set; }
+
+
     }
     public class GoodsValues
     {

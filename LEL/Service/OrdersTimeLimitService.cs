@@ -21,12 +21,7 @@ namespace Service
             using (Entities ctx=new Entities())
             {
                 int hour = TimeSlot.Hour;
-                //   DateTime EndTime = TimeSlot.AddHours(1);
-              //  OrdersLimitCount result = new OrdersLimitCount();
-
-                var year = DateTime.Now.Year;
-                var month = DateTime.Now.Month;
-                var day = DateTime.Now.Day;
+             
                 var BeginTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 0, 0, 0);
                 var EndTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 23, 59, 59);
 
@@ -40,23 +35,40 @@ namespace Service
                         TimeSlot = b.Key.Hour
                     });
                 var list = groupby.ToList();
-                var CurrentCountList = list.Select(s => s.TimeSlot);
-                var LimitCountList = ctx.le_orders_timelimit.Where(s => CurrentCountList.Contains(s.TimeSlot))
+                // var CurrentCountList = list.Select(s => s.TimeSlot);
+                //var LimitCountList = ctx.le_orders_timelimit.Where(s => CurrentCountList.Contains(s.TimeSlot))
+                var LimitCountList = ctx.le_orders_timelimit.Where(s =>true)
                     .Select(b => new OrdersLimitGroupby
                     {
                        TimeSlot= b.TimeSlot,
-                       LimitCount=  b.LimitOrderCount
+                       LimitCount=  b.LimitOrderCount,
+                       AdminID=b.AdminID,
+                       AdminName=b.le_admin.Nickname,
+                       CreateTime=b.CreateTime,
+                       ID=b.ID,
+                     //  LimitOrderCount=b.LimitOrderCount,
+                       UpdateTime=b.UpdateTime
                     }).ToList();
 
-              var results= list.Join(LimitCountList, a => a.TimeSlot, b => b.TimeSlot, (a, b) =>
-                
-                    new OrdersLimitGroupby
-                    {   
-                        CurrentOrderCount=a.CurrentOrderCount,
-                        TimeSlot = b.TimeSlot,
-                        LimitCount = b.LimitCount
-                    }).ToList();
-            
+                LimitCountList.ForEach(m => {
+                    var exit = list.FirstOrDefault(s => s.TimeSlot == m.TimeSlot);
+                    if (exit != null)
+                    {
+                        m.CurrentOrderCount = exit.CurrentOrderCount;
+                    }
+                });
+
+                var results = LimitCountList;
+              //var results= list.Join(LimitCountList, a => a.TimeSlot, b => b.TimeSlot, (a, b) =>
+
+                //      new OrdersLimitGroupby
+                //      {   
+                //          CurrentOrderCount=a.CurrentOrderCount,
+                //          TimeSlot = b.TimeSlot,
+                //          LimitCount = b.LimitCount,
+
+                //      }).ToList();
+
 
 
 
@@ -79,6 +91,8 @@ namespace Service
                     AdminName=s.le_admin.Nickname
 
                 }).ToList();
+
+
                 return temp;
             }
         }

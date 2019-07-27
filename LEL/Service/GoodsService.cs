@@ -438,7 +438,7 @@ namespace Service
                     s.Initial,
                     s.Integral,
                     s.IsCrossdomain,
-                  
+                    s.IsRandomDistribution,
                     s.IsReturn,
                     s.PlaceofOrigin,
                     s.PriceFull,
@@ -453,6 +453,12 @@ namespace Service
                     s.TermOfValidity,
                     s.CountFull,
                     s.CountReduction,
+                    s.QuotaBeginTime,
+                    s.QuotaEndTime,
+                    s.IsParcel,
+                    s.PriceScheme1,
+                    s.PriceScheme2,
+                    s.PriceScheme3,
                 }).FirstOrDefaultAsync();
                 if (result == null || result.GoodsID == 0)
                 {
@@ -503,6 +509,15 @@ namespace Service
                 GDetailed.TermOfValidity    = result.TermOfValidity;
                 GDetailed.CountFull = result.CountFull;
                 GDetailed.CountReduction = result.CountReduction;
+
+                GDetailed.QuotaBeginTime = result.QuotaBeginTime;
+                GDetailed.QuotaEndTime = result.QuotaEndTime;
+                GDetailed.IsParcel = result.IsParcel;
+                GDetailed.IsRandomDistribution = result.IsRandomDistribution;
+                GDetailed.PriceScheme1 = result.PriceScheme1;
+                GDetailed.PriceScheme2 = result.PriceScheme2;
+                GDetailed.PriceScheme3 = result.PriceScheme3;
+              
                 //GDetailed.SupplierID = result.SuppliersID;
                 //GDetailed.SupplierName = result.SuppliersName; //GetSupplierByID(GDetailed.SupplierID);
 
@@ -793,7 +808,8 @@ namespace Service
 
                     model.IsParcel = dto.IsParcel;
 
-
+                    model.QuotaBeginTime = dto.QuotaBeginTime;
+                    model.QuotaEndTime = dto.QuotaEndTime;
 
                     #region 添加属性
                     int p = 1;
@@ -1021,6 +1037,8 @@ namespace Service
                 model.PriceScheme2 = dto.PriceScheme2.HasValue ? dto.PriceScheme2.Value : 0;
                 model.PriceScheme3 = dto.PriceScheme3.HasValue ? dto.PriceScheme3.Value : 0;
                 model.IsParcel = dto.IsParcel;
+                model.QuotaBeginTime = dto.QuotaBeginTime;
+                model.QuotaEndTime = dto.QuotaEndTime;
 
                 GoodLogModel.AfterGoodsName = model.GoodsName;
                 GoodLogModel.AfterQuota = model.Quota;

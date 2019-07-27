@@ -110,6 +110,12 @@ namespace Service
                     User.Msg = "SUCCESS";
                     return User;
                 }
+                else if(!string.IsNullOrEmpty(Token))
+                {
+                    User.Code = 1;
+                    User.Msg = "Token失效";
+                    return User;
+                }
                 else
                 {
                     //log.Debug(string.Format("用户名：{0},登陆失败)",LoginName));

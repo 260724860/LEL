@@ -224,6 +224,8 @@ namespace Service
                     CountFull=s.le_goods.CountFull,
                     CountReduction=s.le_goods.CountReduction,
                     IsShelves=s.le_goods.IsShelves,
+                    QuotaBeginTime=s.le_goods.QuotaBeginTime,
+                    QuotaEndTime=s.le_goods.QuotaEndTime,
                     GoodsValueList = s.le_cart_goodsvalue
                     .Select(k => new GoodsValues
                     {
@@ -320,8 +322,8 @@ namespace Service
                     {
                         //判断当前时间内的下单数
 
-                        string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
-                        string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
+                        //string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
+                        //string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
 
                         DateTime EndTime = ParamasData.PickupTime.Value.AddHours(1);
                         var hour = ParamasData.PickupTime.Value.Hour;
@@ -357,22 +359,43 @@ namespace Service
                         Msg = "该商品ID【"+goodsModel.GoodsName+"】已经下架，无法下单";
                         return 0;
                     }
+
                     var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
                     int AlreadyBuyCount = 0;
 
-                    //已经购买的数量
-                    var BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID).Select(k => new { k.GoodsCount }).ToList();
-                    if (BuyCountIquery != null)
+                    ///判断商品限购
+                    if (goodsModel.Quota != -1) //限购商品
                     {
-                        AlreadyBuyCount = BuyCountIquery.Sum(g => g.GoodsCount);
-                    }
+                        var BuyCountIquery = new List<int>();
+                        if (goodsModel.QuotaBeginTime == null && goodsModel.QuotaEndTime == null)
+                        {
+                            //已经购买的数量
+                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID).Select(k => k.GoodsCount).ToList();
+                            if (BuyCountIquery != null)
+                            {
+                                AlreadyBuyCount = BuyCountIquery.Sum();
+                            }
+                        }
+                        else 
+                        {
+                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID 
+                            && s.GoodsID == QuotaGoods.GoodsID
+                            &&s.CreateTime>=goodsModel.QuotaBeginTime
+                            &&s.CreateTime<=goodsModel.QuotaEndTime).Select(k => k.GoodsCount).ToList();
+                            if (BuyCountIquery != null)
+                            {
+                                AlreadyBuyCount = BuyCountIquery.Sum();
+                            }
+                        }
 
-                    if ((QuotaGoods != null && goodsModel.Quota != -1 && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - QuotaGoods.GoodsCount < 0 && goodsModel.Quota != -1))
-                    {
-                        Msg = string.Format("该商品没人限购{0}件", goodsModel.Quota);
-                        log.Debug(Msg);
-                        return 0;
+                        if ((QuotaGoods != null && goodsModel.Quota != -1 && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - QuotaGoods.GoodsCount < 0 && goodsModel.Quota != -1))
+                        {
+                            Msg = string.Format("该商品没人限购{0}件", goodsModel.Quota);
+                            log.Debug(Msg);
+                            return 0;
+                        }
                     }
+                   
                     if (goodsModel.Stock - QuotaGoods.GoodsCount < 0)
                     {
                         Msg = "库存不足，请稍后再试";

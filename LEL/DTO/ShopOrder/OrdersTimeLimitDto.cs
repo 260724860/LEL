@@ -14,8 +14,11 @@ namespace DTO.ShopOrder
         public System.DateTime UpdateTime { get; set; }
         public int TimeSlot { get; set; }
         public int LimitOrderCount { get; set; }
-       // public int CurrentOrderCount { get; set; }
+
+        public int CurrentOrderCount { get; set; }
+
         public string AdminName { get; set; }
+
 
     }
 }

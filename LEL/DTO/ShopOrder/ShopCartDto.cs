@@ -100,7 +100,19 @@ namespace DTO.ShopOrder
         /// </summary>
         public int? ReturnCount { get; set; } = 1;
 
+        /// <summary>
+        /// 是否上架 0/1
+        /// </summary>
         public int IsShelves { get; set; }
+
+        /// <summary>
+        /// 限购开始时间
+        /// </summary>
+        public Nullable<System.DateTime> QuotaBeginTime { get; set; }
+        /// <summary>
+        /// 限购结束时间
+        /// </summary>
+        public Nullable<System.DateTime> QuotaEndTime { get; set; }
     }
 
 }

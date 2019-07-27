@@ -4,6 +4,7 @@ using DTO.Others;
 using DTO.ShopOrder;
 using Service;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace LELAdmin.Controllers
@@ -352,6 +353,29 @@ namespace LELAdmin.Controllers
                 return Json(JRpcHelper.AjaxResult(1, msg, result));
 
             }
+        }
+
+        /// <summary>
+        /// 获取当前时间段内下单数
+        /// </summary>
+        /// <param name="TimeSlot"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost, Route("api/ShopOrder/GetOrderLimitByTimeSlot/")]
+        public async Task<IHttpActionResult> GetOrderLimitByTimeSlot(DateTime? TimeSlot)
+        {
+            DateTime newDate;
+            if (TimeSlot==null)
+            {
+                newDate = DateTime.Now;
+            }
+            else
+            {
+                newDate = TimeSlot.Value;
+            }
+          
+            var result = await new OrdersTimeLimitService().GetOrderLimitForTimeSlot(newDate);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
     }
