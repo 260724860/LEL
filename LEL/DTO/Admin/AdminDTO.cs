@@ -144,5 +144,7 @@ namespace DTO.Admin
         public string Password { get; set; }
 
         public string TelePhone { get; set; }
+
+        public string Address { get; set; }
     }
 }
