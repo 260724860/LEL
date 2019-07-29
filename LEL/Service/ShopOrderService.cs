@@ -1557,7 +1557,7 @@ namespace Service
 
                                 break;
                             default:
-                                throw new Exception("订单状态错误，请检查");
+                                throw new Exception("订单状态【"+Status.ToString()+"】错误，请检查");
                                 break;
                         }
 
@@ -1601,8 +1601,11 @@ namespace Service
                         OrderLineLog.AfterStatus = (int)Status;
                         OrderLineLog.OrderLineID = CurrentLine.OrdersLinesID;
 
-                        ctx.le_orders_lines_log.Add(OrderLineLog);
-
+                        if (OrderLineLog.AfterCount != OrderLineLog.BeforeCount||OrderLineLog.BeforeMoney!=OrderLineLog.AfterMoney)
+                        {
+                            ctx.le_orders_lines_log.Add(OrderLineLog);
+                        }
+                      
                         if (CurrentLine.le_goods.TotalSalesVolume < 0 || CurrentLine.le_goods.SalesVolumes < 0)
                         {
                             Msg = string.Format("计算错误,月销量不可为负数.订单行ID:{0}", CurrentLine.OrdersLinesID);
