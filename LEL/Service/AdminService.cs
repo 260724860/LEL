@@ -404,6 +404,10 @@ namespace Service
                 {
                     model.TelePhone = editAdmin.TelePhone;
                 }
+                if(!string.IsNullOrEmpty(editAdmin.Address))
+                {
+                    model.Address = editAdmin.Address;
+                }
                 model.Status = editAdmin.Status;
                 //  model.UpdateTime = DateTime.Now;
                 ctx.Entry<le_admin>(model).State = EntityState.Modified;
