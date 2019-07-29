@@ -17,12 +17,13 @@ namespace LEL.Controllers
 
         SupplierUserService SupplierUserService = new SupplierUserService();
 
-        /// <summary>
-        /// 获取AccessToken
-        /// </summary>
-        /// <param name="Loginname">登陆名</param>
-        /// <param name="PWD"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 登陆获取access_token
+       /// </summary>
+       /// <param name="Loginname">手机号码</param>
+       /// <param name="PWD"></param>
+       /// <param name="Token">登陆token</param>
+       /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         public IHttpActionResult GetAccessToken(string Loginname, string PWD,string Token="")
