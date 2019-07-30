@@ -152,7 +152,12 @@ namespace Common
         public static string GenerateOutTradeNo(string HeadStr)
         {
             var ran = new Random();
-            return string.Format("{0}{1}{2}", HeadStr, DateTime.Now.ToString("yyyyMMddHHmmss"), ran.Next(999));
+            int r = ran.Next(999);
+            if(r<100)
+            {
+                r = r * 10;
+            }
+            return string.Format("{0}{1}{2}", HeadStr, DateTime.Now.ToString("yyyyMMddHHmmss"), r);
         }
 
 

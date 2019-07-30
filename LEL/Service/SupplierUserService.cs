@@ -11,6 +11,7 @@ namespace Service
     public class SupplierUserService
     {
         private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(SupplierUserService));
+        private SortedList<string, le_sysconfig> SysConfigs = SysConfig.Get().values;
         /// <summary>
         /// 登陆  
         /// </summary>
@@ -215,6 +216,18 @@ namespace Service
                 model.PassWord = DESEncrypt.Encrypt(PWD, model.Salt);
                 model.CreateTime = DateTime.Now;
                 model.Status = 0;
+
+                lel_admin_suppliers Admin_ReModel = new lel_admin_suppliers();
+                Admin_ReModel.CreateTime = DateTime.Now;
+                Admin_ReModel.UpdateTime = DateTime.Now;
+                if (SysConfigs.Where(s => s.Value.Name == "CurrentContext").FirstOrDefault().Value.Value == "TEST")
+                {
+                    Admin_ReModel.AdminID = 9;
+                }
+                Admin_ReModel.le_suppliers = model;
+
+                ctx.lel_admin_suppliers.Add(Admin_ReModel);
+
                 ctx.le_suppliers.Add(model);
                 try
                 {

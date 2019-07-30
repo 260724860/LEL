@@ -334,7 +334,7 @@ namespace Service
                         var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
 
                         var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
-                        if (CurrentOrderCountSetting <= CurrentOrderCount)
+                        if (CurrentOrderCountSetting <= CurrentOrderCount&& CurrentOrderCountSetting!=0)
                         {
                             Msg = "当前时间下单数已满,请选择其他时间";
                             //  log.Debug(Msg);
@@ -1030,17 +1030,23 @@ namespace Service
                         }
                         if (Linemodel.DeliverCount != data.GoodsCount)//更改商品数量
                         {
-
+                            if (data.GoodsCount <= 0)
+                            {
+                                Linemodel.Status = (int)OrderLineStatus.YiQuXiao;
+                                data.GoodsCount = 0;
+                            }
+                            int Difference=  Linemodel.DeliverCount - data.GoodsCount;
                             ///更改订单数量 更新商品库存                         
-                            Linemodel.le_goods.Stock += (Linemodel.DeliverCount - data.GoodsCount);
-                            Linemodel.le_goods.SalesVolumes -= (Linemodel.DeliverCount - data.GoodsCount);
-                            Linemodel.le_goods.TotalSalesVolume -= (Linemodel.DeliverCount - data.GoodsCount);
+                            Linemodel.le_goods.Stock += (Difference);
+                            Linemodel.le_goods.SalesVolumes -= (Difference);
+                            Linemodel.le_goods.TotalSalesVolume -= (Difference);
+
+                            modhead.DeliverCount -= Difference;
+                            modhead.RealSupplyAmount -=(Linemodel.SupplyPrice * Difference);
+                            modhead.RealAmount  -= (Linemodel.GoodsPrice * Difference);
 
                             Linemodel.DeliverCount = data.GoodsCount;
-                            if (Linemodel.DeliverCount <= 0)
-                            {
-                                Linemodel.DeliverCount = 0;
-                            }
+                          
                          
                             OrderLineLogModel.AfterCount = Linemodel.DeliverCount;
                             OrderLineLogModel.AfterMoney = Linemodel.GoodsPrice;
@@ -1058,9 +1064,9 @@ namespace Service
 
                     }
 
-                    modhead.DeliverCount = OrderLineList.Sum(s => s.DeliverCount);
-                    modhead.RealSupplyAmount = OrderLineList.Sum(s => s.SupplyPrice * s.DeliverCount);
-                    modhead.RealAmount = OrderLineList.Sum(s => s.GoodsPrice * s.DeliverCount);
+                    //modhead.DeliverCount = OrderLineList.Sum(s => s.DeliverCount);
+                    //modhead.RealSupplyAmount = OrderLineList.Sum(s => s.SupplyPrice * s.DeliverCount);
+                    //modhead.RealAmount = OrderLineList.Sum(s => s.GoodsPrice * s.DeliverCount);
 
                     if (modhead.DeliverCount < 0)
                     {
@@ -1096,73 +1102,6 @@ namespace Service
             }
         }
 
-        /// <summary>
-        /// 查询商品的供货商信息
-        /// </summary>
-        /// <param name="GoodsID"></param>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-//        public List<GoodsSuppliersInfoDto> GetGoodsSuppliersList(int GoodsID, out string msg)
-//        {
-//            using (Entities ctx = new Entities())
-//            {
-//                try
-//                {
-//                    string sql = string.Format(@"select lg.GoodsID,lg.GoodsName,ls.Suppliers_Name,lgs.Price,ls.SuppliersID from le_suppliers ls 
-//left join le_goods_suppliers lgs on lgs.SuppliersID = ls.SuppliersID
-//left join le_goods lg on lg.GoodsID=lgs.GoodsID
-//where lg.GoodsID=@GoodsID");
-
-//                    MySqlParameter[] parameters =
-//                    {
-//                    new MySqlParameter("@GoodsID", MySqlDbType.Int32),
-//                    };
-//                    parameters[0].Value = GoodsID;
-
-//                    var resule = ctx.Database.SqlQuery<GoodsSuppliersInfoDto>(sql, parameters).ToList();
-//                    msg = "SUCCESS";
-//                    return resule;
-//                }
-//                catch (Exception ex)
-//                {
-//                    msg = "查询异常，信息：" + ex.ToString();
-//                    return null;
-//                }
-//            }
-//        }
-
-        /// <summary>
-        /// 用户取消订单
-        /// </summary>
-        /// <param name="UserID"></param>
-        /// <param name="OrderNo"></param>
-        /// <returns></returns>
-        //public bool UserCancelOrder(int UserID, string OrderNo)
-        //{
-        //    using (Entities ctx = new Entities())
-        //    {
-        //        var orderModel = ctx.le_orders_head.Where(s => s.UsersID == UserID && s.OutTradeNo == OrderNo).FirstOrDefault();
-        //        if (orderModel == null)
-        //        {
-        //            return false;
-        //        }
-        //        if (orderModel.Status != 0)
-        //        {
-        //            return false;
-        //        }
-        //        orderModel.Status = 5;
-        //        ctx.Entry<le_orders_head>(orderModel).State = EntityState.Modified;
-        //        if (ctx.SaveChanges() > 0)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-
-        //    }
-        //}
 
         /// <summary>
         /// 获取订单行列表
@@ -1249,84 +1188,89 @@ namespace Service
                     YiFahuoCount = s.Status,
                     YiWanChengCount = s.Status,
                     YiJieSuanCount = s.Status,
+                    YiQuXiaoCount=s.Status,
+                    OrderLineCount=s.OrdersLinesID
                 });
                 result = result.OrderByDescending(s => s.CreateTime);
-                //var GroupResult = result.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
-                //{
-                //    AdminName = k.Max(p => p.AdminName),
-                //    AdminTelPhone = k.Max(p => p.AdminTelPhone),
-                //    AdminID = k.Max(p => p.AdminID),
-                //    OrderHeadID = k.Max(p => p.OrderHeadID),
-                //    CreateTime = k.Max(p => p.CreateTime),
-                //    GoodsCount = k.Sum(p => p.GoodsCount),
-                //    DeliverCount = k.Sum(p => p.DeliverCount),
-                //    GoodsImage = k.Max(p => p.GoodsImage),
-                //    GoodsName = k.Max(p => p.GoodsName),
-                //    Goods_ID = k.Max(p => p.Goods_ID),
-                //    //RcName = k.Max(p => p.RcName),
-                //    //RcPhone = k.Max(p => p.RcPhone),
-                //    SupplyMoney = k.Sum(p => p.SupplyMoney * p.DeliverCount),
-                //    Notes = k.Max(p => p.Notes),
-                //    OrderLineID = k.Max(p => p.OrderLineID),
-                //    Status1 = k.Min(p => p.Status1),
-                //    Status2 = k.Max(p => p.Status1) - 1 == 0 ? 1 : 1,
-                //    Status3 = k.Max(p => p.Status1),
-                //    SuppliersID = k.Max(p => p.SuppliersID),
-                //    UpdateTime = k.Max(p => p.UpdateTime),
-                //    UsersID = k.Max(p => p.UsersID),
-
-                //    OrderType = k.Max(p => p.OrderType),
-
-                //    Out_Trade_No = k.Max(p => p.Out_Trade_No),
-                //    PickupTime = k.Max(p => p.PickupTime),
-
-                //    WeiPaiFaCount=k.Count(p=>p.WeiPaiFaCount==(int)OrderLineStatus.WeiPaiFa),
-                //    DaiJieDanCount = k.Count(p => p.DaiJieDanCount == (int)OrderLineStatus.DaiJieDan),
-                //    DaiFaHuoCount = k.Count(p => p.DaiFaHuoCount == (int)OrderLineStatus.DaiFaHuo),
-                //    FaHuoZhongCount = k.Count(p => p.FaHuoZhongCount == (int)OrderLineStatus.FaHuoZhong),
-                //    YiFahuoCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiFahuo),
-                //    YiWanChengCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiWanCheng),
-                //    YiJieSuanCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiJieSuan),
-                //});
-
-                var GroupResult = tempIq.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
+                var kk = result.ToList();
+                var GroupResult = result.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
                 {
-                    AdminName = k.Max(p => p.le_admin.Nickname),
-                    AdminTelPhone = k.Max(p => p.le_admin.TelePhone),
+                    AdminName = k.Max(p => p.AdminName),
+                    AdminTelPhone = k.Max(p => p.AdminTelPhone),
                     AdminID = k.Max(p => p.AdminID),
                     OrderHeadID = k.Max(p => p.OrderHeadID),
                     CreateTime = k.Max(p => p.CreateTime),
                     GoodsCount = k.Sum(p => p.GoodsCount),
                     DeliverCount = k.Sum(p => p.DeliverCount),
-                    GoodsImage = k.Max(p => BasePath + p.le_goods.Image),
-                    GoodsName = k.Max(p => p.le_goods.GoodsName),
-                    Goods_ID = k.Max(p => p.GoodsID),
+                    GoodsImage = k.Max(p => p.GoodsImage),
+                    GoodsName = k.Max(p => p.GoodsName),
+                    Goods_ID = k.Max(p => p.Goods_ID),
                     //RcName = k.Max(p => p.RcName),
                     //RcPhone = k.Max(p => p.RcPhone),
-                    SupplyMoney = k.Sum(p => p.SupplyPrice * p.DeliverCount),
+                    SupplyMoney = k.Sum(p => p.SupplyMoney * p.DeliverCount),
                     Notes = k.Max(p => p.Notes),
-                    OrderLineID = k.Max(p => p.OrdersLinesID),
-                    Status1 = k.Min(p => p.Status),
-                    Status2 = k.Max(p => p.Status) - 1 == 0 ? 1 : 1,
-                    Status3 = k.Max(p => p.Status),
+                    OrderLineID = k.Max(p => p.OrderLineID),
+                    Status1 = k.Min(p => p.Status1),
+                    Status2 = k.Max(p => p.Status1) - 1 == 0 ? 1 : 1,
+                    Status3 = k.Max(p => p.Status1),
                     SuppliersID = k.Max(p => p.SuppliersID),
                     UpdateTime = k.Max(p => p.UpdateTime),
                     UsersID = k.Max(p => p.UsersID),
 
-                    OrderType = k.Max(p => p.le_orders_head.OrderType),
+                    OrderType = k.Max(p => p.OrderType),
 
-                    Out_Trade_No = k.Max(p => p.le_orders_head.OutTradeNo),
-                    PickupTime = k.Max(p => p.le_orders_head.PickupTime),
+                    Out_Trade_No = k.Max(p => p.Out_Trade_No),
+                    PickupTime = k.Max(p => p.PickupTime),
 
-                    WeiPaiFaCount = k.Count(p => p.Status == (int)OrderLineStatus.WeiPaiFa),
-                    DaiJieDanCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiJieDan),
-                    DaiFaHuoCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiFaHuo),
-                    FaHuoZhongCount = k.Count(p => p.Status == (int)OrderLineStatus.FaHuoZhong),
-                    YiFahuoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiFahuo),
-                    YiWanChengCount = k.Count(p => p.Status == (int)OrderLineStatus.YiWanCheng),
-                    YiJieSuanCount = k.Count(p => p.Status == (int)OrderLineStatus.YiJieSuan),
-                    YiQuXiaoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiQuXiao),
+                    WeiPaiFaCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.WeiPaiFa),
+                    DaiJieDanCount = k.Count(p => p.DaiJieDanCount == (int)OrderLineStatus.DaiJieDan),
+                    DaiFaHuoCount = k.Count(p => p.DaiFaHuoCount == (int)OrderLineStatus.DaiFaHuo),
+                    FaHuoZhongCount = k.Count(p => p.FaHuoZhongCount == (int)OrderLineStatus.FaHuoZhong),
+                    YiFahuoCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiFahuo),
+                    YiWanChengCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiWanCheng),
+                    YiJieSuanCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.YiJieSuan),
+                    YiQuXiaoCount = k.Count(p => p.YiQuXiaoCount == (int)OrderLineStatus.YiQuXiao),
+                    OrderLineCount=k.Count(p=>p.OrderLineID>0)
                 });
+
+                //var GroupResult = tempIq.GroupBy(q => q.OrderHeadID).Select(k => new OrderLineDto
+                //{
+                //    AdminName = k.Max(p => p.le_admin.Nickname),
+                //    AdminTelPhone = k.Max(p => p.le_admin.TelePhone),
+                //    AdminID = k.Max(p => p.AdminID),
+                //    //OrderHeadID = k.Max(p => p.OrderHeadID),
+                //    CreateTime = k.Max(p => p.CreateTime),
+                //    GoodsCount = k.Sum(p => p.GoodsCount),
+                //    DeliverCount = k.Sum(p => p.DeliverCount),
+                //    GoodsImage = k.Max(p => BasePath + p.le_goods.Image),
+                //    GoodsName = k.Max(p => p.le_goods.GoodsName),
+                //    Goods_ID = k.Max(p => p.GoodsID),
+                //    //RcName = k.Max(p => p.RcName),
+                //    //RcPhone = k.Max(p => p.RcPhone),
+                //    SupplyMoney = k.Sum(p => p.SupplyPrice * p.DeliverCount),
+                //    Notes = k.Max(p => p.Notes),
+                //    OrderLineID = k.Max(p => p.OrdersLinesID),
+                //    Status1 = k.Min(p => p.Status),
+                //    Status2 = k.Max(p => p.Status) - 1 == 0 ? 1 : 1,
+                //    Status3 = k.Max(p => p.Status),
+                //    SuppliersID = k.Max(p => p.SuppliersID),
+                //    UpdateTime = k.Max(p => p.UpdateTime),
+                //    UsersID = k.Max(p => p.UsersID),
+
+                //    OrderType = k.Max(p => p.le_orders_head.OrderType),
+
+                //    Out_Trade_No = k.Max(p => p.le_orders_head.OutTradeNo),
+                //    PickupTime = k.Max(p => p.le_orders_head.PickupTime),
+
+                //    WeiPaiFaCount = k.Count(p => p.Status == (int)OrderLineStatus.WeiPaiFa),
+                //    DaiJieDanCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiJieDan),
+                //    DaiFaHuoCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiFaHuo),
+                //    FaHuoZhongCount = k.Count(p => p.Status == (int)OrderLineStatus.FaHuoZhong),
+                //    YiFahuoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiFahuo),
+                //    YiWanChengCount = k.Count(p => p.Status == (int)OrderLineStatus.YiWanCheng),
+                //    YiJieSuanCount = k.Count(p => p.Status == (int)OrderLineStatus.YiJieSuan),
+                //    YiQuXiaoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiQuXiao),
+                //});
                 GroupResult = GroupResult.OrderByDescending(s => s.CreateTime);
                 Count = GroupResult.Count();
                 GroupResult = GroupResult.Skip(SeachOptions.Offset).Take(SeachOptions.Rows);
@@ -1508,8 +1452,8 @@ namespace Service
                                 break;
 
                             case OrderLineStatus.YiFahuo: //已发货
-                                CurrentLine.Status = (int)OrderLineStatus.YiFahuo;
 
+                                CurrentLine.Status = (int)OrderLineStatus.YiFahuo;
                                 if (AdminID != 0)  //总部加急单也有接单权限
                                 {
                                     OrderLineLog.AdminID = AdminID;
@@ -1522,19 +1466,25 @@ namespace Service
                                 //供货商完成接单 推送消息给总部
                                 new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
                                 break;
-                            case OrderLineStatus.YiWanCheng: //已完成
-                                CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
+                            //case OrderLineStatus.YiWanCheng: //已完成
+                            //    CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
 
 
                                 break;
                             case OrderLineStatus.YiJieSuan: //已结算
+                                if ((OrderLineStatus)CurrentLine.Status != OrderLineStatus.YiWanCheng)
+                                {
+                                    Msg = "只有完成状态下可设置结算";
+                                    return false;
+                                }
+                                OrderLineLog.AdminID = AdminID;
                                 CurrentLine.Status = (int)OrderLineStatus.YiJieSuan;
                                 new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
 
                                 break;
 
                             case OrderLineStatus.YiQuXiao:
-                                CurrentLine.Status = 3;
+                                CurrentLine.Status = (int)OrderLineStatus.YiQuXiao;
                                 OrderLineLog.SupplierID = SuppliersID;
                                 CurrentLine.le_goods.Stock += CurrentLine.DeliverCount;
                                 CurrentLine.le_goods.SalesVolumes -= CurrentLine.DeliverCount;
@@ -1638,11 +1588,7 @@ namespace Service
                 return false;
             }
         }
-        //private void SetOrderHeadStatus()
-        //{
-
-        //}
-
+      
 
         /// <summary>
         /// 更新订单状态
@@ -1666,7 +1612,6 @@ namespace Service
                         msg = "该订单不存在，请确认后重试";
                         return false;
                     }
-
                     OrderHeadLogModel.BeforeCount = model.GoodsCount;
                     OrderHeadLogModel.BeforeMoney = model.RealAmount;
                     OrderHeadLogModel.BeforeStatus = model.Status;
@@ -1682,9 +1627,7 @@ namespace Service
                     {
                         OrderHeadLogModel.UserID = loginInfo.UserID;
                     }
-
                     OrderHeadLogModel.OrderHeadID = model.OrdersHeadID;
-
                    
                     var OrderlineList = model.le_orders_lines.ToList(); //ctx.le_orders_lines.Where(s => s.OutTradeNo == OutTradeNo).ToList();
                     if (OrderlineList.Any(s => s.Status == 1 || s.Status == 2) && Status == 5)
@@ -1702,140 +1645,204 @@ namespace Service
                         msg = "非加急单,无直接接单权限";
                         return false;
                     }
-                    if (Status == 1)//已完成
+                    OrderHeadStatus CurrentStatus = (OrderHeadStatus)Status;
+                    switch( CurrentStatus )
                     {
-                       if(OrderlineList.Any(s=>s.Status==(int)OrderLineStatus.DaiFaHuo)
-                            || OrderlineList.Any(s => s.Status == (int)OrderLineStatus.DaiJieDan)
-                            || OrderlineList.Any(s=>s.Status==(int)OrderLineStatus.FaHuoZhong)
-                            || OrderlineList.Any(s => s.Status == (int)OrderLineStatus.WeiPaiFa)
-                           )
-                        {
-                            msg = "该订单内还有未接单或未派单订单,无法确认完成";
-                            return false;
-                        }
-                        foreach (var index in OrderlineList)
-                        {
-                            index.UpdateTime = DateTime.Now;
-                            index.Status = (int)OrderLineStatus.YiWanCheng;
-                            ctx.Entry<le_orders_lines>(index).State = EntityState.Modified;
-                        }
-
-                        model.CompleteTime = DateTime.Now;
-                        new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1); //推送消息给用户
-                    }
-                    if (Status == 4)//加急单直接设置为已结单
-                    {
-
-                        foreach (var orderline in OrderlineList)
-                        {
-                            le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
-                            OrderLineLogModel.BeforeCount = orderline.GoodsCount;
-                            OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
-                            OrderLineLogModel.BeforeStatus = orderline.Status;
-                            OrderLineLogModel.CreateTime = DateTime.Now;
-                            OrderLineLogModel.AfterStatus = 2;
-                            OrderLineLogModel.AdminID = loginInfo.UserID;
-                            OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
-                            orderline.Status = 2;
-                            orderline.UpdateTime = DateTime.Now;
-                            ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
-                            ctx.le_orders_lines_log.Add(OrderLineLogModel);
-                        }
-                    }
-                    if (Status == 5)//取消订单
-                    {
-                        if (loginInfo.UserID != model.AdminID && model.AdminID != null)
-                        {
-                            msg = "无权限操作此订单";
-                            return false;
-                        }
-                        foreach (var orderline in OrderlineList)
-                        {
-                            if (orderline.Status != 3)
+                       
+                        case OrderHeadStatus.YiQuXiao:  //已取消
+                            model.Status = (int)OrderHeadStatus.YiQuXiao;
+                            if (loginInfo.UserID != model.AdminID && model.AdminID != null) //只有用户和总部可以取消订单
                             {
-                                //orderline.le_goods.Stock += orderline.GoodsCount;
-                                //orderline.le_goods.SalesVolumes -= orderline.GoodsCount;
-                                //orderline.le_goods.TotalSalesVolume -= orderline.GoodsCount;
-
-
-                                orderline.le_goods.Stock += orderline.DeliverCount;
-                                orderline.le_goods.SalesVolumes -= orderline.DeliverCount;
-                                orderline.le_goods.TotalSalesVolume -= orderline.DeliverCount;
-
-                                model.RealAmount -= orderline.DeliverCount * orderline.GoodsPrice;
-                                model.RealSupplyAmount -= orderline.DeliverCount * orderline.SupplyPrice;
-                                model.DeliverCount -= orderline.DeliverCount;
-
-                                ctx.Entry<le_goods>(orderline.le_goods).State = EntityState.Modified;
-                            }
-                            le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
-                            OrderLineLogModel.BeforeCount = orderline.GoodsCount;
-                            OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
-                            OrderLineLogModel.BeforeStatus = orderline.Status;
-                            OrderLineLogModel.AfterStatus = 3;
-                            OrderLineLogModel.CreateTime = DateTime.Now;
-                            OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
-                            if (loginInfo.UserType == 1)
-                            {
-                                OrderLineLogModel.UserID = loginInfo.UserID;
-                            }
-                            if (loginInfo.UserType == 3)
-                            {
-                                OrderLineLogModel.AdminID = loginInfo.UserID;
-                            }
-
-                            orderline.Status = 3;
-                            orderline.UpdateTime = DateTime.Now;
-                            ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
-
-                            ctx.le_orders_lines_log.Add(OrderLineLogModel);
-
-                            new OtherService().UpdatePushMsg(orderline.SuppliersID, model.OutTradeNo, 2);
-                        }
-                        if (model.AdminID != null)
-                        {
-                            new OtherService().UpdatePushMsg(model.AdminID.Value, model.OutTradeNo, 3);
-                        }
-                        new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1);
-                    }
-                    if (Status == 3)//待接单==派单
-                    {
-                        if (loginInfo.UserType != 3)
-                        {
-                            msg = "无操作权限，只有总部人员可操作";
-                            return false;
-                        }
-                        foreach (var orderline in OrderlineList)
-                        {
-
-                            if(orderline.Status!=0)
-                            {
-                                msg = "该订单内还有其他状态，无法派单！";
+                                msg = "无权限操作此订单";
                                 return false;
                             }
-                            le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
-                            OrderLineLogModel.BeforeCount = orderline.GoodsCount;
-                            OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
-                            OrderLineLogModel.BeforeStatus = orderline.Status;
-                            OrderLineLogModel.AfterCount = orderline.DeliverCount;
-                            OrderLineLogModel.AfterMoney = orderline.GoodsPrice;
-                            OrderLineLogModel.AfterStatus = 1;
-                            OrderLineLogModel.CreateTime = DateTime.Now;                          
-                            OrderLineLogModel.AdminID = loginInfo.UserID;
-                            OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
+                            foreach (var orderline in OrderlineList)
+                            {
+                                le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
 
-                            orderline.AdminID = loginInfo.UserID;
-                            orderline.Status = 1;
-                            orderline.UpdateTime = DateTime.Now;
-                            ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
-                            ctx.le_orders_lines_log.Add(OrderLineLogModel);
-                        }
+                                if (orderline.Status != (int)OrderLineStatus.YiQuXiao)
+                                {
+                                    orderline.le_goods.Stock += orderline.DeliverCount;
+                                    orderline.le_goods.SalesVolumes -= orderline.DeliverCount;
+                                    orderline.le_goods.TotalSalesVolume -= orderline.DeliverCount;
+                                    
+
+                                    model.RealAmount -= orderline.DeliverCount * orderline.GoodsPrice;
+                                    model.RealSupplyAmount -= orderline.DeliverCount * orderline.SupplyPrice;
+                                    model.DeliverCount -= orderline.DeliverCount;
+
+                                    OrderLineLogModel.BeforeCount = orderline.DeliverCount;
+                                    OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
+                                    OrderLineLogModel.BeforeStatus = orderline.Status;
+                                    OrderLineLogModel.AfterStatus = (int)OrderLineStatus.YiQuXiao;
+                                    OrderLineLogModel.CreateTime = DateTime.Now;
+                                    OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
+                                    if (loginInfo.UserType == 1)
+                                    {
+                                        OrderLineLogModel.UserID = loginInfo.UserID;
+                                    }
+                                    if (loginInfo.UserType == 3)
+                                    {
+                                        OrderLineLogModel.AdminID = loginInfo.UserID;
+                                    }
+
+                                    orderline.DeliverCount = 0;
+                                    orderline.Status = (int)OrderLineStatus.YiQuXiao;
+                                    orderline.UpdateTime = DateTime.Now;
+
+                                    ctx.Entry<le_goods>(orderline.le_goods).State = EntityState.Modified;
+                                    ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
+
+                                    ctx.le_orders_lines_log.Add(OrderLineLogModel);
+
+                                    new OtherService().UpdatePushMsg(orderline.SuppliersID, model.OutTradeNo, 2);
+
+                                } 
+                            }
+                            if (model.AdminID != null)
+                            {
+                                new OtherService().UpdatePushMsg(model.AdminID.Value, model.OutTradeNo, 3);
+                            }
+                            new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1);
+                            break;
+
+                         case OrderHeadStatus.DaiJieDan: //待接单 派单操作
+                            model.Status = (int)OrderHeadStatus.DaiJieDan;
+                            if (loginInfo.UserType != 3)
+                                {
+                                    msg = "无操作权限，只有总部人员可操作";
+                                    return false;
+                                }
+                            foreach (var orderline in OrderlineList)
+                            {
+                                if (orderline.Status != 0)
+                                {
+                                    msg = "该订单内还有其他状态，无法派单！";
+                                    return false;
+                                }
+                                le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
+                                OrderLineLogModel.BeforeCount = orderline.DeliverCount;
+                                OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
+                                OrderLineLogModel.BeforeStatus = orderline.Status;
+
+                                OrderLineLogModel.AfterCount = orderline.DeliverCount;
+                                OrderLineLogModel.AfterMoney = orderline.GoodsPrice;
+                                OrderLineLogModel.AfterStatus = (int)OrderLineStatus.DaiJieDan;
+                                OrderLineLogModel.CreateTime = DateTime.Now;
+                                OrderLineLogModel.AdminID = loginInfo.UserID;
+                                OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
+
+                                orderline.AdminID = loginInfo.UserID;
+                                //orderline.SuppliersID=
+                                orderline.Status = (int)OrderLineStatus.DaiJieDan;
+                                orderline.UpdateTime = DateTime.Now;
+
+                                ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
+                                ctx.le_orders_lines_log.Add(OrderLineLogModel);
+                                new OtherService().UpdatePushMsg(orderline.SuppliersID, model.OutTradeNo, 2);
+                            }
+
+                            break;
+
+                        case OrderHeadStatus.YiFaHuo://加急单直接设置成已发货
+                            model.Status = (int)OrderHeadStatus.YiFaHuo;
+                            foreach (var orderline in OrderlineList)
+                            {
+                                if (orderline.Status !=(int) OrderLineStatus.YiQuXiao)
+                                {
+                                    le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
+                                    OrderLineLogModel.BeforeCount = orderline.DeliverCount;
+                                    OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
+                                    OrderLineLogModel.BeforeStatus = orderline.Status;
+                                    OrderLineLogModel.CreateTime = DateTime.Now;
+                                    OrderLineLogModel.AfterStatus =(int) OrderLineStatus.YiFahuo;
+                                    OrderLineLogModel.AdminID = loginInfo.UserID;
+                                    OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
+                                    orderline.Status = (int)OrderLineStatus.YiFahuo;
+                                    orderline.UpdateTime = DateTime.Now;
+                                    ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
+                                    ctx.le_orders_lines_log.Add(OrderLineLogModel);
+
+                                }
+                            }
+                            if (OrderlineList.Count(s => s.Status == (int)OrderLineStatus.YiFahuo) == OrderlineList.Count() - OrderlineList.Count(s=>s.Status==(int)OrderLineStatus.YiQuXiao)) //全部已发货,更新订单头状态
+                            {
+                                model.Status = (int)OrderHeadStatus.YiFaHuo;//修改订单头状态为已结单
+                                
+                            }
+                            break;
+
+                        case OrderHeadStatus.FaHuoZhong://发货中
+
+                            foreach (var orderline in OrderlineList)
+                            {
+                                if (orderline.Status != (int)OrderLineStatus.YiQuXiao&&(orderline.Status==(int)OrderLineStatus.DaiJieDan|| orderline.Status == (int)OrderLineStatus.DaiFaHuo ))
+                                {
+                                    le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
+                                    OrderLineLogModel.BeforeCount = orderline.DeliverCount;
+                                    OrderLineLogModel.BeforeMoney = orderline.GoodsPrice;
+                                    OrderLineLogModel.BeforeStatus = orderline.Status;
+                                    OrderLineLogModel.CreateTime = DateTime.Now;
+                                    OrderLineLogModel.AfterStatus = (int)OrderLineStatus.YiFahuo;
+                                    OrderLineLogModel.AdminID = loginInfo.UserID;
+                                    OrderLineLogModel.OrderLineID = orderline.OrdersLinesID;
+                                    orderline.Status = (int)OrderLineStatus.FaHuoZhong;
+                                    orderline.UpdateTime = DateTime.Now;
+                                    ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
+                                    ctx.le_orders_lines_log.Add(OrderLineLogModel);
+
+                                }
+                            }
+                            if (OrderlineList.Count(s => s.Status == (int)OrderLineStatus.FaHuoZhong) == OrderlineList.Count() - OrderlineList.Count(s => s.Status == (int)OrderLineStatus.YiQuXiao)) //全部已发货,更新订单头状态
+                            {
+                                model.Status = (int)OrderHeadStatus.FaHuoZhong;//修改订单头状态为已结单
+
+                            }
+                            break;
+                        case OrderHeadStatus.YiWanCheng://已完成
+                            model.Status = (int)OrderHeadStatus.YiWanCheng;
+                            if (OrderlineList.Any(s => s.Status == (int)OrderLineStatus.DaiFaHuo)
+                             || OrderlineList.Any(s => s.Status == (int)OrderLineStatus.DaiJieDan)
+                             || OrderlineList.Any(s => s.Status == (int)OrderLineStatus.FaHuoZhong)
+                             || OrderlineList.Any(s => s.Status == (int)OrderLineStatus.WeiPaiFa)
+                            )
+                            {
+                                msg = "该订单内还有未接单或未派单订单,无法确认完成";
+                                return false;
+                            }
+
+                            foreach (var index in OrderlineList)
+                            {
+                                if ((OrderLineStatus)index.Status != OrderLineStatus.YiQuXiao)
+                                {
+                                    le_orders_lines_log OrderLineLogModel = new le_orders_lines_log();
+                                    OrderLineLogModel.BeforeCount = index.DeliverCount;
+                                    OrderLineLogModel.BeforeMoney = index.GoodsPrice;
+                                    OrderLineLogModel.BeforeStatus = index.Status;
+                                    OrderLineLogModel.CreateTime = DateTime.Now;
+                                    OrderLineLogModel.AfterStatus = (int)OrderLineStatus.YiWanCheng;
+                                    OrderLineLogModel.AdminID = loginInfo.UserID;
+                                    OrderLineLogModel.OrderLineID = index.OrdersLinesID;
+
+                                    index.UpdateTime = DateTime.Now;
+                                    index.Status = (int)OrderLineStatus.YiWanCheng;
+                                    ctx.Entry<le_orders_lines>(index).State = EntityState.Modified;
+                                }
+                            }
+
+                            model.CompleteTime = DateTime.Now;
+                            new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1); //推送消息给用户
+                            break;
+                           
+                        default:
+
+                            throw new Exception("订单状态【" + Status.ToString() + "】错误，请检查");
+                            break;
                     }
-
-
+                   
                     model.UpdateTime = DateTime.Now;
                   
-                    model.Status = Status;
+                  
 
                     OrderHeadLogModel.AfterStatus = model.Status;
                     OrderHeadLogModel.CreateTime = DateTime.Now;

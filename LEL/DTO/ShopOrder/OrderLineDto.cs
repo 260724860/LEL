@@ -87,6 +87,11 @@ namespace DTO.ShopOrder
         /// </summary>
         public int YiQuXiaoCount { get; set; }
 
+        /// <summary>
+        /// 订单行
+        /// </summary>
+        public int OrderLineCount { get; set; }
+
         #endregion
     }
 }

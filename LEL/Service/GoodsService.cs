@@ -132,6 +132,11 @@ namespace Service
                     Stock = s.Stock,
                     Quota = s.Quota,
                     MSRP = s.MSRP,
+                   // SupplyPrice=s.le_goods_suppliers.Select(k=>k.Supplyprice).FirstOrDefault(),
+                   SupplyPriceList=s.le_goods_suppliers.Select(k=>new GoodsSupplier() {
+                       SuppliserID=k.SuppliersID,
+                       SupplyPrice= k.Supplyprice,
+                   }).ToList(),
                     GoodsValueList = s.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
                     {
                         SerialNumber = k.SerialNumber,
@@ -141,6 +146,7 @@ namespace Service
                         GoodsValueName = k.GoodsValue
                     }).ToList(),
                 });
+               
 
                 #region 排序              
                 switch (options.SortKey)
@@ -192,6 +198,15 @@ namespace Service
                 result = result.Skip(options.Offset).Take(options.Rows);
 
                 list.GoodsModel = await result.ToListAsync();
+                if (options.SupplierID != null)
+                {
+                    for (int i = 0; i < list.GoodsModel.Count; i++)
+                    {
+                        list.GoodsModel[i].SupplyPriceList = list.GoodsModel[i].SupplyPriceList.Where(s => s.SuppliserID == options.SupplierID.Value).ToList();
+                    }
+                }
+
+
                 return list;
             }
 

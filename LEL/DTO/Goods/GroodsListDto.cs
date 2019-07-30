@@ -66,11 +66,32 @@ namespace DTO.Goods
         /// 最小采购量
         /// </summary>
         public int MinimumPurchase { get; set; } = 1;
+        /// <summary>
+        /// 供应价格集合
+        /// </summary>
+        public List<GoodsSupplier> SupplyPriceList { get; set; }
     }
     public class GoodsListDto
     {
         public List<GroodsModelDto> GoodsModel { get; set; }
         public int PageCount { get; set; }
 
+        
+    }
+
+    /// <summary>
+    /// 供应商价格
+    /// </summary>
+    public class GoodsSupplier
+    {
+        /// <summary>
+        /// 供应价格
+        /// </summary>
+        public decimal SupplyPrice { get; set; }
+
+        /// <summary>
+        /// 供应商ID
+        /// </summary>
+        public int SuppliserID { get; set; }
     }
 }
