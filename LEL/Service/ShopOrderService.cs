@@ -334,7 +334,7 @@ namespace Service
                         var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
 
                         var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime <= EndTime).Count();
-                        if (CurrentOrderCountSetting <= CurrentOrderCount&& CurrentOrderCountSetting!=0)
+                        if (CurrentOrderCountSetting <= CurrentOrderCount)
                         {
                             Msg = "当前时间下单数已满,请选择其他时间";
                             //  log.Debug(Msg);

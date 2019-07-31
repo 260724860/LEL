@@ -17,7 +17,7 @@ namespace DTO.ShopOrder
         /// <summary>
         /// 限制下单数
         /// </summary>
-        public int LimitOrderCount { get; set; }
+        public int LimitCount { get; set; }
        // public int CurrentOrderCount { get; set; }
        
 

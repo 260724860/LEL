@@ -101,6 +101,11 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
+                if(dto.TimeSlot<0||dto.TimeSlot>23)
+                {
+                    Msg = "时间段设置错误，请选择0点-23点之内时间段";
+                    return false;
+                }
                 if (dto.ID == 0 || dto.ID == null)
                 {
                     var temp = ctx.le_orders_timelimit.Any(s => s.TimeSlot == dto.TimeSlot);
@@ -112,7 +117,7 @@ namespace Service
                     else
                     {
                         le_orders_timelimit model = new le_orders_timelimit();
-                        model.LimitOrderCount = dto.LimitOrderCount;
+                        model.LimitOrderCount = dto.LimitCount;
                         model.TimeSlot = dto.TimeSlot;
                         model.CreateTime = DateTime.Now;
                         model.UpdateTime = DateTime.Now;
@@ -137,7 +142,7 @@ namespace Service
                     }
                     model.UpdateTime = DateTime.Now;
                     model.TimeSlot = dto.TimeSlot;
-                    model.LimitOrderCount = dto.LimitOrderCount;
+                    model.LimitOrderCount = dto.LimitCount;
                     model.AdminID = AdminID;
                     ctx.Entry<le_orders_timelimit>(model).State = System.Data.Entity.EntityState.Modified;
 
