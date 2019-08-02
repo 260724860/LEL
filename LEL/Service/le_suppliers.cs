@@ -20,9 +20,9 @@ namespace Service
             this.le_goods_suppliers = new HashSet<le_goods_suppliers>();
             this.le_order_pack = new HashSet<le_order_pack>();
             this.le_orders_head_log = new HashSet<le_orders_head_log>();
-            this.le_orders_lines = new HashSet<le_orders_lines>();
             this.le_orders_lines_log = new HashSet<le_orders_lines_log>();
             this.lel_admin_suppliers = new HashSet<lel_admin_suppliers>();
+            this.le_orders_lines = new HashSet<le_orders_lines>();
         }
     
         public int SuppliersID { get; set; }
@@ -77,10 +77,10 @@ namespace Service
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_head_log> le_orders_head_log { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_lines_log> le_orders_lines_log { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<lel_admin_suppliers> lel_admin_suppliers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
     }
 }

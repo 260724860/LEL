@@ -117,6 +117,22 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", Data.OrderType.ToString() + "," + Data.ExpressType.ToString()));
             }
+            if (Data.ExpressType == 2)
+            {
+                if (!Data.PickupTime.HasValue)
+                {
+                    try
+                    {
+                        Data.PickupTime = Convert.ToDateTime(Data.PickupTimeStr);
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(JRpcHelper.AjaxResult(1, ex.Message+"前端传入时间：【"+ Data.PickupTimeStr + "】", ex));
+                    }
+
+                }
+            }
+            
             Data.UserID = GetUserID();
             string msg;
             List<ShopCartDto> FailCartList;

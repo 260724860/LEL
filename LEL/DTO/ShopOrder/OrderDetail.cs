@@ -19,7 +19,7 @@ namespace DTO.ShopOrder
 
         public int Orders_Lines_ID { get; set; }
         public string SupplierPhone { get; set; }
-        public int SupplierID { get; set; }
+        public int? SupplierID { get; set; }
 
         /// <summary>
         /// 供应商价格

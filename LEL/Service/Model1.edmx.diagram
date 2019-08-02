@@ -23,7 +23,6 @@
         <EntityTypeShape EntityType="leerledbtest3Model.le_orderline_goodsvalue" Width="1.5" PointX="13.5" PointY="24.375" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_orders_head" Width="1.5" PointX="9" PointY="2.625" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_orders_head_log" Width="1.5" PointX="14.25" PointY="8.875" />
-        <EntityTypeShape EntityType="leerledbtest3Model.le_orders_lines" Width="1.5" PointX="11.25" PointY="12.75" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_orders_lines_log" Width="1.5" PointX="13.5" PointY="13.875" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_orders_modify_record" Width="1.5" PointX="11.25" PointY="8.5" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_orders_operationrecord" Width="1.5" PointX="16.75" PointY="8" />
@@ -43,7 +42,6 @@
         <AssociationConnector Association="leerledbtest3Model.FK_le_goods_Log_le_admin" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_head_le_admin" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_headschangerecord_le_admin" />
-        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_admin" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lineschangerecord_le_admin" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_timelimit_le_admin" />
         <AssociationConnector Association="leerledbtest3Model.FK_lel_admin_suppliers_le_admin" />
@@ -54,20 +52,15 @@
         <AssociationConnector Association="leerledbtest3Model.FK_le_orderline_goodsvalue_le_goods_value" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_order_pack_le_orders_head" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_order_pack_le_suppliers" />
-        <AssociationConnector Association="leerledbtest3Model.FK_le_orderline_goodsvalue_le_orders_lines" />
         <AssociationConnector Association="leerledbtest3Model.FK__le_orders_head" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_headschangerecord_le_orders_head" />
-        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_orders_head" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_headschangerecord_le_suppliers" />
-        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_suppliers" />
-        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lineschangerecord_le_orders_lines" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lineschangerecord_le_suppliers" />
         <AssociationConnector Association="leerledbtest3Model.FK_lel_admin_suppliers_le_suppliers" />
         <EntityTypeShape EntityType="leerledbtest3Model.le_users" Width="1.5" PointX="0.75" PointY="8.75" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_admin_re_users_le_users" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_head_le_users" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_headschangerecord_le_users" />
-        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_users" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lineschangerecord_le_users" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_shop_cart_le_users" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_user_address_le_users" />
@@ -78,8 +71,15 @@
         <AssociationConnector Association="leerledbtest3Model.FK_le_goods_Log_le_goods" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_goods_suppliers_le_goods" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_goods_value_le_goods" />
-        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_goods" />
         <AssociationConnector Association="leerledbtest3Model.FK_le_shop_cart_le_goods" />
+        <EntityTypeShape EntityType="leerledbtest3Model.le_orders_lines" Width="1.5" PointX="11.25" PointY="13.625" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_admin" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_goods" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orderline_goodsvalue_le_orders_lines" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_orders_head" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_suppliers" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lines_le_users" />
+        <AssociationConnector Association="leerledbtest3Model.FK_le_orders_lineschangerecord_le_orders_lines" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

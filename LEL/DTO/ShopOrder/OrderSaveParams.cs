@@ -40,6 +40,11 @@ namespace DTO.ShopOrder
         /// 取货人联系电话
         /// </summary>
         public string PickUpPhone { get; set; }
+
+        /// <summary>
+        /// 取货时间字符串
+        /// </summary>
+        public string PickupTimeStr { get; set; }
     }
 
 }

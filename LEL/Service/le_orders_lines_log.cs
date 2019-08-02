@@ -28,8 +28,8 @@ namespace Service
         public System.DateTime CreateTime { get; set; }
     
         public virtual le_admin le_admin { get; set; }
-        public virtual le_orders_lines le_orders_lines { get; set; }
         public virtual le_suppliers le_suppliers { get; set; }
         public virtual le_users le_users { get; set; }
+        public virtual le_orders_lines le_orders_lines { get; set; }
     }
 }

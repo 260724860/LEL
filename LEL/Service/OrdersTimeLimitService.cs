@@ -25,7 +25,7 @@ namespace Service
                 var BeginTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 0, 0, 0);
                 var EndTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 23, 59, 59);
 
-                var groupby = ctx.le_orders_head.Where(s => s.ExpressType == 2 && s.OrderType != 2 && s.PickupTime >= BeginTime && s.PickupTime <= EndTime)
+                var groupby = ctx.le_orders_head.Where(s => s.ExpressType == 2 &&s.Status!=5 && s.OrderType != 2 && s.PickupTime >= BeginTime && s.PickupTime <= EndTime)
                     .GroupBy(k => new
                     {                      
                         k.PickupTime.Value.Hour 

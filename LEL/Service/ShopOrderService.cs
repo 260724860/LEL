@@ -296,7 +296,7 @@ namespace Service
                         return 0;
                     }                 
                 }
-                if (ParamasData.ExpressType == 2)
+                if (ParamasData.ExpressType == 2) //自提
                 {
                     if (!ParamasData.PickupTime.HasValue&& ParamasData.OrderType!=2)
                     {
@@ -370,7 +370,7 @@ namespace Service
                         if (goodsModel.QuotaBeginTime == null && goodsModel.QuotaEndTime == null)
                         {
                             //已经购买的数量
-                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID).Select(k => k.GoodsCount).ToList();
+                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID).Select(k => k.DeliverCount).ToList();
                             if (BuyCountIquery != null)
                             {
                                 AlreadyBuyCount = BuyCountIquery.Sum();
@@ -381,7 +381,7 @@ namespace Service
                             BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID 
                             && s.GoodsID == QuotaGoods.GoodsID
                             &&s.CreateTime>=goodsModel.QuotaBeginTime
-                            &&s.CreateTime<=goodsModel.QuotaEndTime).Select(k => k.GoodsCount).ToList();
+                            &&s.CreateTime<=goodsModel.QuotaEndTime).Select(k => k.DeliverCount).ToList();
                             if (BuyCountIquery != null)
                             {
                                 AlreadyBuyCount = BuyCountIquery.Sum();
@@ -1035,16 +1035,18 @@ namespace Service
                                 Linemodel.Status = (int)OrderLineStatus.YiQuXiao;
                                 data.GoodsCount = 0;
                             }
-                            int Difference=  Linemodel.DeliverCount - data.GoodsCount;
-                            ///更改订单数量 更新商品库存                         
-                            Linemodel.le_goods.Stock += (Difference);
-                            Linemodel.le_goods.SalesVolumes -= (Difference);
-                            Linemodel.le_goods.TotalSalesVolume -= (Difference);
+                            if (Linemodel.Status != (int)OrderLineStatus.YiQuXiao)
+                            {
+                                int Difference = Linemodel.DeliverCount - data.GoodsCount;
+                                ///更改订单数量 更新商品库存                         
+                                Linemodel.le_goods.Stock += (Difference);
+                                Linemodel.le_goods.SalesVolumes -= (Difference);
+                                Linemodel.le_goods.TotalSalesVolume -= (Difference);
 
-                            modhead.DeliverCount -= Difference;
-                            modhead.RealSupplyAmount -=(Linemodel.SupplyPrice * Difference);
-                            modhead.RealAmount  -= (Linemodel.GoodsPrice * Difference);
-
+                                modhead.DeliverCount -= Difference;
+                                modhead.RealSupplyAmount -= (Linemodel.SupplyPrice * Difference);
+                                modhead.RealAmount -= (Linemodel.GoodsPrice * Difference);
+                            }
                             Linemodel.DeliverCount = data.GoodsCount;
                           
                          
@@ -1377,7 +1379,7 @@ namespace Service
                         //}
                         if (CurrentLine.DeliverCount <= 0&& Status!=OrderLineStatus.YiQuXiao)
                         {
-                            Msg = "操作失败,必须商品数必须大于0";
+                            Msg = "操作失败,必须商品【"+ CurrentLine.le_goods.GoodsName+ "】实发数必须大于0";
                             return false;
                         }                      
                         if (SuppliersID != 0 && CurrentLine.SuppliersID != SuppliersID && AdminID == 0)
@@ -1496,12 +1498,20 @@ namespace Service
 
                                 if (CurrentYiQuXiaoCount == LinesList.Count()) //全部已取消,更新订单头状态
                                 {
-                                    OrderHeadModel.Status = 5;//修改订单头状态为已结单
+                                    OrderHeadModel.Status = 5;//修改订单头状态为已取消
                                     OrderHeadLog.AfterStatus = 5;
                                 }
 
+                                if (AdminID != 0) //总部取消的订单，不能让供应商看到
+                                {
+                                    CurrentLine.SuppliersID = null;
+                                }
                                 new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-                                new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
+                                if (CurrentLine.SuppliersID != null)
+                                {
+                                    new OtherService().UpdatePushMsg(CurrentLine.SuppliersID.Value, OrderHeadModel.OutTradeNo, 2);
+                                }
+                               // new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
 
                                 CurrentLine.DeliverCount = 0;
 
@@ -1556,12 +1566,12 @@ namespace Service
                             ctx.le_orders_lines_log.Add(OrderLineLog);
                         }
                       
-                        if (CurrentLine.le_goods.TotalSalesVolume < 0 || CurrentLine.le_goods.SalesVolumes < 0)
-                        {
-                            Msg = string.Format("计算错误,月销量不可为负数.订单行ID:{0}", CurrentLine.OrdersLinesID);
-                            log.Error(Msg, null);
-                            return false;
-                        }
+                        //if (CurrentLine.le_goods.TotalSalesVolume < 0 || CurrentLine.le_goods.SalesVolumes < 0)
+                        //{
+                        //    Msg = string.Format("计算错误,月销量不可为负数.订单行ID:{0},商品ID:{1}", CurrentLine.OrdersLinesID,CurrentLine.le_goods.GoodsID);
+                        //    log.Error(Msg, null);
+                        //    return false;
+                        //}
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
                         ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                     }
@@ -1629,12 +1639,12 @@ namespace Service
                     }
                     OrderHeadLogModel.OrderHeadID = model.OrdersHeadID;
                    
-                    var OrderlineList = model.le_orders_lines.ToList(); //ctx.le_orders_lines.Where(s => s.OutTradeNo == OutTradeNo).ToList();
-                    if (OrderlineList.Any(s => s.Status == 1 || s.Status == 2) && Status == 5)
-                    {
-                        msg = "取消订单失败,订单已在运行";
-                        return false;
-                    }
+                    var OrderlineList = model.le_orders_lines.ToList(); 
+                    //if (OrderlineList.Any(s => s.Status == 1 || s.Status == 2) && Status == 5)
+                    //{
+                    //    msg = "取消订单失败,订单已在运行";
+                    //    return false;
+                    //}
                     if (model.Status == 1 && Status == 1)
                     {
                         msg = "该订单已完成，请勿重复操作";
@@ -1694,8 +1704,10 @@ namespace Service
                                     ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
 
                                     ctx.le_orders_lines_log.Add(OrderLineLogModel);
-
-                                    new OtherService().UpdatePushMsg(orderline.SuppliersID, model.OutTradeNo, 2);
+                                    if (orderline.SuppliersID != null)
+                                    {
+                                        new OtherService().UpdatePushMsg(orderline.SuppliersID.Value, model.OutTradeNo, 2);
+                                    }
 
                                 } 
                             }
@@ -1739,7 +1751,10 @@ namespace Service
 
                                 ctx.Entry<le_orders_lines>(orderline).State = EntityState.Modified;
                                 ctx.le_orders_lines_log.Add(OrderLineLogModel);
-                                new OtherService().UpdatePushMsg(orderline.SuppliersID, model.OutTradeNo, 2);
+                                if (orderline.SuppliersID != null)
+                                {
+                                    new OtherService().UpdatePushMsg(orderline.SuppliersID.Value, model.OutTradeNo, 2);
+                                }
                             }
 
                             break;

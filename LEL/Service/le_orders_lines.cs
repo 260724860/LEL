@@ -33,7 +33,7 @@ namespace Service
         public int Status { get; set; }
         public Nullable<int> AdminID { get; set; }
         public int UsersID { get; set; }
-        public int SuppliersID { get; set; }
+        public Nullable<int> SuppliersID { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
         public decimal PriceFull { get; set; }
@@ -44,13 +44,13 @@ namespace Service
         public int Integral { get; set; }
     
         public virtual le_admin le_admin { get; set; }
+        public virtual le_goods le_goods { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orderline_goodsvalue> le_orderline_goodsvalue { get; set; }
         public virtual le_orders_head le_orders_head { get; set; }
         public virtual le_suppliers le_suppliers { get; set; }
+        public virtual le_users le_users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_lines_log> le_orders_lines_log { get; set; }
-        public virtual le_users le_users { get; set; }
-        public virtual le_goods le_goods { get; set; }
     }
 }
