@@ -97,6 +97,10 @@ namespace LELAdmin.Controllers
         {
             try
             {
+                if (dto.MinimumPurchase <= 0)
+                {
+                    return Json(JRpcHelper.AjaxResult(1, "最小起配数应该大于零", null));
+                }
                 var result = GService.AddGoods(dto, out string msg);
                 if (result != 0)
                 {
@@ -150,7 +154,10 @@ namespace LELAdmin.Controllers
             try
             {
                 string Msg;
-
+                if(dto.MinimumPurchase<=0)
+                {
+                    return Json(JRpcHelper.AjaxResult(1,"最小起配数应该大于零",null));
+                }
                 var result = GService.EditGoods(dto, GetLoginInfo(), out Msg);
                 if (Msg.Equals("SUCCESS") && result)
                 {

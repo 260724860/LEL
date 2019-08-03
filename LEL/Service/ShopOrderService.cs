@@ -268,12 +268,17 @@ namespace Service
             {
                 FailCartList = new List<ShopCartDto>();
                 List<ShopCartDto> CartList = GetCartList(ParamasData.UserID);
-                //  List<ShopCartDto> FialCartList = new List<ShopCartDto>();//下单失败的购物车对象
-
+                
                 if (CartList == null || CartList.Count == 0)
                 {
                     Msg = "获取购物车失败";
                     FailCartList = null;
+                    return 0;
+                }
+
+                if(CartList.Any(s=>s.GoodsCount==0))
+                {
+                    Msg = "下单数不能0，请检查购物车内商品下单数";
                     return 0;
                 }
 
@@ -1565,13 +1570,15 @@ namespace Service
                         {
                             ctx.le_orders_lines_log.Add(OrderLineLog);
                         }
-                      
-                        //if (CurrentLine.le_goods.TotalSalesVolume < 0 || CurrentLine.le_goods.SalesVolumes < 0)
-                        //{
-                        //    Msg = string.Format("计算错误,月销量不可为负数.订单行ID:{0},商品ID:{1}", CurrentLine.OrdersLinesID,CurrentLine.le_goods.GoodsID);
-                        //    log.Error(Msg, null);
-                        //    return false;
-                        //}
+
+                        if (CurrentLine.le_goods.TotalSalesVolume < 0 || CurrentLine.le_goods.SalesVolumes < 0)
+                        {
+                            CurrentLine.le_goods.TotalSalesVolume = 0;
+                            CurrentLine.le_goods.SalesVolumes = 0;
+                            string logmesg = string.Format("计算错误,月销量不可为负数.订单行ID:{0},商品ID:{1}", CurrentLine.OrdersLinesID, CurrentLine.le_goods.GoodsID);
+                            log.Error(logmesg, null);
+                           // return false;
+                        }
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
                         ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                     }

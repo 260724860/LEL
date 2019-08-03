@@ -252,6 +252,11 @@ namespace Service
                         GoodsModel.Quota = Convert.ToInt32(GoodsDT.Rows[i]["每人限购"].ToString());
                         GoodsModel.IsBulkCargo = Convert.ToInt32(GoodsDT.Rows[i]["是否为散货(1是,0不是)"].ToString()) == 1 ? 1 : 0; ;
                         GoodsModel.MinimumPurchase = Convert.ToInt32(GoodsDT.Rows[i]["最小采购量"].ToString());
+                        if(GoodsModel.MinimumPurchase<=0)
+                        {
+                            Msg = string.Format("在【商品录入】中到商品序列号为：{0},得最小起配数设置错误,不能小于或等于0", GoodsNumber);
+                            return false;
+                        }
                         GoodsModel.RowVersion = DateTime.Now;
                         GoodsModel.IsShelves = Convert.ToInt32(GoodsDT.Rows[i]["上架(0不上架/1上架)"].ToString()) == 1 ? 1 : 0;
                         GoodsModel.IsRecommend = Convert.ToInt32(GoodsDT.Rows[i]["是否推荐(0否/1是)"].ToString()) == 1 ? 1 : 0;
