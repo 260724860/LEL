@@ -129,6 +129,7 @@ namespace Service
                     PackingNumber = s.PackingNumber,
                     SalesVolumes = s.SalesVolumes,
                     TotalSalesVolumes = s.TotalSalesVolume,
+                    MinimumPurchase=s.MinimumPurchase,
                     Stock = s.Stock,
                     Quota = s.Quota,
                     MSRP = s.MSRP,

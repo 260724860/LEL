@@ -1697,10 +1697,12 @@ namespace Service
                                     if (loginInfo.UserType == 1)
                                     {
                                         OrderLineLogModel.UserID = loginInfo.UserID;
+                                        orderline.SuppliersID = null;
                                     }
                                     if (loginInfo.UserType == 3)
                                     {
                                         OrderLineLogModel.AdminID = loginInfo.UserID;
+                                        orderline.SuppliersID = null;
                                     }
 
                                     orderline.DeliverCount = 0;

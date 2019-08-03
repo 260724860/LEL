@@ -65,7 +65,7 @@ namespace DTO.Goods
         /// <summary>
         /// 最小采购量
         /// </summary>
-        public int MinimumPurchase { get; set; } = 1;
+        public int MinimumPurchase { get; set; } 
         /// <summary>
         /// 供应价格集合
         /// </summary>
