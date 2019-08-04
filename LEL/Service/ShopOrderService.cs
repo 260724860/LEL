@@ -385,14 +385,13 @@ namespace Service
                         {
                             BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID 
                             && s.GoodsID == QuotaGoods.GoodsID
-                            &&s.CreateTime>=goodsModel.QuotaBeginTime
-                            &&s.CreateTime<=goodsModel.QuotaEndTime).Select(k => k.DeliverCount).ToList();
+                            && s.CreateTime>=goodsModel.QuotaBeginTime
+                            && s.CreateTime<=goodsModel.QuotaEndTime).Select(k => k.DeliverCount).ToList();
                             if (BuyCountIquery != null)
                             {
                                 AlreadyBuyCount = BuyCountIquery.Sum();
                             }
                         }
-
                         if ((QuotaGoods != null && goodsModel.Quota != -1 && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - QuotaGoods.GoodsCount < 0 && goodsModel.Quota != -1))
                         {
                             Msg = string.Format("该商品没人限购{0}件", goodsModel.Quota);
@@ -582,7 +581,6 @@ namespace Service
 
                 if (seachParams.BeginTime == null && seachParams.EndTime == null && string.IsNullOrEmpty(seachParams.Out_Trade_No))
                 {
-
                     seachParams.BeginTime = DateTime.Now.AddDays(-3);
                     seachParams.EndTime = DateTime.Now;
                 }
@@ -1034,12 +1032,7 @@ namespace Service
                             Linemodel.Profit = Linemodel.GoodsPrice - SupplyPrice;
                         }
                         if (Linemodel.DeliverCount != data.GoodsCount)//更改商品数量
-                        {
-                            if (data.GoodsCount <= 0)
-                            {
-                                Linemodel.Status = (int)OrderLineStatus.YiQuXiao;
-                                data.GoodsCount = 0;
-                            }
+                        {                         
                             if (Linemodel.Status != (int)OrderLineStatus.YiQuXiao)
                             {
                                 int Difference = Linemodel.DeliverCount - data.GoodsCount;
@@ -1051,6 +1044,12 @@ namespace Service
                                 modhead.DeliverCount -= Difference;
                                 modhead.RealSupplyAmount -= (Linemodel.SupplyPrice * Difference);
                                 modhead.RealAmount -= (Linemodel.GoodsPrice * Difference);
+                            }
+
+                            if (data.GoodsCount <= 0)
+                            {
+                                Linemodel.Status = (int)OrderLineStatus.YiQuXiao;
+                                data.GoodsCount = 0;
                             }
                             Linemodel.DeliverCount = data.GoodsCount;
                           
@@ -1071,9 +1070,12 @@ namespace Service
 
                     }
 
-                    //modhead.DeliverCount = OrderLineList.Sum(s => s.DeliverCount);
-                    //modhead.RealSupplyAmount = OrderLineList.Sum(s => s.SupplyPrice * s.DeliverCount);
-                    //modhead.RealAmount = OrderLineList.Sum(s => s.GoodsPrice * s.DeliverCount);
+
+                    if (OrderLineList.Count(s => s.Status == (int)OrderLineStatus.YiQuXiao) == OrderLineList.Count()) //全部已取消,更新订单头状态
+                    {
+                        modhead.Status = (int)OrderHeadStatus.YiQuXiao;
+                        OrderHeadLogModel.AfterStatus = modhead.Status;
+                    }
 
                     if (modhead.DeliverCount < 0)
                     {
@@ -1551,6 +1553,11 @@ namespace Service
                             OrderHeadModel.Status = (int)OrderHeadStatus.YiJieSuan;
                             OrderHeadLog.AfterStatus = OrderHeadModel.Status;
                         }
+                        if (LinesList.Count(s => s.Status == (int)OrderLineStatus.YiQuXiao) == LinesList.Count() ) //全部已取消,更新订单头状态
+                        {
+                            OrderHeadModel.Status = (int)OrderHeadStatus.YiQuXiao;
+                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
+                        }
 
                         OrderHeadModel.UpdateTime = DateTime.Now;
                         CurrentLine.UpdateTime = DateTime.Now;
@@ -1606,7 +1613,6 @@ namespace Service
             }
         }
       
-
         /// <summary>
         /// 更新订单状态
         /// </summary>
