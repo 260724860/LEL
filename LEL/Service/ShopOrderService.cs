@@ -42,11 +42,7 @@ namespace Service
                     
                     foreach (var CartModel in UserCartList)
                     {
-                        if(CartModel.le_goods.IsShelves==0)
-                        {
-                            Mes = string.Format("该商品已经下架，加入购物车失败");
-                            return 0;
-                        }
+                      
                         var existGoodsValue = CartModel
                         .le_cart_goodsvalue.Select(k => new AddGoodsValues { CategoryType = k.CategoryType, GoodsValueID = k.GoodsValueID }).ToList();
                         if (existGoodsValue != null)
@@ -68,9 +64,21 @@ namespace Service
                     {
                         s.SpecialOffer,
                         s.Stock,
-                        s.Quota
+                        s.Quota,
+                        s.IsShelves,
+                       
                     }).FirstOrDefault();
 
+                    if (GoodsModel.IsShelves == 0)
+                    {
+                        Mes = string.Format("该商品已经下架，加入购物车失败");
+                        return 0;
+                    }
+                    if (GoodsModel.Stock <= 0|| GoodsModel.Stock-GoodsCount<0)
+                    {
+                        Mes = string.Format("该商品库存不足，加入购物车失败.当前库存【{0}】", GoodsModel.Stock);
+                        return 0;
+                    }
                     //增加
                     if (IsAdd)
                     {
@@ -523,6 +531,12 @@ namespace Service
 
                     if (ctx.SaveChanges() > 0)
                     {
+                        //string sqlstr;
+                        //ctx.Database.Log = (sql) =>
+                        //{
+                        //    sqlstr = sql;
+                        //    Console.WriteLine(sql);
+                        //};
                         //用户下单，推送消息给所有总部人员
                         var AdminIDList = ctx.le_admin.Where(s => s.Status == 1).Select(s => s.AdminID).ToList();
                         foreach (var AdminId in AdminIDList)

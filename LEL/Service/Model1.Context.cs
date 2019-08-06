@@ -15,11 +15,15 @@ namespace Service
     
     public partial class Entities : DbContext
     {
+        private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Entities));
         public Entities()
             : base("name=Entities")
         {
+            //this.Database.Log = (sql) => {
+            //    log.DebugFormat("EF执行SQL：{0}", sql);
+            //};
         }
-    
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
