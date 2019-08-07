@@ -21,8 +21,8 @@ namespace Service
             this.le_goods_log = new HashSet<le_goods_log>();
             this.le_goods_suppliers = new HashSet<le_goods_suppliers>();
             this.le_goods_value = new HashSet<le_goods_value>();
-            this.le_shop_cart = new HashSet<le_shop_cart>();
             this.le_orders_lines = new HashSet<le_orders_lines>();
+            this.le_shop_cart = new HashSet<le_shop_cart>();
         }
     
         public int GoodsID { get; set; }
@@ -69,10 +69,9 @@ namespace Service
         public int GoodsType { get; set; }
         public Nullable<int> GoodsBarand { get; set; }
         public decimal PriceFull { get; set; }
-        public decimal PriceReduction { get; set; }
         public decimal CountFull { get; set; }
         public decimal CountReduction { get; set; }
-        public decimal Discount { get; set; }
+        public decimal PriceReduction { get; set; }
         public string TermOfValidity { get; set; }
         public string Province { get; set; }
         public string City { get; set; }
@@ -87,6 +86,7 @@ namespace Service
         public decimal PriceScheme3 { get; set; }
         public Nullable<System.DateTime> QuotaBeginTime { get; set; }
         public Nullable<System.DateTime> QuotaEndTime { get; set; }
+        public decimal Discount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }
@@ -99,8 +99,8 @@ namespace Service
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_value> le_goods_value { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
     }
 }

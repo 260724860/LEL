@@ -15,15 +15,11 @@ namespace Service
     
     public partial class Entities : DbContext
     {
-        private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Entities));
         public Entities()
             : base("name=Entities")
         {
-            //this.Database.Log = (sql) => {
-            //    log.DebugFormat("EF执行SQL：{0}", sql);
-            //};
         }
-
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
@@ -36,6 +32,7 @@ namespace Service
         public virtual DbSet<le_admin_role_mapping> le_admin_role_mapping { get; set; }
         public virtual DbSet<le_admin_role_value> le_admin_role_value { get; set; }
         public virtual DbSet<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }
+        public virtual DbSet<le_goods> le_goods { get; set; }
         public virtual DbSet<le_goods_brand> le_goods_brand { get; set; }
         public virtual DbSet<le_goods_img> le_goods_img { get; set; }
         public virtual DbSet<le_goods_log> le_goods_log { get; set; }
@@ -47,7 +44,9 @@ namespace Service
         public virtual DbSet<le_orderline_goodsvalue> le_orderline_goodsvalue { get; set; }
         public virtual DbSet<le_orders_head> le_orders_head { get; set; }
         public virtual DbSet<le_orders_head_log> le_orders_head_log { get; set; }
+        public virtual DbSet<le_orders_lines> le_orders_lines { get; set; }
         public virtual DbSet<le_orders_lines_log> le_orders_lines_log { get; set; }
+        public virtual DbSet<le_orders_lines_mapping> le_orders_lines_mapping { get; set; }
         public virtual DbSet<le_orders_modify_record> le_orders_modify_record { get; set; }
         public virtual DbSet<le_orders_operationrecord> le_orders_operationrecord { get; set; }
         public virtual DbSet<le_orders_timelimit> le_orders_timelimit { get; set; }
@@ -60,10 +59,8 @@ namespace Service
         public virtual DbSet<le_sysconfig> le_sysconfig { get; set; }
         public virtual DbSet<le_sysversion> le_sysversion { get; set; }
         public virtual DbSet<le_user_address> le_user_address { get; set; }
+        public virtual DbSet<le_users> le_users { get; set; }
         public virtual DbSet<lel_admin_suppliers> lel_admin_suppliers { get; set; }
         public virtual DbSet<lel_imei> lel_imei { get; set; }
-        public virtual DbSet<le_users> le_users { get; set; }
-        public virtual DbSet<le_goods> le_goods { get; set; }
-        public virtual DbSet<le_orders_lines> le_orders_lines { get; set; }
     }
 }

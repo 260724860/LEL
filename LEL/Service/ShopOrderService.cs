@@ -360,7 +360,7 @@ namespace Service
                 var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
 
                 List<le_orders_lines> OrderLinesList = new List<le_orders_lines>();
-                string Trade_no = Common.RandomUtils.GenerateOutTradeNo("LEL");
+                string Trade_no = Common.RandomUtils.GenerateOutTradeNo("LEL")+ ParamasData.UserID.ToString();
                 List<GoodsStock> goodsStocksList = new List<GoodsStock>();
 
                 le_orders_head le_Orders_Head = new le_orders_head();
@@ -551,6 +551,23 @@ namespace Service
                         Msg = "订单提交失败";
                         return 0;
                     }
+                }
+                catch (DbEntityValidationException exception)
+                {
+                    var errorMessages =
+                        exception.EntityValidationErrors
+                            .SelectMany(validationResult => validationResult.ValidationErrors)
+                            .Select(m => m.ErrorMessage);
+
+                    var fullErrorMessage = string.Join(", ", errorMessages);
+
+                    var exceptionMessage = string.Concat(exception.Message, " 验证异常消息是：", fullErrorMessage);
+
+                    log.Error(exceptionMessage, exception);
+
+                    Msg = exceptionMessage;
+                    return 0;
+
                 }
                 catch (Exception ex)
                 {
@@ -1654,6 +1671,23 @@ namespace Service
                         return false;
                     }
                 }
+                catch (DbEntityValidationException exception)
+                {
+                    var errorMessages =
+                        exception.EntityValidationErrors
+                            .SelectMany(validationResult => validationResult.ValidationErrors)
+                            .Select(m => m.ErrorMessage);
+
+                    var fullErrorMessage = string.Join(", ", errorMessages);
+
+                    var exceptionMessage = string.Concat(exception.Message, " 验证异常消息是：", fullErrorMessage);
+
+                    log.Error(exceptionMessage, exception);
+
+                    Msg = exceptionMessage;
+                    return false;
+
+                }
                 catch (Exception ex)
                 {
                     Msg = ex.Message;
@@ -1978,6 +2012,7 @@ namespace Service
                     return false;
 
                 }
+
                 catch (Exception ex)
                 {
                     msg = "修改异常，异常信息：" + ex.ToString();
