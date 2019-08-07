@@ -1072,7 +1072,7 @@ namespace Service
 
                             if(Linemodel.Status== (int)OrderLineStatus.YiQuXiao&& data.GoodsCount>0) //当前状态是已取消，重新编辑之后派单
                             {                                
-                                Linemodel.Status =(int) OrderHeadStatus.WeiPaiFa;
+                                Linemodel.Status =(int)OrderLineStatus.DaiJieDan;
                                 Linemodel.le_goods.Stock -= (data.GoodsCount);
                                 Linemodel.le_goods.SalesVolumes += (data.GoodsCount);
                                 Linemodel.le_goods.TotalSalesVolume += (data.GoodsCount);
@@ -1943,8 +1943,6 @@ namespace Service
                     }
                    
                     model.UpdateTime = DateTime.Now;
-                  
-                  
 
                     OrderHeadLogModel.AfterStatus = model.Status;
                     OrderHeadLogModel.CreateTime = DateTime.Now;
