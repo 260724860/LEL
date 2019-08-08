@@ -122,6 +122,11 @@ namespace Service
             var GoodsValueDT = ExcelHelper.DataReaderExcelFile(fileName, "商品属性");
             var GoodsSupperDT = ExcelHelper.DataReaderExcelFile(fileName, "供应商价格表");
             Random rd = new Random();
+            if (GoodsDT.Rows.Count <= 1)
+            {
+                Msg = string.Format("未检索到任何行!");
+                return false;
+            }
             using (Entities ctx = new Entities())
             {
                 for (int i = 1; i < GoodsDT.Rows.Count; i++) //跳过第一行示例
