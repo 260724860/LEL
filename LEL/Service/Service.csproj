@@ -148,9 +148,6 @@
     <Compile Include="le_orders_lines_log.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="le_orders_lines_mapping.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="le_orders_modify_record.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

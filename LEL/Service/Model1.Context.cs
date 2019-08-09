@@ -46,7 +46,7 @@ namespace Service
         public virtual DbSet<le_orders_head_log> le_orders_head_log { get; set; }
         public virtual DbSet<le_orders_lines> le_orders_lines { get; set; }
         public virtual DbSet<le_orders_lines_log> le_orders_lines_log { get; set; }
-        public virtual DbSet<le_orders_lines_mapping> le_orders_lines_mapping { get; set; }
+       // public virtual DbSet<le_orders_lines_mapping> le_orders_lines_mapping { get; set; }
         public virtual DbSet<le_orders_modify_record> le_orders_modify_record { get; set; }
         public virtual DbSet<le_orders_operationrecord> le_orders_operationrecord { get; set; }
         public virtual DbSet<le_orders_timelimit> le_orders_timelimit { get; set; }
