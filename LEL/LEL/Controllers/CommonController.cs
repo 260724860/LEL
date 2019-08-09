@@ -128,14 +128,21 @@ namespace LEL.Controllers
             }
             var Model = OtherService.GetSmsRecordforNoce(CookieStr);
             System.TimeSpan t3 = DateTime.Now.AddMinutes(-1) - DateTime.Now;
+            var str = TenCentSmsHelper.RandomCode();
             if (Model != null && Model.CreatTime > DateTime.Now.AddMinutes(-1))
             {
                 t3 = DateTime.Now.AddMinutes(-1) - Model.CreatTime;
                 return Json(JRpcHelper.AjaxResult(1, "1分钟内只能发送一条短信", t3.TotalSeconds));
+
             }
-            //var content = string.Format(@"" + ssh.SmsTemplate("T0001"), Code);
-            //ssh.SendSingleSms(Phone, content, out returnmsg);
-            var str = TenCentSmsHelper.RandomCode();
+            if(Model!=null)
+            {
+                if(Model.CreatTime > DateTime.Now.AddMinutes(-10))
+                {
+                    str = Model.Code;
+                }
+            }
+            
             string[] parm = new string[] { str };
             //  TenCentSmsHelper.SmsSingleSender(Phone, 334320, parm, "蘑菇侠");
             TenCentSmsHelper.SmsSingleSender(Phone, 334320, parm, "乐尔乐");
