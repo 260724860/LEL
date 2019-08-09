@@ -84,5 +84,10 @@ namespace DTO.ShopOrder
         /// 积分
         /// </summary>
         public int Integral { get; set; }
+
+        /// <summary>
+        /// 商品类别名
+        /// </summary>
+        public string GoodsGroupsName { get; set; }
     }
 }

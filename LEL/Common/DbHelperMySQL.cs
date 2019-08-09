@@ -526,9 +526,11 @@ namespace Common
                     try
                     {
                         int indentity = 0;
+                        int rows = 0;
                         //循环
                         foreach (CommandInfo myDE in SQLStringList)
                         {
+                           
                             string cmdText = myDE.CommandText;
                             MySqlParameter[] cmdParms = (MySqlParameter[])myDE.Parameters;
                             foreach (MySqlParameter q in cmdParms)
@@ -543,7 +545,7 @@ namespace Common
                             if (myDE.EffentNextType == EffentNextType.ExcuteEffectRows && val <= 0)
                             {
                                 //trans.Rollback();
-                                throw new Exception("SQL:违背要求" + myDE.CommandText + "必须有影响行");
+                                throw new Exception("SQL:违背要求" + myDE.CommandText + "必须有影响行,在第"+rows+"行位置");
                                 //return 0;
                             }
                             foreach (MySqlParameter q in cmdParms)
@@ -554,6 +556,7 @@ namespace Common
                                 }
                             }
                             cmd.Parameters.Clear();
+                            rows++;
                         }
                         trans.Commit();
                     }

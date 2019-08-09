@@ -51,7 +51,10 @@ namespace DTO.ShopOrder
         /// 库存
         /// </summary>
         public int? Stock { get; set; }
-
+        /// <summary>
+        /// 规格单位
+        /// </summary>
+        public string Specifications{get;set;}
         public decimal SpecialOffer { get; set; }
         public DateTime RowVersion { get; set; }
 

@@ -92,6 +92,19 @@ namespace DTO.ShopOrder
         /// </summary>
         public int OrderLineCount { get; set; }
 
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        public string CarNumber { get; set; }
+        /// <summary>
+        /// 取货地址
+        /// </summary>
+        public string RcAddr { get; set; }
+
+        /// <summary>
+        /// 物流类型
+        /// </summary>
+        public int ExpressType { get; set; }
         #endregion
     }
 }

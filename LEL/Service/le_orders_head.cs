@@ -53,9 +53,9 @@ namespace Service
         public virtual ICollection<le_order_pack> le_order_pack { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_modify_record> le_orders_modify_record { get; set; }
+        public virtual le_users le_users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_head_log> le_orders_head_log { get; set; }
-        public virtual le_users le_users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_lines> le_orders_lines { get; set; }
     }
