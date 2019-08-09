@@ -223,8 +223,8 @@ namespace Service
                     //Supplyprice=s.le_goods.le_goods_suppliers.Where(k => k.IsDefalut == 1).FirstOrDefault().Supplyprice,
                     SpecialOffer = s.le_goods.SpecialOffer,
                     PackingNumber=s.le_goods.PackingNumber,
-
-                    Discount=s.le_goods.Discount,
+                    Specifications=s.le_goods.Specifications,
+                    Discount =s.le_goods.Discount,
                     Integral=s.le_goods.Integral,
                     PriceFull=s.le_goods.PriceFull,
                     PriceReduction=s.le_goods.PriceReduction,
@@ -872,7 +872,8 @@ namespace Service
                     Specifications = s.le_goods.Specifications,
                     PackingNumber = s.le_goods.PackingNumber,
                     DeliverCount = s.DeliverCount,
-                    MinimumPurchase=s.le_goods.MinimumPurchase
+                    MinimumPurchase=s.le_goods.MinimumPurchase,
+                    GoodsGroupsName=s.le_goods.le_goodsgroups.Name
                 }).OrderBy(s=>s.SupplierID).OrderBy(s=>s.GoodsID);
 
                 return result.ToList();
@@ -1249,6 +1250,10 @@ namespace Service
                     OrderType = s.le_orders_head.OrderType,
                     Out_Trade_No = s.le_orders_head.OutTradeNo,
                     PickupTime = s.le_orders_head.PickupTime,
+                    
+                    RcAddr=s.le_orders_head.RcAddr,
+                    ExpressType=s.le_orders_head.ExpressType,
+                    CarNumber=s.le_orders_head.CarNumber,
 
                     WeiPaiFaCount=s.Status,
                     DaiJieDanCount=s.Status,
@@ -1290,6 +1295,10 @@ namespace Service
 
                     Out_Trade_No = k.Max(p => p.Out_Trade_No),
                     PickupTime = k.Max(p => p.PickupTime),
+
+                    RcAddr = k.Max(p => p.RcAddr),
+                    ExpressType = k.Max(p => p.ExpressType),
+                    CarNumber = k.Max(p => p.CarNumber),
 
                     WeiPaiFaCount = k.Count(p => p.WeiPaiFaCount == (int)OrderLineStatus.WeiPaiFa),
                     DaiJieDanCount = k.Count(p => p.DaiJieDanCount == (int)OrderLineStatus.DaiJieDan),
