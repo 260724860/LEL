@@ -616,14 +616,20 @@ namespace Service
                     seachParams.BeginTime = DateTime.Now.AddDays(-3);
                     seachParams.EndTime = DateTime.Now;
                 }
-
-                if (seachParams.BeginTime!=null)
+                if (!string.IsNullOrEmpty(seachParams.Out_Trade_No))
                 {
-                    tempIq = tempIq.Where(s => s.CreateTime >= seachParams.BeginTime);
+                    tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
                 }
-                if (seachParams.EndTime != null)
+                else
                 {
-                    tempIq = tempIq.Where(s => s.CreateTime <= seachParams.EndTime);
+                    if (seachParams.BeginTime != null)
+                    {
+                        tempIq = tempIq.Where(s => s.CreateTime >= seachParams.BeginTime);
+                    }
+                    if (seachParams.EndTime != null)
+                    {
+                        tempIq = tempIq.Where(s => s.CreateTime <= seachParams.EndTime);
+                    }
                 }
 
                 if (seachParams.Status != null)
@@ -639,10 +645,7 @@ namespace Service
                       || s.le_users.UsersNickname.Contains(seachParams.KeyWords)
                     );
                 }
-                if (!string.IsNullOrEmpty(seachParams.Out_Trade_No))
-                {
-                    tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
-                }
+               
                 //if (seachParams.Status != null)
                 //{
                 //    tempIq = tempIq.Where(s => s.Status == seachParams.Status);
