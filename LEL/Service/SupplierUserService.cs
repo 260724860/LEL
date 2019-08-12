@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-
+using EntityFramework.Extensions;
 namespace Service
 {
     public class SupplierUserService
@@ -167,8 +167,28 @@ namespace Service
 
                 if (dto.Suppliers_Status == 2)
                 {
+                    
+                    //1.如果该供应商对的商品只有一个，则直接删除供应商价格
+                    //2.如果该供应商对的商品有多个，删除该供应商价格，设置其他供应商为默认供应商
+                    var temp1 = ctx.le_goods_suppliers.Where(s => s.SuppliersID == model.SuppliersID).Select(s=>s.GoodsID);
 
+                    var temp = ctx.le_goods_suppliers.Where(s => temp1.Contains(s.GoodsID)).GroupBy(s=>s.GoodsID)
+                        .Select(s => new { GoodsId = s.Key, Count = s.Count(k => k.GoodsID > 0) });
+
+                   // ctx.lel_admin_suppliers.
+                    
+                    //  var GoodsSupplierPriceLists = temp.Where(s=>s.Count>1).up;
+
+                    //ctx.le_goods_suppliers.Where(s => s.GoodsID == 1).Update();
+
+                   // var res=   ctx.lel_admin_suppliers.Update(s=>new { });
                     var GoodsSupplierPriceList = model.le_goods_suppliers.ToList();
+                    
+                    
+                    var SingGoodsPriceList = GoodsSupplierPriceList.GroupBy(s => s.GoodsID)
+                        .Select(s => new { GoodsId = s.Key, Count = s.Count(k => k.GoodsID > 0) });//.Where(s => s.Count > 1);
+
+
                     foreach (var index in GoodsSupplierPriceList)
                     {
                         if (index.IsDefalut == 1) //搜索其他供应商替换为默认供应商
@@ -176,13 +196,20 @@ namespace Service
                             var NoDefaultList = ctx.le_goods_suppliers.Where(s => s.GoodsID == index.GoodsID && s.IsDeleted == 0).ToList();
                             if (NoDefaultList == null || NoDefaultList.Count == 0 || NoDefaultList.Count == 1)
                             {
-                                msg = string.Format("关闭失败,该供应商为商品ID:{0}的唯一供应商,无法关闭,请确认检查", index.GoodsID);
-                                return false;
+                                //var Current = NoDefaultList.FirstOrDefault();
+                                //Current.le_goods.IsShelves = 0;
+                                //Current.IsDeleted = 1;
+                               // ctx.Entry<le_goods_suppliers>(Current).State = EntityState.Modified;
+                                //msg = string.Format("关闭失败,该供应商为商品ID:{0}的唯一供应商,无法关闭,请确认检查", index.GoodsID);
+                                //return false;
                             }
-                            var SetDefault = NoDefaultList.Where(s => s.GoodsMappingID != index.GoodsMappingID).OrderBy(s => s.Supplyprice).OrderByDescending(s => s.CreatTime).FirstOrDefault();
-                            SetDefault.IsDefalut = 1;
-                            ctx.Entry<le_goods_suppliers>(SetDefault).State = EntityState.Modified;
-                            ctx.le_goods_suppliers.Remove(index);
+                            else
+                            {
+                                var SetDefault = NoDefaultList.Where(s => s.GoodsMappingID != index.GoodsMappingID).OrderBy(s => s.Supplyprice).OrderByDescending(s => s.CreatTime).FirstOrDefault();
+                                SetDefault.IsDefalut = 1;
+                                ctx.Entry<le_goods_suppliers>(SetDefault).State = EntityState.Modified;
+                                ctx.le_goods_suppliers.Remove(index);
+                            }
                         }
                         else
                         {
