@@ -48,14 +48,14 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "参数错误请检查", null));
             }
             dTO.SuppliersID = GetLoginInfo().UserID;
-            var result = SupplierUserService.Update(dTO, true);
+            var result = SupplierUserService.Update(dTO, true,out string msg);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
             else
             {
-                return Json(JRpcHelper.AjaxResult(1, "修改失败！", result));
+                return Json(JRpcHelper.AjaxResult(1, msg, result));
             }
             return null;
         }

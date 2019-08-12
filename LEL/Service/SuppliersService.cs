@@ -181,6 +181,7 @@ namespace Service
 
                 if (dto.Suppliers_Status == 2)
                 {
+                   
                     var GoodsSupplierPriceList = model.le_goods_suppliers.ToList();
                     foreach (var index in GoodsSupplierPriceList)
                     {
@@ -205,6 +206,7 @@ namespace Service
                     }
                 }
 
+                model.Status = dto.Suppliers_Status;
                 ctx.Entry<le_suppliers>(model).State = EntityState.Modified;
                 var result = ctx.SaveChanges();
                 if (result > 0)

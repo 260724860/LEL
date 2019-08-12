@@ -87,16 +87,16 @@ namespace LELAdmin.Controllers
         {
             try
             {
-                var result = new SupplierUserService().Update(model, false);
+                var result = new SupplierUserService().Update(model, false,out string MSG);
                 if (result)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = "" });
                 }
-                return Json(new { code = 1, msg = "ERROR", content = "" });
+                return Json(new { code = 1, msg = MSG, content = "" });
             }
             catch (Exception ex)
             {
-                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+                return Json(new { code = 1, msg = ex.Message, content = ex.ToString() });
             }
         }
 
