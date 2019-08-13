@@ -20,6 +20,10 @@ namespace LELAdmin
 
             GlobalConfiguration.Configuration.Filters.Add(new LELExceptionFilter());
             new JobScheduler().startQuartzAsync();
+
+          
         }
+
+       
     }
 }

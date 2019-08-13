@@ -12,10 +12,13 @@ namespace Service
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+
+
     
     public partial class Entities : DbContext
     {
         private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Entities));
+
         public Entities()
             : base("name=Entities")
         {
@@ -26,7 +29,9 @@ namespace Service
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            modelBuilder.HasDefaultSchema("");    //增加配置
+            base.OnModelCreating(modelBuilder);
+            //throw new UnintentionalCodeFirstException();
         }
     
         public virtual DbSet<le_ad> le_ad { get; set; }
