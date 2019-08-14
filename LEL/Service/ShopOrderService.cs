@@ -243,7 +243,7 @@ namespace Service
                         GoodsValueID = k.GoodsValueID
 
                     }),
-                    SupplierGoodsList = s.le_goods.le_goods_suppliers.Select(k => new SupplierGoods
+                    SupplierGoodsList = s.le_goods.le_goods_suppliers.Where(k=>k.IsDeleted==0).Select(k => new SupplierGoods
                     {
                         IsDefalut = k.IsDefalut,
                         SupplierID = k.SuppliersID,

@@ -166,158 +166,94 @@ namespace Service
                 model.Classify = dto.Classify;
                 model.AnotherName = dto.AnotherName;
 
-                if (dto.Suppliers_Status == 2)
+                string updateGoodsSupplierSql = "";
+                string UpdateGoodsSql = "";
+                string UpdateDefaultSql = "";
+
+
+                if (!oneself)
                 {
-                    
+                    model.Status = dto.Suppliers_Status;
+                }
+
+                if (model.Status == 2)
+                {                   
                     //1.如果该供应商对的商品只有一个，则直接删除供应商价格
                     //2.如果该供应商对的商品有多个，删除该供应商价格，设置其他供应商为默认供应商
                     var temp1 = ctx.le_goods_suppliers.Where(s => s.SuppliersID == model.SuppliersID&&s.IsDeleted==0).Select(s=>s.GoodsID);
-
                     var temp = ctx.le_goods_suppliers.Where(s => temp1.Contains(s.GoodsID)).GroupBy(s=>s.GoodsID)
                         .Select(s => new { GoodsId = s.Key, Count = s.Count(k => k.GoodsID > 0) }).ToList();
+                    if (temp.Count > 0)
+                    {
+                        string FileterStr = string.Join(",", temp.Select(s => s.GoodsId).ToArray());
+                        updateGoodsSupplierSql = string.Format("update le_goods_suppliers set IsDeleted=1 ,IsDefalut=0  where suppliersid={0} and goodsid in ({1})", model.SuppliersID, FileterStr);
 
-                    var MultipleList = temp.Where(s => s.Count > 1).Select(s => s.GoodsId).ToList();
+                        //一商多供
+                        var MultipleList = temp.Where(s => s.Count > 1).Select(s => s.GoodsId).ToArray();
+                        //单个商品
+                        var SignerList = temp.Where(s => s.Count == 1).Select(s => s.GoodsId).ToArray();
 
-                    // var aaa = ctx.le_goods_suppliers.Delete(s => MultipleList.Contains(s.GoodsID) && s.IsDefalut != 1);
+                        if (MultipleList.Length > 0)
+                        {
+                            //查询更新价格最低得供应商
+                            UpdateDefaultSql = string.Format(" update le_goods_suppliers a inner join(select GoodsMappingID from le_goods_suppliers where goodsid in ({0}) and SuppliersID != {1} and IsDeleted = 0 order by Supplyprice ASC limit 1) b on a.GoodsMappingID = b.GoodsMappingID set IsDefalut = 1  ",
+                               string.Join(",", string.Join(",", MultipleList)), model.SuppliersID);
 
-                    var kkk = ctx.le_goods_suppliers.Where(s => MultipleList.Contains(s.GoodsID) && s.IsDefalut != 1).ToList();
+                        }
 
-
-                    var MultipleListDelete= ctx.le_goods_suppliers.Where(s=>s.GoodsMappingID== 156914).Delete();
-
-                    //  var GoodsSupplierPriceLists = temp.Where(s=>s.Count>1).up;
-
-                    //ctx.le_goods_suppliers.Where(s => s.GoodsID == 1).Update();
-
-                    // var res=   ctx.lel_admin_suppliers.Update(s=>new { });
-
-                    //    var GoodsSupplierPriceList = model.le_goods_suppliers.ToList();
-
-
-                    //    var SingGoodsPriceList = GoodsSupplierPriceList.GroupBy(s => s.GoodsID)
-                    //        .Select(s => new { GoodsId = s.Key, Count = s.Count(k => k.GoodsID > 0) });//.Where(s => s.Count > 1);
-
-
-                    //    foreach (var index in GoodsSupplierPriceList)
-                    //    {
-                    //        if (index.IsDefalut == 1) //搜索其他供应商替换为默认供应商
-                    //        {
-                    //            var NoDefaultList = ctx.le_goods_suppliers.Where(s => s.GoodsID == index.GoodsID && s.IsDeleted == 0).ToList();
-                    //            if (NoDefaultList == null || NoDefaultList.Count == 0 || NoDefaultList.Count == 1)
-                    //            {
-                    //                //var Current = NoDefaultList.FirstOrDefault();
-                    //                //Current.le_goods.IsShelves = 0;
-                    //                //Current.IsDeleted = 1;
-                    //               // ctx.Entry<le_goods_suppliers>(Current).State = EntityState.Modified;
-                    //                //msg = string.Format("关闭失败,该供应商为商品ID:{0}的唯一供应商,无法关闭,请确认检查", index.GoodsID);
-                    //                //return false;
-                    //            }
-                    //            else
-                    //            {
-                    //                var SetDefault = NoDefaultList.Where(s => s.GoodsMappingID != index.GoodsMappingID).OrderBy(s => s.Supplyprice).OrderByDescending(s => s.CreatTime).FirstOrDefault();
-                    //                SetDefault.IsDefalut = 1;
-                    //                ctx.Entry<le_goods_suppliers>(SetDefault).State = EntityState.Modified;
-                    //                ctx.le_goods_suppliers.Remove(index);
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            //ctx.Entry<le_goods_suppliers>(index).State = EntityState.Deleted;
-                    //            ctx.le_goods_suppliers.Remove(index);
-                    //        }
-                    //    }
+                        if (SignerList.Length > 0)
+                        {
+                            UpdateGoodsSql = string.Format("update le_goods set IsShelves=0 where Goodsid in ({0})", string.Join(",", SignerList));
+                        }
+                    }
+                    
+                   
                 }
-                //if (!oneself)
-                //{
-                //    model.Status = dto.Suppliers_Status;
-                //}
-                ////model.Status = dto.Suppliers_Status;
-                //ctx.Entry<le_suppliers>(model).State = EntityState.Modified;
-                var result = ctx.SaveChanges();
-                if (result > 0)
+                if (model.Status == 1)
                 {
-                    msg = "SUCCESS";
-                    return true;
+                    var temp1 = ctx.le_goods_suppliers.Where(s => s.SuppliersID == model.SuppliersID && s.IsDeleted == 1).Select(s => s.GoodsID).ToList();
+                    if (temp1.Count > 0)
+                    {
+                        updateGoodsSupplierSql = string.Format("update le_goods_suppliers set IsDeleted=0  where suppliersid={0} and goodsid in ({1})", model.SuppliersID, string.Join(",", temp1));
+                        UpdateGoodsSql = string.Format("update le_goods set IsShelves=1 where Goodsid in ({0})", string.Join(",", string.Join(",", temp1)));
+                    }
                 }
+                using (var transe = ctx.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(updateGoodsSupplierSql))
+                        {
+                            ctx.Database.ExecuteSqlCommand(updateGoodsSupplierSql);
+                        }
+                        if (!string.IsNullOrEmpty(UpdateDefaultSql))
+                        {
+                                ctx.Database.ExecuteSqlCommand(UpdateDefaultSql);
+                        }
+                        if (!string.IsNullOrEmpty(UpdateGoodsSql))
+                        {
+                                ctx.Database.ExecuteSqlCommand(UpdateGoodsSql);
+                        }
+                 
+                        var result = ctx.SaveChanges();
+                    transe.Commit();
+                        if (result > 0)
+                        {
+                            msg = "SUCCESS";
+                            return true;
+                        }
 
-                msg = "修改失败";
-                return false;
+                        msg = "修改失败";
+                        return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        msg = ex.Message;
+                        transe.Rollback();
+                        return false;
+                    }
+               }
             }
-
-
-            //using (Entities ctx = new Entities())
-            //{
-            //    var UserModel = ctx.le_suppliers.Where(s => s.MobilePhone == dTO.Suppliers_MobilePhone).FirstOrDefault();
-            //    if (UserModel == null)
-            //    {
-            //        return false;
-            //    }
-            //    UserModel.SuppliersID = dTO.SuppliersID;
-            //    UserModel.SuppliersName = dTO.Suppliers_Name;
-            //    UserModel.ResponPeople = dTO.Suppliers_ResponPeople;
-
-               
-            //    UserModel.Email = dTO.Suppliers_Email;
-            //    UserModel.HeadImage = dTO.Suppliers_HeadImage;
-            //    UserModel.MobilePhone = dTO.Suppliers_MobilePhone;
-            //    UserModel.IDImgA = dTO.Suppliers_IDImgA;
-            //    UserModel.IDImgB = dTO.Suppliers_IDImgB;
-            //    UserModel.BusinessImg = dTO.Suppliers_BusinessImg;
-            //    UserModel.AttachImg1 = dTO.Suppliers_AttachImg1;
-            //    UserModel.AttachImg2 = dTO.Suppliers_AttachImg2;
-            //    UserModel.Addr = dTO.Suppliers_Addr;
-              
-            //    UserModel.UpdateTime = dTO.UpdateTime;
-               
-            //    UserModel.IDCardNo = dTO.IDCardNo;
-            //    UserModel.BusinessNo = dTO.BusinessNo;
-
-            //    UserModel.Province = dTO.Province;
-            //    UserModel.City = dTO.City;
-            //    UserModel.Area = dTO.Area;
-            //    UserModel.Longitude = dTO.Longitude;
-            //    UserModel.Latitude = dTO.Latitude;
-            //    UserModel.IMEI = dTO.IMEI;
-            //    UserModel.Initial = dTO.Initial;
-            //    UserModel.Landline = dTO.Landline;
-            //    UserModel.FinanceName = dTO.FinanceName;
-            //    UserModel.FinancePhone = dTO.FinancePhone;
-            //    UserModel.AuthCode = dTO.AuthCode;
-            //    UserModel.Remarks = dTO.Remarks;
-            //    UserModel.Deliverer = dTO.Deliverer;
-            //    UserModel.DelivererPhone= dTO.DelivererPhone;
-            //    UserModel.Category = dTO.Category;
-            //    UserModel.ManagingBrands = dTO.ManagingBrands;
-
-            //    UserModel.CustomerService = dTO.CustomerService;
-            //    UserModel.CustomerServicePhone = dTO.CustomerServicePhone;
-            //    UserModel.Docker = dTO.Docker;
-            //    UserModel.DockerPhone = dTO.DockerPhone;
-            //    UserModel.Zoning = dTO.Zoning;
-            //    UserModel.CartModel = dTO.CartModel;
-            //    UserModel.Classify = dTO.Classify;
-            //    UserModel.AnotherName = dTO.AnotherName;
-
-               
-            //    UserModel.UpdateTime = DateTime.Now;
-            //    try
-            //    {
-            //        ctx.Entry<le_suppliers>(UserModel).State = EntityState.Modified;
-            //        if (ctx.SaveChanges() > 0)
-            //        {
-            //            return true;
-            //        }
-            //        return false;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        log.Error(ex);
-            //        throw ex;
-            //        return false;
-
-            //    }
-            //}
-           
         }
 
         /// <summary>
