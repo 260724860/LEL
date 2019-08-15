@@ -94,7 +94,7 @@ namespace Service
                 }
                 if (options.SupplierID != null)
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID));
+                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID&&k.IsDeleted==0));
                 }
                 if(options.GoodsID!=null&&options.PageTurning!=null)
                 {
@@ -134,7 +134,7 @@ namespace Service
                     Quota = s.Quota,
                     MSRP = s.MSRP,
                    // SupplyPrice=s.le_goods_suppliers.Select(k=>k.Supplyprice).FirstOrDefault(),
-                   SupplyPriceList=s.le_goods_suppliers.Select(k=>new GoodsSupplier() {
+                   SupplyPriceList=s.le_goods_suppliers.Where(k=>k.IsDeleted==0).Select(k=>new GoodsSupplier() {
                        SuppliserID=k.SuppliersID,
                        SupplyPrice= k.Supplyprice,
                    }).ToList(),
@@ -199,13 +199,13 @@ namespace Service
                 result = result.Skip(options.Offset).Take(options.Rows);
 
                 list.GoodsModel = await result.ToListAsync();
-                if (options.SupplierID != null)
-                {
-                    for (int i = 0; i < list.GoodsModel.Count; i++)
-                    {
-                        list.GoodsModel[i].SupplyPriceList = list.GoodsModel[i].SupplyPriceList.Where(s => s.SuppliserID == options.SupplierID.Value).ToList();
-                    }
-                }
+                //if (options.SupplierID != null)
+                //{
+                //    for (int i = 0; i < list.GoodsModel.Count; i++)
+                //    {
+                //        list.GoodsModel[i].SupplyPriceList = list.GoodsModel[i].SupplyPriceList.Where(s => s.SuppliserID == options.SupplierID.Value).ToList();
+                //    }
+                //}
 
 
                 return list;
@@ -879,6 +879,7 @@ namespace Service
                     #region 添加供应商
                     foreach (var Supplier in dto.GoodsSuplierPriceList)
                     {
+                        
                         le_goods_suppliers le_Goods_Suppliers = new le_goods_suppliers();
                         le_Goods_Suppliers.CreatTime = DateTime.Now;
                         le_Goods_Suppliers.IsDefalut = Supplier.IsDefalut;
@@ -1096,24 +1097,38 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                if (ctx.le_goods_suppliers.Any(s => s.SuppliersID == SupplierID && s.GoodsID == GoodsID && s.IsDeleted == 0))
+                int ID = 0;
+                var ExitModel = ctx.le_goods_suppliers.Where(s => s.SuppliersID == SupplierID && s.GoodsID == GoodsID).FirstOrDefault();
+                if (ExitModel != null)
                 {
-                    Msg = "已存在供应商价格,请勿重复添加";
-                    return 0;
+                    if (ExitModel.IsDeleted == 0)
+                    {
+                        Msg = "已存在供应商价格,请勿重复添加";
+                        return 0;
+                    }
+                    ID = ExitModel.GoodsMappingID;
+                    ExitModel.IsDeleted = 0;
+                    ExitModel.UpdateTime = DateTime.Now;
+                    ctx.Entry<le_goods_suppliers>(ExitModel).State = EntityState.Modified;
                 }
-                le_goods_suppliers model = new le_goods_suppliers();
-                model.SuppliersID = SupplierID;
-                model.GoodsID = GoodsID;
-                model.Supplyprice = Price;
-                model.CreatTime = DateTime.Now;
-                model.UpdateTime = DateTime.Now;
-                model.IsDeleted = 0;
-                model.IsDefalut = IsDefalut;
-                ctx.le_goods_suppliers.Add(model);
+                else
+                {
+                    le_goods_suppliers model = new le_goods_suppliers();
+                    model.SuppliersID = SupplierID;
+                    model.GoodsID = GoodsID;
+                    model.Supplyprice = Price;
+                    model.CreatTime = DateTime.Now;
+                    model.UpdateTime = DateTime.Now;
+                    model.IsDeleted = 0;
+                    model.IsDefalut = IsDefalut;
+                    ctx.le_goods_suppliers.Add(model);
+                    ID = model.GoodsMappingID;
+                }
+
                 if (ctx.SaveChanges() > 0)
                 {
                     Msg = "SUCCESS";
-                    return model.GoodsMappingID;
+                    return ID;
                 }
                 else
                 {

@@ -315,8 +315,8 @@ namespace Service
                     model.OrderHeadID = dto.OrderHeadID;
                     model.BeforeCount = dto.BeforeCount;
                     model.AfterCount = dto.AfterCount;
-                    model.BeforeMoney = dto.BeforeMoney;
-                    model.AfterMoney = dto.AfterMoney;
+                    model.BeforeAmount = dto.BeforeMoney;
+                    model.AfterAmount = dto.AfterMoney;
                     model.AdminID = dto.AdminID;
 
                     ctx.le_orders_head_log.Add(model);

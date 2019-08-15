@@ -1,5 +1,6 @@
 ﻿using DTO.Common;
 using DTO.LogDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -95,7 +96,7 @@ namespace Service
                 var result = tempIq.Select(s => new OrderHeadLogDto
                 {
                     AdminName = s.le_admin.Nickname,
-                    AfterMoney = s.AfterMoney,
+                    AfterMoney = s.AfterAmount,
                     SupplierName = s.le_suppliers.SuppliersName,
                     AfterStatus = s.AfterStatus,
                     BeforeStatus = s.BeforeStatus,
@@ -104,7 +105,7 @@ namespace Service
                     OrderHeadID = s.OrderHeadID,
                     SupplierID = s.SupplierID,
                     AdminID = s.AdminID,
-                    BeforeMoney = s.BeforeMoney,
+                    BeforeMoney = s.BeforeAmount,
                     CreateTime = s.CreateTime,
                     UserID = s.UserID,
                     UserName = s.le_users.UsersNickname,
@@ -178,6 +179,82 @@ namespace Service
             }
             //    Count = 0;
             //return null;
+        }
+
+        /// <summary>
+        /// 添加订单头日志
+        /// </summary>
+        /// <param name="Before"></param>
+        /// <param name="After"></param>
+        /// <param name="UserID"></param>
+        /// <param name="AdminID"></param>
+        /// <param name="SupplierID"></param>
+        /// <returns></returns>
+        public le_orders_head_log AddOrderHeadLog(le_orders_head Before ,le_orders_head After,int? UserID,int? AdminID,int? SupplierID,string Actions)
+        {
+            le_orders_head_log log = new le_orders_head_log();
+            log.CreateTime = DateTime.Now;
+            log.BeforeCount = Before.DeliverCount;
+            log.BeforeAmount = Before.RealAmount;
+            log.BeforeStatus = Before.Status;
+            log.HeadRecordID = Before.OrdersHeadID;
+            log.UserID = UserID;
+            log.AdminID = AdminID;
+            log.SupplierID = SupplierID;
+            log.BeforeSupplierAmout = Before.RealSupplyAmount;
+            log.Actions = Actions;
+            bool Isadd = false;
+            if (Before.DeliverCount != After.DeliverCount)
+            {
+                Isadd = true;
+                log.AfterCount = After.DeliverCount;
+            }
+            if (Before.RealAmount != After.RealAmount)
+            {
+                Isadd = true;
+                log.AfterAmount = After.RealAmount;
+            }
+            if (Before.RealSupplyAmount != After.RealSupplyAmount)
+            {
+                Isadd = true;
+                log.AfterSupplierAmout = After.RealSupplyAmount;
+            }
+            if (Before.Status != After.Status)
+            {
+                Isadd = true;
+                log.AfterStatus= After.Status;
+            }
+            if (Isadd)
+            {
+                return log;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 添加订单行日志
+        /// </summary>
+        /// <param name="Before"></param>
+        /// <param name="After"></param>
+        /// <param name="UserID"></param>
+        /// <param name="AdminID"></param>
+        /// <param name="SupplierID"></param>
+        /// <returns></returns>
+        public le_orders_lines_log AddOrderLines(le_orders_lines Before, int? UserID, int? AdminID, int? SupplierID,string Actions)
+        {
+            le_orders_lines_log log = new le_orders_lines_log();
+            log.AdminID = AdminID;
+            log.UserID = UserID;
+            log.SupplierID = SupplierID;
+            log.BeforeCount = Before.DeliverCount;
+            log.BeforeMoney = Before.SupplyPrice;
+            log.BeforeStatus = Before.Status;
+            log.Actions = Actions;
+
+            return log;
         }
     }
 }

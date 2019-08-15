@@ -26,6 +26,7 @@ namespace Service
         public Nullable<int> SupplierID { get; set; }
         public Nullable<int> UserID { get; set; }
         public System.DateTime CreateTime { get; set; }
+        public string Actions { get; set; }
     
         public virtual le_admin le_admin { get; set; }
         public virtual le_orders_lines le_orders_lines { get; set; }

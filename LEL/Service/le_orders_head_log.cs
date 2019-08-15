@@ -18,14 +18,17 @@ namespace Service
         public int OrderHeadID { get; set; }
         public int BeforeCount { get; set; }
         public Nullable<int> AfterCount { get; set; }
-        public decimal BeforeMoney { get; set; }
-        public Nullable<decimal> AfterMoney { get; set; }
+        public decimal BeforeAmount { get; set; }
+        public Nullable<decimal> AfterAmount { get; set; }
+        public Nullable<int> AdminID { get; set; }
+        public Nullable<int> UserID { get; set; }
+        public Nullable<int> SupplierID { get; set; }
+        public System.DateTime CreateTime { get; set; }
         public int BeforeStatus { get; set; }
         public Nullable<int> AfterStatus { get; set; }
-        public Nullable<int> SupplierID { get; set; }
-        public Nullable<int> UserID { get; set; }
-        public Nullable<int> AdminID { get; set; }
-        public System.DateTime CreateTime { get; set; }
+        public Nullable<decimal> BeforeSupplierAmout { get; set; }
+        public Nullable<decimal> AfterSupplierAmout { get; set; }
+        public string Actions { get; set; }
     
         public virtual le_admin le_admin { get; set; }
         public virtual le_orders_head le_orders_head { get; set; }
