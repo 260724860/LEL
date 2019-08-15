@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-
+using EntityFramework.Extensions;
 namespace Service
 {
     public class SupplierUserService
@@ -115,83 +115,200 @@ namespace Service
         /// <param name="dTO"></param>
         /// <param name="oneself"></param>
         /// <returns></returns>
-        public bool Update(SupplierUserDto dTO, bool oneself)
+        public bool Update(SupplierUserDto dto, bool oneself,out string msg)
         {
             using (Entities ctx = new Entities())
             {
-                var UserModel = ctx.le_suppliers.Where(s => s.MobilePhone == dTO.Suppliers_MobilePhone).FirstOrDefault();
-                if (UserModel == null)
+                var model = ctx.le_suppliers.Where(s => s.SuppliersID == dto.SuppliersID).FirstOrDefault();
+                if (dto == null)
                 {
+                    msg = "该记录不存在";
                     return false;
                 }
-                UserModel.SuppliersID = dTO.SuppliersID;
-                UserModel.SuppliersName = dTO.Suppliers_Name;
-                UserModel.ResponPeople = dTO.Suppliers_ResponPeople;
 
-               
-                UserModel.Email = dTO.Suppliers_Email;
-                UserModel.HeadImage = dTO.Suppliers_HeadImage;
-                UserModel.MobilePhone = dTO.Suppliers_MobilePhone;
-                UserModel.IDImgA = dTO.Suppliers_IDImgA;
-                UserModel.IDImgB = dTO.Suppliers_IDImgB;
-                UserModel.BusinessImg = dTO.Suppliers_BusinessImg;
-                UserModel.AttachImg1 = dTO.Suppliers_AttachImg1;
-                UserModel.AttachImg2 = dTO.Suppliers_AttachImg2;
-                UserModel.Addr = dTO.Suppliers_Addr;
-              
-                UserModel.UpdateTime = dTO.UpdateTime;
-               
-                UserModel.IDCardNo = dTO.IDCardNo;
-                UserModel.BusinessNo = dTO.BusinessNo;
+                model.SuppliersName = dto.Suppliers_Name;
+                model.ResponPeople = dto.Suppliers_ResponPeople;
+                model.Addr = dto.Suppliers_Addr;
+                model.Status = dto.Suppliers_Status;
+                model.MobilePhone = dto.Suppliers_MobilePhone;
+                model.IDImgA = dto.Suppliers_IDImgA;
+                model.IDImgB = dto.Suppliers_IDImgB;
+                model.BusinessImg = dto.Suppliers_BusinessImg;
+                model.AttachImg1 = dto.Suppliers_AttachImg1;
+                model.AttachImg2 = dto.Suppliers_AttachImg2;
+                model.HeadImage = dto.Suppliers_HeadImage;
+                model.HeadImage = dto.Suppliers_HeadImage;
+                model.IDCardNo = dto.IDCardNo;
+                model.BusinessNo = dto.BusinessNo;
+                model.Province = dto.Province;
+                model.City = dto.City;
+                model.Area = dto.Area;
+                model.Longitude = dto.Longitude;
+                model.Latitude = dto.Latitude;
+                model.IMEI = dto.IMEI;
+                model.Initial = dto.Initial;
+                model.Landline = dto.Landline;
+                model.FinanceName = dto.FinanceName;
+                model.FinancePhone = dto.FinancePhone;
+                model.AuthCode = dto.AuthCode;
+                model.Remarks = dto.Remarks;
+                model.Deliverer = dto.Deliverer;
+                model.DelivererPhone = dto.DelivererPhone;
+                model.Category = dto.Category;
+                model.ManagingBrands = dto.ManagingBrands;
+                model.CustomerService = dto.CustomerService;
+                model.CustomerServicePhone = dto.CustomerServicePhone;
+                model.Docker = dto.Docker;
+                model.DockerPhone = dto.DockerPhone;
+                model.Zoning = dto.Zoning;
+                model.CartModel = dto.CartModel;
+                model.Classify = dto.Classify;
+                model.AnotherName = dto.AnotherName;
 
-                UserModel.Province = dTO.Province;
-                UserModel.City = dTO.City;
-                UserModel.Area = dTO.Area;
-                UserModel.Longitude = dTO.Longitude;
-                UserModel.Latitude = dTO.Latitude;
-                UserModel.IMEI = dTO.IMEI;
-                UserModel.Initial = dTO.Initial;
-                UserModel.Landline = dTO.Landline;
-                UserModel.FinanceName = dTO.FinanceName;
-                UserModel.FinancePhone = dTO.FinancePhone;
-                UserModel.AuthCode = dTO.AuthCode;
-                UserModel.Remarks = dTO.Remarks;
-                UserModel.Deliverer = dTO.Deliverer;
-                UserModel.DelivererPhone= dTO.DelivererPhone;
-                UserModel.Category = dTO.Category;
-                UserModel.ManagingBrands = dTO.ManagingBrands;
+                if (dto.Suppliers_Status == 2)
+                {
+                    
+                    //1.如果该供应商对的商品只有一个，则直接删除供应商价格
+                    //2.如果该供应商对的商品有多个，删除该供应商价格，设置其他供应商为默认供应商
+                    var temp1 = ctx.le_goods_suppliers.Where(s => s.SuppliersID == model.SuppliersID).Select(s=>s.GoodsID);
 
-                UserModel.CustomerService = dTO.CustomerService;
-                UserModel.CustomerServicePhone = dTO.CustomerServicePhone;
-                UserModel.Docker = dTO.Docker;
-                UserModel.DockerPhone = dTO.DockerPhone;
-                UserModel.Zoning = dTO.Zoning;
-                UserModel.CartModel = dTO.CartModel;
-                UserModel.Classify = dTO.Classify;
-                UserModel.AnotherName = dTO.AnotherName;
+                    var temp = ctx.le_goods_suppliers.Where(s => temp1.Contains(s.GoodsID)).GroupBy(s=>s.GoodsID)
+                        .Select(s => new { GoodsId = s.Key, Count = s.Count(k => k.GoodsID > 0) });
 
+                   // ctx.lel_admin_suppliers.
+                    
+                    //  var GoodsSupplierPriceLists = temp.Where(s=>s.Count>1).up;
+
+                    //ctx.le_goods_suppliers.Where(s => s.GoodsID == 1).Update();
+
+                   // var res=   ctx.lel_admin_suppliers.Update(s=>new { });
+                    var GoodsSupplierPriceList = model.le_goods_suppliers.ToList();
+                    
+                    
+                    var SingGoodsPriceList = GoodsSupplierPriceList.GroupBy(s => s.GoodsID)
+                        .Select(s => new { GoodsId = s.Key, Count = s.Count(k => k.GoodsID > 0) });//.Where(s => s.Count > 1);
+
+
+                    foreach (var index in GoodsSupplierPriceList)
+                    {
+                        if (index.IsDefalut == 1) //搜索其他供应商替换为默认供应商
+                        {
+                            var NoDefaultList = ctx.le_goods_suppliers.Where(s => s.GoodsID == index.GoodsID && s.IsDeleted == 0).ToList();
+                            if (NoDefaultList == null || NoDefaultList.Count == 0 || NoDefaultList.Count == 1)
+                            {
+                                //var Current = NoDefaultList.FirstOrDefault();
+                                //Current.le_goods.IsShelves = 0;
+                                //Current.IsDeleted = 1;
+                               // ctx.Entry<le_goods_suppliers>(Current).State = EntityState.Modified;
+                                //msg = string.Format("关闭失败,该供应商为商品ID:{0}的唯一供应商,无法关闭,请确认检查", index.GoodsID);
+                                //return false;
+                            }
+                            else
+                            {
+                                var SetDefault = NoDefaultList.Where(s => s.GoodsMappingID != index.GoodsMappingID).OrderBy(s => s.Supplyprice).OrderByDescending(s => s.CreatTime).FirstOrDefault();
+                                SetDefault.IsDefalut = 1;
+                                ctx.Entry<le_goods_suppliers>(SetDefault).State = EntityState.Modified;
+                                ctx.le_goods_suppliers.Remove(index);
+                            }
+                        }
+                        else
+                        {
+                            //ctx.Entry<le_goods_suppliers>(index).State = EntityState.Deleted;
+                            ctx.le_goods_suppliers.Remove(index);
+                        }
+                    }
+                }
                 if (!oneself)
                 {
-                    UserModel.Status = dTO.Suppliers_Status;
+                    model.Status = dto.Suppliers_Status;
                 }
-                UserModel.UpdateTime = DateTime.Now;
-                try
+                //model.Status = dto.Suppliers_Status;
+                ctx.Entry<le_suppliers>(model).State = EntityState.Modified;
+                var result = ctx.SaveChanges();
+                if (result > 0)
                 {
-                    ctx.Entry<le_suppliers>(UserModel).State = EntityState.Modified;
-                    if (ctx.SaveChanges() > 0)
-                    {
-                        return true;
-                    }
-                    return false;
+                    msg = "SUCCESS";
+                    return true;
                 }
-                catch (Exception ex)
-                {
-                    log.Error(ex);
-                    throw ex;
-                    return false;
 
-                }
+                msg = "修改失败";
+                return false;
             }
+
+
+            //using (Entities ctx = new Entities())
+            //{
+            //    var UserModel = ctx.le_suppliers.Where(s => s.MobilePhone == dTO.Suppliers_MobilePhone).FirstOrDefault();
+            //    if (UserModel == null)
+            //    {
+            //        return false;
+            //    }
+            //    UserModel.SuppliersID = dTO.SuppliersID;
+            //    UserModel.SuppliersName = dTO.Suppliers_Name;
+            //    UserModel.ResponPeople = dTO.Suppliers_ResponPeople;
+
+               
+            //    UserModel.Email = dTO.Suppliers_Email;
+            //    UserModel.HeadImage = dTO.Suppliers_HeadImage;
+            //    UserModel.MobilePhone = dTO.Suppliers_MobilePhone;
+            //    UserModel.IDImgA = dTO.Suppliers_IDImgA;
+            //    UserModel.IDImgB = dTO.Suppliers_IDImgB;
+            //    UserModel.BusinessImg = dTO.Suppliers_BusinessImg;
+            //    UserModel.AttachImg1 = dTO.Suppliers_AttachImg1;
+            //    UserModel.AttachImg2 = dTO.Suppliers_AttachImg2;
+            //    UserModel.Addr = dTO.Suppliers_Addr;
+              
+            //    UserModel.UpdateTime = dTO.UpdateTime;
+               
+            //    UserModel.IDCardNo = dTO.IDCardNo;
+            //    UserModel.BusinessNo = dTO.BusinessNo;
+
+            //    UserModel.Province = dTO.Province;
+            //    UserModel.City = dTO.City;
+            //    UserModel.Area = dTO.Area;
+            //    UserModel.Longitude = dTO.Longitude;
+            //    UserModel.Latitude = dTO.Latitude;
+            //    UserModel.IMEI = dTO.IMEI;
+            //    UserModel.Initial = dTO.Initial;
+            //    UserModel.Landline = dTO.Landline;
+            //    UserModel.FinanceName = dTO.FinanceName;
+            //    UserModel.FinancePhone = dTO.FinancePhone;
+            //    UserModel.AuthCode = dTO.AuthCode;
+            //    UserModel.Remarks = dTO.Remarks;
+            //    UserModel.Deliverer = dTO.Deliverer;
+            //    UserModel.DelivererPhone= dTO.DelivererPhone;
+            //    UserModel.Category = dTO.Category;
+            //    UserModel.ManagingBrands = dTO.ManagingBrands;
+
+            //    UserModel.CustomerService = dTO.CustomerService;
+            //    UserModel.CustomerServicePhone = dTO.CustomerServicePhone;
+            //    UserModel.Docker = dTO.Docker;
+            //    UserModel.DockerPhone = dTO.DockerPhone;
+            //    UserModel.Zoning = dTO.Zoning;
+            //    UserModel.CartModel = dTO.CartModel;
+            //    UserModel.Classify = dTO.Classify;
+            //    UserModel.AnotherName = dTO.AnotherName;
+
+               
+            //    UserModel.UpdateTime = DateTime.Now;
+            //    try
+            //    {
+            //        ctx.Entry<le_suppliers>(UserModel).State = EntityState.Modified;
+            //        if (ctx.SaveChanges() > 0)
+            //        {
+            //            return true;
+            //        }
+            //        return false;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        log.Error(ex);
+            //        throw ex;
+            //        return false;
+
+            //    }
+            //}
+           
         }
 
         /// <summary>

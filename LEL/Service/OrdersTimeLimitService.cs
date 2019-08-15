@@ -58,7 +58,7 @@ namespace Service
                     }
                 });
 
-                var results = LimitCountList;
+                var results = LimitCountList.OrderBy(s=>s.TimeSlot).ToList();
               //var results= list.Join(LimitCountList, a => a.TimeSlot, b => b.TimeSlot, (a, b) =>
 
                 //      new OrdersLimitGroupby

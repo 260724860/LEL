@@ -1413,125 +1413,125 @@ namespace Service
 
         #region 商品属性操作
 
-        public le_goods_value AddGoodsValueList(List<GoodsValues> List,int IsBulkCargo, out string Msg)
-        {
-            using (Entities ctx = new Entities())
-            {
-                List<Object> list = new List<Object>();
+        //public le_goods_value AddGoodsValueList(List<GoodsValues> List,int IsBulkCargo, out string Msg)
+        //{
+        //    using (Entities ctx = new Entities())
+        //    {
+        //        List<Object> list = new List<Object>();
 
-                if (List.Count <= 0)
-                {
-                    Msg = "参数错误，未获取到有效值";
-                    return null;
-                }
-                try
-                {
-                    foreach (var index in List)
-                    {
+        //        if (List.Count <= 0)
+        //        {
+        //            Msg = "参数错误，未获取到有效值";
+        //            return null;
+        //        }
+        //        try
+        //        {
+        //            foreach (var index in List)
+        //            {
                         
-                        var exitModel = ctx.le_goods_value.Where(s => s.GoodsValueID == index.GoodsValueID).FirstOrDefault();
-                        if (exitModel != null)
-                        {
-                            if (string.IsNullOrEmpty(index.SerialNumber))
-                            {
-                                exitModel.IsBulkCargo = IsBulkCargo;
-                                exitModel.IsAuto = 1;
-                                if (IsBulkCargo == 0)
-                                {
+        //                var exitModel = ctx.le_goods_value.Where(s => s.GoodsValueID == index.GoodsValueID).FirstOrDefault();
+        //                if (exitModel != null)
+        //                {
+        //                    if (string.IsNullOrEmpty(index.SerialNumber))
+        //                    {
+        //                        exitModel.IsBulkCargo = IsBulkCargo;
+        //                        exitModel.IsAuto = 1;
+        //                        if (IsBulkCargo == 0)
+        //                        {
 
-                                    index.SerialNumber = BarcodeGeneration(0);
-                                }
-                                else
-                                {
-                                    index.SerialNumber = BarcodeGeneration(1);
-                                }
-                            }
-                            exitModel.GoodsID = index.GoodsID;
-                            exitModel.GoodsValue = index.GoodsValueName;
-                            exitModel.UpdateTime = DateTime.Now;
-                            //exitModel.Enable=
-                            exitModel.CategoryType = index.CategoryType;
-                            exitModel.SerialNumber = index.SerialNumber;
-                            ctx.Entry<le_goods_value>(exitModel).State = EntityState.Modified;
-                            if (ctx.SaveChanges() <= 0)
-                            {
-                                log.Error(string.Format("属性修改失败id={0}", exitModel.GoodsValueID));
-                                Msg = "SUCCESS";
-                                return exitModel;
-                            }
-                        }
-                        else
-                        {
+        //                            index.SerialNumber = BarcodeGeneration(0);
+        //                        }
+        //                        else
+        //                        {
+        //                            index.SerialNumber = BarcodeGeneration(1);
+        //                        }
+        //                    }
+        //                    exitModel.GoodsID = index.GoodsID;
+        //                    exitModel.GoodsValue = index.GoodsValueName;
+        //                    exitModel.UpdateTime = DateTime.Now;
+        //                    //exitModel.Enable=
+        //                    exitModel.CategoryType = index.CategoryType;
+        //                    exitModel.SerialNumber = index.SerialNumber;
+        //                    ctx.Entry<le_goods_value>(exitModel).State = EntityState.Modified;
+        //                    if (ctx.SaveChanges() <= 0)
+        //                    {
+        //                        log.Error(string.Format("属性修改失败id={0}", exitModel.GoodsValueID));
+        //                        Msg = "SUCCESS";
+        //                        return exitModel;
+        //                    }
+        //                }
+        //                else
+        //                {
                           
-                            le_goods_value goods_Value = new le_goods_value();
-                            if (string.IsNullOrEmpty(index.SerialNumber))
-                            {
-                                goods_Value.IsAuto = 1;
-                                if (IsBulkCargo == 0)
-                                {
+        //                    le_goods_value goods_Value = new le_goods_value();
+        //                    if (string.IsNullOrEmpty(index.SerialNumber))
+        //                    {
+        //                        goods_Value.IsAuto = 1;
+        //                        if (IsBulkCargo == 0)
+        //                        {
 
-                                    index.SerialNumber = BarcodeGeneration(0);
-                                }
-                                else
-                                {
-                                    index.SerialNumber = BarcodeGeneration(1);
-                                }
-                            }
-                            goods_Value.IsBulkCargo = IsBulkCargo;
-                            goods_Value.GoodsID = index.GoodsID;
-                            goods_Value.GoodsValue = index.GoodsValueName;
-                            //exitModel.Enable=
-                            goods_Value.CategoryType = index.CategoryType;
-                            goods_Value.SerialNumber = index.SerialNumber;
-                            goods_Value.Enable = 1;
-                            goods_Value.CreateTime = DateTime.Now;
-                            goods_Value.UpdateTime = DateTime.Now;
-                            ctx.le_goods_value.Add(goods_Value);
-                            if (ctx.SaveChanges() <= 0)
-                            {
-                                log.Error(string.Format("属性添加失败GoodsValue={0}", index.GoodsValueName));
-                            }
-                            Msg = "SUCCESS";
-                            return goods_Value;
-                        }
-                    }
-                    Msg = "SUCCESS";
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    Msg = ex.Message;
-                    return null;
-                }
-                //Object group = new Object();
-                //List<GoodsValue> Valuelist = new List<GoodsValue>();
-                //Valuelist.Add(dto);
+        //                            index.SerialNumber = BarcodeGeneration(0);
+        //                        }
+        //                        else
+        //                        {
+        //                            index.SerialNumber = BarcodeGeneration(1);
+        //                        }
+        //                    }
+        //                    goods_Value.IsBulkCargo = IsBulkCargo;
+        //                    goods_Value.GoodsID = index.GoodsID;
+        //                    goods_Value.GoodsValue = index.GoodsValueName;
+        //                    //exitModel.Enable=
+        //                    goods_Value.CategoryType = index.CategoryType;
+        //                    goods_Value.SerialNumber = index.SerialNumber;
+        //                    goods_Value.Enable = 1;
+        //                    goods_Value.CreateTime = DateTime.Now;
+        //                    goods_Value.UpdateTime = DateTime.Now;
+        //                    ctx.le_goods_value.Add(goods_Value);
+        //                    if (ctx.SaveChanges() <= 0)
+        //                    {
+        //                        log.Error(string.Format("属性添加失败GoodsValue={0}", index.GoodsValueName));
+        //                    }
+        //                    Msg = "SUCCESS";
+        //                    return goods_Value;
+        //                }
+        //            }
+        //            Msg = "SUCCESS";
+        //            return null;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Msg = ex.Message;
+        //            return null;
+        //        }
+        //        //Object group = new Object();
+        //        //List<GoodsValue> Valuelist = new List<GoodsValue>();
+        //        //Valuelist.Add(dto);
 
-                //var exit = ctx.le_goods_value_mapping.Where(s => s.CategoryType == dto.CategoryType && s.GoodsID == dto.GoodsID).FirstOrDefault();
-                //if (exit != null)
-                //{
-                //    //已存在属性大类，直接添加
-                //    AddGoodsValue(Valuelist, exit.ID,out object valueobj);
-                //    list.Add(valueobj);
-                //}
-                //else {
-                //    //先添加属性大类，在添加属性明细
-                //    le_goods_value_mapping lgvm = new le_goods_value_mapping();
-                //    lgvm.GoodsID = dto.GoodsID;
-                //    lgvm.CategoryType = dto.CategoryType;
-                //    ctx.le_goods_value_mapping.Add(lgvm);
+        //        //var exit = ctx.le_goods_value_mapping.Where(s => s.CategoryType == dto.CategoryType && s.GoodsID == dto.GoodsID).FirstOrDefault();
+        //        //if (exit != null)
+        //        //{
+        //        //    //已存在属性大类，直接添加
+        //        //    AddGoodsValue(Valuelist, exit.ID,out object valueobj);
+        //        //    list.Add(valueobj);
+        //        //}
+        //        //else {
+        //        //    //先添加属性大类，在添加属性明细
+        //        //    le_goods_value_mapping lgvm = new le_goods_value_mapping();
+        //        //    lgvm.GoodsID = dto.GoodsID;
+        //        //    lgvm.CategoryType = dto.CategoryType;
+        //        //    ctx.le_goods_value_mapping.Add(lgvm);
 
-                //    if (ctx.SaveChanges() > 0)
-                //    {
-                //        AddGoodsValue(Valuelist, lgvm.ID, out object valueobj);
-                //        list.Add(valueobj);
-                //    }
-                //}
-            }
-            //obj = list;
-            //return true;
+        //        //    if (ctx.SaveChanges() > 0)
+        //        //    {
+        //        //        AddGoodsValue(Valuelist, lgvm.ID, out object valueobj);
+        //        //        list.Add(valueobj);
+        //        //    }
+        //        //}
+        //    }
+        //    //obj = list;
+        //    //return true;
 
-        }
+        //}
 
         /// <summary>
         /// 增加商品属性

@@ -181,6 +181,7 @@ namespace Service
 
                 if (dto.Suppliers_Status == 2)
                 {
+                   
                     var GoodsSupplierPriceList = model.le_goods_suppliers.ToList();
                     foreach (var index in GoodsSupplierPriceList)
                     {
@@ -189,8 +190,11 @@ namespace Service
                             var NoDefaultList = ctx.le_goods_suppliers.Where(s => s.GoodsID == index.GoodsID && s.IsDeleted == 0).ToList();
                             if (NoDefaultList == null || NoDefaultList.Count == 0 || NoDefaultList.Count == 1)
                             {
-                                msg = string.Format("关闭失败,该供应商为商品ID:{0}的唯一供应商,无法关闭,请确认检查", index.GoodsID);
-                                return false;
+                                var Current= NoDefaultList.FirstOrDefault();
+                                Current.le_goods.IsShelves = 0;
+                                ctx.Entry<le_goods_suppliers>(Current).State = EntityState.Modified;
+                                //msg = string.Format("关闭失败,该供应商为商品ID:{0}的唯一供应商,无法关闭,请确认检查", index.GoodsID);
+                                //return false;
                             }
                             var SetDefault = NoDefaultList.Where(s => s.GoodsMappingID != index.GoodsMappingID).OrderBy(s => s.Supplyprice).OrderByDescending(s => s.CreatTime).FirstOrDefault();
                             SetDefault.IsDefalut = 1;
@@ -205,6 +209,7 @@ namespace Service
                     }
                 }
 
+                model.Status = dto.Suppliers_Status;
                 ctx.Entry<le_suppliers>(model).State = EntityState.Modified;
                 var result = ctx.SaveChanges();
                 if (result > 0)
