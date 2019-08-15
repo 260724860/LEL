@@ -259,7 +259,7 @@ namespace Service
         }
 
         /// <summary>
-        ///  保存订单
+        ///  保存订单 从购物车获取
         /// </summary>
         /// <param name="orderGoodsList"></param>
         /// <param name="UserID"></param>
@@ -586,6 +586,7 @@ namespace Service
             return 0;
         }
 
+       // public int OrderSave()
         /// <summary>
         /// 排序扩展
         /// DistinctBy不是.net framework提供的扩展方法，是第三方的扩展方法
@@ -2207,7 +2208,8 @@ namespace Service
 
                 catch (Exception ex)
                 {
-                    msg = "修改异常，异常信息：" + ex.ToString();
+
+                    msg = "修改异常，异常信息：" + ExceptionHelper.GetInnerExceptionMsg(ex);
 
                     log.Error(ExceptionHelper.GetInnerExceptionMsg(ex), ex);
                     return false;

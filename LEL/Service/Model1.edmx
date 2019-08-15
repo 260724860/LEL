@@ -352,8 +352,8 @@
           <Property Name="OrderLineID" Type="int" Nullable="false" />
           <Property Name="BeforeCount" Type="int" Nullable="false" />
           <Property Name="AfterCount" Type="int" />
-          <Property Name="BeforeMoney" Type="decimal" Precision="10" Scale="0" Nullable="false" />
-          <Property Name="AfterMoney" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="BeforeMoney" Type="decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="AfterMoney" Type="decimal" Precision="9" Scale="2" />
           <Property Name="BeforeStatus" Type="int" Nullable="false" />
           <Property Name="AfterStatus" Type="int" />
           <Property Name="AdminID" Type="int" />
