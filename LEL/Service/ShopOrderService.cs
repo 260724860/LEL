@@ -2364,7 +2364,7 @@ namespace Service
                 parameters1[0].Value = index.GoodsID;
                 parameters1[1].Value = index.RowVersion;
                 parameters1[2].Value = index.GoodsCount;
-                CommandInfo commandInfo = new CommandInfo(sql, parameters1, EffentNextType.ExcuteEffectRows);
+                CommandInfo commandInfo = new CommandInfo(sql, parameters1, EffentNextType.None);
                 sqllist.Add(commandInfo);
 
             }
