@@ -12,13 +12,10 @@ namespace Service
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-
-
     
     public partial class Entities : DbContext
     {
         private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Entities));
-
         public Entities()
             : base("name=Entities")
         {
@@ -29,9 +26,7 @@ namespace Service
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("");    //增加配置
-            base.OnModelCreating(modelBuilder);
-            //throw new UnintentionalCodeFirstException();
+            throw new UnintentionalCodeFirstException();
         }
     
         public virtual DbSet<le_ad> le_ad { get; set; }
@@ -55,7 +50,7 @@ namespace Service
         public virtual DbSet<le_orders_head_log> le_orders_head_log { get; set; }
         public virtual DbSet<le_orders_lines> le_orders_lines { get; set; }
         public virtual DbSet<le_orders_lines_log> le_orders_lines_log { get; set; }
-       // public virtual DbSet<le_orders_lines_mapping> le_orders_lines_mapping { get; set; }
+        public virtual DbSet<le_orders_lines_mapping> le_orders_lines_mapping { get; set; }
         public virtual DbSet<le_orders_modify_record> le_orders_modify_record { get; set; }
         public virtual DbSet<le_orders_operationrecord> le_orders_operationrecord { get; set; }
         public virtual DbSet<le_orders_timelimit> le_orders_timelimit { get; set; }
@@ -69,6 +64,7 @@ namespace Service
         public virtual DbSet<le_sysversion> le_sysversion { get; set; }
         public virtual DbSet<le_user_address> le_user_address { get; set; }
         public virtual DbSet<le_users> le_users { get; set; }
+        public virtual DbSet<le_weixinuser> le_weixinuser { get; set; }
         public virtual DbSet<lel_admin_suppliers> lel_admin_suppliers { get; set; }
         public virtual DbSet<lel_imei> lel_imei { get; set; }
     }

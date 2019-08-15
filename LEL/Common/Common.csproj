@@ -84,6 +84,7 @@
     <Compile Include="ExceptionHelper.cs" />
     <Compile Include="HttpUtils.cs" />
     <Compile Include="JRpcHelper.cs" />
+    <Compile Include="MyDeepCopy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomUtils.cs" />
     <Compile Include="SmsSendHelper.cs" />

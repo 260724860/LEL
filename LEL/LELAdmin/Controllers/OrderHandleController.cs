@@ -3,6 +3,7 @@ using DTO.ShopOrder;
 using DTO.Suppliers;
 using LELAdmin.Models;
 using Service;
+using System.Collections;
 using System.Collections.Generic;
 using System.Web.Http;
 using static DTO.Common.Enum;
@@ -77,7 +78,7 @@ namespace LELAdmin.Controllers
         }
 
         /// <summary>
-        /// 修改订单行状态，拆单
+        /// 修改订单行状态，拆单 待优化
         /// </summary>
         /// <param name="Status"></param>
         /// <param name="OrdersLinesID"></param>
@@ -91,19 +92,43 @@ namespace LELAdmin.Controllers
         {
             
             int AdminID = GetLoginInfo().UserID;
-            int ErrCount = 0;
-           
-                var result = ShopOrderBLL.UpdateOrderLineStatus(UpdateParams, out string Msg, AdminID, 0);
-                if (!result)
-                {
-                    ErrCount++;
-                    return Json(JRpcHelper.AjaxResult(1, Msg, UpdateParams));
-                }
+        
+            var result = ShopOrderBLL.UpdateOrderLineStatus(UpdateParams, out string Msg, AdminID, 0);
+            if (!result)
+            {
+                  
+                return Json(JRpcHelper.AjaxResult(1, Msg, UpdateParams));
+            }
 
      
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", UpdateParams));
         }
 
+     
+       /// <summary>
+       /// 修改供应商订单行
+       /// </summary>
+       /// <param name="param"></param>
+       /// <returns></returns>
+        [HttpPost, Route("api/OrderHandle/UpdateOrderLineStatusBySupplier/")]
+        public IHttpActionResult UpdateOrderLineStatusBySupplier(UpdateOrderLineStatusBySupplierDto param)
+        {
+            int AdminID = GetLoginInfo().UserID;
+            int[] limit = { 100, 2,3 };
+            if (!((IList)limit).Contains(param.Status))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "请输入正常的状态码限定范围[100, 2,3]", param.Status));
+            }
+
+
+            var result = ShopOrderBLL.UpdateOrderLineStatusBySupplier(param.OrderNO, AdminID, param.SuppliersID, param.Status, out string Msg);
+            if (!result)
+            {
+               
+                return Json(JRpcHelper.AjaxResult(1, Msg, param.OrderNO));
+            }
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", param.OrderNO));
+        }
         /// <summary>
         /// 修改订单信息
         /// </summary>

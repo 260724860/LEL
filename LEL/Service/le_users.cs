@@ -46,14 +46,6 @@ namespace Service
         public string CarNumber { get; set; }
         public string BusinessNo { get; set; }
         public string IDCardNo { get; set; }
-        public string FinanceName { get; set; }
-        public string FinancePhone { get; set; }
-        public string AuthCode { get; set; }
-        public string Remarks { get; set; }
-        public string Zoning { get; set; }
-        public string CartModel { get; set; }
-        public string ContractNumber { get; set; }
-        public string Classify { get; set; }
         public string Province { get; set; }
         public string City { get; set; }
         public string Area { get; set; }
@@ -64,6 +56,14 @@ namespace Service
         public string Initial { get; set; }
         public string Email { get; set; }
         public string Landline { get; set; }
+        public string FinanceName { get; set; }
+        public string FinancePhone { get; set; }
+        public string AuthCode { get; set; }
+        public string Remarks { get; set; }
+        public string Zoning { get; set; }
+        public string CartModel { get; set; }
+        public string ContractNumber { get; set; }
+        public string Classify { get; set; }
         public string AnotherName { get; set; }
         public string ReceiveName { get; set; }
         public string ReceivePhone { get; set; }
