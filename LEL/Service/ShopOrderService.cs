@@ -1815,7 +1815,7 @@ namespace Service
                             if (index.Status != (int)(OrderLineStatus.YiJieSuan) && index.Status != (int)OrderLineStatus.YiWanCheng && index.Status != (int)(OrderLineStatus.YiQuXiao))
                             {
                                 CurrentLine.Status = (int)OrderLineStatus.YiFahuo;
-                             
+
                             }
                             break;
                         case OrderLineStatus.YiQuXiao:
@@ -1832,6 +1832,7 @@ namespace Service
                   
                     if (LineLog.AfterCount != LineLog.BeforeCount || LineLog.AfterStatus != LineLog.BeforeStatus)
                     {
+                        CurrentLine.AdminID = AdminID;
                         CurrentLine.UpdateTime = DateTime.Now;
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
                         ctx.le_orders_lines_log.Add(LineLog);
@@ -2364,7 +2365,7 @@ namespace Service
                 parameters1[0].Value = index.GoodsID;
                 parameters1[1].Value = index.RowVersion;
                 parameters1[2].Value = index.GoodsCount;
-                CommandInfo commandInfo = new CommandInfo(sql, parameters1, EffentNextType.None);
+                CommandInfo commandInfo = new CommandInfo(sql, parameters1, EffentNextType.ExcuteEffectRows);
                 sqllist.Add(commandInfo);
 
             }
