@@ -167,7 +167,8 @@ namespace Service
 
                 string updateGoodsSupplierSql = "";
                 string UpdateGoodsSql = "";
-                string UpdateDefaultSql = "";
+
+               List<string> UpdateDefaultSql =new List<string>();
 
 
                 if (!oneself)
@@ -195,8 +196,12 @@ namespace Service
                         if (MultipleList.Length > 0)
                         {
                             //查询更新价格最低得供应商
-                            UpdateDefaultSql = string.Format(" update le_goods_suppliers a inner join(select GoodsMappingID from le_goods_suppliers where goodsid in ({0}) and SuppliersID != {1} and IsDeleted = 0 order by Supplyprice ASC limit 1) b on a.GoodsMappingID = b.GoodsMappingID set IsDefalut = 1  ",
-                               string.Join(",", string.Join(",", MultipleList)), model.SuppliersID);
+                            foreach (var index in MultipleList)
+                            {
+                                UpdateDefaultSql.Add( string.Format(" update le_goods_suppliers a inner join(select GoodsMappingID from le_goods_suppliers where goodsid in ({0}) and SuppliersID != {1} and IsDeleted = 0 order by Supplyprice ASC limit 1) b on a.GoodsMappingID = b.GoodsMappingID set IsDefalut = 1  ",
+                               index, model.SuppliersID));
+                            }
+                            
 
                         }
 
@@ -225,9 +230,12 @@ namespace Service
                         {
                             ctx.Database.ExecuteSqlCommand(updateGoodsSupplierSql);
                         }
-                        if (!string.IsNullOrEmpty(UpdateDefaultSql))
+                        if(UpdateDefaultSql.Count>0)
                         {
-                                ctx.Database.ExecuteSqlCommand(UpdateDefaultSql);
+                            foreach(var item in UpdateDefaultSql)
+                            {
+                                ctx.Database.ExecuteSqlCommand(item);
+                            }
                         }
                         if (!string.IsNullOrEmpty(UpdateGoodsSql))
                         {
@@ -235,7 +243,7 @@ namespace Service
                         }
                  
                         var result = ctx.SaveChanges();
-                    transe.Commit();
+                        transe.Commit();
                         if (result > 0)
                         {
                             msg = "SUCCESS";
