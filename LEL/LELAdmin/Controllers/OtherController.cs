@@ -4,8 +4,11 @@ using DTO.Others;
 using DTO.ShopOrder;
 using Service;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Web.Http;
+using static Service.GoodsService;
 
 namespace LELAdmin.Controllers
 {
@@ -378,5 +381,32 @@ namespace LELAdmin.Controllers
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
+        /// <summary>
+        /// 检查商品图片是否存在
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="rows"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet,Route("FindGoodsImg")]
+        public IHttpActionResult FindGoodsImg(int offset,int rows,bool IsShop0Jpg)
+        {
+            var GetAllGoodsImg = new GoodsService().GetAllGoodsImg(offset,rows);
+            var   localPath = System.Web.HttpContext.Current.Server.MapPath("/");
+            List<FindGoodsImg> result = new List<FindGoodsImg>();
+            foreach (var item in GetAllGoodsImg)
+            {
+                if (!System.IO.File.Exists(localPath+ item.Img))
+                {
+                    result.Add(item);
+                }
+                if(item.Img== "/GoodImg/0.jpg"&& IsShop0Jpg==true)
+                {
+                    result.Add(item);
+                }
+            }
+
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result,result.Count));
+        }
     }
 }

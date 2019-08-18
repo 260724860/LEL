@@ -39,10 +39,10 @@ namespace Service
                     bool IsAdd = true;
                     le_shop_cart ShopCarModel = new le_shop_cart();
                     var UserCartList = ctx.le_shop_cart.Where(s => s.GoodsID == GoodsID && s.UserID == UserID).ToList();
-                    
+
                     foreach (var CartModel in UserCartList)
                     {
-                      
+
                         var existGoodsValue = CartModel
                         .le_cart_goodsvalue.Select(k => new AddGoodsValues { CategoryType = k.CategoryType, GoodsValueID = k.GoodsValueID }).ToList();
                         if (existGoodsValue != null)
@@ -66,7 +66,7 @@ namespace Service
                         s.Stock,
                         s.Quota,
                         s.IsShelves,
-                       
+
                     }).FirstOrDefault();
 
                     if (GoodsModel.IsShelves == 0)
@@ -74,7 +74,7 @@ namespace Service
                         Mes = string.Format("该商品已经下架，加入购物车失败");
                         return 0;
                     }
-                    if (GoodsModel.Stock <= 0|| GoodsModel.Stock-GoodsCount<0)
+                    if (GoodsModel.Stock <= 0 || GoodsModel.Stock - GoodsCount < 0)
                     {
                         Mes = string.Format("该商品库存不足，加入购物车失败.当前库存【{0}】", GoodsModel.Stock);
                         return 0;
@@ -222,18 +222,18 @@ namespace Service
                     RowVersion = s.le_goods.RowVersion,
                     //Supplyprice=s.le_goods.le_goods_suppliers.Where(k => k.IsDefalut == 1).FirstOrDefault().Supplyprice,
                     SpecialOffer = s.le_goods.SpecialOffer,
-                    PackingNumber=s.le_goods.PackingNumber,
-                    Specifications=s.le_goods.Specifications,
-                    Discount =s.le_goods.Discount,
-                    Integral=s.le_goods.Integral,
-                    PriceFull=s.le_goods.PriceFull,
-                    PriceReduction=s.le_goods.PriceReduction,
-                    ReturnCount=s.ReturnCount,
-                    CountFull=s.le_goods.CountFull,
-                    CountReduction=s.le_goods.CountReduction,
-                    IsShelves=s.le_goods.IsShelves,
-                    QuotaBeginTime=s.le_goods.QuotaBeginTime,
-                    QuotaEndTime=s.le_goods.QuotaEndTime,
+                    PackingNumber = s.le_goods.PackingNumber,
+                    Specifications = s.le_goods.Specifications,
+                    Discount = s.le_goods.Discount,
+                    Integral = s.le_goods.Integral,
+                    PriceFull = s.le_goods.PriceFull,
+                    PriceReduction = s.le_goods.PriceReduction,
+                    ReturnCount = s.ReturnCount,
+                    CountFull = s.le_goods.CountFull,
+                    CountReduction = s.le_goods.CountReduction,
+                    IsShelves = s.le_goods.IsShelves,
+                    QuotaBeginTime = s.le_goods.QuotaBeginTime,
+                    QuotaEndTime = s.le_goods.QuotaEndTime,
                     GoodsValueList = s.le_cart_goodsvalue
                     .Select(k => new GoodsValues
                     {
@@ -243,7 +243,7 @@ namespace Service
                         GoodsValueID = k.GoodsValueID
 
                     }),
-                    SupplierGoodsList = s.le_goods.le_goods_suppliers.Where(k=>k.IsDeleted==0).Select(k => new SupplierGoods
+                    SupplierGoodsList = s.le_goods.le_goods_suppliers.Where(k => k.IsDeleted == 0).Select(k => new SupplierGoods
                     {
                         IsDefalut = k.IsDefalut,
                         SupplierID = k.SuppliersID,
@@ -275,8 +275,12 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 FailCartList = new List<ShopCartDto>();
-                List<ShopCartDto> CartList = GetCartList(ParamasData.UserID);
+
+                // var NoRemoveCarList = new List<ShopCartDto>();
                 
+                List<ShopCartDto> CartList = GetCartList(ParamasData.UserID);
+             
+
                 if (CartList == null || CartList.Count == 0)
                 {
                     Msg = "获取购物车失败";
@@ -284,7 +288,7 @@ namespace Service
                     return 0;
                 }
 
-                if(CartList.Any(s=>s.GoodsCount==0))
+                if (CartList.Any(s => s.GoodsCount == 0))
                 {
                     Msg = "下单数不能0，请检查购物车内商品下单数";
                     return 0;
@@ -292,7 +296,7 @@ namespace Service
 
                 AddressDto AddressModel = new AddressDto();
                 if (ParamasData.ExpressType == 1)
-                {                   
+                {
                     AddressModel = ctx.le_user_address.Where(s => s.AddressID == ParamasData.AddressID && s.UserID == ParamasData.UserID && s.Status == 1).
                         Select(k => new AddressDto
                         {
@@ -307,11 +311,11 @@ namespace Service
                         Msg = "地址输入错误";
                         FailCartList = null;
                         return 0;
-                    }                 
+                    }
                 }
                 if (ParamasData.ExpressType == 2) //自提
                 {
-                    if (!ParamasData.PickupTime.HasValue&& ParamasData.OrderType!=2)
+                    if (!ParamasData.PickupTime.HasValue && ParamasData.OrderType != 2)
                     {
                         Msg = "请选择下单时间";
                         FailCartList = null;
@@ -360,17 +364,20 @@ namespace Service
                 var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
 
                 List<le_orders_lines> OrderLinesList = new List<le_orders_lines>();
-                string Trade_no = Common.RandomUtils.GenerateOutTradeNo("LEL")+ ParamasData.UserID.ToString();
+                string Trade_no = Common.RandomUtils.GenerateOutTradeNo("LEL") + ParamasData.UserID.ToString();
                 List<GoodsStock> goodsStocksList = new List<GoodsStock>();
 
                 le_orders_head le_Orders_Head = new le_orders_head();
 
                 foreach (var goodsModel in CartList)
                 {
-                    if(goodsModel.IsShelves==0)
+                    if (goodsModel.IsShelves == 0)
                     {
-                        Msg = "该商品ID【"+goodsModel.GoodsName+"】已经下架，无法下单";
-                        return 0;
+                        FailCartList.Add(goodsModel);
+                        CartList.Remove(goodsModel);
+                        // continue;
+                        //Msg = "该商品ID【" + goodsModel.GoodsName + "】已经下架，无法下单";
+                        //return 0;
                     }
 
                     var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
@@ -383,50 +390,57 @@ namespace Service
                         if (goodsModel.QuotaBeginTime == null && goodsModel.QuotaEndTime == null)
                         {
                             //已经购买的数量
-                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID&&s.Status!=(int)OrderLineStatus.YiQuXiao).Select(k => k.DeliverCount).ToList();
+                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID && s.GoodsID == QuotaGoods.GoodsID && s.Status != (int)OrderLineStatus.YiQuXiao).Select(k => k.DeliverCount).ToList();
                             if (BuyCountIquery != null)
                             {
                                 AlreadyBuyCount = BuyCountIquery.Sum();
                             }
                         }
-                        else 
+                        else
                         {
-                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID 
-                            && s.GoodsID == QuotaGoods.GoodsID 
+                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.UserID
+                            && s.GoodsID == QuotaGoods.GoodsID
                             && s.Status != (int)OrderLineStatus.YiQuXiao
-                            && s.CreateTime>=goodsModel.QuotaBeginTime
-                            && s.CreateTime<goodsModel.QuotaEndTime).Select(k => k.DeliverCount).ToList();
+                            && s.CreateTime >= goodsModel.QuotaBeginTime
+                            && s.CreateTime < goodsModel.QuotaEndTime).Select(k => k.DeliverCount).ToList();
                             if (BuyCountIquery != null)
                             {
                                 AlreadyBuyCount = BuyCountIquery.Sum();
                             }
                         }
-                        if ((QuotaGoods != null  && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - (QuotaGoods.GoodsCount+ AlreadyBuyCount) < 0 ))
+                        if ((QuotaGoods != null && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - (QuotaGoods.GoodsCount + AlreadyBuyCount) < 0))
                         {
-                            Msg = string.Format("商品【{0}】限购{1}件已经购买{2}件,当前下单数量{3}件,请重新选择下单数量！", goodsModel.GoodsName, goodsModel.Quota,AlreadyBuyCount,goodsModel.GoodsCount);
+                            Msg = string.Format("商品【{0}】限购{1}件已经购买{2}件,当前下单数量{3}件,请重新选择下单数量！", goodsModel.GoodsName, goodsModel.Quota, AlreadyBuyCount, goodsModel.GoodsCount);
                             log.Debug(Msg);
                             return 0;
                         }
                     }
-                   
+
                     if (goodsModel.Stock - QuotaGoods.GoodsCount < 0)
                     {
-                        Msg = "库存不足，请稍后再试";
-                        return 0;
+                        FailCartList.Add(goodsModel);
+                        //CartList.Remove(goodsModel);
+                        continue;
+                        //Msg = "库存不足，请稍后再试";
+                        //return 0;
                     }
                     var DefaulSuplier = goodsModel.SupplierGoodsList.Where(s => s.IsDefalut == 1).FirstOrDefault();
                     if (DefaulSuplier == null)
                     {
-                        Msg = "该商品未设置商品默认供应商,下单失败.商品ID:" + goodsModel.GoodsID.ToString();
-                        log.Debug(Msg);
-                        return 0;
+                        FailCartList.Add(goodsModel);
+                       // CartList.Remove(goodsModel);
+                        
+                        continue;
+                        //Msg = "该商品未设置商品默认供应商,下单失败.商品ID:" + goodsModel.GoodsID.ToString();
+                        //log.Debug(Msg);
+                        //return 0;
                     }
-                    int OrderGoodsCount=0;//下单商品数量
-                    if (ParamasData.OrderType==1|| ParamasData.OrderType==3)
+                    int OrderGoodsCount = 0;//下单商品数量
+                    if (ParamasData.OrderType == 1 || ParamasData.OrderType == 3)
                     {
                         OrderGoodsCount = goodsModel.GoodsCount;
                     }
-                    if (ParamasData.OrderType ==2)
+                    if (ParamasData.OrderType == 2)
                     {
                         OrderGoodsCount = goodsModel.ReturnCount.Value;
                     }
@@ -469,7 +483,7 @@ namespace Service
                     le_Orders_Head.le_orders_lines.Add(linesModel);
                 }
 
-              
+
 
                 le_Orders_Head.CreateTime = DateTime.Now;
                 le_Orders_Head.OrderAmout = OrderLinesList.Sum(s => s.GoodsPrice * s.GoodsCount);
@@ -492,7 +506,7 @@ namespace Service
                 le_Orders_Head.PickUpPhone = ParamasData.PickUpPhone;
                 le_Orders_Head.PickupTime = ParamasData.PickupTime;
                 le_Orders_Head.PickUpMan = ParamasData.PickUpMan;
-                
+
 
                 ctx.le_orders_head.Add(le_Orders_Head);
 
@@ -515,8 +529,9 @@ namespace Service
 
                 try
                 {
+                    var RemoveCart = FailCartList.Select(s => s.CartID).ToArray();
                     //删除购物车,待优化
-                    var CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.UserID).ToList();
+                    var CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.UserID&& !RemoveCart.Contains(s.CartID)).ToList();
                     foreach (var CartModel in CartLists)
                     {
 
@@ -586,7 +601,387 @@ namespace Service
             return 0;
         }
 
-       // public int OrderSave()
+        public int OrderSave(OrderSaveParamesExtend ParamasData, out string Msg)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var GoodsIDList = ParamasData.GoodsInfo.Select(s => s.GoodsID);
+                var SupplierIDList = ParamasData.GoodsInfo.Select(s => s.SupplierID);
+                var GoodsValueIDList = ParamasData.GoodsInfo.Select(s => s.GoodsValueID);
+
+                var SupplierPric = ctx.le_goods_suppliers.Where(s => GoodsIDList.Contains(s.GoodsID) && SupplierIDList.Contains(s.SuppliersID) && s.IsDeleted == 0)
+                    .Select(s => new { Supplyprice = s.Supplyprice, GoodsID = s.GoodsID , SupplierID =s.SuppliersID});
+
+                if (SupplierPric.Count() != ParamasData.GoodsInfo.Count)
+                {
+                    Msg = string.Format("供应商id与商品ID不匹配,请检查数据");
+                    return 0;
+                }
+                var GoodsValueList = ctx.le_goods_value.Where(s => GoodsValueIDList.Contains(s.GoodsValueID) && GoodsIDList.Contains(s.GoodsID) && s.Enable == 1)
+                    .Select(s=>new GoodsValues {GoodsID=s.GoodsID,GoodsValueID=s.GoodsValueID });
+
+                if (SupplierPric.Count() != ParamasData.GoodsInfo.Count)
+                {
+                    Msg = string.Format("供应商id与商品ID不匹配,请检查数据");
+                    return 0;
+                }
+                var CartList = ctx.le_goods.Where(s => GoodsIDList.Contains(s.GoodsID)).Select(
+                    k => new ShopCartDto {
+                        //CartID = k.CartID,
+                        //GoodsCount = k.GoodsCount,
+                        GoodsID = k.GoodsID,
+                        Price = k.SpecialOffer,
+                        Stock = k.Stock,
+                        Quota = k.Quota,
+                        MinimumPurchase = k.MinimumPurchase,
+                        RowVersion = k.RowVersion,
+
+                        SpecialOffer = k.SpecialOffer,
+                        //PackingNumber = s.le_goods.PackingNumber,
+                        // Specifications = s.le_goods.Specifications,
+                        Discount = k.Discount,
+                        Integral = k.Integral,
+                        PriceFull = k.PriceFull,
+                        PriceReduction = k.PriceReduction,
+                        //ReturnCount = k.ReturnCount,
+                        CountFull = k.CountFull,
+                        CountReduction = k.CountReduction,
+                        IsShelves = k.IsShelves,
+                        QuotaBeginTime = k.QuotaBeginTime,
+                        QuotaEndTime = k.QuotaEndTime,
+                        //    GoodsValueList = s.le_cart_goodsvalue
+                        //.Select(k => new GoodsValues
+                        //{
+                        //    SerialNumber = k.le_goods_value.SerialNumber,
+                        //    CategoryType = k.CategoryType,
+                        //    GoodsValueName = k.le_goods_value.GoodsValue,
+                        //    GoodsValueID = k.GoodsValueID
+
+                        //}),
+                        //    SupplierGoodsList = s.le_goods.le_goods_suppliers.Where(k => k.IsDeleted == 0).Select(k => new SupplierGoods
+                        //    {
+                        //        IsDefalut = k.IsDefalut,
+                        //        SupplierID = k.SuppliersID,
+                        //        Price = k.Supplyprice
+                        //    }).ToList(),
+                        //    GoodsGroups_ID = s.le_goods.GoodsGroupsID,
+                    }
+                    ).ToList();
+                foreach (var item in CartList)
+                {
+                    item.GoodsCount = ParamasData.GoodsInfo.Where(s => s.GoodsID == item.GoodsID).Select(s => s.GoodsCount).FirstOrDefault();
+                    item.SupplierGoodsList = SupplierPric.Where(s => s.GoodsID == item.GoodsID).Select(s => new SupplierGoods { Price = s.Supplyprice ,IsDefalut=1,SupplierID=s.SupplierID}).ToList();
+                    item.GoodsValueList = GoodsValueList.Where(s => s.GoodsID == item.GoodsID).ToList();
+                }
+                if (CartList == null || CartList.Count == 0)
+                {
+                    Msg = "获取购物车失败";
+                    //  FailCartList = null;
+                    return 0;
+                }
+
+                if (CartList.Any(s => s.GoodsCount == 0))
+                {
+                    Msg = "下单数不能0，请检查购物车内商品下单数";
+                    return 0;
+                }
+
+                AddressDto AddressModel = new AddressDto();
+                if (ParamasData.OrderInfo.ExpressType == 1)
+                {
+                    AddressModel = ctx.le_user_address.Where(s => s.AddressID == ParamasData.OrderInfo.AddressID && s.UserID == ParamasData.OrderInfo.UserID && s.Status == 1).
+                        Select(k => new AddressDto
+                        {
+                            ReceiveAddress = k.ReceiveAddress,
+                            ReceivePhone = k.ReceivePhone,
+                            ReceiveArea = k.ReceiveArea,
+                            ReceiveName = k.ReceiveName
+                        }).
+                        FirstOrDefault();
+                    if (AddressModel == null)
+                    {
+                        Msg = "地址输入错误";
+                        //   FailCartList = null;
+                        return 0;
+                    }
+                }
+                if (ParamasData.OrderInfo.ExpressType == 2) //自提
+                {
+                    if (!ParamasData.OrderInfo.PickupTime.HasValue && ParamasData.OrderInfo.OrderType != 2)
+                    {
+                        Msg = "请选择下单时间";
+                        //FailCartList = null;
+                        return 0;
+                    }
+                    AddressModel = ctx.le_sys_address.Where(s => s.AddressID == ParamasData.OrderInfo.AddressID && s.Status == 1).
+                     Select(k => new AddressDto
+                     {
+                         ReceiveAddress = k.ReceiveAddress,
+                         ReceivePhone = k.ReceivePhone,
+                         ReceiveArea = k.ReceiveArea,
+                         ReceiveName = k.ReceiveName
+                     }).FirstOrDefault();
+                    if (AddressModel == null)
+                    {
+                        Msg = "地址输入错误";
+                        // FailCartList = null;
+                        return 0;
+                    }
+                    if (ParamasData.OrderInfo.OrderType != 2)
+                    {
+                        //判断当前时间内的下单数
+
+                        //string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
+                        //string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
+
+                        DateTime EndTime = ParamasData.OrderInfo.PickupTime.Value.AddHours(1);
+                        var hour = ParamasData.OrderInfo.PickupTime.Value.Hour;
+                        var CurrentTime = DateTime.Now;
+
+#pragma warning disable CS1030 // #warning 指令
+#warning 功能已经完成，暂时注释
+                        var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
+
+                        var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.PickupTime >= ParamasData.OrderInfo.PickupTime.Value && s.PickupTime < EndTime).Count();
+                        if (CurrentOrderCountSetting <= CurrentOrderCount)
+                        {
+                            Msg = "当前时间下单数已满,请选择其他时间";
+                            //  log.Debug(Msg);
+                            return 0;
+                        }
+                    }
+#pragma warning restore CS1030 // #warning 指令
+                }
+
+                var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
+
+                List<le_orders_lines> OrderLinesList = new List<le_orders_lines>();
+                string Trade_no = Common.RandomUtils.GenerateOutTradeNo("LEL") + ParamasData.OrderInfo.UserID.ToString();
+                List<GoodsStock> goodsStocksList = new List<GoodsStock>();
+
+                le_orders_head le_Orders_Head = new le_orders_head();
+
+                foreach (var goodsModel in CartList)
+                {
+                    if (goodsModel.IsShelves == 0)
+                    {
+                        Msg = "该商品ID【" + goodsModel.GoodsName + "】已经下架，无法下单";
+                        return 0;
+                    }
+
+                    var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
+                    int AlreadyBuyCount = 0;
+
+                    ///判断商品限购
+                    if (goodsModel.Quota != -1) //限购商品
+                    {
+                        var BuyCountIquery = new List<int>();
+                        if (goodsModel.QuotaBeginTime == null && goodsModel.QuotaEndTime == null)
+                        {
+                            //已经购买的数量
+                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.OrderInfo.UserID && s.GoodsID == QuotaGoods.GoodsID && s.Status != (int)OrderLineStatus.YiQuXiao).Select(k => k.DeliverCount).ToList();
+                            if (BuyCountIquery != null)
+                            {
+                                AlreadyBuyCount = BuyCountIquery.Sum();
+                            }
+                        }
+                        else
+                        {
+                            BuyCountIquery = ctx.le_orders_lines.Where(s => s.UsersID == ParamasData.OrderInfo.UserID
+                            && s.GoodsID == QuotaGoods.GoodsID
+                            && s.Status != (int)OrderLineStatus.YiQuXiao
+                            && s.CreateTime >= goodsModel.QuotaBeginTime
+                            && s.CreateTime < goodsModel.QuotaEndTime).Select(k => k.DeliverCount).ToList();
+                            if (BuyCountIquery != null)
+                            {
+                                AlreadyBuyCount = BuyCountIquery.Sum();
+                            }
+                        }
+                        if ((QuotaGoods != null && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - (QuotaGoods.GoodsCount + AlreadyBuyCount) < 0))
+                        {
+                            Msg = string.Format("商品【{0}】限购{1}件已经购买{2}件,当前下单数量{3}件,请重新选择下单数量！", goodsModel.GoodsName, goodsModel.Quota, AlreadyBuyCount, goodsModel.GoodsCount);
+                            log.Debug(Msg);
+                            return 0;
+                        }
+                    }
+
+                    if (goodsModel.Stock - QuotaGoods.GoodsCount < 0)
+                    {
+                        Msg = "库存不足，请稍后再试";
+                        return 0;
+                    }
+                    var DefaulSuplier = goodsModel.SupplierGoodsList.Where(s => s.IsDefalut == 1).FirstOrDefault();
+                    if (DefaulSuplier == null)
+                    {
+                        Msg = "该商品未设置商品默认供应商,下单失败.商品ID:" + goodsModel.GoodsID.ToString();
+                        log.Debug(Msg);
+                        return 0;
+                    }
+                    int OrderGoodsCount = 0;//下单商品数量
+                    if (ParamasData.OrderInfo.OrderType == 1 || ParamasData.OrderInfo.OrderType == 3)
+                    {
+                        OrderGoodsCount = goodsModel.GoodsCount;
+                    }
+                    if (ParamasData.OrderInfo.OrderType == 2)
+                    {
+                        OrderGoodsCount = goodsModel.ReturnCount.Value;
+                    }
+                    GoodsStock goodsStock = new GoodsStock();
+                    goodsStock.Stock = goodsModel.Stock;
+                    goodsStock.RowVersion = goodsModel.RowVersion;
+                    goodsStock.GoodsID = goodsModel.GoodsID;
+                    goodsStock.GoodsCount = goodsModel.GoodsCount;
+                    goodsStocksList.Add(goodsStock);
+
+                    le_orders_lines linesModel = new le_orders_lines();
+                    linesModel.CreateTime = DateTime.Now;
+                    linesModel.GoodsCount = OrderGoodsCount;//goodsModel.GoodsCount;
+                    linesModel.DeliverCount = OrderGoodsCount;// goodsModel.GoodsCount;
+                    linesModel.GoodsPrice = goodsModel.SpecialOffer;
+                    linesModel.SupplyPrice = DefaulSuplier.Price;
+                    linesModel.Profit = goodsModel.Price - DefaulSuplier.Price;
+
+                    linesModel.CountFull = goodsModel.CountFull;
+                    linesModel.CountReduction = goodsModel.CountReduction;
+                    linesModel.PriceFull = goodsModel.PriceFull;
+                    linesModel.PriceReduction = goodsModel.PriceReduction;
+                    linesModel.Integral = goodsModel.Integral;
+                    linesModel.Discount = goodsModel.Discount;
+
+                    linesModel.Status = 0;
+                    linesModel.UpdateTime = DateTime.Now;
+                    linesModel.UsersID = ParamasData.OrderInfo.UserID;
+                    linesModel.SuppliersID = DefaulSuplier.SupplierID;
+                    linesModel.GoodsID = goodsModel.GoodsID;
+                    foreach (var GoodsValue in goodsModel.GoodsValueList)
+                    {
+                        le_orderline_goodsvalue linValue = new le_orderline_goodsvalue();
+                        linValue.CategoryType = GoodsValue.CategoryType;
+                        linValue.GoodsValueID = GoodsValue.GoodsValueID;
+                        linesModel.le_orderline_goodsvalue.Add(linValue);
+                    }
+                    OrderLinesList.Add(linesModel);
+
+                    le_Orders_Head.le_orders_lines.Add(linesModel);
+                }
+
+                var UserInfo = ctx.le_users.Where(s => s.UsersID == ParamasData.OrderInfo.UserID)
+                    .Select(s => new { CarNumber = s.CarNumber, PickUpPhone = s.UsersMobilePhone, PickUpMan = s.UsersName }).FirstOrDefault();
+                le_Orders_Head.CreateTime = DateTime.Now;
+                le_Orders_Head.OrderAmout = OrderLinesList.Sum(s => s.GoodsPrice * s.GoodsCount);
+                le_Orders_Head.RealAmount = le_Orders_Head.OrderAmout;
+                le_Orders_Head.OrderSupplyAmount = OrderLinesList.Sum(s => s.SupplyPrice * s.GoodsCount);
+                le_Orders_Head.RealSupplyAmount = le_Orders_Head.OrderSupplyAmount;
+                le_Orders_Head.OutTradeNo = Trade_no;
+                le_Orders_Head.RcAddr = AddressModel.ReceiveArea + "-" + AddressModel.ReceiveAddress;
+                le_Orders_Head.RcName = AddressModel.ReceiveName;
+                le_Orders_Head.RcPhone = AddressModel.ReceivePhone;
+                le_Orders_Head.Status = 0;
+                le_Orders_Head.UsersID = ParamasData.OrderInfo.UserID;
+                le_Orders_Head.UpdateTime = DateTime.Now;
+                le_Orders_Head.GoodsCount = OrderLinesList.Sum(s => s.GoodsCount);
+                le_Orders_Head.DeliverCount = le_Orders_Head.GoodsCount;
+                le_Orders_Head.Head_Notes = CartList[0].GoodsName + "$" + ParamasData.OrderInfo.Notes;
+                le_Orders_Head.OrderType = ParamasData.OrderInfo.OrderType;
+                le_Orders_Head.ExpressType = ParamasData.OrderInfo.ExpressType;
+                le_Orders_Head.CarNumber = UserInfo.CarNumber;// ParamasData.OrderInfo.CarNumber;
+                le_Orders_Head.PickUpPhone = UserInfo.PickUpMan;// ParamasData.OrderInfo.PickUpPhone;
+                le_Orders_Head.PickupTime = ParamasData.OrderInfo.PickupTime;
+                le_Orders_Head.PickUpMan = UserInfo.PickUpMan;//ParamasData.OrderInfo.PickUpMan;
+
+
+                ctx.le_orders_head.Add(le_Orders_Head);
+
+                //去重复
+                var NORepeat = goodsStocksList.GroupBy(s => s.GoodsID).Select(g => new GoodsStock { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount), Stock = g.Max(k => k.Stock), RowVersion = g.Max(k => k.RowVersion) }).ToList();
+                bool IsHaveStock = true;
+
+                //退货单不计销量
+                if (ParamasData.OrderInfo.OrderType != 2)
+                {
+                    IsHaveStock = CheckStock(NORepeat);
+                }
+                if (!IsHaveStock)
+                {
+
+                    Msg = "访问人次太多,请稍后再试!";
+                    log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
+                    return 0;
+                }
+
+                try
+                {
+                    //删除购物车,待优化
+                    var CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.OrderInfo.UserID).ToList();
+                    foreach (var CartModel in CartLists)
+                    {
+
+                        var CartValue = CartModel.le_cart_goodsvalue.ToList();
+                        foreach (var index in CartValue)
+                        {
+                            ctx.le_cart_goodsvalue.Remove(index);
+                            //ctx.Entry<le_cart_goodsvalue>(index).State = EntityState.Deleted;
+                        }
+                        ctx.le_shop_cart.Remove(CartModel);
+                    }
+
+                    if (ctx.SaveChanges() > 0)
+                    {
+                      
+                        //用户下单，推送消息给所有总部人员
+                        var AdminIDList = ctx.le_admin.Where(s => s.Status == 1).Select(s => s.AdminID).ToList();
+                        foreach (var AdminId in AdminIDList)
+                        {
+                            new OtherService().UpdatePushMsg(AdminId, le_Orders_Head.OutTradeNo, 3);
+                        }
+                        Msg = "订单提交成功";
+                        return le_Orders_Head.OrdersHeadID;
+                    }
+                    else
+                    {
+                        Msg = "订单提交失败";
+                        return 0;
+                    }
+                }
+                catch (DbEntityValidationException exception)
+                {
+                    var errorMessages =
+                        exception.EntityValidationErrors
+                            .SelectMany(validationResult => validationResult.ValidationErrors)
+                            .Select(m => m.ErrorMessage);
+
+                    var fullErrorMessage = string.Join(", ", errorMessages);
+
+                    var exceptionMessage = string.Concat(exception.Message, " 验证异常消息是：", fullErrorMessage);
+
+                    log.Error(exceptionMessage, exception);
+
+                    Msg = exceptionMessage;
+                    return 0;
+
+                }
+                catch (Exception ex)
+                {
+                    var str = ExceptionHelper.GetInnerExceptionMsg(ex);
+
+                    Msg = str;
+                    log.Error(str, ex);
+
+                    return 0;
+
+                }
+                Msg = "FAIL";
+                return 0;
+
+            }
+            return 0;
+
+
+            Msg = "";
+            return 0;
+        }
+
+        //private 
         /// <summary>
         /// 排序扩展
         /// DistinctBy不是.net framework提供的扩展方法，是第三方的扩展方法
@@ -1394,8 +1789,7 @@ namespace Service
         /// <param name="UserID"></param>
         /// <returns></returns>
         public bool UpdateOrderLineStatus(List<UpdateOrderLineParamas> OrderLineList, out string Msg, int AdminID = 0, int SuppliersID = 0)
-        {
-          
+        {          
             using (Entities ctx = new Entities())
             {
                 var OrderNo = OrderLineList.Select(s => s.OrderNo).FirstOrDefault();
@@ -1547,6 +1941,7 @@ namespace Service
                               
                                 //供货商完成接单 推送消息给总部
                                 new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+                                new OtherService().UpdatePushMsg(CurrentLine.SuppliersID.Value, OrderHeadModel.OutTradeNo, 2);
                                 break;
                             //case OrderLineStatus.YiWanCheng: //已完成
                             //    CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
@@ -1815,7 +2210,7 @@ namespace Service
                             if (index.Status != (int)(OrderLineStatus.YiJieSuan) && index.Status != (int)OrderLineStatus.YiWanCheng && index.Status != (int)(OrderLineStatus.YiQuXiao))
                             {
                                 CurrentLine.Status = (int)OrderLineStatus.YiFahuo;
-                             
+
                             }
                             break;
                         case OrderLineStatus.YiQuXiao:
@@ -1832,12 +2227,17 @@ namespace Service
                   
                     if (LineLog.AfterCount != LineLog.BeforeCount || LineLog.AfterStatus != LineLog.BeforeStatus)
                     {
+                        CurrentLine.AdminID = AdminID;
                         CurrentLine.UpdateTime = DateTime.Now;
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
                         ctx.le_orders_lines_log.Add(LineLog);
                     }
                     
                    
+                }
+                foreach (var index in SupplierList)
+                {
+                    new OtherService().UpdatePushMsg(index, OrderHeadModel.OutTradeNo, 2);
                 }
 
                 OrderHeadModel.Status = (int)ProcessingOrderHeadStatus(AllOrderLinesList, (OrderHeadStatus)OrderHeadModel.Status);
@@ -2364,7 +2764,7 @@ namespace Service
                 parameters1[0].Value = index.GoodsID;
                 parameters1[1].Value = index.RowVersion;
                 parameters1[2].Value = index.GoodsCount;
-                CommandInfo commandInfo = new CommandInfo(sql, parameters1, EffentNextType.None);
+                CommandInfo commandInfo = new CommandInfo(sql, parameters1, EffentNextType.ExcuteEffectRows);
                 sqllist.Add(commandInfo);
 
             }
