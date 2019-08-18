@@ -12,20 +12,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Senparc.NeuChar" Version="0.7.5" />
-    <PackageReference Include="Senparc.WebSocket" Version="0.7.1.6" />
-    <PackageReference Include="Senparc.Weixin" Version="6.4.12" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.7.12" />
-    <PackageReference Include="Senparc.Weixin.Open" Version="4.5.8.1" />
-    <PackageReference Include="Senparc.Weixin.QY" Version="4.4.1" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.4.3" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.5.10.1" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.5.2" />
-    <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
+    <Folder Include="Properties\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <PackageReference Include="Senparc.WebSocket" Version="0.8.0" />
+    <PackageReference Include="Senparc.Weixin" Version="6.4.12" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.7.12" />
+    <PackageReference Include="Senparc.Weixin.Open" Version="4.5.8.1" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.4.3" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.5.10.1" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.5.2" />
   </ItemGroup>
 
 </Project>

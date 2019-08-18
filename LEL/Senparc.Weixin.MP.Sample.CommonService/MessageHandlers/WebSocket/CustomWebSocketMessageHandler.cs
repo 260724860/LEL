@@ -67,8 +67,8 @@ namespace Senparc.Weixin.MP.Sample.CommonService.MessageHandlers.WebSocket
                 //临时演示使用固定openId
                 var openId = sessionBag != null ? sessionBag.OpenId : "onh7q0DGM1dctSDbdByIHvX4imxA";// "用户未正确登陆";
 
-                await webSocketHandler.SendMessage("OpenId：" + openId);
-                await webSocketHandler.SendMessage("FormId：" + formId);
+               // await webSocketHandler.SendMessage("OpenId：" + openId);
+              //  await webSocketHandler.SendMessage("FormId：" + formId);
 
                 if (sessionBag == null)
                 {
@@ -96,7 +96,7 @@ namespace Senparc.Weixin.MP.Sample.CommonService.MessageHandlers.WebSocket
             {
                 var msg = ex.Message + "\r\n\r\n" + originalData + "\r\n\r\nAPPID:" + appId;
 
-                await webSocketHandler.SendMessage(msg); //VS2017以下如果编译不通过，可以注释掉这一行
+               // await webSocketHandler.SendMessage(msg); //VS2017以下如果编译不通过，可以注释掉这一行
 
                 WeixinTrace.SendCustomLog("WebSocket OnMessageReceiced()过程出错", msg);
             }
