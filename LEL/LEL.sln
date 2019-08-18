@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LEL", "LEL\LEL.csproj", "{6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LELAdmin", "LELAdmin\LELAdmin.csproj", "{BB20400D-B1E6-4C41-B5EA-BCE8EB5B21B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MP", "MP\MP.csproj", "{16BCCF77-A9D5-4335-818A-FAD53F216C08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP", "MP\MP.csproj", "{16BCCF77-A9D5-4335-818A-FAD53F216C08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Weixin.MP.CoreSample.CommonService", "Senparc.Weixin.MP.Sample.CommonService\Senparc.Weixin.MP.CoreSample.CommonService.csproj", "{E175ABD2-FD0B-4384-9AD2-11E7E9FB399C}"
 EndProject

@@ -167,7 +167,7 @@ namespace Service
 
                 string updateGoodsSupplierSql = "";
                 string UpdateGoodsSql = "";
-
+                string updateGoodsSupplierByDefaultSql = "";
                List<string> UpdateDefaultSql =new List<string>();
 
 
@@ -201,8 +201,6 @@ namespace Service
                                 UpdateDefaultSql.Add( string.Format(" update le_goods_suppliers a inner join(select GoodsMappingID from le_goods_suppliers where goodsid in ({0}) and SuppliersID != {1} and IsDeleted = 0 order by Supplyprice ASC limit 1) b on a.GoodsMappingID = b.GoodsMappingID set IsDefalut = 1  ",
                                index, model.SuppliersID));
                             }
-                            
-
                         }
 
                         if (SignerList.Length > 0)
@@ -210,17 +208,34 @@ namespace Service
                             UpdateGoodsSql = string.Format("update le_goods set IsShelves=0 where Goodsid in ({0})", string.Join(",", SignerList));
                         }
                     }
-                    
-                   
                 }
                 if (model.Status == 1)
                 {
-                    var temp1 = ctx.le_goods_suppliers.Where(s => s.SuppliersID == model.SuppliersID && s.IsDeleted == 1).Select(s => s.GoodsID).ToList();
-                    if (temp1.Count > 0)
+                    var temp = ctx.le_goods_suppliers.Where(s => s.SuppliersID == model.SuppliersID&&s.IsDeleted==1).Select(s=>s.GoodsID);
+                    var temp1 = ctx.le_goods_suppliers.Where(s => temp.Contains(s.GoodsID))
+                        .Select(s => new { GoodsID = s.GoodsID, SupplierID = s.SuppliersID })
+                        .GroupBy(s => s.GoodsID)
+                        .Select(s => new { SupplierCount = s.Count(), GoodsID=s.Key }).ToArray();
+
+                    var MultipleList = temp1.Where(s => s.SupplierCount > 1).Select(s => s.GoodsID).ToArray();
+                    var SignerList = temp1.Where(s => s.SupplierCount == 1).Select(s => s.GoodsID).ToArray();
+
+                    var GoodsIDList = temp1.Select(s => s.GoodsID).ToArray();
+
+                    // var TempGroup=temp1.g
+                    //if (temp1.Count > 0)
+                    //{
+                    if (MultipleList.Count()>0)
                     {
-                        updateGoodsSupplierSql = string.Format("update le_goods_suppliers set IsDeleted=0  where suppliersid={0} and goodsid in ({1})", model.SuppliersID, string.Join(",", temp1));
-                        UpdateGoodsSql = string.Format("update le_goods set IsShelves=1 where Goodsid in ({0})", string.Join(",", string.Join(",", temp1)));
+                        updateGoodsSupplierSql = string.Format("update le_goods_suppliers set IsDeleted=0  where suppliersid={0} and goodsid in ({1})", model.SuppliersID, string.Join(",", MultipleList));
                     }
+                    if (SignerList.Count()>0)
+                    {
+                        updateGoodsSupplierByDefaultSql = string.Format("update le_goods_suppliers set IsDeleted=0 , IsDefalut = 1  where suppliersid={0} and goodsid in ({1})", model.SuppliersID, string.Join(",", SignerList));
+
+                    }
+                    UpdateGoodsSql = string.Format("update le_goods set IsShelves=1 where Goodsid in ({0})", string.Join(",", string.Join(",", GoodsIDList)));
+                    //}
                 }
                 using (var transe = ctx.Database.BeginTransaction())
                 {
@@ -241,7 +256,10 @@ namespace Service
                         {
                                 ctx.Database.ExecuteSqlCommand(UpdateGoodsSql);
                         }
-                 
+                        if(!string.IsNullOrEmpty(updateGoodsSupplierByDefaultSql))
+                        {
+                            ctx.Database.ExecuteSqlCommand(updateGoodsSupplierByDefaultSql);
+                        }
                         var result = ctx.SaveChanges();
                         transe.Commit();
                         if (result > 0)

@@ -90,13 +90,13 @@ namespace Service
                 }
                 if (!string.IsNullOrEmpty(options.SerialNumber))
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber) && k.Enable == 1));
+                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber == options.SerialNumber && k.Enable == 1));
                 }
                 if (options.SupplierID != null)
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID&&k.IsDeleted==0));
+                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID && k.IsDeleted == 0));
                 }
-                if(options.GoodsID!=null&&options.PageTurning!=null)
+                if (options.GoodsID != null && options.PageTurning != null)
                 {
                     if (options.PageTurning == 1)
                     {
@@ -129,15 +129,15 @@ namespace Service
                     PackingNumber = s.PackingNumber,
                     SalesVolumes = s.SalesVolumes,
                     TotalSalesVolumes = s.TotalSalesVolume,
-                    MinimumPurchase=s.MinimumPurchase,
+                    MinimumPurchase = s.MinimumPurchase,
                     Stock = s.Stock,
                     Quota = s.Quota,
                     MSRP = s.MSRP,
-                   // SupplyPrice=s.le_goods_suppliers.Select(k=>k.Supplyprice).FirstOrDefault(),
-                   SupplyPriceList=s.le_goods_suppliers.Where(k=>k.IsDeleted==0).Select(k=>new GoodsSupplier() {
-                       SuppliserID=k.SuppliersID,
-                       SupplyPrice= k.Supplyprice,
-                   }).ToList(),
+                    // SupplyPrice=s.le_goods_suppliers.Select(k=>k.Supplyprice).FirstOrDefault(),
+                    SupplyPriceList = s.le_goods_suppliers.Where(k => k.IsDeleted == 0).Select(k => new GoodsSupplier() {
+                        SuppliserID = k.SuppliersID,
+                        SupplyPrice = k.Supplyprice,
+                    }).ToList(),
                     GoodsValueList = s.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
                     {
                         SerialNumber = k.SerialNumber,
@@ -147,7 +147,7 @@ namespace Service
                         GoodsValueName = k.GoodsValue
                     }).ToList(),
                 });
-               
+
 
                 #region 排序              
                 switch (options.SortKey)
@@ -280,7 +280,7 @@ namespace Service
                        || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords) && k.Enable == 1)
                        ); ;
                 }
-                 if(options.GoodsID!=null&&options.PageTurning!=null)
+                if (options.GoodsID != null && options.PageTurning != null)
                 {
                     if (options.PageTurning == 1)
                     {
@@ -293,11 +293,11 @@ namespace Service
                 }
                 if (!string.IsNullOrEmpty(options.SerialNumber))
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber.Contains(options.SerialNumber)&&k.Enable==1));
+                    tempIq = tempIq.Where(s => s.le_goods_value.Any(k => k.SerialNumber == options.SerialNumber && k.Enable == 1));
                 }
                 if (options.SupplierID != null)
                 {
-                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID&&k.IsDeleted==0));
+                    tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID && k.IsDeleted == 0));
                 }
 
                 var tempJoin = tempIq.Join(ctx.le_goods_suppliers, o => o.GoodsID, p => p.GoodsID, (p, o) => new GroodsModelDto
@@ -324,7 +324,7 @@ namespace Service
                     Stock = p.Stock,
                     Quota = p.Quota,
                     MSRP = p.MSRP,
-                    MinimumPurchase=p.MinimumPurchase,
+                    MinimumPurchase = p.MinimumPurchase,
                     GoodsValueList = p.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
                     {
                         SerialNumber = k.SerialNumber,
@@ -337,8 +337,8 @@ namespace Service
                 });
                 var AdminRoleSupplier = ctx.lel_admin_suppliers.Where(s => s.AdminID == AdminID).Select(s => s.SupplierID).ToList();
                 var tmepGroup = tempJoin.Where(s => AdminRoleSupplier.Contains(s.SupplierID));//.ToList();
-              
-              
+
+
                 list.PageCount = await tmepGroup.CountAsync();
                 #region 排序              
                 switch (options.SortKey)
@@ -506,23 +506,23 @@ namespace Service
                 GDetailed.TotalSalesVolumes = result.TotalSalesVolume;
 
 
-                GDetailed.GoodsBarand       = result.GoodsBarand;
-                GDetailed.Initial           = result.Initial;
-                GDetailed.Integral          = result.Integral;
-                GDetailed.IsCrossdomain     = result.IsCrossdomain;
-                GDetailed.IsDeliverHome     = result.IsDeliverHome;
-                GDetailed.IsReturn          = result.IsReturn;
-                GDetailed.PlaceofOrigin     = result.PlaceofOrigin;
-                GDetailed.PriceFull         = result.PriceFull;
-                GDetailed.PriceReduction    = result.PriceReduction;
-                GDetailed.ProductionDate    = result.ProductionDate;
-                GDetailed.Remarks           = result.Remarks;
-                GDetailed.SeckillBeginTime  = result.SeckillBeginTime;
-                GDetailed.SeckillEndTime    = result.SeckillEndTime;
-                GDetailed.VirtualNumber     = result.VirtualNumber;
-                GDetailed.UrgentOrder       = result.UrgentOrder;
-                GDetailed.Discount          = result.Discount;
-                GDetailed.TermOfValidity    = result.TermOfValidity;
+                GDetailed.GoodsBarand = result.GoodsBarand;
+                GDetailed.Initial = result.Initial;
+                GDetailed.Integral = result.Integral;
+                GDetailed.IsCrossdomain = result.IsCrossdomain;
+                GDetailed.IsDeliverHome = result.IsDeliverHome;
+                GDetailed.IsReturn = result.IsReturn;
+                GDetailed.PlaceofOrigin = result.PlaceofOrigin;
+                GDetailed.PriceFull = result.PriceFull;
+                GDetailed.PriceReduction = result.PriceReduction;
+                GDetailed.ProductionDate = result.ProductionDate;
+                GDetailed.Remarks = result.Remarks;
+                GDetailed.SeckillBeginTime = result.SeckillBeginTime;
+                GDetailed.SeckillEndTime = result.SeckillEndTime;
+                GDetailed.VirtualNumber = result.VirtualNumber;
+                GDetailed.UrgentOrder = result.UrgentOrder;
+                GDetailed.Discount = result.Discount;
+                GDetailed.TermOfValidity = result.TermOfValidity;
                 GDetailed.CountFull = result.CountFull;
                 GDetailed.CountReduction = result.CountReduction;
 
@@ -533,7 +533,7 @@ namespace Service
                 GDetailed.PriceScheme1 = result.PriceScheme1;
                 GDetailed.PriceScheme2 = result.PriceScheme2;
                 GDetailed.PriceScheme3 = result.PriceScheme3;
-              
+
                 //GDetailed.SupplierID = result.SuppliersID;
                 //GDetailed.SupplierName = result.SuppliersName; //GetSupplierByID(GDetailed.SupplierID);
 
@@ -787,7 +787,7 @@ namespace Service
                     model.Describe = dto.Describe;
                     model.GoodsGroupsID = dto.GoodsGroups_ID;
                     model.GoodsName = dto.GoodsName;
-                    model.SpecialOffer = dto.SpecialOffer;                
+                    model.SpecialOffer = dto.SpecialOffer;
                     model.IsHot = dto.IsHot;
                     model.IsNewGoods = dto.IsNewGoods;
                     model.IsRecommend = dto.IsRecommend;
@@ -879,7 +879,7 @@ namespace Service
                     #region 添加供应商
                     foreach (var Supplier in dto.GoodsSuplierPriceList)
                     {
-                        
+
                         le_goods_suppliers le_Goods_Suppliers = new le_goods_suppliers();
                         le_Goods_Suppliers.CreatTime = DateTime.Now;
                         le_Goods_Suppliers.IsDefalut = Supplier.IsDefalut;
@@ -1443,7 +1443,7 @@ namespace Service
         //        {
         //            foreach (var index in List)
         //            {
-                        
+
         //                var exitModel = ctx.le_goods_value.Where(s => s.GoodsValueID == index.GoodsValueID).FirstOrDefault();
         //                if (exitModel != null)
         //                {
@@ -1477,7 +1477,7 @@ namespace Service
         //                }
         //                else
         //                {
-                          
+
         //                    le_goods_value goods_Value = new le_goods_value();
         //                    if (string.IsNullOrEmpty(index.SerialNumber))
         //                    {
@@ -1840,7 +1840,7 @@ namespace Service
         /// <returns></returns>
         public int GetGoodsMaxSort()
         {
-            using (Entities ctx=new Entities())
+            using (Entities ctx = new Entities())
             {
                 int result = ctx.le_goods.Max(s => s.Sort);
                 return result + 1;
@@ -1854,7 +1854,7 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                var result = ctx.le_goods.Any(s=>s.Sort== Sort);
+                var result = ctx.le_goods.Any(s => s.Sort == Sort);
                 return result;
             }
         }
@@ -1882,6 +1882,24 @@ namespace Service
                 }
             }
 
+        }
+
+        public List<FindGoodsImg> GetAllGoodsImg(int offset, int rows)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var GoodsIDList = ctx.le_goods.Where(s => true).OrderBy(s => s.GoodsID).Skip(offset).Take(rows)
+                    .Select(s=>new FindGoodsImg { GoodsID=s.GoodsID,Img=s.Image, GoodsName =s.GoodsName}).ToList();
+                return GoodsIDList;
+            }
+        }
+
+        public class FindGoodsImg
+         {
+            public string Img { get; set; }
+            public int GoodsID { get; set; }
+            public string GoodsName { get; set; }
+           // public string SerialNumber { get; set; }
         }
 
     }

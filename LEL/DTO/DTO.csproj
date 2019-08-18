@@ -77,6 +77,7 @@
     <Compile Include="ShopOrder\OrderLineDto.cs" />
     <Compile Include="ShopOrder\OrderLineSeachParames.cs" />
     <Compile Include="ShopOrder\OrderPackCount.cs" />
+    <Compile Include="ShopOrder\OrderSavebyWinForm.cs" />
     <Compile Include="ShopOrder\OrderSaveParams.cs" />
     <Compile Include="ShopOrder\OrderSeachParams.cs" />
     <Compile Include="ShopOrder\OrdersLimitCount.cs" />

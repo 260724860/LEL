@@ -148,7 +148,54 @@ namespace LEL.Controllers
             return null;
 
         }
+        /// <summary>
+        /// 保存订单 接口
+        /// </summary>
 
+        /// <returns></returns>
+        [HttpPost, Route("api/ShopOrder/OrderSaveInterface/")]
+        public IHttpActionResult OrderSaveInterface(OrderSaveParamesExtend ParamasData)
+        {
+            int[] OrderTypes = { 1, 2, 3 }; int[] ExpressTypes = { 1, 2 };
+            if (GetUserID() == -1)
+            {
+                return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
+            }
+            if (!OrderTypes.Contains(ParamasData.OrderInfo.OrderType) || !ExpressTypes.Contains(ParamasData.OrderInfo.ExpressType))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", ParamasData.OrderInfo.OrderType.ToString() + "," + ParamasData.OrderInfo.ExpressType.ToString()));
+            }
+            if (ParamasData.OrderInfo.ExpressType == 2)
+            {
+                if (!ParamasData.OrderInfo.PickupTime.HasValue)
+                {
+                    try
+                    {
+                        ParamasData.OrderInfo.PickupTime = Convert.ToDateTime(ParamasData.OrderInfo.PickupTimeStr);
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(JRpcHelper.AjaxResult(1, ex.Message + "前端传入时间：【" + ParamasData.OrderInfo.PickupTimeStr + "】", ex));
+                    }
+
+                }
+            }
+            ParamasData.OrderInfo.UserID = GetUserID();
+            
+            string msg;
+            List<ShopCartDto> FailCartList;
+            var result = shopOrderService.OrderSave(ParamasData, out msg);
+            if (result != 0)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, msg, result));
+            }
+            return null;
+
+        }
         /// <summary>
         /// 新增收货地址
         /// </summary>
