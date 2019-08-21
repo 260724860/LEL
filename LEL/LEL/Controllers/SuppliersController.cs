@@ -216,6 +216,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }
+
             options.SupplierID = GetUserID();
             var result = await GoodService.GetGoodsListAsync(options);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));

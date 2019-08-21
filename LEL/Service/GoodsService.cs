@@ -25,7 +25,7 @@ namespace Service
         /// 获取商品列表
         /// </summary>
         /// <returns></returns>
-        public async Task<GoodsListDto> GetGoodsListAsync(GoodsSeachOptions options)
+        public async Task<GoodsListDto> GetGoodsListAsync(GoodsSeachOptions options,string Environment="")
         {
             var BasePath = GetSysConfigList.Values.Where(s => s.Name == "HeadQuartersDomain").FirstOrDefault().Value;
             GoodsListDto list = new GoodsListDto();
@@ -95,6 +95,13 @@ namespace Service
                 if (options.SupplierID != null)
                 {
                     tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID && k.IsDeleted == 0));
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(Environment))
+                    {
+                        tempIq= tempIq.Where(s => s.Environment.Contains(Environment));
+                    }
                 }
                 if (options.GoodsID != null && options.PageTurning != null)
                 {
@@ -826,6 +833,11 @@ namespace Service
 
                     model.QuotaBeginTime = dto.QuotaBeginTime;
                     model.QuotaEndTime = dto.QuotaEndTime;
+                    
+                    if(!string.IsNullOrEmpty(dto.Environment))
+                    {
+                        model.Environment = dto.Environment;
+                    }
 
                     #region 添加属性
                     int p = 1;
@@ -1056,6 +1068,11 @@ namespace Service
                 model.IsParcel = dto.IsParcel;
                 model.QuotaBeginTime = dto.QuotaBeginTime;
                 model.QuotaEndTime = dto.QuotaEndTime;
+
+                if (!string.IsNullOrEmpty(dto.Environment))
+                {
+                    model.Environment = dto.Environment;
+                }
 
                 GoodLogModel.AfterGoodsName = model.GoodsName;
                 GoodLogModel.AfterQuota = model.Quota;

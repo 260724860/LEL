@@ -87,6 +87,7 @@ namespace Service
         public decimal PriceScheme3 { get; set; }
         public Nullable<System.DateTime> QuotaBeginTime { get; set; }
         public Nullable<System.DateTime> QuotaEndTime { get; set; }
+        public string Environment { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }

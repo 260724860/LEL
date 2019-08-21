@@ -209,6 +209,11 @@ namespace DTO.Goods
         /// 限购结束时间
         /// </summary>
         public Nullable<System.DateTime> QuotaEndTime { get; set; }
+       
+        /// <summary>
+        /// 所属环境 
+        /// </summary>
+        public string Environment { get; set; }
     }
 
     public class GoodsImage

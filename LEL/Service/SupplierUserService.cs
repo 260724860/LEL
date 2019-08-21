@@ -170,7 +170,6 @@ namespace Service
                 string updateGoodsSupplierByDefaultSql = "";
                List<string> UpdateDefaultSql =new List<string>();
 
-
                 if (!oneself)
                 {
                     model.Status = dto.Suppliers_Status;
@@ -234,7 +233,10 @@ namespace Service
                         updateGoodsSupplierByDefaultSql = string.Format("update le_goods_suppliers set IsDeleted=0 , IsDefalut = 1  where suppliersid={0} and goodsid in ({1})", model.SuppliersID, string.Join(",", SignerList));
 
                     }
-                    UpdateGoodsSql = string.Format("update le_goods set IsShelves=1 where Goodsid in ({0})", string.Join(",", string.Join(",", GoodsIDList)));
+                    if (GoodsIDList.Length > 0)
+                    {
+                        UpdateGoodsSql = string.Format("update le_goods set IsShelves=1 where Goodsid in ({0})", string.Join(",", string.Join(",", GoodsIDList)));
+                    }
                     //}
                 }
                 using (var transe = ctx.Database.BeginTransaction())

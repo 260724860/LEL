@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Web.Http;
 
 namespace LEL.Controllers
@@ -47,10 +48,12 @@ namespace LEL.Controllers
         }
 
         // DELETE api/values/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            string msg = "59.9";
-            Convert.ToInt32(msg);
+            //string msg = "59.9";
+            //Convert.ToInt32(msg);
+            string url = Request.RequestUri.Host.ToString();
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", url));
         }
     }
 }

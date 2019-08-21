@@ -36,7 +36,14 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }
-            var result = await GoodsService.GetGoodsListAsync(options);
+            string Environment = "";
+            string url= Request.RequestUri.Host.ToString();
+            var SubdomainArrty = url.Split('.');
+            if (SubdomainArrty.Length > 0)
+            {
+                Environment = SubdomainArrty[0];
+            }
+            var result = await GoodsService.GetGoodsListAsync(options, Environment);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 

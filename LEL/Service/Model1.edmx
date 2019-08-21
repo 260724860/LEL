@@ -154,6 +154,7 @@
           <Property Name="PriceScheme3" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="QuotaBeginTime" Type="datetime" Precision="0" />
           <Property Name="QuotaEndTime" Type="datetime" Precision="0" />
+          <Property Name="Environment" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="le_goods_brand">
           <Key>
@@ -1703,6 +1704,7 @@
           <Property Name="PriceScheme3" Type="Decimal" Nullable="false" />
           <Property Name="QuotaBeginTime" Type="DateTime" />
           <Property Name="QuotaEndTime" Type="DateTime" />
+          <Property Name="Environment" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="le_goods_img" Relationship="leerledbtestModel.FK_le_goods_img_le_goods" FromRole="le_goods" ToRole="le_goods_img" />
           <NavigationProperty Name="le_goods_brand" Relationship="leerledbtestModel.FK_le_goods_le_goods_brand" FromRole="le_goods" ToRole="le_goods_brand" />
           <NavigationProperty Name="le_goodsgroups" Relationship="leerledbtestModel.FK_le_goods_le_goodsgroups" FromRole="le_goods" ToRole="le_goodsgroups" />
@@ -2856,6 +2858,7 @@
           <EntitySetMapping Name="le_goods">
             <EntityTypeMapping TypeName="leerledbtestModel.le_goods">
               <MappingFragment StoreEntitySet="le_goods">
+                <ScalarProperty Name="Environment" ColumnName="Environment" />
                 <ScalarProperty Name="QuotaEndTime" ColumnName="QuotaEndTime" />
                 <ScalarProperty Name="QuotaBeginTime" ColumnName="QuotaBeginTime" />
                 <ScalarProperty Name="PriceScheme3" ColumnName="PriceScheme3" />
