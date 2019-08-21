@@ -93,6 +93,8 @@
     <Compile Include="User\UserInfo.cs" />
     <Compile Include="User\UserRegistDTO.cs" />
     <Compile Include="User\UserSeachOptions.cs" />
+    <Compile Include="WeixinDto\OAuthUserInfo.cs" />
+    <Compile Include="WeixinDto\WeixinUserDto.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

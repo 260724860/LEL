@@ -26,5 +26,7 @@ namespace Service
         public string HeadImgUrl { get; set; }
         public string Privilege { get; set; }
         public string Unionid { get; set; }
+        public System.DateTime UpdateTime { get; set; }
+        public string AppID { get; set; }
     }
 }

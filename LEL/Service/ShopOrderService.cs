@@ -361,7 +361,7 @@ namespace Service
 #pragma warning restore CS1030 // #warning 指令
                 }
 
-                var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) });
+                var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) }).ToList();
 
                 List<le_orders_lines> OrderLinesList = new List<le_orders_lines>();
                 string Trade_no = Common.RandomUtils.GenerateOutTradeNo("LEL") + ParamasData.UserID.ToString();
@@ -374,8 +374,8 @@ namespace Service
                     if (goodsModel.IsShelves == 0)
                     {
                         FailCartList.Add(goodsModel);
-                        CartList.Remove(goodsModel);
-                        // continue;
+                        //CartList.Remove(goodsModel);
+                        continue;
                         //Msg = "该商品ID【" + goodsModel.GoodsName + "】已经下架，无法下单";
                         //return 0;
                     }
@@ -618,7 +618,7 @@ namespace Service
                     return 0;
                 }
                 var GoodsValueList = ctx.le_goods_value.Where(s => GoodsValueIDList.Contains(s.GoodsValueID) && GoodsIDList.Contains(s.GoodsID) && s.Enable == 1)
-                    .Select(s=>new GoodsValues {GoodsID=s.GoodsID,GoodsValueID=s.GoodsValueID });
+                    .Select(s=>new GoodsValues {GoodsID=s.GoodsID,GoodsValueID=s.GoodsValueID, CategoryType=s.CategoryType });
 
                 if (SupplierPric.Count() != ParamasData.GoodsInfo.Count)
                 {
@@ -2647,9 +2647,18 @@ namespace Service
                 {
                     Model.PickupTime = orderEditParams.PickupTime;
                 }
-                Model.PickUpMan = orderEditParams.PickUpMan;
-                Model.PickUpPhone = orderEditParams.PickUpPhone;
-                Model.CarNumber = orderEditParams.CarNumber;
+                if(!string.IsNullOrEmpty(orderEditParams.PickUpMan))
+                {
+                    Model.PickUpMan = orderEditParams.PickUpMan;
+                }
+                if (!string.IsNullOrEmpty(orderEditParams.PickUpPhone))
+                {
+                    Model.PickUpPhone = orderEditParams.PickUpPhone;
+                }
+                if(!string.IsNullOrEmpty(orderEditParams.CarNumber))
+                {
+                    Model.CarNumber = orderEditParams.CarNumber;
+                }              
                 ctx.Entry<le_orders_head>(Model).State = EntityState.Modified;
                 if (ctx.SaveChanges() > 0)
                 {

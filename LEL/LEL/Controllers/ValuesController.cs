@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 
 namespace LEL.Controllers
 {
@@ -48,6 +49,8 @@ namespace LEL.Controllers
         // DELETE api/values/5
         public void Delete(int id)
         {
+            string msg = "59.9";
+            Convert.ToInt32(msg);
         }
     }
 }

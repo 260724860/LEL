@@ -225,5 +225,36 @@ namespace LELAdmin.Controllers
             string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/商品录入格式.xlsx";
             // ExcelHelper.addExcelData(path,0,null);
         }
+        [AllowAnonymous]
+        [HttpPost, Route("api/UploadExcel/Test/")]
+        public void Test()
+        {
+            string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/汉初文化资料.xlsx";
+            var GoodsDT = ExcelHelper.DataReaderExcelFile(path, "sheet1");
+            List<string> result = new List<string>();
+            using (Entities ctx = new Entities())
+                
+            {
+                var trans=  ctx.Database.BeginTransaction();
+                for (int i = 0; i < GoodsDT.Rows.Count; i++)
+                {
+                    // result.Add(GoodsDT.Rows[i]["商品名称"].ToString());
+                    string sql = "update le_goods set SpecialOffer=" + GoodsDT.Rows[i]["平台供价"] + " where GoodsName='" + GoodsDT.Rows[i]["商品名称"] + "' ";
+                   
+                    ctx.Database.ExecuteSqlCommand(sql);
+                }
+                try
+                {
+                    trans.Commit();
+                    ctx.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
+            }
+        //}
+          //  string sql = "select * from le_goods_value where serialnumber in ("+string.Join(",", result) +")";
+        }
     }
 }

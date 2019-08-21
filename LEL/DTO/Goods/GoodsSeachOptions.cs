@@ -37,6 +37,8 @@
         /// </summary>
         public int? PageTurning { get; set; }
 
+        public bool IsExportExcel { get; set; }
+
     }
 
     public enum GoodsSeachOrderByType

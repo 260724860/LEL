@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 
 namespace LEL.Controllers
 {
@@ -9,6 +10,13 @@ namespace LEL.Controllers
             ViewBag.Title = "Home Page";
 
             return View();
+        }
+        public ActionResult Result()
+        {
+            string msg = "59.9";
+            Convert.ToInt32(msg);
+
+            return Json(msg);
         }
     }
 }

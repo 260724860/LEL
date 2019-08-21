@@ -21,7 +21,6 @@ namespace Common
 
                     ISheet sheet = hssfworkbook.GetSheet(SheetName);
 
-
                     //sheet.ShiftRows(1, sheet.LastRowNum, -1);
                     //sheet.RemoveRow(sheet.GetRow(sheet.LastRowNum));
 
@@ -94,8 +93,6 @@ namespace Common
             var book = new XSSFWorkbook();
             ISheet sheet = book.CreateSheet(SheetName);
             //Data Columns
-
-
             IRow crow = sheet.CreateRow(0);
             for (int j = 0; j < dt.Columns.Count; j++)
             {
@@ -138,8 +135,11 @@ namespace Common
             ISheet sheet = null;
 
             //HSSFWorkbook workbook;
-            using (FileStream stream = File.OpenRead(fileName))
+            if (!string.IsNullOrEmpty(fileName))
+            {
+              using (FileStream stream = File.OpenRead(fileName))
                 workbook = new XSSFWorkbook(stream);
+            }
             try
             {
                 foreach (var model in List)
@@ -151,7 +151,9 @@ namespace Common
                     }
                     else
                     {
-                        return -1;
+                        workbook = BuildWorkbook(model.dt,model.SheetNmae);
+                        sheet = workbook.GetSheet(model.SheetNmae);
+                        //return -1;
                     }
 
                     if (isColumnWritten == true) //写入DataTable的列名

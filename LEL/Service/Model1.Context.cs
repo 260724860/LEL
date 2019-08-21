@@ -60,6 +60,7 @@ namespace Service
         public virtual DbSet<le_sysversion> le_sysversion { get; set; }
         public virtual DbSet<le_user_address> le_user_address { get; set; }
         public virtual DbSet<le_users> le_users { get; set; }
+        public virtual DbSet<le_weixinmp> le_weixinmp { get; set; }
         public virtual DbSet<le_weixinuser> le_weixinuser { get; set; }
         public virtual DbSet<lel_admin_suppliers> lel_admin_suppliers { get; set; }
         public virtual DbSet<lel_imei> lel_imei { get; set; }

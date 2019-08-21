@@ -3,6 +3,7 @@ using DTO.Goods;
 using DTO.ShopOrder;
 using DTO.Suppliers;
 using DTO.SupplierUser;
+using DTO.WeixinDto;
 using Service;
 using System;
 using System.Collections.Generic;
@@ -355,6 +356,17 @@ namespace LEL.Controllers
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", reuslt));
         }
 
+        /// <summary>
+        /// 微信消息绑定
+        /// </summary>
+        /// <param name="OrderHeadID"></param>
+        /// <returns></returns>
+        [Route("BindOpenid")]
+        [HttpPost]
+        public IHttpActionResult BindOpenid(OAuthUserInfo userInfo )
+        {
+            return null;
+        }
         /// <summary>
         /// 修改供应商价格
         /// </summary>

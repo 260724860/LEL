@@ -616,6 +616,19 @@
           <Property Name="CustomerServicePhone" Type="varchar" MaxLength="50" />
           <Property Name="Token" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="le_weixinmp">
+          <Key>
+            <PropertyRef Name="AppID" />
+          </Key>
+          <Property Name="AppID" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="OriginalID" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="AppSecret" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="QrcodeUrl" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="Alias" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Nickname" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="HeadImg" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="PrincipalName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="le_weixinuser">
           <Key>
             <PropertyRef Name="ID" />
@@ -632,6 +645,8 @@
           <Property Name="HeadImgUrl" Type="varchar" MaxLength="512" Nullable="false" />
           <Property Name="Privilege" Type="varchar" MaxLength="512" Nullable="false" />
           <Property Name="Unionid" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="UpdateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AppID" Type="varchar" MaxLength="64" Nullable="false" />
         </EntityType>
         <EntityType Name="lel_admin_suppliers">
           <Key>
@@ -1164,6 +1179,7 @@
           <EntitySet Name="le_sysversion" EntityType="Self.le_sysversion" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_weixinmp" EntityType="Self.le_weixinmp" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="le_weixinuser" EntityType="Self.le_weixinuser" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest3" store:Type="Tables" />
           <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest3" store:Type="Tables" />
@@ -1364,6 +1380,7 @@
           <EntitySet Name="le_sysversion" EntityType="leerledbtestModel.le_sysversion" />
           <EntitySet Name="le_user_address" EntityType="leerledbtestModel.le_user_address" />
           <EntitySet Name="le_users" EntityType="leerledbtestModel.le_users" />
+          <EntitySet Name="le_weixinmp" EntityType="leerledbtestModel.le_weixinmp" />
           <EntitySet Name="le_weixinuser" EntityType="leerledbtestModel.le_weixinuser" />
           <EntitySet Name="lel_admin_suppliers" EntityType="leerledbtestModel.lel_admin_suppliers" />
           <EntitySet Name="lel_imei" EntityType="leerledbtestModel.lel_imei" />
@@ -2211,6 +2228,19 @@
           <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_users" FromRole="le_users" ToRole="le_shop_cart" />
           <NavigationProperty Name="le_user_address" Relationship="leerledbtestModel.FK_le_user_address_le_users" FromRole="le_users" ToRole="le_user_address" />
         </EntityType>
+        <EntityType Name="le_weixinmp">
+          <Key>
+            <PropertyRef Name="AppID" />
+          </Key>
+          <Property Name="AppID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="OriginalID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="AppSecret" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="QrcodeUrl" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="Alias" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Nickname" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="HeadImg" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="PrincipalName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="le_weixinuser">
           <Key>
             <PropertyRef Name="ID" />
@@ -2227,6 +2257,8 @@
           <Property Name="HeadImgUrl" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="false" />
           <Property Name="Privilege" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="false" />
           <Property Name="Unionid" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AppID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="lel_admin_suppliers">
           <Key>
@@ -3377,9 +3409,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="le_weixinmp">
+            <EntityTypeMapping TypeName="leerledbtestModel.le_weixinmp">
+              <MappingFragment StoreEntitySet="le_weixinmp">
+                <ScalarProperty Name="PrincipalName" ColumnName="PrincipalName" />
+                <ScalarProperty Name="HeadImg" ColumnName="HeadImg" />
+                <ScalarProperty Name="Nickname" ColumnName="Nickname" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="QrcodeUrl" ColumnName="QrcodeUrl" />
+                <ScalarProperty Name="AppSecret" ColumnName="AppSecret" />
+                <ScalarProperty Name="OriginalID" ColumnName="OriginalID" />
+                <ScalarProperty Name="AppID" ColumnName="AppID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="le_weixinuser">
             <EntityTypeMapping TypeName="leerledbtestModel.le_weixinuser">
               <MappingFragment StoreEntitySet="le_weixinuser">
+                <ScalarProperty Name="AppID" ColumnName="AppID" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="Unionid" ColumnName="Unionid" />
                 <ScalarProperty Name="Privilege" ColumnName="Privilege" />
                 <ScalarProperty Name="HeadImgUrl" ColumnName="HeadImgUrl" />
