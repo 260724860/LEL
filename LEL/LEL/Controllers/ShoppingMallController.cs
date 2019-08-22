@@ -42,9 +42,13 @@ namespace LEL.Controllers
             if (SubdomainArrty.Length > 0)
             {
                 Environment = SubdomainArrty[0];
+                if(Environment=="lelshoptest"|| Environment == "lelshoptest3")
+                {
+                    Environment = "";
+                }
             }
             var result = await GoodsService.GetGoodsListAsync(options, Environment);
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Environment));
         }
 
         /// <summary>

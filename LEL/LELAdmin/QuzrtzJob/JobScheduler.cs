@@ -13,6 +13,7 @@ namespace LELAdmin.QuzrtzJob
 
             //创建调度任务 
             StdSchedulerFactory ssf = new StdSchedulerFactory();
+            
             IScheduler sched = await ssf.GetScheduler();
             JobDetailImpl jdBossReport = new JobDetailImpl("jdBossReport", typeof(ClearSalesVoilumesJob));
 
@@ -26,8 +27,10 @@ namespace LELAdmin.QuzrtzJob
                 .Build(); ;
 
             await sched.ScheduleJob(jdBossReport, triggerBossReport);
-
             await sched.Start();
+            
+            
+            
 
         }
     }

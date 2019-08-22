@@ -45,6 +45,8 @@ namespace DTO.ShopOrder
         /// 取货时间字符串
         /// </summary>
         public string PickupTimeStr { get; set; }
+        
+        
     }
 
 }

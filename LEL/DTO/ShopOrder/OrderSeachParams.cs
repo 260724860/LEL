@@ -1,4 +1,5 @@
 ﻿using System;
+using static DTO.Common.Enum;
 
 namespace DTO.ShopOrder
 {
@@ -47,5 +48,10 @@ namespace DTO.ShopOrder
         public int? OrderType { get; set; }
 
         public int? ExpressType { get; set; }
+        
+        /// <summary>
+        /// 订单列表排序
+        /// </summary>
+        public OrderListOrderByType? orderByType { get; set; }
     }
 }

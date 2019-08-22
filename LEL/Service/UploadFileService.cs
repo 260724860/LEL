@@ -235,6 +235,11 @@ namespace Service
                                 return false;
                             }
                         }
+                        if(string.IsNullOrEmpty(GoodsDT.Rows[i]["库存"].ToString()))
+                        {
+                            Msg = string.Format("在【商品录入】中商品序列号：{0}的【库存】格式错误", GoodsNumber);
+                            return false;
+                        }
                         #endregion
 
                         GoodsModel.Describe = GoodsDT.Rows[i]["商品描述"].ToString();

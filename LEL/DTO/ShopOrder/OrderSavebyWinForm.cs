@@ -18,6 +18,7 @@ namespace DTO.ShopOrder
         /// </summary>
         public OrderSaveParams OrderInfo { get; set; }
 
+        public int Status { get; set; }
     }
 
     public class OrderSaveGoodsInfoParames

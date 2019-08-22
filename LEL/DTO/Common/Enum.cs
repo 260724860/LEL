@@ -30,7 +30,24 @@
             ProfitDesc=7
 
         }
-
+        
+        /// <summary>
+        /// 订单列表排序
+        /// </summary>
+        public enum OrderListOrderByType
+        {
+            StoreAsc=1,
+            StoreDesc=2,
+            OrderAmoutAsc=3,
+            OrderAmoutDesc=4,
+            RealAmoutAsc=5,
+            RealAmoutDesc=6,
+            UpdateTimeAsc=7,
+            UpdateTimeDesc=8,
+            PickupTimeAsc=9,
+            PickupTimeDesc=10,           
+        }
+        
         /// <summary>
         /// 订单头状态(未派发(0),待接单(3),待发货(6),发货中(7),已发货(20),已完成(1),已结算(100),已取消(5))
         /// </summary>
@@ -74,8 +91,7 @@
             /// </summary>
             YiQuXiao = 5,
 
-            
-
+           
         }
 
         /// <summary>

@@ -22,6 +22,7 @@ namespace LELAdmin.Controllers
         /// </summary>
         /// <param name="seachParams"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [Route("GetListOrder")]
         [HttpPost]
         public IHttpActionResult GetListOrder(OrderSeachParams seachParams)

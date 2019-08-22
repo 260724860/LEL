@@ -601,7 +601,7 @@ namespace Service
             return 0;
         }
 
-        public int OrderSave(OrderSaveParamesExtend ParamasData, out string Msg)
+        public string OrderSave(OrderSaveParamesExtend ParamasData, out string Msg)
         {
             using (Entities ctx = new Entities())
             {
@@ -615,7 +615,8 @@ namespace Service
                 if (SupplierPric.Count() != ParamasData.GoodsInfo.Count)
                 {
                     Msg = string.Format("供应商id与商品ID不匹配,请检查数据");
-                    return 0;
+                    //return "0";
+                    return Msg;
                 }
                 var GoodsValueList = ctx.le_goods_value.Where(s => GoodsValueIDList.Contains(s.GoodsValueID) && GoodsIDList.Contains(s.GoodsID) && s.Enable == 1)
                     .Select(s=>new GoodsValues {GoodsID=s.GoodsID,GoodsValueID=s.GoodsValueID, CategoryType=s.CategoryType });
@@ -623,7 +624,8 @@ namespace Service
                 if (SupplierPric.Count() != ParamasData.GoodsInfo.Count)
                 {
                     Msg = string.Format("供应商id与商品ID不匹配,请检查数据");
-                    return 0;
+                    // return 0;
+                    return Msg;
                 }
                 var CartList = ctx.le_goods.Where(s => GoodsIDList.Contains(s.GoodsID)).Select(
                     k => new ShopCartDto {
@@ -677,13 +679,15 @@ namespace Service
                 {
                     Msg = "获取购物车失败";
                     //  FailCartList = null;
-                    return 0;
+                    // return 0;
+                    return Msg;
                 }
 
                 if (CartList.Any(s => s.GoodsCount == 0))
                 {
                     Msg = "下单数不能0，请检查购物车内商品下单数";
-                    return 0;
+                    // return 0;
+                    return Msg;
                 }
 
                 AddressDto AddressModel = new AddressDto();
@@ -702,7 +706,8 @@ namespace Service
                     {
                         Msg = "地址输入错误";
                         //   FailCartList = null;
-                        return 0;
+                        //return 0;
+                        return Msg;
                     }
                 }
                 if (ParamasData.OrderInfo.ExpressType == 2) //自提
@@ -711,7 +716,8 @@ namespace Service
                     {
                         Msg = "请选择下单时间";
                         //FailCartList = null;
-                        return 0;
+                        // return 0;
+                        return Msg;
                     }
                     AddressModel = ctx.le_sys_address.Where(s => s.AddressID == ParamasData.OrderInfo.AddressID && s.Status == 1).
                      Select(k => new AddressDto
@@ -725,7 +731,8 @@ namespace Service
                     {
                         Msg = "地址输入错误";
                         // FailCartList = null;
-                        return 0;
+                        // return 0;
+                        return Msg;
                     }
                     if (ParamasData.OrderInfo.OrderType != 2)
                     {
@@ -747,7 +754,8 @@ namespace Service
                         {
                             Msg = "当前时间下单数已满,请选择其他时间";
                             //  log.Debug(Msg);
-                            return 0;
+                            //return 0;
+                            return Msg;
                         }
                     }
 #pragma warning restore CS1030 // #warning 指令
@@ -766,7 +774,8 @@ namespace Service
                     if (goodsModel.IsShelves == 0)
                     {
                         Msg = "该商品ID【" + goodsModel.GoodsName + "】已经下架，无法下单";
-                        return 0;
+                        //return 0;
+                        return Msg;
                     }
 
                     var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
@@ -801,21 +810,24 @@ namespace Service
                         {
                             Msg = string.Format("商品【{0}】限购{1}件已经购买{2}件,当前下单数量{3}件,请重新选择下单数量！", goodsModel.GoodsName, goodsModel.Quota, AlreadyBuyCount, goodsModel.GoodsCount);
                             log.Debug(Msg);
-                            return 0;
+                            //return 0;
+                            return Msg;
                         }
                     }
 
                     if (goodsModel.Stock - QuotaGoods.GoodsCount < 0)
                     {
                         Msg = "库存不足，请稍后再试";
-                        return 0;
+                        //return 0;
+                        return Msg;
                     }
                     var DefaulSuplier = goodsModel.SupplierGoodsList.Where(s => s.IsDefalut == 1).FirstOrDefault();
                     if (DefaulSuplier == null)
                     {
                         Msg = "该商品未设置商品默认供应商,下单失败.商品ID:" + goodsModel.GoodsID.ToString();
                         log.Debug(Msg);
-                        return 0;
+                        // return 0;
+                        return Msg;
                     }
                     int OrderGoodsCount = 0;//下单商品数量
                     if (ParamasData.OrderInfo.OrderType == 1 || ParamasData.OrderInfo.OrderType == 3)
@@ -848,7 +860,22 @@ namespace Service
                     linesModel.Integral = goodsModel.Integral;
                     linesModel.Discount = goodsModel.Discount;
 
-                    linesModel.Status = 0;
+                    if (ParamasData.Status == (int)OrderHeadStatus.YiFaHuo)
+                    {
+                        linesModel.Status = (int)OrderLineStatus.YiFahuo;
+                    }
+                    else if (ParamasData.Status == (int)OrderHeadStatus.YiWanCheng)
+                    {
+                        linesModel.Status = (int)OrderLineStatus.YiWanCheng;
+                    }else if(ParamasData.Status==(int)OrderHeadStatus.WeiPaiFa)
+                    {
+                        linesModel.Status = (int)OrderLineStatus.WeiPaiFa;
+                    }
+                    else
+                    {
+                        Msg = "只允许订单状态为【已完成】【已发货】";
+                        return Msg;
+                    }
                     linesModel.UpdateTime = DateTime.Now;
                     linesModel.UsersID = ParamasData.OrderInfo.UserID;
                     linesModel.SuppliersID = DefaulSuplier.SupplierID;
@@ -876,7 +903,7 @@ namespace Service
                 le_Orders_Head.RcAddr = AddressModel.ReceiveArea + "-" + AddressModel.ReceiveAddress;
                 le_Orders_Head.RcName = AddressModel.ReceiveName;
                 le_Orders_Head.RcPhone = AddressModel.ReceivePhone;
-                le_Orders_Head.Status = 0;
+                le_Orders_Head.Status = ParamasData.Status;
                 le_Orders_Head.UsersID = ParamasData.OrderInfo.UserID;
                 le_Orders_Head.UpdateTime = DateTime.Now;
                 le_Orders_Head.GoodsCount = OrderLinesList.Sum(s => s.GoodsCount);
@@ -906,7 +933,8 @@ namespace Service
 
                     Msg = "访问人次太多,请稍后再试!";
                     log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
-                    return 0;
+                    //return 0;
+                    return Msg;
                 }
 
                 try
@@ -935,12 +963,13 @@ namespace Service
                             new OtherService().UpdatePushMsg(AdminId, le_Orders_Head.OutTradeNo, 3);
                         }
                         Msg = "订单提交成功";
-                        return le_Orders_Head.OrdersHeadID;
+                        return le_Orders_Head.OutTradeNo;
                     }
                     else
                     {
                         Msg = "订单提交失败";
-                        return 0;
+                        //return 0;
+                        return Msg;
                     }
                 }
                 catch (DbEntityValidationException exception)
@@ -957,8 +986,8 @@ namespace Service
                     log.Error(exceptionMessage, exception);
 
                     Msg = exceptionMessage;
-                    return 0;
-
+                    // return 0;
+                    return Msg;
                 }
                 catch (Exception ex)
                 {
@@ -967,18 +996,20 @@ namespace Service
                     Msg = str;
                     log.Error(str, ex);
 
-                    return 0;
+                    // return 0;
+                    return Msg;
 
                 }
                 Msg = "FAIL";
-                return 0;
+                // return 0;
+                return Msg;
 
             }
-            return 0;
+            return "";
 
 
             Msg = "";
-            return 0;
+            return "";
         }
 
         //private 
@@ -1039,6 +1070,7 @@ namespace Service
                       || s.Head_Notes.Contains(seachParams.KeyWords)
                       || s.RcAddr.Contains(seachParams.KeyWords)
                       || s.le_users.UsersNickname.Contains(seachParams.KeyWords)
+                    //  || s.le_su
                     );
                 }
                
@@ -1127,8 +1159,50 @@ namespace Service
 
                 //}
                 //);
-
-                result = result.OrderByDescending(s => s.CreateTime);
+                if(seachParams.orderByType==null)
+                {
+                    result = result.OrderByDescending(s => s.CreateTime);
+                }
+                else
+                {
+                    switch(seachParams.orderByType)
+                    {
+                        case OrderListOrderByType.OrderAmoutAsc:
+                            result = result.OrderBy(s => s.OrderAmout);
+                            break;
+                        case OrderListOrderByType.OrderAmoutDesc:
+                            result = result.OrderByDescending(s => s.OrderAmout);
+                            break;
+                        case OrderListOrderByType.PickupTimeAsc:
+                            result = result.OrderBy(s => s.PickupTime);
+                            break;
+                        case OrderListOrderByType.PickupTimeDesc:
+                            result = result.OrderByDescending(s => s.PickupTime);
+                            break;
+                        case OrderListOrderByType.RealAmoutAsc:
+                            result = result.OrderBy(s => s.RealAmount);
+                            break;
+                        case OrderListOrderByType.RealAmoutDesc:
+                            result = result.OrderByDescending(s => s.RealAmount);
+                            break;
+                        case OrderListOrderByType.StoreAsc:
+                            result = result.OrderBy(s => s.UsersID);
+                            break;
+                        case OrderListOrderByType.StoreDesc:
+                            result = result.OrderByDescending(s => s.UsersID);
+                            break;
+                        case OrderListOrderByType.UpdateTimeAsc:
+                            result = result.OrderBy(s => s.UpdateTime);
+                            break;
+                        case OrderListOrderByType.UpdateTimeDesc:
+                            result = result.OrderByDescending(s => s.UpdateTime);
+                            break;
+                        default:
+                            result = result.OrderByDescending(s => s.CreateTime);
+                            break;
+                    }
+                }
+                
                 Count = result.Count();
                 result = result.Skip(seachParams.Offset).Take(seachParams.Rows);
 

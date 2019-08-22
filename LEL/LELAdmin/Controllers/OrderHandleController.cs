@@ -251,7 +251,6 @@ namespace LELAdmin.Controllers
                     {
                         return Json(JRpcHelper.AjaxResult(1, ex.Message + "前端传入时间：【" + ParamasData.OrderInfo.PickupTimeStr + "】", ex));
                     }
-
                 }
             }
            // ParamasData.OrderInfo.UserID = GetUserID();
@@ -259,7 +258,7 @@ namespace LELAdmin.Controllers
             string msg;
             List<ShopCartDto> FailCartList;
             var result = new ShopOrderService().OrderSave(ParamasData, out msg);
-            if (result != 0)
+            if (result.Substring(0, 3) != "LEL")
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
@@ -267,6 +266,8 @@ namespace LELAdmin.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, msg, result));
             }
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        
             return null;
 
         }

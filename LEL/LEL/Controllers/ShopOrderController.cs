@@ -133,6 +133,22 @@ namespace LEL.Controllers
             }
             
             Data.UserID = GetUserID();
+            using (Entities ctx=new Entities())
+            {
+                string Classify = ctx.le_users.Where(s => s.UsersID == UserID).Select(s=>s.Classify).FirstOrDefault();
+                string Environment = "";
+                string url = Request.RequestUri.Host.ToString();
+                var SubdomainArrty = url.Split('.');
+                if (SubdomainArrty.Length > 0)
+                {
+                    Environment = SubdomainArrty[0];
+                }
+                if(Classify=="lelshoptest"&& Environment== "lelshoptest")
+                {
+                    return Json(JRpcHelper.AjaxResult(1, "下单失败，只能从lelshoptest2.muguxia.cn/Content网址下单", Classify));
+                }
+
+            }
             string msg;
             List<ShopCartDto> FailCartList;
             var result = shopOrderService.OrderSave(Data, out msg, out FailCartList);
@@ -184,7 +200,7 @@ namespace LEL.Controllers
             string msg;
             List<ShopCartDto> FailCartList;
             var result = shopOrderService.OrderSave(ParamasData, out msg);
-            if (result != 0)
+            if (result.Substring(0,3)!= "LEL")
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
@@ -192,6 +208,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, msg, result));
             }
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             return null;
 
         }
