@@ -529,6 +529,12 @@ namespace Service
 
                 try
                 {
+                    if (OrderLinesList.Count <= 0||FailCartList.Count()== CartList.Count())
+                    {
+                        Msg = "下单失败，请稍后再试";
+                        log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
+                        return 0;
+                    }
                     var RemoveCart = FailCartList.Select(s => s.CartID).ToArray();
                     //删除购物车,待优化
                     var CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.UserID&& !RemoveCart.Contains(s.CartID)).ToList();
@@ -1037,6 +1043,10 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 var tempIq = ctx.le_orders_head.Where(s=>true);
+                if(seachParams.StatusArray!=null&&seachParams.Status==null)
+                {
+                    tempIq = tempIq.Where(s => seachParams.StatusArray.Contains(s.Status));
+                }
 
                 if (seachParams.BeginTime == null && seachParams.EndTime == null && string.IsNullOrEmpty(seachParams.Out_Trade_No))
                 {
@@ -1070,6 +1080,8 @@ namespace Service
                       || s.Head_Notes.Contains(seachParams.KeyWords)
                       || s.RcAddr.Contains(seachParams.KeyWords)
                       || s.le_users.UsersNickname.Contains(seachParams.KeyWords)
+                      || s.le_orders_lines.Any(k=>k.le_suppliers.SuppliersName.Contains(seachParams.KeyWords))
+
                     //  || s.le_su
                     );
                 }

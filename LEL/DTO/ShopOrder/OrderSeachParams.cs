@@ -48,10 +48,22 @@ namespace DTO.ShopOrder
         public int? OrderType { get; set; }
 
         public int? ExpressType { get; set; }
-        
+
         /// <summary>
-        /// 订单列表排序
-        /// </summary>
+        /// 订单排序
+        ///  StoreAsc=1,
+       ///      StoreDesc=2,
+      ///      OrderAmoutAsc=3,
+      ///      OrderAmoutDesc=4,
+      ///      RealAmoutAsc=5,
+      ///      RealAmoutDesc=6,
+      ///      UpdateTimeAsc=7,
+      ///      UpdateTimeDesc=8,
+      ///      PickupTimeAsc=9,
+       ///     PickupTimeDesc=10,        
+      /// </summary>
         public OrderListOrderByType? orderByType { get; set; }
+
+        public int[] StatusArray { get; set; }
     }
 }

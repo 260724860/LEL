@@ -420,13 +420,18 @@ namespace Service
         /// </summary>
         /// <param name="GoodsID"></param>
         /// <returns></returns>
-        public async Task<GoodsDetailedDto> GetGoodDetailedAync(int GoodsID)
+        public async Task<GoodsDetailedDto> GetGoodDetailedAync(int GoodsID,string Environment="")
         {
             var BasePath = GetSysConfigList.Values.Where(s => s.Name == "HeadQuartersDomain").FirstOrDefault().Value;
             GoodsDetailedDto GDetailed = new GoodsDetailedDto();
             using (Entities ctx = new Entities())
             {
                 var temp = ctx.le_goods.Where(s => s.GoodsID == GoodsID);
+                if(!string.IsNullOrEmpty(Environment))
+                {
+                    temp = temp.Where(s=>s.Environment== Environment);
+                }
+                
                 var result = await temp.Select(s => new
                 {
                     s.GoodsName,

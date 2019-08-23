@@ -42,7 +42,7 @@ namespace LEL.Controllers
             if (SubdomainArrty.Length > 0)
             {
                 Environment = SubdomainArrty[0];
-                if(Environment=="lelshoptest"|| Environment == "lelshoptest3")
+                if(Environment=="lelshoptest"||Environment== "lelshoptest2")
                 {
                     Environment = "";
                 }
@@ -59,7 +59,18 @@ namespace LEL.Controllers
         [HttpGet, Route("api/ShoppingMall/GetGoodDetailed/")]
         public async Task<IHttpActionResult> GetGoodDetailed(int GoodsID)
         {
-            var result = await GoodsService.GetGoodDetailedAync(GoodsID);
+            string Environment = "";
+            string url = Request.RequestUri.Host.ToString();
+            var SubdomainArrty = url.Split('.');
+            if (SubdomainArrty.Length > 0)
+            {
+                Environment = SubdomainArrty[0];
+                if (Environment == "lelshoptest" || Environment == "lelshoptest2")
+                {
+                    Environment = "";
+                }
+            }
+            var result = await GoodsService.GetGoodDetailedAync(GoodsID, Environment);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
     }
