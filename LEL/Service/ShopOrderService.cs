@@ -777,12 +777,12 @@ namespace Service
 
                 foreach (var goodsModel in CartList)
                 {
-                    if (goodsModel.IsShelves == 0)
-                    {
-                        Msg = "该商品ID【" + goodsModel.GoodsName + "】已经下架，无法下单";
-                        //return 0;
-                        return Msg;
-                    }
+                    //if (goodsModel.IsShelves == 0)
+                    //{
+                    //    Msg = "该商品ID【" + goodsModel.GoodsName + "】已经下架，无法下单";
+                    //    //return 0;
+                    //    return Msg;
+                    //}
 
                     var QuotaGoods = QuotaGoodsList.Where(s => s.GoodsID == goodsModel.GoodsID).FirstOrDefault();
                     int AlreadyBuyCount = 0;
@@ -836,14 +836,14 @@ namespace Service
                         return Msg;
                     }
                     int OrderGoodsCount = 0;//下单商品数量
-                    if (ParamasData.OrderInfo.OrderType == 1 || ParamasData.OrderInfo.OrderType == 3)
-                    {
+                    //if (ParamasData.OrderInfo.OrderType == 1 || ParamasData.OrderInfo.OrderType == 3)
+                    //{
                         OrderGoodsCount = goodsModel.GoodsCount;
-                    }
-                    if (ParamasData.OrderInfo.OrderType == 2)
-                    {
-                        OrderGoodsCount = goodsModel.ReturnCount.Value;
-                    }
+                    //}
+                    //if (ParamasData.OrderInfo.OrderType == 2)
+                    //{
+                    //    OrderGoodsCount = goodsModel.ReturnCount.Value;
+                    //}
                     GoodsStock goodsStock = new GoodsStock();
                     goodsStock.Stock = goodsModel.Stock;
                     goodsStock.RowVersion = goodsModel.RowVersion;
