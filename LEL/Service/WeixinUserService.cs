@@ -96,18 +96,81 @@ namespace Service
             }
         }
 
-        //public List<WeixinUserDto> GetWeixinUserList(int UserType, int UserID)
-        //{
-        //    using (Entities ctx=new Entities())
-        //    {
-        //        switch (UserType)
-        //        {
+        public List<WeixinUserDtoList> GetWeixinUserList(int UserType, int UserID)
+        {
+            using (Entities ctx = new Entities())
+            {
+                IQueryable<WeixinUserDtoList> Iquery=null ;
+                
+                switch (UserType)
+                {
 
-        //            case 1:
-        //                ctx.le
-        //                break;
-        //        }
-        //    }
-        //}
+                    case 1:
+                        Iquery = ctx.le_users.Join(ctx.le_weixinuser, a => a.UsersID, b => b.UserID, (a, b)=>new WeixinUserDtoList
+                        {
+                            //SuppliersName=a.UsersNickname,
+                            UserID=a.UsersID,
+                            UserName=a.UsersName,
+                            UserType=1,
+                            AppID=b.AppID,
+                            city=b.City,
+                            country=b.Country,
+                            headimgurl=b.HeadImgUrl,
+                            nickname=b.Nickname,
+                            openid=b.Openid,
+                           // privilege=b.Privilege,
+                            sex=b.Sex,
+                            unionid=b.Unionid,
+                            province=b.Privilege
+                        }).Where(s=>s.UserType==1&&s.UserID==UserID);
+                        break;
+                    case 2:
+                        Iquery = ctx.le_suppliers.Join(ctx.le_weixinuser, a => a.SuppliersID, b => b.UserID, (a, b) => new WeixinUserDtoList
+                        {
+                            SuppliersName = a.SuppliersName,
+                            UserID = a.SuppliersID,
+                          //  UserName = a,
+                            UserType = 2,
+                            AppID = b.AppID,
+                            city = b.City,
+                            country = b.Country,
+                            headimgurl = b.HeadImgUrl,
+                            nickname = b.Nickname,
+                            openid = b.Openid,
+                            // privilege=b.Privilege,
+                            sex = b.Sex,
+                            unionid = b.Unionid,
+                            province = b.Privilege
+                        }).Where(s => s.UserType == 1 && s.UserID == UserID);
+                        break;
+                    case 3:
+                        Iquery = ctx.le_admin.Join(ctx.le_weixinuser, a => a.AdminID, b => b.UserID, (a, b) => new WeixinUserDtoList
+                        {
+                            SuppliersName = a.Nickname,
+                            UserID = a.AdminID,
+                            //  UserName = a,
+                            UserType = 3,
+                            AppID = b.AppID,
+                            city = b.City,
+                            country = b.Country,
+                            headimgurl = b.HeadImgUrl,
+                            nickname = b.Nickname,
+                            openid = b.Openid,
+                            // privilege=b.Privilege,
+                            sex = b.Sex,
+                            unionid = b.Unionid,
+                            province = b.Privilege
+                        }).Where(s => s.UserType == 1 && s.UserID == UserID);
+                        break;
+
+                    default:
+                        new Exception("非法的UserType");
+                        break;
+                      
+                }
+                var result = Iquery.ToList();
+                return result;
+            }
+        }
     }
 }

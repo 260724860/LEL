@@ -91,6 +91,9 @@ namespace MP
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env ,IOptions<SenparcSetting> senparcSetting, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
+            // 启用静态文件
+            app.UseStaticFiles();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

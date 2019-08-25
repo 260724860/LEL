@@ -15,8 +15,9 @@ namespace LELAdmin.QuzrtzJob
             StdSchedulerFactory ssf = new StdSchedulerFactory();
             
             IScheduler sched = await ssf.GetScheduler();
+            
+            
             JobDetailImpl jdBossReport = new JobDetailImpl("jdBossReport", typeof(ClearSalesVoilumesJob));
-
             ITrigger triggerBossReport = TriggerBuilder.Create()
                 .WithIdentity("trigger1", "group1")
                  //.WithCronSchedule("*/10 * * * * ?")

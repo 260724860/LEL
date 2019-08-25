@@ -17,7 +17,7 @@ namespace LEL.Controllers
             info.Status = Convert.ToInt32(claimIdentity.FindFirstValue("Status"));
             info.UserType = Convert.ToInt32(claimIdentity.FindFirstValue("UserType"));
             info.UserID = Convert.ToInt32(claimIdentity.FindFirstValue("UserID"));
-
+            info.Classify = claimIdentity.FindFirstValue("Classify");
             if (info.Status != 1 && info.UserType == 1)
             {
                 // return Json(JRpcHelper.AjaxResult(10000, "账号未通过审核或已禁用", info.UserID));

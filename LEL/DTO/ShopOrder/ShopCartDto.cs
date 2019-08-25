@@ -116,6 +116,11 @@ namespace DTO.ShopOrder
         /// 限购结束时间
         /// </summary>
         public Nullable<System.DateTime> QuotaEndTime { get; set; }
+        
+        /// <summary>
+        /// 分类，暂时有用
+        /// </summary>
+        public string Classify { get; set; }
     }
 
 }

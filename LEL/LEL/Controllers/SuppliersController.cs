@@ -362,12 +362,22 @@ namespace LEL.Controllers
         /// </summary>
         /// <param name="OrderHeadID"></param>
         /// <returns></returns>
-        [Route("BindOpenid")]
+        [Route("BindWeixinUser")]
         [HttpPost]
-        public IHttpActionResult BindOpenid(OAuthUserInfo userInfo )
+        public IHttpActionResult BindWeixinUser(BindWxUserDto dto )
         {
+            var result=  new WeixinUserService().BindWeixinUser(dto.WeixinInfo, 2, GetUserID(), out string Msg);
+            if(result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", dto));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, Msg, dto));
+            }
             return null;
         }
+        
         /// <summary>
         /// 修改供应商价格
         /// </summary>

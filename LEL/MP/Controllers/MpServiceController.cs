@@ -57,13 +57,13 @@ namespace MP.Controllers
                 // return Content("您拒绝了授权！");
                 return Json(new { code = 0, msg = "您拒绝了授权", content = "" });
             }
-            if (state != HttpContext.Session.GetString("State"))
-            {
+            //if (state != HttpContext.Session.GetString("State"))
+            //{
                 //这里的state其实是会暴露给客户端的，验证能力很弱，这里只是演示一下，
                 //建议用完之后就清空，将其一次性使用
                 //实际上可以存任何想传递的数据，比如用户ID，并且需要结合例如下面的Session["OAuthAccessToken"]进行验证
                 //return Content("验证失败！请从正规途径进入！");
-            }
+            //}
 
            OAuthAccessTokenResult result = null;
 

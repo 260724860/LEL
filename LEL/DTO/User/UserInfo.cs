@@ -9,5 +9,6 @@ namespace DTO.User
         public string LoginName { get; set; }
         public int Status { get; set; }
         public DateTime LoginTime { get; set; }
+        public string Classify { get; set; }
     }
 }

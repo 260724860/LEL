@@ -8,7 +8,8 @@ namespace LEL.Controllers
     /// <summary>
     /// 商城API地址
     /// </summary>
-    public class ShoppingMallController : ApiController
+    [Authorize]
+    public class ShoppingMallController : BaseApiController
     {
         private Service.GoodsService GoodsService = new Service.GoodsService();
 
@@ -36,19 +37,21 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }
-            string Environment = "";
-            string url= Request.RequestUri.Host.ToString();
-            var SubdomainArrty = url.Split('.');
-            if (SubdomainArrty.Length > 0)
-            {
-                Environment = SubdomainArrty[0];
-                if(Environment=="lelshoptest"||Environment== "lelshoptest2")
-                {
-                    Environment = "";
-                }
-            }
-            var result = await GoodsService.GetGoodsListAsync(options, Environment);
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Environment));
+            string Classify = GetLoginInfo().Classify; 
+            
+            //string Environment = "";
+            //string url= Request.RequestUri.Host.ToString();
+            //var SubdomainArrty = url.Split('.');
+            //if (SubdomainArrty.Length > 0)
+            //{
+            //    Environment = SubdomainArrty[0];
+            //    if(Environment=="lelshoptest"||Environment== "lelshoptest2"||Environment=="localhost")
+            //    {
+            //        Environment = "";
+            //    }
+            //}
+            var result = await GoodsService.GetGoodsListAsync(options, Classify);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Classify));
         }
 
         /// <summary>

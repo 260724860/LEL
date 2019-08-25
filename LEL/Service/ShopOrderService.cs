@@ -269,7 +269,7 @@ namespace Service
         /// <param name="ExpressType">快递类型/1快递物流 2 自提</param>
         /// <param name="Msg"></param>
         /// <returns></returns>
-        public int OrderSave(OrderSaveParams ParamasData, out string Msg, out List<ShopCartDto> FailCartList)
+        public int OrderSave(OrderSaveParams ParamasData, out string Msg, out List<ShopCartDto> FailCartList, string Classify = "")
         {
             Msg = "未知错误";
             using (Entities ctx = new Entities())
@@ -371,6 +371,12 @@ namespace Service
 
                 foreach (var goodsModel in CartList)
                 {
+                    
+                    if(!string.IsNullOrEmpty(goodsModel.Classify)&&!string.IsNullOrEmpty(Classify)&& goodsModel.Classify!= Classify)
+                    {
+                        Msg = "该商品ID【" + goodsModel.GoodsName + "】无法下单，门店批次不匹配";
+                        return 0;
+                    }
                     if (goodsModel.IsShelves == 0)
                     {
                         FailCartList.Add(goodsModel);
@@ -2983,6 +2989,8 @@ namespace Service
             return OriginalStatus;
            // throw new Exception("ProcessingOrderHeadStatus-处理订单头状态失败");
         }
+        
+         
     }
 
 }
