@@ -18,11 +18,13 @@ namespace Service
         /// <param name="LoginName"></param>
         /// <param name="PWD"></param>
         /// <returns></returns>
-        public SupplierUserDto Login(string LoginName, string PWD)
+        public SupplierUserDto Login(string LoginName, string PWD,string Token="",string Unionid="")
         {
             using (Entities ctx = new Entities())
             {
-                var User = ctx.le_suppliers.Join(ctx.le_pushmsg, a => a.SuppliersID, b => b.UserID, (a, b) => new SupplierUserDto
+                SupplierUserDto UserDto = new SupplierUserDto();
+                var User = new SupplierUserDto();
+                var temp = ctx.le_suppliers.Join(ctx.le_pushmsg, a => a.SuppliersID, b => b.UserID, (a, b) => new SupplierUserDto
                 {
                     SuppliersID = a.SuppliersID,
                     Suppliers_Name = a.SuppliersName,
@@ -46,7 +48,7 @@ namespace Service
                     UserType = b.UserType,
                     BusinessNo = a.BusinessNo,
                     IDCardNo = a.IDCardNo,
-                     Province = a.Province,
+                    Province = a.Province,
                     City = a.City,
                     Area = a.Area,
                     Longitude = a.Longitude,
@@ -71,15 +73,22 @@ namespace Service
                     CartModel = a.CartModel,
                     Classify = a.Classify,
                     AnotherName = a.AnotherName,
+                    Token = a.Token,
 
-                }).Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
-
+                });//.Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    User = temp.Where(s => s.Token == Token).FirstOrDefault();
+                }
+                else
+                {
+                    User = temp.Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
+                }
                 if (User != null)
                 {
-
                     var DbPwd = DESEncrypt.Decrypt(User.Suppliers_PassWord, User.Suppliers_Salt);
                     var result = DESEncrypt.MD5Encrypt32(DbPwd + "SystemLEL");
-                    if (result != PWD)
+                    if (result != PWD && string.IsNullOrEmpty(Token))
                     {
                         User.Code = 1;
                         User.Msg = "账号或密码错误";
@@ -91,19 +100,30 @@ namespace Service
                         User.Msg = "账号被禁用";
                         return User;
                     }
-                    //User.Suppliers_LoginTime = DateTime.Now;
-                    //ctx.Entry<le_suppliers>(User).State = EntityState.Modified;
-                    //ctx.SaveChanges();
+                    var update = ctx.le_suppliers.Where(s => s.SuppliersID == User.SuppliersID).FirstOrDefault();
+                    update.Token = Guid.NewGuid().ToString("N");
+                    ctx.Entry<le_suppliers>(update).State = EntityState.Modified;
+                    ctx.SaveChanges();
                     User.Code = 0;
+                    User.Suppliers_Salt = "******";
+                    User.Suppliers_PassWord = "*******";
                     User.Msg = "SUCCESS";
                     return User;
                 }
+                else if (!string.IsNullOrEmpty(Token))
+                {
+                    UserDto.Code = 1;
+                    UserDto.Msg = "Token失效,请重新获取!";
+                    return UserDto;
+                    //User.Code = 1;
+                    //User.Msg = "Token失效,请重新获取";
+                    //return User;
+                }
                 else
                 {
-                    //log.Debug(string.Format("用户名：{0},登陆失败)", LoginName));
-                    SupplierUserDto UserDto = new SupplierUserDto();
+                    //log.Debug(string.Format("用户名：{0},登陆失败)",LoginName));
                     UserDto.Code = 1;
-                    UserDto.Msg = "该手机号码尚未注册！";
+                    UserDto.Msg = "该手机号码尚未注册!";
                     return UserDto;
                 }
             }

@@ -153,5 +153,9 @@ namespace DTO.SupplierUser
         /// 别名
         /// </summary>
         public string AnotherName { get; set; }
+        /// <summary>
+        /// 登陆token
+        /// </summary>
+        public string Token { get; set; }
     }
 }

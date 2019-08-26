@@ -72,12 +72,13 @@ namespace LEL.Controllers
         /// </summary>
         /// <param name="Loginname">登陆名</param>
         /// <param name="PWD"></param>
+        /// <param name="Token">一次性登陆token</param>
         /// <returns></returns>
         [HttpPost, Route("api/Authenticate/GetSuppliersAccessToken/")]
         [AllowAnonymous]
-        public IHttpActionResult GetSuppliersAccessToken(string Loginname, string PWD)
+        public IHttpActionResult GetSuppliersAccessToken(string Loginname="", string PWD="",string Token="")
         {
-            var SupplierUser = SupplierUserService.Login(Loginname, PWD);
+            var SupplierUser = SupplierUserService.Login(Loginname, PWD, Token);
             if (SupplierUser.Code == 1)
             {
                 return Json(JRpcHelper.AjaxResult(1, SupplierUser.Msg, null));

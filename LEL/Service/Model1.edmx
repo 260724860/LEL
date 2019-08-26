@@ -512,6 +512,7 @@
           <Property Name="Category" Type="varchar" MaxLength="20" />
           <Property Name="ManagingBrands" Type="varchar" MaxLength="20" />
           <Property Name="AnotherName" Type="varchar" MaxLength="20" />
+          <Property Name="Token" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="le_sys_address">
           <Key>
@@ -2117,6 +2118,7 @@
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_suppliers" FromRole="le_suppliers" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_orders_lines_log" Relationship="leerledbtestModel.FK_le_orders_lineschangerecord_le_suppliers" FromRole="le_suppliers" ToRole="le_orders_lines_log" />
           <NavigationProperty Name="lel_admin_suppliers" Relationship="leerledbtestModel.FK_lel_admin_suppliers_le_suppliers" FromRole="le_suppliers" ToRole="lel_admin_suppliers" />
+          <Property Name="Token" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="le_sys_address">
           <Key>
@@ -3256,6 +3258,7 @@
           <EntitySetMapping Name="le_suppliers">
             <EntityTypeMapping TypeName="leerledbtestModel.le_suppliers">
               <MappingFragment StoreEntitySet="le_suppliers">
+                <ScalarProperty Name="Token" ColumnName="Token" />
                 <ScalarProperty Name="AnotherName" ColumnName="AnotherName" />
                 <ScalarProperty Name="ManagingBrands" ColumnName="ManagingBrands" />
                 <ScalarProperty Name="Category" ColumnName="Category" />

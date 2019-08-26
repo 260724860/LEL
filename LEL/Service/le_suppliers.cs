@@ -69,6 +69,7 @@ namespace Service
         public string Category { get; set; }
         public string ManagingBrands { get; set; }
         public string AnotherName { get; set; }
+        public string Token { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }
