@@ -450,5 +450,56 @@ namespace Service
                 }
             }
         }
+
+        /// <summary>
+        /// 刷新用户token
+        /// </summary>
+        /// <param name="UserType"></param>
+        /// <param name="LoginName"></param>
+        /// <returns></returns>
+        public bool FlushTokenbyUser(int UserType,string LoginName)
+        {
+            using (Entities ctx=new Entities())
+            {
+                if(UserType==1)
+                {
+                    var temp = ctx.le_users.Where(s => true);
+                    if(!string.IsNullOrEmpty(LoginName))
+                    {
+                       temp = temp.Where(s => s.UsersMobilePhone == LoginName);
+                       
+                    }
+                    var result = temp.ToList();
+                    foreach (var item in result)
+                    {
+                        item.Token = Guid.NewGuid().ToString("N");
+                    }
+                }
+                if (UserType == 2)
+                {
+                    var temp = ctx.le_suppliers.Where(s => true);
+                    if (!string.IsNullOrEmpty(LoginName))
+                    {
+                        temp = temp.Where(s => s.MobilePhone == LoginName);
+
+                    }
+                    var result = temp.ToList();
+                    foreach (var item in result)
+                    {
+                        item.Token = Guid.NewGuid().ToString("N");
+                    }
+                }
+                int i = ctx.SaveChanges();
+                if(i>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
+
 }

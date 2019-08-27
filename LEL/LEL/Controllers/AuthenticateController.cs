@@ -78,6 +78,14 @@ namespace LEL.Controllers
         [AllowAnonymous]
         public IHttpActionResult GetSuppliersAccessToken(string Loginname="", string PWD="",string Token="")
         {
+            if(Token== "undefined")
+            {
+                Token = "";
+            }
+            if(string.IsNullOrEmpty(Loginname)||string.IsNullOrEmpty(PWD))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "请输入账号密码！", Loginname));
+            }
             var SupplierUser = SupplierUserService.Login(Loginname, PWD, Token);
             if (SupplierUser.Code == 1)
             {

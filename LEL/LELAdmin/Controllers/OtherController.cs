@@ -408,5 +408,17 @@ namespace LELAdmin.Controllers
 
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result,result.Count));
         }
+        public IHttpActionResult FlushTokenbyUser(int UserType,string LoginName="")
+        {
+            var IsSuccess = new SupplierUserService().FlushTokenbyUser(UserType, LoginName);
+            if(IsSuccess)
+            {
+                return  Json(JRpcHelper.AjaxResult(0, "SUCCESS", LoginName));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, "Fail", LoginName));
+            }
+        }
     }
 }

@@ -55,5 +55,7 @@ namespace LEL.Controllers
             string url = Request.RequestUri.Host.ToString();
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", url));
         }
+
+
     }
 }
