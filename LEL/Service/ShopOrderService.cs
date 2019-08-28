@@ -537,8 +537,8 @@ namespace Service
                 {
                     if (OrderLinesList.Count <= 0||FailCartList.Count()== CartList.Count())
                     {
-                        Msg = "下单失败，请稍后再试";
-                        log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
+                        Msg = "下单失败，请稍后再试。请检查购物车内商品是否已下架或库存不足";
+                        //log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
                         return 0;
                     }
                     var RemoveCart = FailCartList.Select(s => s.CartID).ToArray();

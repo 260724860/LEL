@@ -377,7 +377,30 @@ namespace LEL.Controllers
             }
             return null;
         }
-        
+        /// <summary>
+        /// 修改供应商订单行
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/OrderHandle/UpdateOrderLineStatusBySupplier/")]
+        public IHttpActionResult UpdateOrderLineStatusBySupplier(UpdateOrderLineStatusBySupplierDto param)
+        {
+            int AdminID = GetLoginInfo().UserID;
+            int[] limit = { 100, 2, 3 };
+            if (!((IList)limit).Contains(param.Status))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "请输入正常的状态码限定范围[100, 2,3]", param.Status));
+            }
+
+
+            var result = ShopOrderBLL.UpdateOrderLineStatusBySupplier(param.OrderNO, AdminID, param.SuppliersID, param.Status, out string Msg);
+            if (!result)
+            {
+
+                return Json(JRpcHelper.AjaxResult(1, Msg, param.OrderNO));
+            }
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", param.OrderNO));
+        }
         /// <summary>
         /// 修改供应商价格
         /// </summary>
