@@ -15,5 +15,8 @@ namespace DTO.ShopOrder
         public int? OrderType { get; set; }
         public DateTime? BeginTime { get; set; }
         public DateTime? EndTinme { get; set; }
+        
+        public DateTime? BeginPickupTime { get; set; }
+        public DateTime? EndPickupTime { get; set; }
     }
 }

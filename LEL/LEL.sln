@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP", "MP\MP.csproj", "{16BC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Weixin.MP.CoreSample.CommonService", "Senparc.Weixin.MP.Sample.CommonService\Senparc.Weixin.MP.CoreSample.CommonService.csproj", "{E175ABD2-FD0B-4384-9AD2-11E7E9FB399C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{2E383AFC-D907-4012-8374-6A6465F800BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{E175ABD2-FD0B-4384-9AD2-11E7E9FB399C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E175ABD2-FD0B-4384-9AD2-11E7E9FB399C}.Release|x86.ActiveCfg = Release|Any CPU
 		{E175ABD2-FD0B-4384-9AD2-11E7E9FB399C}.Release|x86.Build.0 = Release|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Debug|x86.Build.0 = Debug|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Release|x86.ActiveCfg = Release|Any CPU
+		{2E383AFC-D907-4012-8374-6A6465F800BD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

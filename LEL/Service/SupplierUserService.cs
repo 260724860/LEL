@@ -224,7 +224,7 @@ namespace Service
 
                         if (SignerList.Length > 0)
                         {
-                            UpdateGoodsSql = string.Format("update le_goods set IsShelves=0 where Goodsid in ({0})", string.Join(",", SignerList));
+                            UpdateGoodsSql = string.Format("update le_goods set IsShelves=0,IsVendorClosure=1 where Goodsid in ({0}) ", string.Join(",", SignerList));
                         }
                     }
                 }
@@ -251,11 +251,10 @@ namespace Service
                     if (SignerList.Count()>0)
                     {
                         updateGoodsSupplierByDefaultSql = string.Format("update le_goods_suppliers set IsDeleted=0 , IsDefalut = 1  where suppliersid={0} and goodsid in ({1})", model.SuppliersID, string.Join(",", SignerList));
-
                     }
                     if (GoodsIDList.Length > 0)
                     {
-                        UpdateGoodsSql = string.Format("update le_goods set IsShelves=1 where Goodsid in ({0})", string.Join(",", string.Join(",", GoodsIDList)));
+                        UpdateGoodsSql = string.Format("update le_goods set IsShelves=1 where Goodsid in ({0}) and IsVendorClosure=1", string.Join(",", string.Join(",", GoodsIDList)));
                     }
                     //}
                 }

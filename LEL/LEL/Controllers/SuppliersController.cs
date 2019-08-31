@@ -6,6 +6,7 @@ using DTO.SupplierUser;
 using DTO.WeixinDto;
 using Service;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -378,22 +379,21 @@ namespace LEL.Controllers
             return null;
         }
         /// <summary>
-        /// 修改供应商订单行
+        /// 修改供应商订单行（接单/取消/结算/发货中）
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost, Route("api/OrderHandle/UpdateOrderLineStatusBySupplier/")]
-        public IHttpActionResult UpdateOrderLineStatusBySupplier(UpdateOrderLineStatusBySupplierDto param)
+        public IHttpActionResult UpdateOrderLineStatusBySupplier(UpdateOrderLineStatusBySupplierDto param )
         {
-            int AdminID = GetLoginInfo().UserID;
-            int[] limit = { 100, 2, 3 };
+            //int AdminID = GetLoginInfo().UserID;
+            int[] limit = { 100, 2, 3,6 };
             if (!((IList)limit).Contains(param.Status))
             {
-                return Json(JRpcHelper.AjaxResult(1, "请输入正常的状态码限定范围[100, 2,3]", param.Status));
+                return Json(JRpcHelper.AjaxResult(1, "请输入正常的状态码限定范围[100, 2,3,6]", param.Status));
             }
 
-
-            var result = ShopOrderBLL.UpdateOrderLineStatusBySupplier(param.OrderNO, AdminID, param.SuppliersID, param.Status, out string Msg);
+            var result = ShopOrderBLL.UpdateOrderLineStatusBySupplier(param.OrderNO, null, param.SuppliersID, param.Status, out string Msg);
             if (!result)
             {
 

@@ -17,8 +17,13 @@ namespace DTO.ShopOrder
         /// </summary>
         public List<int> SuppliersID { get; set; }
         /// <summary>
-        /// 订单行状态限定范围 {100已结算,2已发货，3已取消 }
+        /// 订单行状态限定范围 {100已结算,2已发货（接单），3已取消 }
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// Unionid
+        /// </summary>
+        public string Unionid { get; set; }
     }
 }

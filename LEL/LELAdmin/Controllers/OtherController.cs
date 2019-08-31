@@ -408,6 +408,15 @@ namespace LELAdmin.Controllers
 
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result,result.Count));
         }
+
+        /// <summary>
+        /// 刷新所有登录用户Token
+        /// </summary>
+        /// <param name="UserType"></param>
+        /// <param name="LoginName"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet, Route("FlushTokenbyUser")]
         public IHttpActionResult FlushTokenbyUser(int UserType,string LoginName="")
         {
             var IsSuccess = new SupplierUserService().FlushTokenbyUser(UserType, LoginName);
@@ -419,6 +428,18 @@ namespace LELAdmin.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "Fail", LoginName));
             }
+        }
+        
+        /// <summary>
+        /// 处理购物车内已经下架的商品
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet, Route("ProcessingShopCartShelves")]
+        public IHttpActionResult ProcessingShopCartShelves()
+        {
+            var result = new ShopOrderService().ProcessingShopCartShelves();
+            return Json(JRpcHelper.AjaxResult(0, "result", null));
         }
     }
 }

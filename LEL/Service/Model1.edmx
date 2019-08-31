@@ -155,6 +155,7 @@
           <Property Name="QuotaBeginTime" Type="datetime" Precision="0" />
           <Property Name="QuotaEndTime" Type="datetime" Precision="0" />
           <Property Name="Environment" Type="varchar" MaxLength="50" />
+          <Property Name="IsVendorClosure" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="le_goods_brand">
           <Key>
@@ -1714,6 +1715,7 @@
           <NavigationProperty Name="le_goods_value" Relationship="leerledbtestModel.FK_le_goods_value_le_goods" FromRole="le_goods" ToRole="le_goods_value" />
           <NavigationProperty Name="le_orders_lines" Relationship="leerledbtestModel.FK_le_orders_lines_le_goods" FromRole="le_goods" ToRole="le_orders_lines" />
           <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods" FromRole="le_goods" ToRole="le_shop_cart" />
+          <Property Name="IsVendorClosure" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="le_goods_brand">
           <Key>
@@ -2860,6 +2862,7 @@
           <EntitySetMapping Name="le_goods">
             <EntityTypeMapping TypeName="leerledbtestModel.le_goods">
               <MappingFragment StoreEntitySet="le_goods">
+                <ScalarProperty Name="IsVendorClosure" ColumnName="IsVendorClosure" />
                 <ScalarProperty Name="Environment" ColumnName="Environment" />
                 <ScalarProperty Name="QuotaEndTime" ColumnName="QuotaEndTime" />
                 <ScalarProperty Name="QuotaBeginTime" ColumnName="QuotaBeginTime" />

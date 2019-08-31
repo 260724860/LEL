@@ -24,6 +24,8 @@ namespace DTO.ShopOrder
         public int? Status3 { get; set; }
         public int? AdminID { get; set; }
         public int UsersID { get; set; }
+        
+        public string UsersName { get; set; }
         public int? SuppliersID { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public System.DateTime CreateTime { get; set; }
@@ -33,7 +35,6 @@ namespace DTO.ShopOrder
         public string GoodsName { get; set; }
         public string GoodsImage { get; set; }
 
-
         public int OrderType { get; set; }
         #region 扩展属性
         //public string GoodsName { get; set; }
@@ -41,7 +42,7 @@ namespace DTO.ShopOrder
         public string AdminName { get; set; }
 
         public string SuppliersName { get; set; }
-        public string UsersName { get; set; }
+       
         public string StatusName { get; set; }
         public List<GoodsValues> GoodsValuesList { get; set; }
 

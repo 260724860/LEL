@@ -12,6 +12,8 @@ using Senparc.Weixin.Exceptions;
 using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
 using Senparc.Weixin;
 using OAuthAccessTokenResult = Senparc.Weixin.MP.AdvancedAPIs.OAuth.OAuthAccessTokenResult;
+using Senparc.Weixin.MP.Containers;
+using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 
 namespace MP.Controllers
 {
@@ -105,6 +107,35 @@ namespace MP.Controllers
                 //return Content(ex.Message);
                 return Json(new { code = 0, msg = ex.Message, content = ex });
             }
+        }
+
+       /// <summary>
+       /// 发送模板消息
+       /// </summary>
+       /// <param name="appid"></param>
+       /// <param name="touser"></param>
+       /// <param name="template_id"></param>
+       /// <param name="url"></param>
+       /// <param name="miniprogram"></param>
+       /// <param name="pagepath"></param>
+       /// <param name="data"></param>
+       /// <param name=""></param>
+       /// <returns></returns>
+        [HttpGet, Route("SendTemplateMessAge")]
+        public ActionResult SendTemplateMessAge(string mp_appid, string touser,string template_id,string url,string miniprogram,string pagepath,string miniprogram_appid,string data,string color)
+        {
+            string token = AccessTokenContainer.GetAccessToken(mp_appid);
+
+            var testData = new //TestTemplateData()
+            {
+                first = new TemplateDataItem(string.Format("【测试-{0}】QrCode单元测试完成一个线程。", SystemTime.Now.ToString("T"))),
+                keyword1 = new TemplateDataItem(touser),
+                keyword2 = new TemplateDataItem("QrCode测试"),
+                keyword3 = new TemplateDataItem(SystemTime.Now.Ticks.ToString("O")),
+                remark = new TemplateDataItem("结果：")
+            };
+            //  TemplateApi.SendTemplateMessageAsync(token, touser, template_id, url, testData,);
+            return null;
         }
     }
 }

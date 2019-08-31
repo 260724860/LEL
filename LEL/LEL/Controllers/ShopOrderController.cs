@@ -143,10 +143,10 @@ namespace LEL.Controllers
                 {
                     Environment = SubdomainArrty[0];
                 }
-                if(Classify=="lelshoptest"&& Environment== "lelshoptest")
-                {
-                    return Json(JRpcHelper.AjaxResult(1, "下单失败，只能从lelshoptest2.muguxia.cn/Content网址下单", Classify));
-                }
+                //if(Classify=="lelshoptest"&& Environment== "lelshoptest")
+                //{
+                //    return Json(JRpcHelper.AjaxResult(1, "下单失败，只能从lelshoptest2.muguxia.cn/Content网址下单", Classify));
+                //}
 
             }
             string msg;

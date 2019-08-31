@@ -271,5 +271,24 @@ namespace LELAdmin.Controllers
             return null;
 
         }
+
+        /// <summary>
+        /// 获取订单详细内供应商状态
+        /// </summary>
+        /// <param name="OrderNo"></param>
+        /// <returns></returns>
+        [HttpGet, Route("api/ShopOrder/GetOrderSupplierList/")]
+        public IHttpActionResult GetOrderSupplierList(string OrderNo)
+        {
+            var result=  ShopOrderBLL.GetOrderSupplierList(OrderNo);
+            if(result == null||result.Count<=0)
+            {
+                return Json(JRpcHelper.AjaxResult(1, "请输入正确得单号", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+        }
     }
 }

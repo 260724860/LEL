@@ -83,6 +83,7 @@
     <Compile Include="AdminOrderService.cs" />
     <Compile Include="AdminService.cs" />
     <Compile Include="AuthorityService.cs" />
+    <Compile Include="DataHandlingService.cs" />
     <Compile Include="GoodsService.cs" />
     <Compile Include="IndexService.cs" />
     <Compile Include="lel_admin_suppliers.cs">

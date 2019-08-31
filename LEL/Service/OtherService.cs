@@ -569,8 +569,12 @@ namespace Service
         /// <param name="UserID"></param>
         /// <param name="OrderNO"></param>
         /// <returns></returns>
-        public bool UpdatePushMsg(int UserID, string OrderNO, int UserType, int MsgType = 1)
+        public bool UpdatePushMsg(int? UserID, string OrderNO, int UserType, int MsgType = 1,int IsDeleted=0)
         {
+            if(!UserID.HasValue)
+            {
+                return false;
+            }
             using (Entities ctx = new Entities())
             {
                 var model = ctx.le_pushmsg.Where(s => s.UserID == UserID && s.UserType == UserType).FirstOrDefault();
@@ -584,6 +588,7 @@ namespace Service
                 model.MsgCount += 1;
                 model.UpdateTime = DateTime.Now;
                 model.MsgType = MsgType;
+                model.IsDeleted = IsDeleted;
                 ctx.Entry<le_pushmsg>(model).State = EntityState.Modified;
                 if (ctx.SaveChanges() > 0)
                 {

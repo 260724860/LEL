@@ -172,8 +172,20 @@ namespace LELAdmin.Controllers
             var result = StoreSevice.GetBaseStoreUserList(KeyWords, GetLoginInfo().UserID);
             return Json(new { code = 0, msg = "SUCCESS", content = result });
         }
-
-
+        
+        /// <summary>
+        /// 获取用户绑定的微信
+        /// </summary>
+        /// <param name="UserType">1门店 2供应商</param>
+        /// <param name="UserID">用户ID</param>
+        /// <returns></returns>
+        [Route("GetWeixinUserList")]
+        [HttpPost]
+        public IHttpActionResult GetWeixinUserList(int UserType, int UserID)
+        {
+            var result = new WeixinUserService().GetWeixinUserList(UserType, UserID);
+            return Json(new { code = 0, msg = "SUCCESS", content = result });
+        }
         #endregion
     }
 }

@@ -9,6 +9,7 @@ using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Service
         private static ILog log = LogManager.GetLogger(typeof(ShopOrderService));
         private SortedList<string, le_sysconfig> GetSysConfigList = SysConfig.Get().values;
         string BasePath = SysConfig.Get().values.Values.Where(s => s.Name == "HeadQuartersDomain").FirstOrDefault().Value;
+        string AutomaticDispatch= SysConfig.Get().values.Values.Where(s => s.Name == "AutomaticDispatch").FirstOrDefault().Value;
         /// <summary>
         /// 添加购物车
         /// </summary>
@@ -276,6 +278,13 @@ namespace Service
             {
                 FailCartList = new List<ShopCartDto>();
 
+                int LineDefaultStatus=  (int)OrderLineStatus.WeiPaiFa;
+                int HeadDefaultStatus = (int)OrderHeadStatus.WeiPaiFa;
+               if(AutomaticDispatch=="TRUE"&& ParamasData.OrderType!=2)
+                {
+                    LineDefaultStatus = (int)OrderLineStatus.DaiJieDan; 
+                    HeadDefaultStatus = (int)OrderHeadStatus.DaiJieDan;
+                }
                 // var NoRemoveCarList = new List<ShopCartDto>();
                 
                 List<ShopCartDto> CartList = GetCartList(ParamasData.UserID);
@@ -472,7 +481,7 @@ namespace Service
                     linesModel.Integral = goodsModel.Integral;
                     linesModel.Discount = goodsModel.Discount;
 
-                    linesModel.Status = 0;
+                    linesModel.Status = LineDefaultStatus;
                     linesModel.UpdateTime = DateTime.Now;
                     linesModel.UsersID = ParamasData.UserID;
                     linesModel.SuppliersID = DefaulSuplier.SupplierID;
@@ -500,7 +509,7 @@ namespace Service
                 le_Orders_Head.RcAddr = AddressModel.ReceiveArea + "-" + AddressModel.ReceiveAddress;
                 le_Orders_Head.RcName = AddressModel.ReceiveName;
                 le_Orders_Head.RcPhone = AddressModel.ReceivePhone;
-                le_Orders_Head.Status = 0;
+                le_Orders_Head.Status = HeadDefaultStatus;
                 le_Orders_Head.UsersID = ParamasData.UserID;
                 le_Orders_Head.UpdateTime = DateTime.Now;
                 le_Orders_Head.GoodsCount = OrderLinesList.Sum(s => s.GoodsCount);
@@ -818,7 +827,7 @@ namespace Service
                                 AlreadyBuyCount = BuyCountIquery.Sum();
                             }
                         }
-                        if ((QuotaGoods != null && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - (QuotaGoods.GoodsCount + AlreadyBuyCount) < 0))
+                        if (((QuotaGoods != null && goodsModel.Quota - AlreadyBuyCount <= 0) || (goodsModel.Quota - (QuotaGoods.GoodsCount + AlreadyBuyCount) < 0))&& ParamasData.OrderInfo.OrderType != 2)
                         {
                             Msg = string.Format("商品【{0}】限购{1}件已经购买{2}件,当前下单数量{3}件,请重新选择下单数量！", goodsModel.GoodsName, goodsModel.Quota, AlreadyBuyCount, goodsModel.GoodsCount);
                             log.Debug(Msg);
@@ -827,7 +836,7 @@ namespace Service
                         }
                     }
 
-                    if (goodsModel.Stock - QuotaGoods.GoodsCount < 0)
+                    if (goodsModel.Stock - QuotaGoods.GoodsCount < 0&& ParamasData.OrderInfo.OrderType!=2)
                     {
                         Msg = "库存不足，请稍后再试";
                         //return 0;
@@ -1024,20 +1033,7 @@ namespace Service
             return "";
         }
 
-        //private 
-        /// <summary>
-        /// 排序扩展
-        /// DistinctBy不是.net framework提供的扩展方法，是第三方的扩展方法
-        /// </summary>
-        /// <typeparam name="t"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="propertySelector"></param>
-        /// <returns></returns>
-        //public static IEnumerable<t> DistinctBy<t>(this IEnumerable<t> list, Func<t, object> propertySelector)
-        //{
-        //    return list.GroupBy(propertySelector).Select(x => x.First());
-
-        //}
+       
         /// <summary>
         /// 获取订单列表
         /// </summary>
@@ -1061,7 +1057,15 @@ namespace Service
                 }
                 if (!string.IsNullOrEmpty(seachParams.Out_Trade_No))
                 {
-                    tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
+                    if(seachParams.Out_Trade_No.Length<22)
+                    {
+                        tempIq = tempIq.Where(s => s.OutTradeNo.EndsWith(seachParams.Out_Trade_No));
+                    }
+                    else
+                    {
+                        tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
+                    }
+                  
                 }
                 else
                 {
@@ -1082,12 +1086,14 @@ namespace Service
                 if (!string.IsNullOrEmpty(seachParams.KeyWords))
                 {
                     tempIq = tempIq.Where(s => s.RcName.Contains(seachParams.KeyWords)
+                      //|| s.OutTradeNo.Contains(seachParams.KeyWords)
                       || s.RcPhone.Contains(seachParams.KeyWords)
                       || s.Head_Notes.Contains(seachParams.KeyWords)
-                      || s.RcAddr.Contains(seachParams.KeyWords)
+                     // || s.RcAddr.Contains(seachParams.KeyWords)
                       || s.le_users.UsersNickname.Contains(seachParams.KeyWords)
                       || s.le_orders_lines.Any(k=>k.le_suppliers.SuppliersName.Contains(seachParams.KeyWords))
-
+                      
+                      || s.OutTradeNo.EndsWith(seachParams.Out_Trade_No)
                     //  || s.le_su
                     );
                 }
@@ -1371,7 +1377,33 @@ namespace Service
             }
             return null;
         }
-
+        
+        /// <summary>
+        /// 获取订单详细内供应商状态
+        /// </summary>
+        /// <param name="OrderNo"></param>
+        /// <returns></returns>
+        public List<OrderSupplierList> GetOrderSupplierList(string OrderNo)
+        {
+            using (Entities ctx=new Entities())
+            {
+                var tempIq = ctx.le_orders_lines.Where(s=>true);
+                var selectIquery = tempIq.GroupBy(k => k.SuppliersID).Select(s => new OrderSupplierList
+                {
+                    SupplierID=s.Key,
+                    DeliverCount = s.Sum(k => k.DeliverCount),
+                    Status = s.Max(k => k.Status),
+                    SupplierName = s.Max(k => k.le_suppliers.SuppliersName),
+                    TotalSupplyPrice = s.Sum(k => k.SupplyPrice),
+                    GoodsCount = s.Sum(k => k.GoodsCount),
+                    MobilePhone = s.Max(k => k.le_suppliers.MobilePhone)
+                });
+               
+                var result = selectIquery.ToList();
+                return result;
+                ;
+            }
+        }
         /// <summary>
         /// 修改订单收货信息
         /// </summary>
@@ -1477,11 +1509,11 @@ namespace Service
                     msg = "请确认需要编辑的信息";
                     return false;
                 }
-                if(List.Any(s=>s.SuppliersID==0))
-                {
-                    msg = "请选择供应商！";
-                    return false;
-                }
+                //if(List.Any(s=>s.SuppliersID==0))
+                //{
+                //    msg = "请选择供应商！";
+                //    return false;
+                //}
                 int OrderHeadID = List[0].OrderHeadID;
                 List<le_orders_lines> OrderLineList = new List<le_orders_lines>();
                
@@ -1675,13 +1707,21 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 var tempIq = ctx.le_orders_lines.Where(s => true);
+                tempIq = tempIq.Where(s => s.Status != 0);
                 if (SeachOptions.AdminID != null)
                 {
                     tempIq = tempIq.Where(s => s.AdminID == SeachOptions.AdminID.Value);
                 }
                 if (!string.IsNullOrEmpty(SeachOptions.OrderNo))
                 {
-                    tempIq = tempIq.Where(s => s.le_orders_head.OutTradeNo == SeachOptions.OrderNo);
+                    if (SeachOptions.OrderNo.Length < 22)
+                    {
+                        tempIq = tempIq.Where(s => s.le_orders_head.OutTradeNo.EndsWith(SeachOptions.OrderNo));
+                    }
+                    else
+                    {
+                        tempIq = tempIq.Where(s => s.le_orders_head.OutTradeNo == SeachOptions.OrderNo);
+                    }
                 }
                 if (SeachOptions.BeginTime != null)
                 {
@@ -1690,6 +1730,14 @@ namespace Service
                 if (SeachOptions.EndTinme != null)
                 {
                     tempIq = tempIq.Where(s => s.CreateTime <= SeachOptions.EndTinme);
+                }
+                if(SeachOptions.BeginPickupTime!=null)
+                {
+                    tempIq = tempIq.Where(s => s.le_orders_head.PickupTime >= SeachOptions.BeginPickupTime);
+                }
+                if(SeachOptions.EndPickupTime != null)
+                {
+                    tempIq = tempIq.Where(s => s.le_orders_head.PickupTime <SeachOptions.EndPickupTime);
                 }
                 if (SeachOptions.UserID != null)
                 {
@@ -1703,17 +1751,16 @@ namespace Service
                 {
                     tempIq = tempIq.Where(s => s.le_orders_head.OrderType == SeachOptions.OrderType);
                 }
-                if (SeachOptions.Status != null)
-                {
-                    tempIq = tempIq.Where(s => s.Status == SeachOptions.Status.Value);
-                }
-                else
-                {
-                    tempIq = tempIq.Where(s => s.Status != 0);
-                }
+             
                 if (!string.IsNullOrEmpty(SeachOptions.KeyWords))
                 {
-                    tempIq = tempIq.Where(s => s.le_goods.GoodsName.Contains(SeachOptions.KeyWords));
+                    tempIq = tempIq.Where(s => s.le_goods.GoodsName.Contains(SeachOptions.KeyWords)
+                    || s.le_users.UsersNickname.Contains(SeachOptions.KeyWords)
+                    || s.le_users.UsersMobilePhone.Contains(SeachOptions.KeyWords)
+                    || s.le_users.UsersName.Contains(SeachOptions.KeyWords)
+                    || s.le_orders_head.OutTradeNo.EndsWith(SeachOptions.KeyWords)
+                    );
+                    
                 }
                 var result = tempIq.Select(s => new OrderLineDto
                 {
@@ -1738,6 +1785,7 @@ namespace Service
                     SuppliersID = s.SuppliersID,
                     UpdateTime = s.UpdateTime,
                     UsersID = s.UsersID,
+                    UsersName=s.le_users.UsersNickname,
                     OrderType = s.le_orders_head.OrderType,
                     Out_Trade_No = s.le_orders_head.OutTradeNo,
                     PickupTime = s.le_orders_head.PickupTime,
@@ -1781,7 +1829,7 @@ namespace Service
                     SuppliersID = k.Max(p => p.SuppliersID),
                     UpdateTime = k.Max(p => p.UpdateTime),
                     UsersID = k.Max(p => p.UsersID),
-
+                    UsersName=k.Max(p=>p.UsersName),
                     OrderType = k.Max(p => p.OrderType),
 
                     Out_Trade_No = k.Max(p => p.Out_Trade_No),
@@ -1801,46 +1849,25 @@ namespace Service
                     YiQuXiaoCount = k.Count(p => p.YiQuXiaoCount == (int)OrderLineStatus.YiQuXiao),
                     OrderLineCount=k.Count(p=>p.OrderLineID>0)
                 });
+                if (SeachOptions.Status != null)
+                {
+                    if(SeachOptions.Status == 1)
+                    {
+                        GroupResult = GroupResult.Where(s => s.DaiFaHuoCount>0||s.DaiJieDanCount>0);
+                    }
+                    if (SeachOptions.Status == 2)//已处理
+                    {
+                        GroupResult = GroupResult.Where(s => s.YiFahuoCount == s.OrderLineCount-s.YiQuXiaoCount&& s.YiQuXiaoCount != s.OrderLineCount);
+                    }
+                    if(SeachOptions.Status == 3)//已取消
+                    {
+                        GroupResult = GroupResult.Where(s => s.YiQuXiaoCount == s.OrderLineCount );
+                    }
+                   
+                }
 
-                //var GroupResult = tempIq.GroupBy(q => q.OrderHeadID).Select(k => new OrderLineDto
-                //{
-                //    AdminName = k.Max(p => p.le_admin.Nickname),
-                //    AdminTelPhone = k.Max(p => p.le_admin.TelePhone),
-                //    AdminID = k.Max(p => p.AdminID),
-                //    //OrderHeadID = k.Max(p => p.OrderHeadID),
-                //    CreateTime = k.Max(p => p.CreateTime),
-                //    GoodsCount = k.Sum(p => p.GoodsCount),
-                //    DeliverCount = k.Sum(p => p.DeliverCount),
-                //    GoodsImage = k.Max(p => BasePath + p.le_goods.Image),
-                //    GoodsName = k.Max(p => p.le_goods.GoodsName),
-                //    Goods_ID = k.Max(p => p.GoodsID),
-                //    //RcName = k.Max(p => p.RcName),
-                //    //RcPhone = k.Max(p => p.RcPhone),
-                //    SupplyMoney = k.Sum(p => p.SupplyPrice * p.DeliverCount),
-                //    Notes = k.Max(p => p.Notes),
-                //    OrderLineID = k.Max(p => p.OrdersLinesID),
-                //    Status1 = k.Min(p => p.Status),
-                //    Status2 = k.Max(p => p.Status) - 1 == 0 ? 1 : 1,
-                //    Status3 = k.Max(p => p.Status),
-                //    SuppliersID = k.Max(p => p.SuppliersID),
-                //    UpdateTime = k.Max(p => p.UpdateTime),
-                //    UsersID = k.Max(p => p.UsersID),
 
-                //    OrderType = k.Max(p => p.le_orders_head.OrderType),
-
-                //    Out_Trade_No = k.Max(p => p.le_orders_head.OutTradeNo),
-                //    PickupTime = k.Max(p => p.le_orders_head.PickupTime),
-
-                //    WeiPaiFaCount = k.Count(p => p.Status == (int)OrderLineStatus.WeiPaiFa),
-                //    DaiJieDanCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiJieDan),
-                //    DaiFaHuoCount = k.Count(p => p.Status == (int)OrderLineStatus.DaiFaHuo),
-                //    FaHuoZhongCount = k.Count(p => p.Status == (int)OrderLineStatus.FaHuoZhong),
-                //    YiFahuoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiFahuo),
-                //    YiWanChengCount = k.Count(p => p.Status == (int)OrderLineStatus.YiWanCheng),
-                //    YiJieSuanCount = k.Count(p => p.Status == (int)OrderLineStatus.YiJieSuan),
-                //    YiQuXiaoCount = k.Count(p => p.Status == (int)OrderLineStatus.YiQuXiao),
-                //});
-                GroupResult = GroupResult.OrderByDescending(s => s.CreateTime);
+                GroupResult = GroupResult.OrderBy(s => s.CreateTime).ThenBy(t=>t.PickupTime);
                 Count = GroupResult.Count();
                 GroupResult = GroupResult.Skip(SeachOptions.Offset).Take(SeachOptions.Rows);
                 var filter = GroupResult.ToList();
@@ -2009,13 +2036,13 @@ namespace Service
                             case OrderLineStatus.DaiFaHuo: //待发货
                                 CurrentLine.Status = (int)OrderLineStatus.DaiFaHuo;
 
-                                new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+                                new OtherService().UpdatePushMsg(CurrentLine.AdminID, OrderHeadModel.OutTradeNo, 3);
 
                                 break;
 
                             case OrderLineStatus.FaHuoZhong: //发货中
                                 CurrentLine.Status= (int)OrderLineStatus.FaHuoZhong;
-                                new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+                                new OtherService().UpdatePushMsg(CurrentLine.AdminID, OrderHeadModel.OutTradeNo, 3);
 
                                 break;
 
@@ -2032,8 +2059,8 @@ namespace Service
                                 }
                               
                                 //供货商完成接单 推送消息给总部
-                                new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
-                                new OtherService().UpdatePushMsg(CurrentLine.SuppliersID.Value, OrderHeadModel.OutTradeNo, 2);
+                                new OtherService().UpdatePushMsg(CurrentLine.AdminID, OrderHeadModel.OutTradeNo, 3);
+                                new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
                                 break;
                             //case OrderLineStatus.YiWanCheng: //已完成
                             //    CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
@@ -2073,10 +2100,10 @@ namespace Service
                                 {
                                     CurrentLine.SuppliersID = null;
                                 }
-                                new OtherService().UpdatePushMsg(CurrentLine.AdminID.Value, OrderHeadModel.OutTradeNo, 3);
+                                new OtherService().UpdatePushMsg(CurrentLine.AdminID, OrderHeadModel.OutTradeNo, 3);
                                 if (CurrentLine.SuppliersID != null)
                                 {
-                                    new OtherService().UpdatePushMsg(CurrentLine.SuppliersID.Value, OrderHeadModel.OutTradeNo, 2);
+                                    new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
                                 }
                                // new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
 
@@ -2210,7 +2237,7 @@ namespace Service
         /// <param name="Status"></param>
         /// <param name="Msg"></param>
         /// <returns></returns>
-        public bool UpdateOrderLineStatusBySupplier(string OrderNO,int AdminID,List<int> SupplierList,int Status,out string Msg)
+        public bool UpdateOrderLineStatusBySupplier(string OrderNO,int? AdminID,List<int> SupplierList,int Status,out string Msg)
         {
             LogService logBll = new LogService();
             List<string> UpdateGoodsSql = new List<string>();
@@ -2225,7 +2252,7 @@ namespace Service
                 HeadLog.BeforeSupplierAmout=OrderHeadModel.RealSupplyAmount;
                 HeadLog.CreateTime = DateTime.Now;
                 HeadLog.HeadRecordID = OrderHeadModel.OrdersHeadID;
-                HeadLog.AdminID=AdminID;
+                HeadLog.AdminID= AdminID != null ? AdminID : null; ;
                 HeadLog.OrderHeadID = OrderHeadModel.OrdersHeadID;
                 HeadLog.AfterAmount = OrderHeadModel.RealAmount;
                 HeadLog.AfterCount = OrderHeadModel.DeliverCount;
@@ -2253,7 +2280,6 @@ namespace Service
                 if (lineStatus == OrderLineStatus.YiQuXiao)
                 {
                     UpdateGoodsSql= ProcessingOrderHeadAndGoods(OrderLinesList, OrderHeadModel, true);
-
                 }
                 else
                 {
@@ -2265,6 +2291,15 @@ namespace Service
                     }
                     
                 }
+                //查询该供应商所有订单行内不等于已发货并且不等于已取消并且不等于未派发
+                foreach( var SupplierID in SupplierList)
+                {
+                    if(!ctx.le_orders_lines.Any(s => s.Status == (int)OrderLineStatus.DaiJieDan &&s.SuppliersID== SupplierID))
+                    {
+                        new OtherService().UpdatePushMsg(SupplierID, OrderNO, 2, 1, 1);
+                    }
+                }
+              
                 foreach (var index in OrderLinesList)
                 {
                     var CurrentLine = AllOrderLinesList.Where(s => s.OrdersLinesID == index.OrdersLinesID).FirstOrDefault();
@@ -2274,11 +2309,17 @@ namespace Service
                     LineLog.BeforeCount = CurrentLine.DeliverCount;
                     LineLog.BeforeMoney = CurrentLine.SupplyPrice;
                     LineLog.BeforeStatus = CurrentLine.Status;
-                    LineLog.AdminID = AdminID;
+                    LineLog.AdminID = AdminID!=null?AdminID:null;
                     LineLog.CreateTime = DateTime.Now;
                     LineLog.OrderLineID = CurrentLine.OrdersLinesID;
                     LineLog.AfterStatus = CurrentLine.Status;
                     LineLog.AfterCount = CurrentLine.DeliverCount;
+                    if (index.DeliverCount <= 0&& lineStatus!=OrderLineStatus.YiQuXiao)
+                    {
+                        Msg = "实发数不能0，请重新设置";
+                        return false;
+                    }
+
                     switch (lineStatus)
                     {
                         case OrderLineStatus.YiJieSuan:
@@ -2293,6 +2334,15 @@ namespace Service
                                
                             }
                             break;
+                        case OrderLineStatus.FaHuoZhong:
+                            if (index.Status != (int)(OrderLineStatus.YiJieSuan) && index.Status != (int)(OrderLineStatus.YiQuXiao)&& index.Status != (int)(OrderLineStatus.YiFahuo))
+                            {
+                                CurrentLine.Status = (int)OrderLineStatus.FaHuoZhong;
+
+                            }
+                            break;
+                   
+
                         case OrderLineStatus.YiFahuo:
                             if (index.DeliverCount <= 0)
                             {
@@ -2304,6 +2354,7 @@ namespace Service
                                 CurrentLine.Status = (int)OrderLineStatus.YiFahuo;
 
                             }
+
                             break;
                         case OrderLineStatus.YiQuXiao:
                             CurrentLine.Status= (int)OrderLineStatus.YiQuXiao;
@@ -2319,7 +2370,7 @@ namespace Service
                   
                     if (LineLog.AfterCount != LineLog.BeforeCount || LineLog.AfterStatus != LineLog.BeforeStatus)
                     {
-                        CurrentLine.AdminID = AdminID;
+                        CurrentLine.AdminID = AdminID != null ? AdminID : null; ;
                         CurrentLine.UpdateTime = DateTime.Now;
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
                         ctx.le_orders_lines_log.Add(LineLog);
@@ -2515,14 +2566,14 @@ namespace Service
                                     ctx.le_orders_lines_log.Add(OrderLineLogModel);
                                     if (orderline.SuppliersID != null)
                                     {
-                                        new OtherService().UpdatePushMsg(orderline.SuppliersID.Value, model.OutTradeNo, 2);
+                                        new OtherService().UpdatePushMsg(orderline.SuppliersID, model.OutTradeNo, 2);
                                     }
 
                                 } 
                             }
                             if (model.AdminID != null)
                             {
-                                new OtherService().UpdatePushMsg(model.AdminID.Value, model.OutTradeNo, 3);
+                                new OtherService().UpdatePushMsg(model.AdminID, model.OutTradeNo, 3);
                             }
                             new OtherService().UpdatePushMsg(model.UsersID, model.OutTradeNo, 1);
                             break;
@@ -2991,6 +3042,61 @@ namespace Service
         }
         
          
+        public bool ProcessingShopCartShelves()
+        {
+            using (Entities ctx=new Entities())
+            {
+                string CartListSql= "select c.SerialNumber,a.cartid from le_shop_cart a "
++ " left join le_goods b on a.goodsid = b.goodsid"
++" left join le_goods_value c on b.GoodsID = c.GoodsID"
++" left join le_cart_goodsvalue d on a.CartID = d.CartID"
++" where b.IsShelves = 0";
+               var CartList = ctx.Database.SqlQuery<CartList>(CartListSql).ToList();
+
+                DbContextTransaction Trans = null;
+               
+                Trans = ctx.Database.BeginTransaction();
+                
+                int count = 0;
+                foreach(var item in CartList)
+                {
+                    string SelectGoods = "select a.Goodsid,a.goodsvalueid from le_goods_value a  left join le_goods b on a.GoodsID = b.goodsid  where a.serialnumber = '" + item .SerialNumber+ "' and Isshelves = 1 limit 1";
+                    var Goodsinfo = ctx.Database.SqlQuery<GoodsInfo>(SelectGoods).FirstOrDefault();
+                    if(Goodsinfo != null)
+                    {
+                        string UpdateCartSql = " update le_shop_cart set goodsid="+ Goodsinfo .GoodsID+ " where cartid="+ item .cartid+ " ";
+                        string UpdateCartValueSql = " update le_cart_goodsvalue set goodsvalueid=" + Goodsinfo.goodsvalueid + " where cartid=" + item.cartid + "";
+
+                        count++;
+                        ctx.Database.ExecuteSqlCommand(UpdateCartSql);
+                        ctx.Database.ExecuteSqlCommand(UpdateCartValueSql);
+                    }
+                    else
+                    {
+                        string DeleteCartVaule = "delete from le_cart_goodsvalue where cartid="+ item.cartid + "";
+                        string DeleteCartSql = "delete from le_shop_cart where cartid=" + item.cartid + "";
+
+                        ctx.Database.ExecuteSqlCommand(DeleteCartVaule);
+                        ctx.Database.ExecuteSqlCommand(DeleteCartSql);
+
+                    }
+                }
+                Trans.Commit();
+                var isSuccess = ctx.SaveChanges();
+                return false;
+            }
+        }
+        
+        public class CartList
+        {
+            public int cartid { get; set; }
+            public string SerialNumber { get; set; }
+        }
+        public class GoodsInfo
+        {
+            public string GoodsID { get; set; }
+            public string goodsvalueid { get; set; }
+        }
     }
 
 }

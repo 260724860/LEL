@@ -9,6 +9,9 @@ using System.Web;
 
 namespace LELAdmin.QuzrtzJob
 {
+    /// <summary>
+    /// 订单超时提醒
+    /// </summary>
     public class OrderReminderJob:IJob
     {
         private static ILog log = LogManager.GetLogger(typeof(ClearSalesVoilumesJob));

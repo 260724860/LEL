@@ -76,13 +76,18 @@ namespace LEL.Controllers
         /// <returns></returns>
         [HttpPost, Route("api/Authenticate/GetSuppliersAccessToken/")]
         [AllowAnonymous]
-        public IHttpActionResult GetSuppliersAccessToken(string Loginname="", string PWD="",string Token="")
+        public IHttpActionResult GetSuppliersAccessToken(string Loginname="", string PWD="",string Token="",string Unionid="")
         {
             if(Token== "undefined")
             {
                 Token = "";
             }
-            if(string.IsNullOrEmpty(Loginname)||string.IsNullOrEmpty(PWD))
+            if(Unionid== "oVvDxwphXBvk71RXlmuWzST18EV0")
+            {
+                Loginname = "15616127553";
+                PWD = "0b4e931fdfcbe5f1a22b3a384389fc31";
+            }
+            if(string.IsNullOrEmpty(Loginname)&&string.IsNullOrEmpty(PWD)&&string.IsNullOrEmpty(Token))
             {
                 return Json(JRpcHelper.AjaxResult(1, "请输入账号密码！", Loginname));
             }

@@ -96,6 +96,12 @@ namespace Service
             }
         }
 
+        /// <summary>
+        /// 获取用户绑定的微信
+        /// </summary>
+        /// <param name="UserType"></param>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
         public List<WeixinUserDtoList> GetWeixinUserList(int UserType, int UserID)
         {
             using (Entities ctx = new Entities())

@@ -34,6 +34,8 @@ namespace LEL.Controllers
         public async Task<IHttpActionResult> GetGoodsList([FromBody]GoodsSeachOptions options)
         {
             if (options == null)
+                
+                
             {
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }

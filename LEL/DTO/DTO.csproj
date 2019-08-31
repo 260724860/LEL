@@ -84,6 +84,7 @@
     <Compile Include="ShopOrder\OrdersLimitGroupby.cs" />
     <Compile Include="ShopOrder\OrdersTimeLimitDto.cs" />
     <Compile Include="ShopOrder\OrdersTimeLimitEditDto.cs" />
+    <Compile Include="ShopOrder\OrderSupplierList.cs" />
     <Compile Include="ShopOrder\ShopCartDto.cs" />
     <Compile Include="ShopOrder\UpdateOrderLineStatusBySupplierDto.cs" />
     <Compile Include="Suppliers\SuppliersDto.cs" />
