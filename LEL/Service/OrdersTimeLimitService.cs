@@ -16,12 +16,11 @@ namespace Service
         /// </summary>
         /// <param name="TimeSlot"></param>
         /// <returns></returns>
-        public async Task<List<OrdersLimitGroupby>>  GetOrderLimitForTimeSlot(DateTime TimeSlot)
+        public async Task<List<OrdersLimitGroupby>>  GetOrderLimitForTimeSlot(DateTime TimeSlot,int? UserID=null)
         {
             using (Entities ctx=new Entities())
             {
-                int hour = TimeSlot.Hour;
-             
+                UserID = 64;
                 var BeginTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 0, 0, 0);
                 var EndTime = new DateTime(TimeSlot.Year, TimeSlot.Month, TimeSlot.Day, 23, 59, 59);
 
@@ -57,7 +56,15 @@ namespace Service
                         m.CurrentOrderCount = exit.CurrentOrderCount;
                     }
                 });
-
+                //if(UserID!=null&&UserID!=0)
+                //{
+                //    var Classify = ctx.le_users.Where(s => s.UsersID == UserID).Select(s => s.Classify).FirstOrDefault();
+                //    var Exit291 = ctx.le_shop_cart.Any(s => s.UserID == UserID && s.le_goods.le_goods_suppliers.Any(k => k.SuppliersID == 291));//.Select(s => s.le_goods.le_goods_suppliers.Any(k => k.SuppliersID == 291));
+                //    if( Exit291 && Classify=="lelshoptest")
+                //    {
+                //        LimitCountList = new List<OrdersLimitGroupby>();
+                //    }
+                //}
                 var results = LimitCountList.OrderBy(s=>s.TimeSlot).ToList();
               //var results= list.Join(LimitCountList, a => a.TimeSlot, b => b.TimeSlot, (a, b) =>
 

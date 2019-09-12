@@ -97,6 +97,10 @@ namespace Common
         {
             return new AjaxResult { code = code, msg = msg, content = obj, accattach = accattach };
         }
+        public static AjaxResult2 AjaxResult2(int code, string msg, object obj, object accattach, object accattach2)
+        {
+            return new AjaxResult2 { code = code, msg = msg, content = obj, accattach = accattach, accattach2 = accattach2 };
+        }
     }
 
     public class AjaxResult
@@ -117,5 +121,25 @@ namespace Common
         public object content { get; set; }
 
         public object accattach { get; set; }
+    }
+    public class AjaxResult2
+    {
+        /// <summary>
+        /// 执行的结果
+        /// </summary>
+        public int code { get; set; }
+
+        /// <summary>
+        /// 错误消息
+        /// </summary>
+        public string msg { get; set; }
+
+        /// <summary>
+        /// 执行返回的数据
+        /// </summary>
+        public object content { get; set; }
+
+        public object accattach { get; set; }
+        public object accattach2 { get; set; }
     }
 }

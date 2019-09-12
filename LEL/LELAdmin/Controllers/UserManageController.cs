@@ -186,6 +186,8 @@ namespace LELAdmin.Controllers
             var result = new WeixinUserService().GetWeixinUserList(UserType, UserID);
             return Json(new { code = 0, msg = "SUCCESS", content = result });
         }
+
+     
         #endregion
     }
 }

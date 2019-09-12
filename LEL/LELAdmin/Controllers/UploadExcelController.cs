@@ -86,7 +86,7 @@ namespace LELAdmin.Controllers
                     string filePath = System.Web.HttpContext.Current.Server.MapPath("/") + folderPath + fileName;
                     hpf.SaveAs(filePath);
                     // string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/1.xlsx";
-                    var ImportData = UploadFileBLL.InsetDb(filePath, out string Msg);
+                    var ImportData = UploadFileBLL.InsertGoodsBaseInfo(filePath, out string Msg);
                     if (ImportData)
                     {
                         return Json(JRpcHelper.AjaxResult(0, "上传成功", null));
@@ -235,26 +235,34 @@ namespace LELAdmin.Controllers
             using (Entities ctx = new Entities())
                 
             {
-                var trans=  ctx.Database.BeginTransaction();
-                for (int i = 0; i < GoodsDT.Rows.Count; i++)
-                {
-                    // result.Add(GoodsDT.Rows[i]["商品名称"].ToString());
-                    string sql = "update le_goods set SpecialOffer=" + GoodsDT.Rows[i]["平台供价"] + " where GoodsName='" + GoodsDT.Rows[i]["商品名称"] + "' ";
+                //var trans=  ctx.Database.BeginTransaction();
+                //for (int i = 0; i < GoodsDT.Rows.Count; i++)
+                //{
+                //    // result.Add(GoodsDT.Rows[i]["商品名称"].ToString());
+                //    string sql = "update le_goods set SpecialOffer=" + GoodsDT.Rows[i]["平台供价"] + " where GoodsName='" + GoodsDT.Rows[i]["商品名称"] + "' ";
                    
-                    ctx.Database.ExecuteSqlCommand(sql);
-                }
-                try
-                {
-                    trans.Commit();
-                    ctx.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    trans.Rollback();
-                }
+                //    ctx.Database.ExecuteSqlCommand(sql);
+                //}
+                //try
+                //{
+                //    trans.Commit();
+                //    ctx.SaveChanges();
+                //}
+                //catch (Exception ex)
+                //{
+                //    trans.Rollback();
+                //}
             }
         //}
           //  string sql = "select * from le_goods_value where serialnumber in ("+string.Join(",", result) +")";
+        }
+        [AllowAnonymous]
+        [HttpPost, Route("api/UploadExcel/UpdateGoodsInfoByExcel/")]
+        public IHttpActionResult UpdateGoodsInfoByExcel(string FileName)
+        {
+            string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/"+ FileName + ".xlsx";
+            new UploadFileService().UpdateGoodsInfoByExcel(path, out string Msg);
+            return null;
         }
     }
 }

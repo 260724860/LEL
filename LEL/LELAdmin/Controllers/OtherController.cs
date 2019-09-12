@@ -2,6 +2,7 @@
 using DTO.Common;
 using DTO.Others;
 using DTO.ShopOrder;
+using MPApiService;
 using Service;
 using System;
 using System.Collections.Generic;
@@ -441,5 +442,18 @@ namespace LELAdmin.Controllers
             var result = new ShopOrderService().ProcessingShopCartShelves();
             return Json(JRpcHelper.AjaxResult(0, "result", null));
         }
+        [AllowAnonymous]
+        [HttpGet, Route("Test")]
+        public IHttpActionResult Test()
+        {
+            MPApiServiceClient serviceClient = new MPApiServiceClient(new Uri("https://xcy.kdk94.top/"),new AnonymousCredential());
+            var result= serviceClient.SendSuppliersTemplateMsgWithHttpMessagesAsync("","","","");
+            return null;
+        }
+    }
+    public class AnonymousCredential : Microsoft.Rest.ServiceClientCredentials
+
+    {
+
     }
 }

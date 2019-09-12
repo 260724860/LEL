@@ -122,7 +122,6 @@ namespace LELAdmin.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "请输入正常的状态码限定范围[100, 2,3]", param.Status));
             }
 
-
             var result = ShopOrderBLL.UpdateOrderLineStatusBySupplier(param.OrderNO, AdminID, param.SuppliersID, param.Status, out string Msg);
             if (!result)
             {
@@ -277,18 +276,29 @@ namespace LELAdmin.Controllers
         /// </summary>
         /// <param name="OrderNo"></param>
         /// <returns></returns>
-        [HttpGet, Route("api/ShopOrder/GetOrderSupplierList/")]
-        public IHttpActionResult GetOrderSupplierList(string OrderNo)
+        [HttpPost, Route("api/ShopOrder/GetOrderSupplierList/")]
+        public IHttpActionResult GetOrderSupplierList(OrderSupplierListParams Params)
         {
-            var result=  ShopOrderBLL.GetOrderSupplierList(OrderNo);
+            var result=  ShopOrderBLL.GetOrderSupplierList(Params,out int Count);
             if(result == null||result.Count<=0)
             {
                 return Json(JRpcHelper.AjaxResult(1, "请输入正确得单号", result));
             }
             else
             {
-                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
             }
+        }
+        /// <summary>
+        /// 获取订单详细
+        /// </summary>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/ShopOrder/GetOrderDeatils/")]
+        public IHttpActionResult GetOrderDeatils(OrderDeatilsParams Params)
+        {
+            var result = ShopOrderBLL.GetOrderDeatils(Params, out int Count);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
     }
 }

@@ -22,8 +22,8 @@ namespace Service
             this.le_orders_head_log = new HashSet<le_orders_head_log>();
             this.le_orders_lines = new HashSet<le_orders_lines>();
             this.le_orders_lines_log = new HashSet<le_orders_lines_log>();
-            this.le_shop_cart = new HashSet<le_shop_cart>();
             this.le_user_address = new HashSet<le_user_address>();
+            this.le_shop_cart = new HashSet<le_shop_cart>();
         }
     
         public int UsersID { get; set; }
@@ -82,8 +82,8 @@ namespace Service
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_orders_lines_log> le_orders_lines_log { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_user_address> le_user_address { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<le_shop_cart> le_shop_cart { get; set; }
     }
 }

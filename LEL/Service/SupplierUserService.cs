@@ -150,7 +150,7 @@ namespace Service
                 model.ResponPeople = dto.Suppliers_ResponPeople;
                 model.Addr = dto.Suppliers_Addr;
              //   model.Status = dto.Suppliers_Status;
-                model.MobilePhone = dto.Suppliers_MobilePhone;
+               // model.MobilePhone = dto.Suppliers_MobilePhone;
                 model.IDImgA = dto.Suppliers_IDImgA;
                 model.IDImgB = dto.Suppliers_IDImgB;
                 model.BusinessImg = dto.Suppliers_BusinessImg;

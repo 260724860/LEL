@@ -25,6 +25,7 @@ namespace Service
                 if(Exit)
                 {
                     Msg = "请勿重复绑定";
+                    return false;
                 }
                 le_weixinuser model = new le_weixinuser();
                 model.UserType = UserType;
@@ -102,7 +103,7 @@ namespace Service
         /// <param name="UserType"></param>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        public List<WeixinUserDtoList> GetWeixinUserList(int UserType, int UserID)
+        public List<WeixinUserDtoList> GetWeixinUserList(int UserType, int? UserID)
         {
             using (Entities ctx = new Entities())
             {
@@ -147,7 +148,7 @@ namespace Service
                             sex = b.Sex,
                             unionid = b.Unionid,
                             province = b.Privilege
-                        }).Where(s => s.UserType == 1 && s.UserID == UserID);
+                        }).Where(s => s.UserType == 2 && s.UserID == UserID);
                         break;
                     case 3:
                         Iquery = ctx.le_admin.Join(ctx.le_weixinuser, a => a.AdminID, b => b.UserID, (a, b) => new WeixinUserDtoList
@@ -166,7 +167,7 @@ namespace Service
                             sex = b.Sex,
                             unionid = b.Unionid,
                             province = b.Privilege
-                        }).Where(s => s.UserType == 1 && s.UserID == UserID);
+                        }).Where(s => s.UserType == 3 && s.UserID == UserID);
                         break;
 
                     default:

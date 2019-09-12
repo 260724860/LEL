@@ -18,8 +18,15 @@ namespace Common
                 using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
                     XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
-
-                    ISheet sheet = hssfworkbook.GetSheet(SheetName);
+                    ISheet sheet;
+                    if (string.IsNullOrEmpty(SheetName))
+                    {
+                         sheet = hssfworkbook.GetSheet(SheetName);
+                    }
+                   else
+                    {
+                         sheet = hssfworkbook.GetSheetAt(0);
+                    }
 
                     //sheet.ShiftRows(1, sheet.LastRowNum, -1);
                     //sheet.RemoveRow(sheet.GetRow(sheet.LastRowNum));

@@ -14,6 +14,8 @@ using Senparc.Weixin;
 using OAuthAccessTokenResult = Senparc.Weixin.MP.AdvancedAPIs.OAuth.OAuthAccessTokenResult;
 using Senparc.Weixin.MP.Containers;
 using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
+using Senparc.Weixin.MP.CommonAPIs;
+using Senparc.Weixin.MP.Helpers;
 
 namespace MP.Controllers
 {
@@ -76,6 +78,10 @@ namespace MP.Controllers
             }
             catch (Exception ex)
             {
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
                 return Json(new { code = 0, msg = ex.Message, content = ex });
                 //return Content(ex.Message);
             }
@@ -93,10 +99,7 @@ namespace MP.Controllers
             //因为第一步选择的是OAuthScope.snsapi_userinfo，这里可以进一步获取用户详细信息
             try
             {
-                if (!string.IsNullOrEmpty(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
+              
 
                 OAuthUserInfo userInfo = OAuthApi.GetUserInfo(result.access_token, result.openid);
                 //return View(userInfo);
@@ -104,6 +107,10 @@ namespace MP.Controllers
             }
             catch (ErrorJsonResultException ex)
             {
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
                 //return Content(ex.Message);
                 return Json(new { code = 0, msg = ex.Message, content = ex });
             }
@@ -121,21 +128,64 @@ namespace MP.Controllers
        /// <param name="data"></param>
        /// <param name=""></param>
        /// <returns></returns>
-        [HttpGet, Route("SendTemplateMessAge")]
-        public ActionResult SendTemplateMessAge(string mp_appid, string touser,string template_id,string url,string miniprogram,string pagepath,string miniprogram_appid,string data,string color)
+        [HttpGet, Route("SendSuppliersTemplateMsg")]
+        public ActionResult SendSuppliersTemplateMsg( string Openid,string OrderNO, string Unionid,string PickupTime)
         {
-            string token = AccessTokenContainer.GetAccessToken(mp_appid);
+            // unionid = "ozMvfwgZ4yykDxJddkAxt9cMMfoY";
+            string token = AccessTokenContainer.TryGetAccessToken(appId,appSecret);
 
-            var testData = new //TestTemplateData()
+            Openid =string.IsNullOrEmpty(Openid)? "oXeYqvzZcyS63MEL4HGuJkXhRHf8":Openid;
+            OrderNO = string.IsNullOrEmpty(OrderNO) ? "oXeYqvzZcyS63MEL4HGuJkXhRHf8" : OrderNO;
+          //  Unionid=string.IsNullOrEmpty(Unionid)?
+            string  template_id = "LsrlZpLITtUChWHqcSbnl9yX78x1EIytnkHFgMc_qHA";
+            string  miniprogram_appid = "wx41878160d625e1cb";
+            PickupTime =string.IsNullOrEmpty(PickupTime)? DateTime.Now.ToString("F"): PickupTime;
+             // miniprogram = "oXeYqvzZcyS63MEL4HGuJkXhRHf8";
+             var result = CommonApi.GetToken(appId, appSecret);
+
+            var TempleteData = new 
             {
-                first = new TemplateDataItem(string.Format("【测试-{0}】QrCode单元测试完成一个线程。", SystemTime.Now.ToString("T"))),
-                keyword1 = new TemplateDataItem(touser),
-                keyword2 = new TemplateDataItem("QrCode测试"),
-                keyword3 = new TemplateDataItem(SystemTime.Now.Ticks.ToString("O")),
-                remark = new TemplateDataItem("结果：")
+                first = new TemplateDataItem(string.Format("你有一笔新的订单，请立即处理。", SystemTime.Now.ToString("T"))),
+                tradeDateTime = new TemplateDataItem(DateTime.Now.ToString("F")),
+                orderType = new TemplateDataItem("订货单"),
+                customerInfo = new TemplateDataItem("乐尔乐供应链管理服务中心"),
+                orderItemName= new TemplateDataItem("单号"),
+                orderItemData= new TemplateDataItem(OrderNO),
+                remark= new TemplateDataItem("请在"+ PickupTime + "前送达！", "#FF0000")
             };
-            //  TemplateApi.SendTemplateMessageAsync(token, touser, template_id, url, testData,);
+            TempleteModel_MiniProgram MiniProgram =new TempleteModel_MiniProgram();
+            MiniProgram.appid = miniprogram_appid;
+            MiniProgram.pagepath = "pages/order/details/details?unionid="+ Unionid+ "&OrderNO =" + OrderNO;
+            var TempleteMsgresult=  TemplateApi.SendTemplateMessage(token, Openid, template_id, null, TempleteData, MiniProgram);
+            if(TempleteMsgresult.errcode!=0)
+            {
+                return Json(new { code = 1, msg = TempleteMsgresult.errmsg, content = "" });
+            }
+            else
+            {
+                return Json(new { code = 0, msg = TempleteMsgresult.errmsg, content = "" });
+            }
             return null;
+        }
+
+        /// <summary>
+        /// 获取给前端UI使用的JSSDK信息包（扫一扫/分享等功能)
+        /// </summary>
+        /// <param name="Url">当前页面Url</param>
+        /// <returns></returns>
+        [HttpGet, Route("GetJsSdkUiPackage")]
+        public ActionResult GetJsSdkUiPackage(string Url)
+        {
+            try
+            {
+                var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, Url);
+                return Json(new { code = 0, msg = "SUCCESS", content = jssdkUiPackage });
+            }
+            catch(Exception ex)
+            {
+                return Json(new { code = 1, msg = ex.Message, content = ex });
+            }
+
         }
     }
 }

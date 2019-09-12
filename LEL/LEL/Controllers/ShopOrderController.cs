@@ -116,6 +116,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", Data.OrderType.ToString() + "," + Data.ExpressType.ToString()));
             }
+
             if (Data.ExpressType == 2)
             {
                 if (!Data.PickupTime.HasValue)
@@ -128,10 +129,24 @@ namespace LEL.Controllers
                     {
                         return Json(JRpcHelper.AjaxResult(1, ex.Message+"前端传入时间：【"+ Data.PickupTimeStr + "】", ex));
                     }
-
                 }
             }
-            
+            if (Data.PickupTime > new DateTime(2019, 09, 17))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误", GetUserID()));
+            }
+            if (Data.PickupTime > DateTime.Now.AddDays(3))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误,取货时间限制48小时内", GetUserID()));
+            }
+            if(Data.PickupTime <new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day+1))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "取货时间错误，请重新选择", GetUserID()));
+            }
+            if (Data.PickupTime.Value.Day==13||Data.PickupTime.Value.Day==14)
+            {
+                return Json(JRpcHelper.AjaxResult(1, "9月13号/14中秋佳节。请选择其他时间", GetUserID()));
+            }
             Data.UserID = GetUserID();
             using (Entities ctx=new Entities())
             {
@@ -359,6 +374,60 @@ namespace LEL.Controllers
         public async Task<IHttpActionResult> GetOrderLimitByTimeSlot(DateTime TimeSlot)
         {
             var result= await new OrdersTimeLimitService().GetOrderLimitForTimeSlot(TimeSlot);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+
+        /// <summary>
+        /// 新增缺货列表
+        /// </summary>
+        /// <param name="Barcode">条码</param>
+        /// <param name="GoodsName">品名</param>
+        /// <param name="PurchasePrice">进价</param>
+        /// <param name="SellingPrice">售价</param>
+        /// <param name="Specifications">规格</param>
+        /// <param name="GoodsCount">数量</param>
+        /// <param name="Merchant">货商</param>
+        /// <param name="MerchantCode">货商编号</param>
+        /// <param name="Classify">分类</param>
+        /// <param name="ClassifyCode">分类便秘</param>
+        /// <param name="Flag">标记</param>
+        /// <param name="Remark">备注</param>
+        /// <param name="InStock">有货无货</param>
+        /// <param name="UsersID">用户ID</param>
+        /// <param name="ID">自增id，0则表示新增/否表示修改</param>
+
+        /// <returns></returns>
+        [Route("AddBackOrder")]
+        [HttpPost]
+        public IHttpActionResult AddBackOrder(string Barcode, string GoodsName, string PurchasePrice, string SellingPrice,
+            string Specifications, int GoodsCount, string Merchant, string MerchantCode, string Classify, string ClassifyCode
+            , int UsersID, string Flag, string Remark ,string InStock, int ID)
+        {
+            var result = new BackOrderService().AddBackOrder(Barcode, GoodsName, PurchasePrice, SellingPrice,
+             Specifications, GoodsCount, Merchant, MerchantCode, Classify, ClassifyCode
+            , UsersID, Flag, Remark, InStock, ID ,out string Msg);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "新增成功", null));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, Msg, null));
+            }
+        }
+       /// <summary>
+       /// 获取
+       /// </summary>
+       /// <param name="UserID"></param>
+       /// <param name="Flag"></param>
+       /// <param name="BeginTime"></param>
+       /// <param name="EndTime"></param>
+       /// <returns></returns>
+        [Route("GetBackOrderList")]
+        [HttpPost]
+        public IHttpActionResult GetBackOrderList(int UserID,string Flag="",DateTime? BeginTime=null,DateTime? EndTime=null)
+        {
+            var result = new BackOrderService().GetbackOrderList(UserID, Flag,BeginTime,EndTime);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
     }

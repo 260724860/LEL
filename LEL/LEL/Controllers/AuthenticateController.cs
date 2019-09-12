@@ -87,7 +87,7 @@ namespace LEL.Controllers
                 Loginname = "15616127553";
                 PWD = "0b4e931fdfcbe5f1a22b3a384389fc31";
             }
-            if(string.IsNullOrEmpty(Loginname)&&string.IsNullOrEmpty(PWD)&&string.IsNullOrEmpty(Token))
+            if(string.IsNullOrEmpty(Loginname)&&string.IsNullOrEmpty(PWD)&&string.IsNullOrEmpty(Token)&&string.IsNullOrEmpty(Unionid))
             {
                 return Json(JRpcHelper.AjaxResult(1, "请输入账号密码！", Loginname));
             }

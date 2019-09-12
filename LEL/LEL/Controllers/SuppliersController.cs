@@ -111,6 +111,7 @@ namespace LEL.Controllers
         {
             SeachOptions.SuppliersID = GetUserID();
             var result = ShopOrderBLL.GetOrderlineList(SeachOptions, out int Count);
+            
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
 
@@ -189,7 +190,18 @@ namespace LEL.Controllers
             }
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", filter));
         }
-
+         /// <summary>
+        /// 获取订单详细 分页
+        /// </summary>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/Suppliers/GetOrderDetailsPage/")]
+        public IHttpActionResult GetOrderDeatilsPage(OrderDeatilsParams Params)
+        {
+            Params.SupplierIDs = new List<int?>{ GetUserID() };
+            var result = ShopOrderBLL.GetOrderDeatils(Params, out int Count);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
+        }
         /// <summary>
         /// 获取供应商价格
         /// </summary>
@@ -363,10 +375,15 @@ namespace LEL.Controllers
         /// </summary>
         /// <param name="OrderHeadID"></param>
         /// <returns></returns>
+        // [AllowAnonymous]
         [Route("BindWeixinUser")]
         [HttpPost]
         public IHttpActionResult BindWeixinUser(BindWxUserDto dto )
         {
+            if(dto==null)
+            {
+                return Json(JRpcHelper.AjaxResult(1, "接受到了空得参数", dto));
+            }
             var result=  new WeixinUserService().BindWeixinUser(dto.WeixinInfo, 2, GetUserID(), out string Msg);
             if(result)
             {
@@ -400,6 +417,18 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, Msg, param.OrderNO));
             }
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", param.OrderNO));
+        }
+        
+        /// <summary>
+        /// 获取绑定用户列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("GetWeixinUserList")]
+        [HttpGet]
+        public IHttpActionResult GetWeixinUserList()
+        {
+            var result = new WeixinUserService().GetWeixinUserList(2, GetUserID());
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
         /// <summary>
         /// 修改供应商价格

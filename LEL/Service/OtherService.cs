@@ -1,6 +1,7 @@
 ﻿using DTO.Common;
 using DTO.Others;
 using log4net;
+using MPApiService;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -563,13 +564,17 @@ namespace Service
             }
         }
 
-        /// <summary>
-        /// 推送订单消息
-        /// </summary>
-        /// <param name="UserID"></param>
-        /// <param name="OrderNO"></param>
-        /// <returns></returns>
-        public bool UpdatePushMsg(int? UserID, string OrderNO, int UserType, int MsgType = 1,int IsDeleted=0)
+       /// <summary>
+       /// 推送消息
+       /// </summary>
+       /// <param name="UserID"></param>
+       /// <param name="OrderNO"></param>
+       /// <param name="UserType"></param>
+       /// <param name="MsgType">1普通订单消息2发货提醒</param>
+       /// <param name="IsDeleted"></param>
+       /// <param name="PickupTime">取货时间可以为空</param>
+       /// <returns></returns>
+        public bool UpdatePushMsg(int? UserID, string OrderNO, int UserType, int MsgType = 1,int IsDeleted=0,string PickupTime="")
         {
             if(!UserID.HasValue)
             {
@@ -577,13 +582,21 @@ namespace Service
             }
             using (Entities ctx = new Entities())
             {
+                var WeixinUserList = new WeixinUserService().GetWeixinUserList(UserType, UserID);
+
+                foreach (var item in WeixinUserList)
+                {
+                    MPApiServiceClient serviceClient = new MPApiServiceClient(new Uri("https://xcy.kdk94.top/"), new AnonymousCredential());
+                    var result = serviceClient.SendSuppliersTemplateMsgWithHttpMessagesAsync(item.openid, OrderNO,item.unionid, PickupTime);
+                }
+
                 var model = ctx.le_pushmsg.Where(s => s.UserID == UserID && s.UserType == UserType).FirstOrDefault();
                 if (model == null)
                 {
                     log.Error(string.Format("推送订单消息失败,UserID:{0}，单号:{1}", UserID, OrderNO));
                     return false;
                 }
-                model.UpdateTime = DateTime.Now;
+            
                 model.OrderNo = OrderNO;
                 model.MsgCount += 1;
                 model.UpdateTime = DateTime.Now;
@@ -600,6 +613,8 @@ namespace Service
                 }
             }
         }
+
+        
 
         /// <summary>
         /// 获取推送消息

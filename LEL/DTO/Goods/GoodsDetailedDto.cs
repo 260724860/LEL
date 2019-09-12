@@ -222,7 +222,10 @@ namespace DTO.Goods
         /// </summary>
         public Nullable<System.DateTime> QuotaEndTime { get; set; }
 
-
+        /// <summary>
+        /// 区分标注 空|leshoptest
+        /// </summary>
+        public string Environment { get; set; }
     }
     public class GoodsValues
     {

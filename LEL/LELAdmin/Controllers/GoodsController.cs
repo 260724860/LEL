@@ -267,31 +267,31 @@ namespace LELAdmin.Controllers
         /// <summary>
         /// 增加商品属性
         /// </summary>
-        /// <param name="Name"></param>
-        /// <param name="Price"></param>
+        /// <param name = "Name" ></ param >
+        /// < param name="Price"></param>
         /// <returns></returns>
-        //[Route("AddGoodsValue")]
-        //[HttpPost]
-        //public IHttpActionResult AddGoodsValue(List<GoodsValues> List,int IsBulkCargo)
-        //{
-        //    try
-        //    {
-        //        if (List.Count <= 0)
-        //        {
-        //            return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
-        //        }
-        //        var result = GService.AddGoodsValueList(List, IsBulkCargo,out string Msg);
-        //        if (result!=null)
-        //        {
-        //            return Json(new { code = 0, msg = "SUCCESS", content = result, result = Msg });
-        //        }
-        //        return Json(new { code = 1, msg = "ERROR", content = "添加失败" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
-        //    }
-        //}
+        [Route("AddGoodsValue")]
+        [HttpPost]
+        public IHttpActionResult AddGoodsValue(List<GoodsValues> List, int IsBulkCargo)
+        {
+            try
+            {
+                if (List.Count <= 0)
+                {
+                    return Json(new { code = 1, msg = "ERROR", content = "List参数为NULL" });
+                }
+                var result = GService.AddGoodsValueList(List, IsBulkCargo, out string Msg);
+                if (result != null)
+                {
+                    return Json(new { code = 0, msg = "SUCCESS", content = result, result = Msg });
+                }
+                return Json(new { code = 1, msg = "ERROR", content = "添加失败" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
 
         /// <summary>
         /// 获取用户列表
@@ -460,5 +460,6 @@ namespace LELAdmin.Controllers
             var result = new LogService().GetGoodsLogList(param.SeachOptions, param.AdminID, param.GoodsID, out int Count);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
+       
     }
 }

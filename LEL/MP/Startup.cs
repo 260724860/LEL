@@ -38,6 +38,18 @@ namespace MP
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("allow_all", builder =>
+                {
+                    builder.AllowAnyOrigin() //允许任何来源的主机访问
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();//指定处理cookie
+                });
+            });
+   
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             #region Swagger文档配置
@@ -85,12 +97,17 @@ namespace MP
              */
             services.AddSenparcGlobalServices(Configuration)//Senparc.CO2NET 全局注册
                     .AddSenparcWeixinServices(Configuration);//Senparc.Weixin 注册
+
+
             #endregion
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env ,IOptions<SenparcSetting> senparcSetting, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
+            app.UseCors("allow_all");
             // 启用静态文件
             app.UseStaticFiles();
             

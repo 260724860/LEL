@@ -89,5 +89,7 @@ namespace DTO.ShopOrder
         /// 商品类别名
         /// </summary>
         public string GoodsGroupsName { get; set; }
+
+        public string OrderNo { get; set; }
     }
 }

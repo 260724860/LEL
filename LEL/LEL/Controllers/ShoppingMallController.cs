@@ -34,13 +34,11 @@ namespace LEL.Controllers
         public async Task<IHttpActionResult> GetGoodsList([FromBody]GoodsSeachOptions options)
         {
             if (options == null)
-                
-                
             {
                 return Json(JRpcHelper.AjaxResult(1, "未接收到有效参数", options));
             }
-            string Classify = GetLoginInfo().Classify; 
-            
+            string Classify = GetLoginInfo().Classify;
+
             //string Environment = "";
             //string url= Request.RequestUri.Host.ToString();
             //var SubdomainArrty = url.Split('.');
@@ -52,8 +50,12 @@ namespace LEL.Controllers
             //        Environment = "";
             //    }
             //}
-            var result = await GoodsService.GetGoodsListAsync(options, Classify);
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Classify));
+            if (Classify == "lelshoptest")
+            {
+                options.SupplierID = 291;
+            }
+            var result = await GoodsService.GetGoodsListAsync(options);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
         /// <summary>

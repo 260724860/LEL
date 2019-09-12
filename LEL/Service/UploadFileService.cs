@@ -1,5 +1,6 @@
 ﻿using Common;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -105,11 +106,20 @@ namespace Service
         }
 
         /// <summary>
+        /// 搜索商品信息并且导出
+        /// </summary>
+        /// <returns></returns>
+        //public DataTable ExportGoodsInfoBySerach()
+        //{
+            
+        //}
+        
+        /// <summary>
         /// 从Excel导入数据库
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public bool InsetDb(string fileName, out string Msg)
+        public bool InsertGoodsBaseInfo(string fileName, out string Msg)
         {
             //DataColumn[] GoodsColumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
             //DataColumn[] GoodsBusinessImgolumns = { new DataColumn("Status"), new DataColumn("ErrorMessage"), new DataColumn("Index") };
@@ -440,6 +450,7 @@ namespace Service
             return true;
         }
 
+        
         /// <summary>
         /// 商品价格信息从Excel导入数据库
         /// </summary>
@@ -498,5 +509,149 @@ namespace Service
         }
 
 
+        public bool UpdateGoodsInfoByExcel(string fileName,out string Msg)
+        {
+            var GoodsInfoDt = ExcelHelper.DataReaderExcelFile(fileName,"Sheet1");
+            using (Entities ctx = new Entities())
+            {
+                var GoodsIdList = new List<int>();
+                var GoodsBarCodeList = new List<string>();
+                for (int i = 0; i < GoodsInfoDt.Rows.Count; i++)
+                {
+                    if (int.TryParse(GoodsInfoDt.Rows[i]["商品ID"].ToString(), out int GoodsID))
+                    {
+                        GoodsIdList.Add(GoodsID);
+                    }
+                    GoodsBarCodeList.Add(GoodsInfoDt.Rows[i]["商品条码"].ToString());
+                }
+                var GoodsInfoList = new List<le_goods>();
+                if (GoodsIdList.Count > 0)
+                {
+                    GoodsInfoList = ctx.le_goods.Where(s => GoodsIdList.Contains(s.GoodsID)).ToList();
+                }
+                else
+                {
+                    GoodsInfoList = ctx.le_goods.Where(s => s.le_goods_value.Any(k => GoodsBarCodeList.Contains(k.SerialNumber))).ToList();
+                }
+                for (int i = 0; i < GoodsInfoDt.Rows.Count; i++)
+                {
+                    var GoodsId=Convert.ToInt32(GoodsInfoDt.Rows[i]["商品id"]);
+                    var GoodsModel = GoodsInfoList.Where(s => s.GoodsID == GoodsId).FirstOrDefault();
+                    if(GoodsModel!=null)
+                    {
+                        if(int.TryParse(GoodsInfoDt.Rows[i]["上架"].ToString(), out int IsShelves))
+                        {
+                            GoodsModel.IsShelves = Convert.ToInt32(GoodsInfoDt.Rows[i]["上架"]);
+                        }
+                        if(int.TryParse(GoodsInfoDt.Rows[i]["起配数"].ToString(), out int MinimumPurchase))
+                        {
+                            GoodsModel.MinimumPurchase = MinimumPurchase;
+                        }
+                        ctx.Entry<le_goods>(GoodsModel).State=System.Data.Entity.EntityState.Modified;
+                    }
+                }
+                int Count = ctx.SaveChanges();
+                if (Count>0)
+                {
+                    Msg = "修改成功";
+                    return true;
+                }
+            }
+            Msg = "未知错误";
+            return false;
+        }
+
+        public bool AddGoodsInfoByExcel(string fileName, out string Msg)
+        {
+            var GoodsInfoDt = ExcelHelper.DataReaderExcelFile(fileName, "Sheet1");
+           
+
+
+            using (Entities ctx = new Entities())
+            {
+                for (int i = 0; i < GoodsInfoDt.Rows.Count; i++)
+                {
+                    #region 参数检查
+                    if (!int.TryParse(GoodsInfoDt.Rows[i]["上架"].ToString(), out int IsShelves))
+                    {
+                        Msg = "上架字段错误只能输入0/1，在序号【"+ GoodsInfoDt.Rows [i]["序号"]+ "】";
+                        return false;
+                    }
+                    if (!int.TryParse(GoodsInfoDt.Rows[i]["散货"].ToString(), out int IsBulkCargo))
+                    {
+                        Msg = "散货字段错误只能输入0/1，在序号【" + GoodsInfoDt.Rows[i]["序号"] + "】";
+                        return false;
+                    }
+                    if (!int.TryParse(GoodsInfoDt.Rows[i]["装箱数"].ToString(), out int PackingNumber))
+                    {
+                        Msg = "装箱数字段错误只能输入正整数，在序号【" + GoodsInfoDt.Rows[i]["序号"] + "】";
+                        return false;
+                    }
+                    if (!int.TryParse(GoodsInfoDt.Rows[i]["起配数"].ToString(), out int MinimumPurchase))
+                    {
+                        Msg = "起配数字段错误只能输入正整数，在序号【" + GoodsInfoDt.Rows[i]["序号"] + "】";
+                        return false;
+                    }
+                    if (string.IsNullOrEmpty(GoodsInfoDt.Rows[i]["保质期"].ToString()))
+                    {
+                        Msg = "保质期不能为空";
+                        return false;
+                    }
+                    if(decimal.TryParse(GoodsInfoDt.Rows[i]["起配数"].ToString(),out decimal SupplierPric))
+                    {
+                        Msg = "";
+                        return false;
+                    }
+                    var ShelfLife= GoodsInfoDt.Rows[i]["保质期"].ToString();
+                    var GoodsName = GoodsInfoDt.Rows[i]["商品名称"].ToString();
+                    var GoodsGroup= GoodsInfoDt.Rows[i]["商品分类"].ToString();
+                    var Unit= GoodsInfoDt.Rows[i]["商品单位"].ToString();
+                    var GoodsGroupModel = ctx.le_goodsgroups.Where(s => s.Name == GoodsGroup).FirstOrDefault();
+                    if (GoodsGroupModel == null)
+                    {
+                        Msg = "请输入正确得商品分类名，在序号【" + GoodsInfoDt.Rows[i]["序号"] + "】";
+                        return false;
+                    }
+                    #endregion
+
+                    le_goods GoodsModel = new le_goods();
+                    le_goods_value GoodsValueModel = new le_goods_value();
+                    le_goods_img GoodsImgModel = new le_goods_img();
+                    le_goods_suppliers GoodsSupplierModel = new le_goods_suppliers();
+
+                    if(GoodsInfoDt.Rows[i]["商品条码"]==null&& IsBulkCargo==0)
+                    {
+                        Msg = "商品条码不可为空，在序号【" + GoodsInfoDt.Rows[i]["序号"] + "】";
+                        return false;
+                    }
+                    GoodsModel.IsBulkCargo = IsBulkCargo;
+                    GoodsValueModel.CategoryType = 1;
+                    GoodsValueModel.IsBulkCargo = IsBulkCargo;
+                    GoodsValueModel.CreateTime = DateTime.Now;
+                    GoodsValueModel.UpdateTime = DateTime.Now;
+                 
+                    if (IsBulkCargo==1&& string.IsNullOrEmpty(GoodsInfoDt.Rows[i]["商品条码"].ToString()))//是散货并且条码为空则自动生成条码
+                    {
+                        GoodsValueModel.IsAuto = 1;
+                        GoodsValueModel.SerialNumber = new GoodsService().BarcodeGeneration(GoodsModel.IsBulkCargo);
+                    }
+                    else
+                    {
+                        GoodsValueModel.SerialNumber = GoodsInfoDt.Rows[i]["商品条码"].ToString();
+                    }
+                    //GoodsModel.le_goods_value = GoodsValueModel;
+                    GoodsModel.GoodsName = GoodsName;
+                    GoodsModel.GoodsGroupsID = GoodsGroupModel.ID;
+                    GoodsModel.Unit = Unit;
+                    GoodsModel.PackingNumber = PackingNumber;
+                    GoodsModel.MinimumPurchase = MinimumPurchase;
+                    GoodsModel.ShelfLife = ShelfLife;
+
+
+                }
+            }
+            Msg = "未完成具体功能";
+            return false;
+        }
     }
 }

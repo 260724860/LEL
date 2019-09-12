@@ -41,7 +41,8 @@ namespace Service
                     bool IsAdd = true;
                     le_shop_cart ShopCarModel = new le_shop_cart();
                     var UserCartList = ctx.le_shop_cart.Where(s => s.GoodsID == GoodsID && s.UserID == UserID).ToList();
-
+                    
+                    
                     foreach (var CartModel in UserCartList)
                     {
 
@@ -271,7 +272,7 @@ namespace Service
         /// <param name="ExpressType">快递类型/1快递物流 2 自提</param>
         /// <param name="Msg"></param>
         /// <returns></returns>
-        public int OrderSave(OrderSaveParams ParamasData, out string Msg, out List<ShopCartDto> FailCartList, string Classify = "")
+        public int OrderSave(OrderSaveParams ParamasData, out string Msg, out List<ShopCartDto> FailCartList)
         {
             Msg = "未知错误";
             using (Entities ctx = new Entities())
@@ -347,18 +348,11 @@ namespace Service
                     if (ParamasData.OrderType != 2)
                     {
                         //判断当前时间内的下单数
-
-                        //string BeginStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":00:00";
-                        //string EndStr = DateTime.Now.ToString("yyyy-MM-dd HH") + ":59:59";
-
                         DateTime EndTime = ParamasData.PickupTime.Value.AddHours(1);
                         var hour = ParamasData.PickupTime.Value.Hour;
                         var CurrentTime = DateTime.Now;
 
-#pragma warning disable CS1030 // #warning 指令
-#warning 功能已经完成，暂时注释
                         var CurrentOrderCountSetting = ctx.le_orders_timelimit.Where(s => s.TimeSlot == hour).Select(s => s.LimitOrderCount).FirstOrDefault();
-
                         var CurrentOrderCount = ctx.le_orders_head.Where(s => s.Status != 5 && s.PickupTime >= ParamasData.PickupTime.Value && s.PickupTime < EndTime).Count();
                         if (CurrentOrderCountSetting <= CurrentOrderCount)
                         {
@@ -367,7 +361,6 @@ namespace Service
                             return 0;
                         }
                     }
-#pragma warning restore CS1030 // #warning 指令
                 }
 
                 var QuotaGoodsList = CartList.GroupBy(s => s.GoodsID).Select(g => new { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount) }).ToList();
@@ -380,12 +373,6 @@ namespace Service
 
                 foreach (var goodsModel in CartList)
                 {
-                    
-                    if(!string.IsNullOrEmpty(goodsModel.Classify)&&!string.IsNullOrEmpty(Classify)&& goodsModel.Classify!= Classify)
-                    {
-                        Msg = "该商品ID【" + goodsModel.GoodsName + "】无法下单，门店批次不匹配";
-                        return 0;
-                    }
                     if (goodsModel.IsShelves == 0)
                     {
                         FailCartList.Add(goodsModel);
@@ -450,6 +437,13 @@ namespace Service
                         //log.Debug(Msg);
                         //return 0;
                     }
+                    //增加爆品设置。
+                    var Classify = ctx.le_users.Where(s => s.UsersID == ParamasData.UserID).Select(s => s.Classify).FirstOrDefault();
+                    if(Classify=="lelshoptest"&& DefaulSuplier.SupplierID!=291)
+                    {
+                        continue;
+                    }
+
                     int OrderGoodsCount = 0;//下单商品数量
                     if (ParamasData.OrderType == 1 || ParamasData.OrderType == 3)
                     {
@@ -498,8 +492,6 @@ namespace Service
                     le_Orders_Head.le_orders_lines.Add(linesModel);
                 }
 
-
-
                 le_Orders_Head.CreateTime = DateTime.Now;
                 le_Orders_Head.OrderAmout = OrderLinesList.Sum(s => s.GoodsPrice * s.GoodsCount);
                 le_Orders_Head.RealAmount = le_Orders_Head.OrderAmout;
@@ -521,10 +513,7 @@ namespace Service
                 le_Orders_Head.PickUpPhone = ParamasData.PickUpPhone;
                 le_Orders_Head.PickupTime = ParamasData.PickupTime;
                 le_Orders_Head.PickUpMan = ParamasData.PickUpMan;
-
-
                 ctx.le_orders_head.Add(le_Orders_Head);
-
                 //去重复
                 var NORepeat = goodsStocksList.GroupBy(s => s.GoodsID).Select(g => new GoodsStock { GoodsID = g.Key, GoodsCount = g.Sum(s => s.GoodsCount), Stock = g.Max(k => k.Stock), RowVersion = g.Max(k => k.RowVersion) }).ToList();
                 bool IsHaveStock = true;
@@ -541,7 +530,37 @@ namespace Service
                     log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
                     return 0;
                 }
+                var GroupBySuppliersList = OrderLinesList.GroupBy(s => s.SuppliersID).Select(s => new { Status = s.Max(k => k.Status), SupplierID = s.Key }).ToList();
+                foreach (var Item in GroupBySuppliersList)
+                {
+                    OrderLineStatus SupplierStatus = (OrderLineStatus)Item.Status;
 
+                    switch (SupplierStatus)
+                    {
+                        case OrderLineStatus.DaiJieDan: //待接单 派单      
+                            string PickupTime = le_Orders_Head.PickupTime.HasValue ? le_Orders_Head.PickupTime.Value.ToString("F") : "";
+                            new OtherService().UpdatePushMsg(Item.SupplierID, le_Orders_Head.OutTradeNo, 2, 0, 0, PickupTime);
+                            break;
+                        case OrderLineStatus.DaiFaHuo: //待发货
+
+                            break;
+                        case OrderLineStatus.FaHuoZhong: //发货中
+
+                            break;
+                        case OrderLineStatus.YiFahuo: //已发货
+
+                            break;
+                        case OrderLineStatus.YiJieSuan: //已结算
+
+                            break;
+                        case OrderLineStatus.YiQuXiao:
+
+                            break;
+                        default:
+
+                            break;
+                    }
+                }
                 try
                 {
                     if (OrderLinesList.Count <= 0||FailCartList.Count()== CartList.Count())
@@ -1064,8 +1083,7 @@ namespace Service
                     else
                     {
                         tempIq = tempIq.Where(s => s.OutTradeNo == seachParams.Out_Trade_No);
-                    }
-                  
+                    }                  
                 }
                 else
                 {
@@ -1339,6 +1357,7 @@ namespace Service
                 }
                 var result = tempIq.Select(s => new OrderDetail
                 {
+                    OrderNo = s.le_orders_head.OutTradeNo,
                     SupplierID = s.SuppliersID,
                     GoodsCount = s.GoodsCount,
                     GoodsID = s.GoodsID,
@@ -1377,28 +1396,162 @@ namespace Service
             }
             return null;
         }
-        
+        /// <summary>
+        /// 获取订单详细
+        /// </summary>
+        /// <param name="Params"></param>
+        /// <param name="Count"></param>
+        /// <returns></returns>
+        public List<OrderDetail>GetOrderDeatils(OrderDeatilsParams Params,out int Count)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var tempIq = ctx.le_orders_lines.Where(s => Params.OrderNos.Contains(s.le_orders_head.OutTradeNo));
+                if (Params.SupplierIDs.Count > 0)
+                {
+                    tempIq = tempIq.Where(s => Params.SupplierIDs.Contains(s.SuppliersID));
+                }
+                if (Params.UserIDs.Count > 0)
+                {
+                    tempIq = tempIq.Where(s => Params.UserIDs.Contains(s.UsersID));
+                }
+                if (Params.AdminID != null && Params.AdminID != 0)
+                {
+                    tempIq = tempIq.Where(s => s.AdminID == Params.AdminID);
+                }
+                var IqSelect = tempIq.Select(s => new OrderDetail
+                {
+                    OrderNo = s.le_orders_head.OutTradeNo,
+                    SupplierID = s.SuppliersID,
+                    GoodsCount = s.GoodsCount,
+                    GoodsID = s.GoodsID,
+                    GoodsImg = BasePath + s.le_goods.Image,
+                    GoodsName = s.le_goods.GoodsName,
+                    Notes = s.Notes,
+                    SpecialOffer = s.le_goods.SpecialOffer,
+                    Discount = s.le_goods.Discount,
+                    PriceReduction = s.le_goods.PriceReduction,
+                    PriceFull = s.le_goods.PriceFull,
+                    Integral = s.le_goods.Integral,
+                    CountFull = s.CountFull,
+                    CountReduction = s.CountReduction,
+                    Status = s.Status,
+                    SuppliersName = s.le_suppliers.SuppliersName,
+                    GoodsValuesList = s.le_orderline_goodsvalue.Select(k => new GoodsValues()
+                    {
+                        SerialNumber = k.le_goods_value.SerialNumber,
+                        CategoryType = k.CategoryType,
+                        GoodsValueID = k.GoodsValueID,
+                        GoodsValueName = k.le_goods_value.GoodsValue
+                    }).ToList(),
+                    Orders_Lines_ID = s.OrdersLinesID,
+                    SupplierPhone = s.le_suppliers.MobilePhone,
+                    SupplyPrice = s.SupplyPrice,
+                    GoodsPrice = s.GoodsPrice,
+                    OriginalPrice = s.le_goods.OriginalPrice,
+                    Specifications = s.le_goods.Specifications,
+                    PackingNumber = s.le_goods.PackingNumber,
+                    DeliverCount = s.DeliverCount,
+                    MinimumPurchase = s.le_goods.MinimumPurchase,
+                    GoodsGroupsName = s.le_goods.le_goodsgroups.Name
+                }).OrderBy(s => s.GoodsID).ThenBy(s => s.SupplierID).ThenBy(s=>s.OrderNo);
+                Count = IqSelect.Count();
+                var OrderIq = IqSelect.Skip(Params.Offset).Take(Params.Rows);
+                var result = OrderIq.ToList();
+                if (Params.OrderNos.Count > 1)
+                {
+                    result = result.GroupBy(s =>new { s.GoodsID,s.OrderNo}).Select(s => new OrderDetail
+                    {
+                        OrderNo = s.Key.OrderNo,
+                        GoodsID = s.Key.GoodsID,
+                        SupplierID = s.Max(k => k.SupplierID),
+                        GoodsCount = s.Sum(k => k.GoodsCount),
+                      
+                        GoodsImg = s.Max(k => k.GoodsImg),
+                        GoodsName = s.Max(k => k.GoodsName),
+                        Notes = s.Max(k => k.Notes),
+                        SpecialOffer = s.Max(k => k.SpecialOffer),
+                        Discount = s.Max(k => k.Discount),
+                        PriceReduction = s.Max(k => k.PriceReduction),
+                        PriceFull = s.Max(k => k.PriceFull),
+                        Integral = s.Max(k => k.Integral),
+                        CountFull = s.Max(k => k.CountFull),
+                        CountReduction = s.Max(k => k.CountReduction),
+                        Status = s.Max(k => k.Status),
+                        SuppliersName = s.Max(k => k.SuppliersName),
+                        GoodsValuesList = s.Max(k => k.GoodsValuesList),
+                        Orders_Lines_ID = s.Max(k => k.Orders_Lines_ID),
+                        SupplierPhone = s.Max(k => k.SupplierPhone),
+                        SupplyPrice = s.Max(k => k.SupplyPrice),
+                        GoodsPrice = s.Max(k => k.GoodsPrice),
+                        OriginalPrice = s.Max(k => k.OriginalPrice),
+                        Specifications = s.Max(k => k.Specifications),
+                        PackingNumber = s.Max(k => k.PackingNumber),
+                        DeliverCount = s.Sum(k => k.DeliverCount),
+                        MinimumPurchase = s.Max(k => k.MinimumPurchase),
+                        GoodsGroupsName = s.Max(k => k.GoodsGroupsName)
+                    }
+                        ).ToList();
+
+                };
+                return result;
+            }
+                   
+        }
         /// <summary>
         /// 获取订单详细内供应商状态
         /// </summary>
         /// <param name="OrderNo"></param>
         /// <returns></returns>
-        public List<OrderSupplierList> GetOrderSupplierList(string OrderNo)
+        public List<OrderSupplierList> GetOrderSupplierList(OrderSupplierListParams Params,out int Count)
         {
             using (Entities ctx=new Entities())
             {
                 var tempIq = ctx.le_orders_lines.Where(s=>true);
+                if(!string.IsNullOrEmpty(Params.OrderNo))
+                {
+                    tempIq = tempIq.Where(s => s.le_orders_head.OutTradeNo.EndsWith (Params.OrderNo) );
+                }
+                else
+                {
+                    if(Params.BeginPickUpTime!=null)
+                    {
+                        tempIq = tempIq.Where(s => s.le_orders_head.PickupTime >= Params.BeginPickUpTime);
+                    }
+                    if(Params.EndPickUpTime!=null)
+                    {
+                        tempIq = tempIq.Where(s => s.le_orders_head.PickupTime <= Params.EndPickUpTime);
+                    }
+                    if(Params.BeginTime!=null)
+                    {
+                        tempIq = tempIq.Where(s => s.CreateTime >= Params.BeginTime);
+                    }
+                    if(Params.EndTime!=null)
+                    {
+                        tempIq = tempIq.Where(s => s.CreateTime <= Params.EndTime);
+                    }
+                    if(!string.IsNullOrEmpty(Params.KeyWords))
+                    {
+                        tempIq = tempIq.Where(s => s.UsersID.ToString().Contains(Params.KeyWords)
+                          || s.SuppliersID.ToString().Contains(Params.KeyWords)
+                          || s.le_users.UsersNickname.Contains(Params.KeyWords)
+                          || s.le_suppliers.SuppliersName.Contains(Params.KeyWords)
+                        );
+                    }
+                }
                 var selectIquery = tempIq.GroupBy(k => k.SuppliersID).Select(s => new OrderSupplierList
                 {
                     SupplierID=s.Key,
                     DeliverCount = s.Sum(k => k.DeliverCount),
                     Status = s.Max(k => k.Status),
                     SupplierName = s.Max(k => k.le_suppliers.SuppliersName),
-                    TotalSupplyPrice = s.Sum(k => k.SupplyPrice),
+                    TotalSupplyPrice = s.Sum(k => k.SupplyPrice*k.GoodsCount),
                     GoodsCount = s.Sum(k => k.GoodsCount),
                     MobilePhone = s.Max(k => k.le_suppliers.MobilePhone)
                 });
-               
+                selectIquery = selectIquery.OrderBy(s => s.SupplierID).Skip(Params.Offset).Take(Params.Rows);
+
+                Count = selectIquery.Count();
                 var result = selectIquery.ToList();
                 return result;
                 ;
@@ -1737,7 +1890,7 @@ namespace Service
                 }
                 if(SeachOptions.EndPickupTime != null)
                 {
-                    tempIq = tempIq.Where(s => s.le_orders_head.PickupTime <SeachOptions.EndPickupTime);
+                    tempIq = tempIq.Where(s => s.le_orders_head.PickupTime <=SeachOptions.EndPickupTime);
                 }
                 if (SeachOptions.UserID != null)
                 {
@@ -1867,7 +2020,7 @@ namespace Service
                 }
 
 
-                GroupResult = GroupResult.OrderBy(s => s.CreateTime).ThenBy(t=>t.PickupTime);
+                GroupResult = GroupResult.OrderByDescending(s => s.CreateTime).ThenBy(t=>t.PickupTime);
                 Count = GroupResult.Count();
                 GroupResult = GroupResult.Skip(SeachOptions.Offset).Take(SeachOptions.Rows);
                 var filter = GroupResult.ToList();
@@ -1912,7 +2065,8 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 var OrderNo = OrderLineList.Select(s => s.OrderNo).FirstOrDefault();
-                var OrderHeadModel = ctx.le_orders_head.Where(s => s.OutTradeNo == OrderNo).FirstOrDefault();             
+                var OrderHeadModel = ctx.le_orders_head.Where(s => s.OutTradeNo == OrderNo).FirstOrDefault();
+                
                 int OrderLinesId = 0;
                 if (OrderHeadModel == null)
                 {
@@ -1932,6 +2086,7 @@ namespace Service
                 try
                 {
                     var LinesList = OrderHeadModel.le_orders_lines.ToList();
+                  
                     foreach (var IndexLine in OrderLineList)
                     {
                         if (AdminID != 0) //总部操作
@@ -2030,7 +2185,7 @@ namespace Service
                                 CurrentLine.SuppliersID = SuppliersID;                                
                                 OrderLineLog.AdminID = AdminID;
 
-                                new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
+                               // new OtherService().UpdatePushMsg(SuppliersID, OrderHeadModel.OutTradeNo, 2);
 
                                 break;
                             case OrderLineStatus.DaiFaHuo: //待发货
@@ -2060,7 +2215,7 @@ namespace Service
                               
                                 //供货商完成接单 推送消息给总部
                                 new OtherService().UpdatePushMsg(CurrentLine.AdminID, OrderHeadModel.OutTradeNo, 3);
-                                new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2);
+                                new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2,1,1);
                                 break;
                             //case OrderLineStatus.YiWanCheng: //已完成
                             //    CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
@@ -2114,48 +2269,9 @@ namespace Service
                                 throw new Exception("订单状态【"+Status.ToString()+"】错误，请检查");
                                 break;
                         }
-                        var FahuoZhongCount = LinesList.Count(s => s.Status == (int)OrderLineStatus.FaHuoZhong);//发货中
-                        var YiQuXiaoCount = LinesList.Count(s => s.Status == (int)OrderLineStatus.YiQuXiao);//已取消
-                        int DaiJieDanCount = LinesList.Count(s => s.Status == (int)OrderLineStatus.DaiJieDan);
-                        int DaiFaHuoCount = LinesList.Count(s => s.Status == (int)OrderLineStatus.DaiFaHuo);
-                        int YiFahuoCount = LinesList.Count(s => s.Status == (int)OrderLineStatus.YiFahuo);
-                        int YiWanChengCount = LinesList.Count(s => s.Status == (int)OrderLineStatus.YiWanCheng);
-                        int YiJieSuanCount = LinesList.Count(s => s.Status == (int)OrderLineStatus.YiJieSuan);
 
-                        if (DaiJieDanCount!=0&&( DaiJieDanCount == LinesList.Count() - YiQuXiaoCount)) //全部派单 更新订单头状态为待接单
-                        {
-                            OrderHeadModel.Status = (int)OrderHeadStatus.DaiJieDan;//修改订单头状态为待接单
-                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
-                        }
-                        if (DaiFaHuoCount!=0&&(DaiFaHuoCount == LinesList.Count() - YiQuXiaoCount)) //全部待发货 更新订单头状态为待接单
-                        {
-                            OrderHeadModel.Status = (int)OrderHeadStatus.DaiFaHuo;//修改订单头状态为待发货
-                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
-                        }
-                        if (FahuoZhongCount != 0 && (FahuoZhongCount == LinesList.Count() - YiQuXiaoCount)) //全部发货中 更新订单头状态为待接单
-                        {
-                            OrderHeadModel.Status = (int)OrderHeadStatus.FaHuoZhong;//修改订单头状态为发货中
-                        }
-                        if (YiFahuoCount!=0&&(YiFahuoCount == LinesList.Count() - YiQuXiaoCount)) //全部已发货,更新订单头状态
-                        {
-                            OrderHeadModel.Status = (int)OrderHeadStatus.YiFaHuo;//修改订单头状态为已结单
-                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
-                        }
-                        if (YiWanChengCount!=0&& (YiWanChengCount == LinesList.Count() - YiQuXiaoCount)) //全部已发货,更新订单头状态
-                        {
-                            OrderHeadModel.Status = (int)OrderHeadStatus.YiWanCheng;
-                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
-                        }
-                        if (YiJieSuanCount!=0&&(YiJieSuanCount == LinesList.Count() - YiQuXiaoCount)) //全部已结算,更新订单头状态
-                        {
-                            OrderHeadModel.Status = (int)OrderHeadStatus.YiJieSuan;
-                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
-                        }
-                        if (YiQuXiaoCount!=0&& (YiQuXiaoCount == LinesList.Count())) //全部已取消,更新订单头状态
-                        {
-                            OrderHeadModel.Status = (int)OrderHeadStatus.YiQuXiao;
-                            OrderHeadLog.AfterStatus = OrderHeadModel.Status;
-                        }
+                        OrderHeadModel.Status = (int)ProcessingOrderHeadStatus(LinesList, (OrderHeadStatus)OrderHeadModel.Status);
+                        OrderHeadLog.AfterStatus = OrderHeadModel.Status;
 
                         OrderHeadModel.UpdateTime = DateTime.Now;
                         CurrentLine.UpdateTime = DateTime.Now;
@@ -2187,7 +2303,37 @@ namespace Service
                         ctx.Entry<le_orders_lines>(CurrentLine).State = EntityState.Modified;
                         ctx.Entry<le_orders_head>(OrderHeadModel).State = EntityState.Modified;
                     }
-                   
+                    var GroupBySuppliersList = OrderLineList.GroupBy(s => s.SuppliersID).Select(s => new { Status = s.Max(k => k.Status), SupplierID = s.Key }).ToList();
+                    foreach (var Item in GroupBySuppliersList)
+                    {
+                        OrderLineStatus SupplierStatus = (OrderLineStatus)Item.Status;
+
+                        switch (SupplierStatus)
+                        {
+                            case OrderLineStatus.DaiJieDan: //待接单 派单      
+                                string PickupTime = OrderHeadModel.PickupTime.HasValue ? OrderHeadModel.PickupTime.Value.ToString("F") : "";
+                                new OtherService().UpdatePushMsg(Item.SupplierID, OrderHeadModel.OutTradeNo, 2, 0, 0, PickupTime);
+                                break;
+                            case OrderLineStatus.DaiFaHuo: //待发货
+
+                                break;
+                            case OrderLineStatus.FaHuoZhong: //发货中
+
+                                break;
+                            case OrderLineStatus.YiFahuo: //已发货
+
+                                break;
+                            case OrderLineStatus.YiJieSuan: //已结算
+
+                                break;
+                            case OrderLineStatus.YiQuXiao:
+
+                                break;
+                            default:
+
+                                break;
+                        }
+                    }
                     if (ctx.SaveChanges() > 0)
                     {
                         Msg = "OK";
@@ -2198,6 +2344,8 @@ namespace Service
                         Msg = "保存失败" + AdminID.ToString();
                         return false;
                     }
+                   
+
                 }
                 catch (DbEntityValidationException exception)
                 {
@@ -2229,7 +2377,7 @@ namespace Service
         }
 
         /// <summary>
-        /// 修改订单行状态 
+        /// 根据供应商修改订单行状态 
         /// </summary>
         /// <param name="OrderNO"></param>
         /// <param name="AdminID"></param>
@@ -2341,8 +2489,12 @@ namespace Service
 
                             }
                             break;
-                   
-
+                        case OrderLineStatus.DaiFaHuo:
+                            if(index.Status==(int)OrderLineStatus.DaiJieDan)
+                            {
+                                CurrentLine.Status = (int)OrderLineStatus.DaiFaHuo;
+                            }
+                            break;
                         case OrderLineStatus.YiFahuo:
                             if (index.DeliverCount <= 0)
                             {

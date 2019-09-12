@@ -71,6 +71,7 @@
     <Compile Include="Report\GoodsSaleDTO.cs" />
     <Compile Include="Report\StoreSaleDto.cs" />
     <Compile Include="Report\SupplierSaleDto.cs" />
+    <Compile Include="ShopOrder\OrderDeatilsParams.cs" />
     <Compile Include="ShopOrder\OrderDetail.cs" />
     <Compile Include="ShopOrder\OrderDto.cs" />
     <Compile Include="ShopOrder\OrderEditDto.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="ShopOrder\OrdersTimeLimitDto.cs" />
     <Compile Include="ShopOrder\OrdersTimeLimitEditDto.cs" />
     <Compile Include="ShopOrder\OrderSupplierList.cs" />
+    <Compile Include="ShopOrder\OrderSupplierListParams.cs" />
     <Compile Include="ShopOrder\ShopCartDto.cs" />
     <Compile Include="ShopOrder\UpdateOrderLineStatusBySupplierDto.cs" />
     <Compile Include="Suppliers\SuppliersDto.cs" />

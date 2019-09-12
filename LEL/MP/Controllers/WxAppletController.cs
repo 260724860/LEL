@@ -162,12 +162,12 @@ namespace MP.Controllers
                 {
                     //Session["WxOpenUser"] = jsonResult;//使用Session保存登陆信息（不推荐）
                     //使用SessionContainer管理登录信息（推荐）
-                    var unionId = "";
+                    var unionId = jsonResult.unionid;
                     var sessionBag = SessionContainer.UpdateSession(null, jsonResult.openid, jsonResult.session_key, unionId);
 
                     //注意：生产环境下SessionKey属于敏感信息，不能进行传输！
                     // return Json(new { success = true, msg = "OK", sessionId = sessionBag.Key, sessionKey = sessionBag.SessionKey });
-                    return Json(new { code = 0, msg = "OK.生产环境下SessionKey属于敏感信息，不能进行传输", content= sessionBag });
+                    return Json(new { code = 0, msg = "OK.生产环境下SessionKey属于敏感信息，不能进行传输", content= sessionBag,unionId=unionId });
                 }
                 else
                 {
