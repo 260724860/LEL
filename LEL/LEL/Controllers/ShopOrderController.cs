@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using static DTO.Common.Enum;
 
 namespace LEL.Controllers
 {
@@ -131,10 +132,10 @@ namespace LEL.Controllers
                     }
                 }
             }
-            if (Data.PickupTime > new DateTime(2019, 09, 17))
-            {
-                return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误", GetUserID()));
-            }
+            //if (Data.PickupTime > new DateTime(2019, 09, 17))
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误", GetUserID()));
+            //}
             if (Data.PickupTime > DateTime.Now.AddDays(3))
             {
                 return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误,取货时间限制48小时内", GetUserID()));
@@ -143,10 +144,7 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "取货时间错误，请重新选择", GetUserID()));
             }
-            if (Data.PickupTime.Value.Day==13||Data.PickupTime.Value.Day==14)
-            {
-                return Json(JRpcHelper.AjaxResult(1, "9月13号/14中秋佳节。请选择其他时间", GetUserID()));
-            }
+          
             Data.UserID = GetUserID();
             using (Entities ctx=new Entities())
             {
@@ -380,32 +378,29 @@ namespace LEL.Controllers
         /// <summary>
         /// 新增缺货列表
         /// </summary>
-        /// <param name="Barcode">条码</param>
-        /// <param name="GoodsName">品名</param>
-        /// <param name="PurchasePrice">进价</param>
-        /// <param name="SellingPrice">售价</param>
-        /// <param name="Specifications">规格</param>
-        /// <param name="GoodsCount">数量</param>
-        /// <param name="Merchant">货商</param>
-        /// <param name="MerchantCode">货商编号</param>
-        /// <param name="Classify">分类</param>
-        /// <param name="ClassifyCode">分类便秘</param>
-        /// <param name="Flag">标记</param>
-        /// <param name="Remark">备注</param>
-        /// <param name="InStock">有货无货</param>
-        /// <param name="UsersID">用户ID</param>
-        /// <param name="ID">自增id，0则表示新增/否表示修改</param>
-
+        /// <param name="dto"></param>
         /// <returns></returns>
-        [Route("AddBackOrder")]
+        [AllowAnonymous]
+        [Route("api/ShopOrder/AddBackOrder")]
         [HttpPost]
-        public IHttpActionResult AddBackOrder(string Barcode, string GoodsName, string PurchasePrice, string SellingPrice,
-            string Specifications, int GoodsCount, string Merchant, string MerchantCode, string Classify, string ClassifyCode
-            , int UsersID, string Flag, string Remark ,string InStock, int ID)
+        public IHttpActionResult AddBackOrder(AddBackOrderDto dto
+            )
         {
-            var result = new BackOrderService().AddBackOrder(Barcode, GoodsName, PurchasePrice, SellingPrice,
-             Specifications, GoodsCount, Merchant, MerchantCode, Classify, ClassifyCode
-            , UsersID, Flag, Remark, InStock, ID ,out string Msg);
+            // return Json(JRpcHelper.AjaxResult(0, "新增成功", dto.Barcode));
+
+            if (dto.GoodsName == null) dto.GoodsName = "";
+            if (dto.PurchasePrice == null) dto.PurchasePrice = "";
+            if (dto.SellingPrice == null) dto.SellingPrice = "";
+            if (dto.Specifications == null) dto.Specifications = "";
+            if (dto.Merchant == null) dto.Merchant = "";
+            if (dto.MerchantCode == null) dto.MerchantCode = "";
+            if (dto.Classify == null) dto.Classify = "";
+            if (dto.ClassifyCode == null) dto.ClassifyCode = "";
+            if (dto.Flag == null) dto.Flag = "";
+            if (dto.Remark == null) dto.Remark = "";
+            var result = new BackOrderService().AddBackOrder(dto.Barcode, dto.GoodsName, dto.PurchasePrice, dto.SellingPrice,
+             dto.Specifications, dto.GoodsCount, dto.Merchant, dto.MerchantCode, dto.Classify, dto.ClassifyCode
+            , dto.UsersID, dto.Flag, dto.Remark, dto.InStock, dto.ID, out string Msg);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "新增成功", null));
@@ -415,20 +410,66 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(1, Msg, null));
             }
         }
-       /// <summary>
-       /// 获取
-       /// </summary>
-       /// <param name="UserID"></param>
-       /// <param name="Flag"></param>
-       /// <param name="BeginTime"></param>
-       /// <param name="EndTime"></param>
-       /// <returns></returns>
-        [Route("GetBackOrderList")]
+        /// <summary>
+        /// 获取自采列表
+        /// </summary>
+        /// <param name="UserID">用户ID</param>
+        /// <param name="IsExport">是否导出Excel</param>
+        /// <param name="OrderByType">排序</param> 
+        /// <param name="Flag">标志</param>
+        /// <param name="BeginTime"></param>
+        /// <param name="EndTime"></param>
+        /// <param name="MerchantCode">供应商编码</param>
+        /// <param name="InStock">有货/无货</param>
+        /// <param name="OrderByType"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Route("api/ShopOrder/GetBackOrderList")]
         [HttpPost]
-        public IHttpActionResult GetBackOrderList(int UserID,string Flag="",DateTime? BeginTime=null,DateTime? EndTime=null)
+        public IHttpActionResult GetBackOrderList(BackOrderListParas dto )
         {
-            var result = new BackOrderService().GetbackOrderList(UserID, Flag,BeginTime,EndTime);
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/商品自采导出格式.xlsx";
+            string FileName = dto.UserID.ToString()+"自采列表"+ DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx";
+            string SavPath = System.Web.HttpContext.Current.Server.MapPath("/") + @"UploadFile\export\" + FileName;
+
+            var result = new BackOrderService().GetbackOrderList(dto.UserID, dto.Flag, dto.BeginTime, dto.EndTime, dto.MerchantCode, dto.OrderByType, dto.InStock);
+
+            if (dto.IsExport)
+            {
+                var dt = DataTableToListHelper.ToDataTable(result);
+                dt.Columns["BarCode"].ColumnName = "条码";
+                dt.Columns["GoodsName"].ColumnName = "商品名";
+                dt.Columns["Specifications"].ColumnName = "规格";
+                dt.Columns["Merchant"].ColumnName = "货商";
+                dt.Columns["GoodsCount"].ColumnName = "数量";
+
+                dt.Columns.Remove("Classify");
+                dt.Columns.Remove("ClassifyCode");
+                dt.Columns.Remove("Remark");
+                dt.Columns.Remove("InStock");
+                dt.Columns.Remove("MerchantCode");
+                dt.Columns.Remove("CreateTime");
+                dt.Columns.Remove("UpdateTime");
+                dt.Columns.Remove("Flag");
+                dt.Columns.Remove("UsersID");
+                dt.Columns.Remove("PurchasePrice");
+                dt.Columns.Remove("SellingPrice");
+                dt.Columns.Remove("ID");
+
+                List<DtoImportExcel> DtList = new List<DtoImportExcel>();
+
+                DtList.Add(new DtoImportExcel { dt = dt, SheetNmae = "自采商品列表" });
+
+                ExcelHelper.DataTableToExcel("", DtList, true, SavPath);
+                string returnpath = "/UploadFile/export/" + FileName;
+
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, returnpath));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+                   
         }
     }
 }

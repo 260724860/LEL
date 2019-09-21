@@ -1,4 +1,5 @@
-﻿using NPOI.SS.UserModel;
+﻿using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,160 @@ namespace Common
     public class ExcelHelper
     {
 
+        private string fileName = null; //文件名
+        private IWorkbook workbook = null;
+        private FileStream fs = null;
+        private bool disposed;
+
+        public ExcelHelper(string fileName)
+        {
+            this.fileName = fileName;
+            disposed = false;
+        }
+
+        public static DataTable ExcelToDataTable(string filePath)
+        {
+            var dt = new DataTable();
+            using (var file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                var hssfworkbook = new XSSFWorkbook(file);
+                var sheet = hssfworkbook.GetSheetAt(0);
+                for (var j = 0; j < 5; j++)
+                {
+                    dt.Columns.Add(Convert.ToChar(((int)'A') + j).ToString());
+                }
+                var rows = sheet.GetRowEnumerator();
+                while (rows.MoveNext())
+                {
+                    var row = (XSSFRow)rows.Current;
+                    var dr = dt.NewRow();
+                    for (var i = 0; i < row.LastCellNum; i++)
+                    {
+                        var cell = row.GetCell(i);
+                        if (cell == null)
+                        {
+                            dr[i] = null;
+                        }
+                        else
+                        {
+                            switch (cell.CellType)
+                            {
+                                case CellType.Blank:
+                                    dr[i] = "[null]";
+                                    break;
+                                case CellType.Boolean:
+                                    dr[i] = cell.BooleanCellValue;
+                                    break;
+                                case CellType.Numeric:
+                                    dr[i] = cell.ToString();
+                                    break;
+                                case CellType.String:
+                                    dr[i] = cell.StringCellValue;
+                                    break;
+                                case CellType.Error:
+                                    dr[i] = cell.ErrorCellValue;
+                                    break;
+                                case CellType.Formula:
+                                    try
+                                    {
+                                        dr[i] = cell.NumericCellValue;
+                                    }
+                                    catch
+                                    {
+                                        dr[i] = cell.StringCellValue;
+                                    }
+                                    break;
+                                default:
+                                    dr[i] = "=" + cell.CellFormula;
+                                    break;
+                            }
+                        }
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
+        }
+
+        public DataTable ExcelToDataTable(string sheetName, bool isFirstRowColumn)
+        {
+            ISheet sheet = null;
+            DataTable data = new DataTable();
+            int startRow = 0;
+            try
+            {
+                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                if (fileName.IndexOf(".xlsx") > 0) // 2007版本
+                    workbook = new XSSFWorkbook(fs);
+                else if (fileName.IndexOf(".xls") > 0) // 2003版本
+                    workbook = new HSSFWorkbook(fs);
+
+                if (sheetName != null)
+                {
+                    sheet = workbook.GetSheet(sheetName);
+                    if (sheet == null) //如果没有找到指定的sheetName对应的sheet，则尝试获取第一个sheet
+                    {
+                        sheet = workbook.GetSheetAt(0);
+                    }
+                }
+                else
+                {
+                    sheet = workbook.GetSheetAt(0);
+                }
+                if (sheet != null)
+                {
+                    IRow firstRow = sheet.GetRow(0);
+                    int cellCount = firstRow.LastCellNum; //一行最后一个cell的编号 即总的列数
+
+                    if (isFirstRowColumn)
+                    {
+                        for (int i = firstRow.FirstCellNum; i < cellCount; ++i)
+                        {
+                            ICell cell = firstRow.GetCell(i);
+                            if (cell != null)
+                            {
+                                string cellValue = cell.StringCellValue;
+                                if (cellValue != null)
+                                {
+                                    DataColumn column = new DataColumn(cellValue);
+                                    data.Columns.Add(column);
+                                }
+                            }
+                        }
+                        startRow = sheet.FirstRowNum + 1;
+                    }
+                    else
+                    {
+                        startRow = sheet.FirstRowNum;
+                    }
+
+                    //最后一列的标号
+                    int rowCount = sheet.LastRowNum;
+                    for (int i = startRow; i <= rowCount; ++i)
+                    {
+                        IRow row = sheet.GetRow(i);
+                        if (row == null) continue; //没有数据的行默认是null　　　　　　　
+
+                        DataRow dataRow = data.NewRow();
+                        for (int j = row.FirstCellNum; j < cellCount; ++j)
+                        {
+                            if (row.GetCell(j) != null) //同理，没有数据的单元格都默认是null
+                                dataRow[j] = row.GetCell(j).ToString();
+                        }
+                        data.Rows.Add(dataRow);
+                    }
+                }
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                Console.WriteLine("Exception: " + ex.Message);
+                return null;
+            }
+        }
+
         public static DataTable DataReaderExcelFile(string filePath, string SheetName)
         {
             #region//初始化信息  
@@ -19,7 +174,7 @@ namespace Common
                 {
                     XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
                     ISheet sheet;
-                    if (string.IsNullOrEmpty(SheetName))
+                    if (!string.IsNullOrEmpty(SheetName))
                     {
                          sheet = hssfworkbook.GetSheet(SheetName);
                     }
@@ -51,7 +206,7 @@ namespace Common
                                 ICell cell = row.GetCell(i);
                                 if (cell == null)
                                 {
-                                    IsNotEmptyFlag = IsNotEmptyFlag || false;
+                                    //IsNotEmptyFlag = IsNotEmptyFlag || false;
                                     dr[i] = null;
                                 }
                                 else

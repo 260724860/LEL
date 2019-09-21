@@ -300,5 +300,41 @@ namespace LELAdmin.Controllers
             var result = ShopOrderBLL.GetOrderDeatils(Params, out int Count);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result, Count));
         }
+
+      /// <summary>
+      /// 新增缺货列表
+      /// </summary>
+      /// <param name="dto"></param>
+      /// <returns></returns>
+        [AllowAnonymous]
+        [Route("api/ShopOrder/AddBackOrder")]
+        [HttpPost]
+        public IHttpActionResult AddBackOrder(AddBackOrderDto dto
+            )
+        {
+           // return Json(JRpcHelper.AjaxResult(0, "新增成功", dto.Barcode));
+
+            if (dto.GoodsName == null) dto.GoodsName = "";
+            if (dto.PurchasePrice == null) dto.PurchasePrice = "";
+            if (dto.SellingPrice == null) dto.SellingPrice = "";
+            if (dto.Specifications == null) dto.Specifications = "";
+            if (dto.Merchant == null) dto.Merchant = "";
+            if (dto.MerchantCode == null) dto.MerchantCode = "";
+            if (dto.Classify == null) dto.Classify = "";
+            if (dto.ClassifyCode == null) dto.ClassifyCode = "";
+            if (dto.Flag == null) dto.Flag = "";
+            if (dto.Remark == null) dto.Remark = "";
+            var result = new BackOrderService().AddBackOrder(dto.Barcode, dto.GoodsName, dto.PurchasePrice, dto.SellingPrice,
+             dto.Specifications, dto.GoodsCount, dto.Merchant, dto.MerchantCode, dto.Classify, dto.ClassifyCode
+            , dto.UsersID, dto.Flag, dto.Remark, dto.InStock, dto.ID, out string Msg);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "新增成功", null));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, Msg, null));
+            }
+        }
     }
 }

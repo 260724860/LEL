@@ -76,7 +76,22 @@ namespace Service
                     Token = a.Token,
 
                 });//.Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
-                if (!string.IsNullOrEmpty(Token))
+
+                if(!string.IsNullOrEmpty(Unionid))
+                {
+                    var wxUserTemp = ctx.le_weixinuser.Where(s => s.UserType == 2 && s.Unionid == Unionid).Select(s=>s.UserID).FirstOrDefault();
+                    if(wxUserTemp==0)
+                    {
+                        User.Code = 1;
+                        User.Msg = "尚未绑定微信！";
+                        return User;
+                    }
+                    else
+                    {
+                        User = temp.Where(s => s.SuppliersID == wxUserTemp).FirstOrDefault();
+                    }
+                }
+                else if (!string.IsNullOrEmpty(Token))
                 {
                     User = temp.Where(s => s.Token == Token).FirstOrDefault();
                 }
@@ -88,7 +103,7 @@ namespace Service
                 {
                     var DbPwd = DESEncrypt.Decrypt(User.Suppliers_PassWord, User.Suppliers_Salt);
                     var result = DESEncrypt.MD5Encrypt32(DbPwd + "SystemLEL");
-                    if (result != PWD && string.IsNullOrEmpty(Token))
+                    if (result != PWD && string.IsNullOrEmpty(Token)&&string.IsNullOrEmpty(Unionid))
                     {
                         User.Code = 1;
                         User.Msg = "账号或密码错误";

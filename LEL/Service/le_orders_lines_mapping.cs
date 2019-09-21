@@ -21,5 +21,7 @@ namespace Service
         public string C { get; set; }
         public string Remarks { get; set; }
         public string Types { get; set; }
+        public int PrintingTimes { get; set; }
+        public System.DateTime UpdateTime { get; set; }
     }
 }

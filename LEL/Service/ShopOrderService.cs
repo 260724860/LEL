@@ -427,16 +427,20 @@ namespace Service
                         //return 0;
                     }
                     var DefaulSuplier = goodsModel.SupplierGoodsList.Where(s => s.IsDefalut == 1).FirstOrDefault();
-                    if (DefaulSuplier == null)
+                    if (DefaulSuplier == null) //没有设置供应商得
                     {
-                        FailCartList.Add(goodsModel);
-                       // CartList.Remove(goodsModel);
-                        
-                        continue;
-                        //Msg = "该商品未设置商品默认供应商,下单失败.商品ID:" + goodsModel.GoodsID.ToString();
-                        //log.Debug(Msg);
-                        //return 0;
+                        DefaulSuplier = goodsModel.SupplierGoodsList.FirstOrDefault();
+                        if(DefaulSuplier==null)
+                        {
+                            FailCartList.Add(goodsModel);
+                           
+                            Msg = "该商品未设置商品默认供应商,下单失败.商品:" + goodsModel.GoodsName.ToString();
+                            //log.Debug(Msg);
+                            return 0;
+                        }
+
                     }
+                    
                     //增加爆品设置。
                     var Classify = ctx.le_users.Where(s => s.UsersID == ParamasData.UserID).Select(s => s.Classify).FirstOrDefault();
                     if(Classify=="lelshoptest"&& DefaulSuplier.SupplierID!=291)
@@ -1390,7 +1394,7 @@ namespace Service
                     DeliverCount = s.DeliverCount,
                     MinimumPurchase=s.le_goods.MinimumPurchase,
                     GoodsGroupsName=s.le_goods.le_goodsgroups.Name
-                }).OrderBy(s=>s.SupplierID).OrderBy(s=>s.GoodsID);
+                }).OrderBy(s=>s.SupplierID).ThenBy(s=>s.GoodsID);
 
                 return result.ToList();
             }
@@ -1958,7 +1962,7 @@ namespace Service
                     OrderLineCount=s.OrdersLinesID
                 });
                 result = result.OrderByDescending(s => s.CreateTime);
-                var kk = result.ToList();
+               
                 var GroupResult = result.GroupBy(k => k.OrderHeadID).Select(k => new OrderLineDto
                 {
                     AdminName = k.Max(p => p.AdminName),
@@ -2015,8 +2019,7 @@ namespace Service
                     if(SeachOptions.Status == 3)//已取消
                     {
                         GroupResult = GroupResult.Where(s => s.YiQuXiaoCount == s.OrderLineCount );
-                    }
-                   
+                    }                   
                 }
 
 
@@ -2024,15 +2027,29 @@ namespace Service
                 Count = GroupResult.Count();
                 GroupResult = GroupResult.Skip(SeachOptions.Offset).Take(SeachOptions.Rows);
                 var filter = GroupResult.ToList();
-                List<OrderLineDto> ResultList = new List<OrderLineDto>();
-                foreach (var index in filter)
+
+                var OrderNoArr = filter.Select(s => s.Out_Trade_No).ToList();
+                string SuppliersId = SeachOptions.SuppliersID.Value.ToString();
+
+                var OrdersLinePrint = ctx.le_orders_lines_mapping.Where(s => s.A == SuppliersId && OrderNoArr.Contains(s.OutTradeNo)).Select(s=>new { s.PrintingTimes,s.OutTradeNo });
+
+                foreach(var item in OrdersLinePrint)
                 {
-                    if (index.Status1 == index.Status3)
+                    var Model = filter.Where(s => s.OrderNo == item.OutTradeNo).FirstOrDefault();
+                    if(Model==null)
                     {
-                        index.Status2 = index.Status1;
-                    }
-                    ResultList.Add(index);
+                        Model.PrintingTimes = item.PrintingTimes;
+                    }                   
                 }
+                //List<OrderLineDto> ResultList = new List<OrderLineDto>();
+                //foreach (var index in filter)
+                //{
+                //    if (index.Status1 == index.Status3)
+                //    {
+                //        index.Status2 = index.Status1;
+                //    }
+                //    ResultList.Add(index);
+                //}
 
                 //if(filter.Count==2)
                 //{
@@ -2045,7 +2062,7 @@ namespace Service
                 //        ResultList.Add(index);
                 //    }
                 //}
-                return ResultList;
+                return filter;
             }
         }
 
@@ -3249,6 +3266,8 @@ namespace Service
             public string GoodsID { get; set; }
             public string goodsvalueid { get; set; }
         }
+
+         
     }
 
 }

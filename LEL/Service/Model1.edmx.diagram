@@ -5,44 +5,46 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="eca86584166c4955afebebd572508092" Name="Diagram1" ZoomLevel="93">
-        <EntityTypeShape EntityType="leerledbtestModel.le_ad" Width="1.5" PointX="10.75" PointY="9.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_admin" Width="1.5" PointX="6" PointY="7.75" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_admin_re_users" Width="1.5" PointX="8.25" PointY="5.5" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_admin_role" Width="1.5" PointX="10.75" PointY="13.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_admin_role_mapping" Width="1.5" PointX="12.75" PointY="9.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_admin_role_value" Width="1.5" PointX="13" PointY="5.625" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_cart_goodsvalue" Width="1.5" PointX="7.5" PointY="27.25" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_goods" Width="1.5" PointX="3" PointY="12.875" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_goods_brand" Width="1.5" PointX="0.75" PointY="19.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_goods_img" Width="1.5" PointX="5.25" PointY="35.375" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_goods_log" Width="1.5" PointX="5.25" PointY="23" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_goods_suppliers" Width="1.5" PointX="5.25" PointY="18.5" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_goods_value" Width="1.5" PointX="5.25" PointY="38.375" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_goodsgroups" Width="1.5" PointX="0.75" PointY="14.5" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_navigation" Width="1.5" PointX="10.75" PointY="5.375" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_order_pack" Width="1.5" PointX="8.25" PointY="37.75" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orderline_goodsvalue" Width="1.5" PointX="10.5" PointY="28.5" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_head" Width="1.5" PointX="6" PointY="43.625" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_head_log" Width="1.5" PointX="13.25" PointY="22.25" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_lines" Width="1.5" PointX="8.25" PointY="16.875" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_lines_log" Width="1.5" PointX="10.5" PointY="17.875" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_lines_mapping" Width="1.5" PointX="12.75" PointY="12.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_modify_record" Width="1.5" PointX="8.25" PointY="54" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_operationrecord" Width="1.5" PointX="12.75" PointY="16.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_orders_timelimit" Width="1.5" PointX="8.25" PointY="12.25" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_pushmsg" Width="1.5" PointX="14.75" PointY="9.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_sms" Width="1.5" PointX="14.75" PointY="13.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_store_bulkcargo" Width="1.5" PointX="14.75" PointY="17.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_suppliers" Width="1.5" PointX="3" PointY="27.875" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_sys_address" Width="1.5" PointX="16.75" PointY="5.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_sysconfig" Width="1.5" PointX="16.75" PointY="10.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_sysversion" Width="1.5" PointX="16.75" PointY="13.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_user_address" Width="1.5" PointX="5.25" PointY="3.5" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_users" Width="1.5" PointX="3" PointY="0.75" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_weixinmp" Width="1.5" PointX="16.75" PointY="17.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_weixinuser" Width="1.5" PointX="15.75" PointY="21.125" />
-        <EntityTypeShape EntityType="leerledbtestModel.lel_admin_suppliers" Width="1.5" PointX="10.25" PointY="24.75" />
-        <EntityTypeShape EntityType="leerledbtestModel.lel_imei" Width="1.5" PointX="17.75" PointY="21.125" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_ad" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_admin" Width="1.5" PointX="3" PointY="24.375" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_admin_re_users" Width="1.5" PointX="8.25" PointY="30.25" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_admin_role" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_admin_role_mapping" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_admin_role_value" Width="1.5" PointX="3" PointY="1.25" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_backorder" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_cart_goodsvalue" Width="1.5" PointX="7.5" PointY="24.875" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods" Width="1.5" PointX="3" PointY="8.375" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_brand" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_img" Width="1.5" PointX="5.25" PointY="26.25" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_log" Width="1.5" PointX="5.25" PointY="18.625" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_suppliers" Width="1.5" PointX="8.25" PointY="14.125" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goods_value" Width="1.5" PointX="5.25" PointY="34" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_goodsgroups" Width="1.5" PointX="0.75" PointY="14.125" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_navigation" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_order_pack" Width="1.5" PointX="8.25" PointY="40.25" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orderline_goodsvalue" Width="1.5" PointX="7.5" PointY="21.125" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_head" Width="1.5" PointX="3" PointY="32.125" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_head_log" Width="1.5" PointX="8.25" PointY="34.375" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_lines" Width="1.5" PointX="5.25" PointY="6.5" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_lines_log" Width="1.5" PointX="7.5" PointY="7.5" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_lines_mapping" Width="1.5" PointX="9.75" PointY="5.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_modify_record" Width="1.5" PointX="5.25" PointY="42.5" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_operationrecord" Width="1.5" PointX="9.75" PointY="9.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_orders_timelimit" Width="1.5" PointX="5.25" PointY="29.875" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_pushmsg" Width="1.5" PointX="11.75" PointY="0.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_shop_cart" Width="1.5" PointX="5.25" PointY="14.125" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_sms" Width="1.5" PointX="11.75" PointY="4.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_store_bulkcargo" Width="1.5" PointX="11.75" PointY="8.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_suppliers" Width="1.5" PointX="3" PointY="40.375" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_sys_address" Width="1.5" PointX="10.75" PointY="12.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_sysconfig" Width="1.5" PointX="12.75" PointY="12.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_sysversion" Width="1.5" PointX="13.75" PointY="0.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_user_address" Width="1.5" PointX="3" PointY="52" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_users" Width="1.5" PointX="0.75" PointY="30.25" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_weixinmp" Width="1.5" PointX="13.75" PointY="4.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.le_weixinuser" Width="1.5" PointX="14.75" PointY="8.75" />
+        <EntityTypeShape EntityType="leerledbtestModel.lel_admin_suppliers" Width="1.5" PointX="5.25" PointY="39.375" />
+        <EntityTypeShape EntityType="leerledbtestModel.lel_imei" Width="1.5" PointX="14.75" PointY="13.75" />
         <AssociationConnector Association="leerledbtestModel.FK_le_admin_re_users_le_admin" />
         <AssociationConnector Association="leerledbtestModel.FK_le_goods_Log_le_admin" />
         <AssociationConnector Association="leerledbtestModel.FK_le_orders_head_le_admin" />
@@ -54,6 +56,7 @@
         <AssociationConnector Association="leerledbtestModel.FK_le_admin_re_users_le_users" />
         <AssociationConnector Association="leerledbtestModel.FK_fa_admin_role_value_fa_navigation" />
         <AssociationConnector Association="leerledbtestModel.FK_le_cart_goodsvalue_le_goods_value" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_cart_goodsvalue_le_shop_cart" />
         <AssociationConnector Association="leerledbtestModel.FK_le_goods_img_le_goods" />
         <AssociationConnector Association="leerledbtestModel.FK_le_goods_le_goods_brand" />
         <AssociationConnector Association="leerledbtestModel.FK_le_goods_le_goodsgroups" />
@@ -61,6 +64,7 @@
         <AssociationConnector Association="leerledbtestModel.FK_le_goods_suppliers_le_goods" />
         <AssociationConnector Association="leerledbtestModel.FK_le_goods_value_le_goods" />
         <AssociationConnector Association="leerledbtestModel.FK_le_orders_lines_le_goods" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_shop_cart_le_goods" />
         <AssociationConnector Association="leerledbtestModel.FK_le_goods_suppliers_le_suppliers" />
         <AssociationConnector Association="leerledbtestModel.FK_le_orderline_goodsvalue_le_goods_value" />
         <AssociationConnector Association="leerledbtestModel.FK_le_order_pack_le_orders_head" />
@@ -77,13 +81,9 @@
         <AssociationConnector Association="leerledbtestModel.FK_le_orders_lineschangerecord_le_orders_lines" />
         <AssociationConnector Association="leerledbtestModel.FK_le_orders_lineschangerecord_le_suppliers" />
         <AssociationConnector Association="leerledbtestModel.FK_le_orders_lineschangerecord_le_users" />
+        <AssociationConnector Association="leerledbtestModel.FK_le_shop_cart_le_users" />
         <AssociationConnector Association="leerledbtestModel.FK_lel_admin_suppliers_le_suppliers" />
         <AssociationConnector Association="leerledbtestModel.FK_le_user_address_le_users" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_backorder" Width="1.5" PointX="7.375" PointY="0.75" />
-        <EntityTypeShape EntityType="leerledbtestModel.le_shop_cart" Width="1.5" PointX="5.25" PointY="13.5" />
-        <AssociationConnector Association="leerledbtestModel.FK_le_cart_goodsvalue_le_shop_cart" />
-        <AssociationConnector Association="leerledbtestModel.FK_le_shop_cart_le_goods" />
-        <AssociationConnector Association="leerledbtestModel.FK_le_shop_cart_le_users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

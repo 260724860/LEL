@@ -31,6 +31,7 @@ namespace Service
         public virtual DbSet<le_admin_role> le_admin_role { get; set; }
         public virtual DbSet<le_admin_role_mapping> le_admin_role_mapping { get; set; }
         public virtual DbSet<le_admin_role_value> le_admin_role_value { get; set; }
+        public virtual DbSet<le_backorder> le_backorder { get; set; }
         public virtual DbSet<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }
         public virtual DbSet<le_goods> le_goods { get; set; }
         public virtual DbSet<le_goods_brand> le_goods_brand { get; set; }
@@ -51,6 +52,7 @@ namespace Service
         public virtual DbSet<le_orders_operationrecord> le_orders_operationrecord { get; set; }
         public virtual DbSet<le_orders_timelimit> le_orders_timelimit { get; set; }
         public virtual DbSet<le_pushmsg> le_pushmsg { get; set; }
+        public virtual DbSet<le_shop_cart> le_shop_cart { get; set; }
         public virtual DbSet<le_sms> le_sms { get; set; }
         public virtual DbSet<le_store_bulkcargo> le_store_bulkcargo { get; set; }
         public virtual DbSet<le_suppliers> le_suppliers { get; set; }
@@ -63,7 +65,5 @@ namespace Service
         public virtual DbSet<le_weixinuser> le_weixinuser { get; set; }
         public virtual DbSet<lel_admin_suppliers> lel_admin_suppliers { get; set; }
         public virtual DbSet<lel_imei> lel_imei { get; set; }
-        public virtual DbSet<le_backorder> le_backorder { get; set; }
-        public virtual DbSet<le_shop_cart> le_shop_cart { get; set; }
     }
 }

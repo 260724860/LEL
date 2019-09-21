@@ -69,10 +69,9 @@ namespace Service
         public int GoodsType { get; set; }
         public Nullable<int> GoodsBarand { get; set; }
         public decimal PriceFull { get; set; }
-        public decimal PriceReduction { get; set; }
         public decimal CountFull { get; set; }
         public decimal CountReduction { get; set; }
-        public decimal Discount { get; set; }
+        public decimal PriceReduction { get; set; }
         public string TermOfValidity { get; set; }
         public string Province { get; set; }
         public string City { get; set; }
@@ -87,8 +86,9 @@ namespace Service
         public decimal PriceScheme3 { get; set; }
         public Nullable<System.DateTime> QuotaBeginTime { get; set; }
         public Nullable<System.DateTime> QuotaEndTime { get; set; }
-        public string Environment { get; set; }
+        public decimal Discount { get; set; }
         public int IsVendorClosure { get; set; }
+        public string Environment { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_img> le_goods_img { get; set; }

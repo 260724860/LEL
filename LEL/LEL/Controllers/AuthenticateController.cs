@@ -87,11 +87,15 @@ namespace LEL.Controllers
                 Loginname = "15616127553";
                 PWD = "0b4e931fdfcbe5f1a22b3a384389fc31";
             }
+            if(!string.IsNullOrEmpty(Unionid)&&!string.IsNullOrEmpty(Token))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "Unionid和！Token不能同时使用", Loginname));
+            }
             if(string.IsNullOrEmpty(Loginname)&&string.IsNullOrEmpty(PWD)&&string.IsNullOrEmpty(Token)&&string.IsNullOrEmpty(Unionid))
             {
                 return Json(JRpcHelper.AjaxResult(1, "请输入账号密码！", Loginname));
             }
-            var SupplierUser = SupplierUserService.Login(Loginname, PWD, Token);
+            var SupplierUser = SupplierUserService.Login(Loginname, PWD, Token, Unionid);
             if (SupplierUser.Code == 1)
             {
                 return Json(JRpcHelper.AjaxResult(1, SupplierUser.Msg, null));

@@ -20,12 +20,12 @@ namespace Service
         public Nullable<int> AfterCount { get; set; }
         public decimal BeforeAmount { get; set; }
         public Nullable<decimal> AfterAmount { get; set; }
-        public Nullable<int> AdminID { get; set; }
-        public Nullable<int> UserID { get; set; }
-        public Nullable<int> SupplierID { get; set; }
-        public System.DateTime CreateTime { get; set; }
         public int BeforeStatus { get; set; }
         public Nullable<int> AfterStatus { get; set; }
+        public Nullable<int> SupplierID { get; set; }
+        public Nullable<int> UserID { get; set; }
+        public Nullable<int> AdminID { get; set; }
+        public System.DateTime CreateTime { get; set; }
         public Nullable<decimal> BeforeSupplierAmout { get; set; }
         public Nullable<decimal> AfterSupplierAmout { get; set; }
         public string Actions { get; set; }

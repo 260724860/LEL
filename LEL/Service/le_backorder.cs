@@ -20,16 +20,16 @@ namespace Service
         public string PurchasePrice { get; set; }
         public string SellingPrice { get; set; }
         public string Specifications { get; set; }
-        public Nullable<int> GoodsCount { get; set; }
+        public int GoodsCount { get; set; }
         public string Merchant { get; set; }
         public string MerchantCode { get; set; }
         public string Classify { get; set; }
         public string ClassifyCode { get; set; }
-        public Nullable<int> UsersID { get; set; }
-        public System.DateTime CreateTime { get; set; }
-        public System.DateTime UpdateTime { get; set; }
+        public int UsersID { get; set; }
         public string Flag { get; set; }
         public string Remark { get; set; }
         public string InStock { get; set; }
+        public System.DateTime CreateTime { get; set; }
+        public System.DateTime UpdateTime { get; set; }
     }
 }

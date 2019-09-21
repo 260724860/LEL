@@ -140,5 +140,34 @@
 
 
         }
+
+        public enum BackOrderOrderByType
+        {
+            /// <summary>
+            /// 更新时间倒序
+            /// </summary>
+             UpdateTimeDesc=1,
+            /// <summary>
+            /// 更新时间正序
+            /// </summary>
+            UpdateTimeAsc = 2,
+            /// <summary>
+            /// 条码正序
+            /// </summary>
+             BarCodeAsc=3,
+             /// <summary>
+             /// 条码倒叙
+             /// </summary>
+             BarCodeDesc = 4,
+             /// <summary>
+             /// 供应商正序
+             /// </summary>
+             MerchantAsc =5,
+             /// <summary>
+             /// 供应商倒叙
+             /// </summary>
+             MerchantDesc=6,
+             
+        }
     }
 }

@@ -153,10 +153,10 @@ namespace MP.Controllers
                 orderItemData= new TemplateDataItem(OrderNO),
                 remark= new TemplateDataItem("请在"+ PickupTime + "前送达！", "#FF0000")
             };
-            TempleteModel_MiniProgram MiniProgram =new TempleteModel_MiniProgram();
-            MiniProgram.appid = miniprogram_appid;
-            MiniProgram.pagepath = "pages/order/details/details?unionid="+ Unionid+ "&OrderNO =" + OrderNO;
-            var TempleteMsgresult=  TemplateApi.SendTemplateMessage(token, Openid, template_id, null, TempleteData, MiniProgram);
+            //TempleteModel_MiniProgram MiniProgram =new TempleteModel_MiniProgram();
+            //MiniProgram.appid = miniprogram_appid;
+            //MiniProgram.pagepath = "pages/order/details/details?unionid="+ Unionid+ "&OrderNO =" + OrderNO;
+            var TempleteMsgresult=  TemplateApi.SendTemplateMessage(token, Openid, template_id, null, TempleteData);
             if(TempleteMsgresult.errcode!=0)
             {
                 return Json(new { code = 1, msg = TempleteMsgresult.errmsg, content = "" });

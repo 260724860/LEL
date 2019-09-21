@@ -256,13 +256,32 @@ namespace LELAdmin.Controllers
         //}
           //  string sql = "select * from le_goods_value where serialnumber in ("+string.Join(",", result) +")";
         }
+
         [AllowAnonymous]
         [HttpPost, Route("api/UploadExcel/UpdateGoodsInfoByExcel/")]
-        public IHttpActionResult UpdateGoodsInfoByExcel(string FileName)
+        public IHttpActionResult UpdateGoodsInfoByExcel(string FileName,string SheetName)
         {
             string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/"+ FileName + ".xlsx";
-            new UploadFileService().UpdateGoodsInfoByExcel(path, out string Msg);
+            new UploadFileService().UpdateGoodsInfoByExcel(path, SheetName, out string Msg);
             return null;
+        }
+
+        [AllowAnonymous]
+        [HttpPost, Route("api/UploadExcel/AddGoodsInfoByExcel/")]
+        public IHttpActionResult AddGoodsInfoByExcel(string FileName)
+        {
+            string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/" + FileName;// + ".xls";
+            //try
+            //{
+                var result = new UploadFileService().AddGoodsInfoByExcel(path, out string Msg, 1);
+                return Json(JRpcHelper.AjaxResult(0, Msg, null));
+            //}
+            //catch(Exception ex)
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
+            //}
+
+           // return null;
         }
     }
 }

@@ -259,6 +259,7 @@
     <Compile Include="Oauth\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Oauth\SimpleRefreshTokenProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuzrtzJob\AutoCancelOrders.cs" />
     <Compile Include="QuzrtzJob\ClearSalesVoilumesJob.cs" />
     <Compile Include="QuzrtzJob\JobScheduler.cs" />
     <Compile Include="QuzrtzJob\OrderReminderJob.cs" />
@@ -362,7 +363,9 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2226</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:64139/</IISUrl>
+          <IISUrl>http://localhost:64138/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:64139/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

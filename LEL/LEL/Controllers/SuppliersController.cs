@@ -431,6 +431,34 @@ namespace LEL.Controllers
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
         /// <summary>
+        /// 获取打印列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("api/OrderHandle/GetOrderPrintList/")]
+        public IHttpActionResult GetOrderPrintList(string OutNo="")
+        {
+            PrintingService bll = new PrintingService();
+            var result = bll.GetLinesMappingList(OutNo, GetUserID());
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+        /// <summary>
+        /// 新建或更新打印列表
+        /// </summary>
+        /// <param name="OutNo"></param>
+        /// <param name="SupplierID"></param>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <param name="C"></param>
+        /// <param name="Remarks"></param>
+        /// <param name="Types"></param>
+        /// <returns></returns>
+        public IHttpActionResult CreateOrUpdate(string OutNo,  string A, string B, string C, string Remarks, string Types)
+        {
+            PrintingService bll = new PrintingService();
+            var result = bll.CreateOrUpdate( OutNo, GetUserID() ,A,  B,  C,  Remarks,  Types);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+        /// <summary>
         /// 修改供应商价格
         /// </summary>
         /// <param name="ID"></param>

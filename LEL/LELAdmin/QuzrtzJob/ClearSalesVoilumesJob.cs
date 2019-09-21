@@ -16,5 +16,6 @@ namespace LELAdmin.QuzrtzJob
             log.Error("清空月销量字段");
             return GoodsBLL.ClearSalesVolumesAsync();
         }
+
     }
 }

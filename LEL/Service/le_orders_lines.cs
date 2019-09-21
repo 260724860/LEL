@@ -28,7 +28,7 @@ namespace Service
         public decimal SupplyPrice { get; set; }
         public int GoodsCount { get; set; }
         public int DeliverCount { get; set; }
-        public decimal Profit { get; set; }
+        public Nullable<decimal> Profit { get; set; }
         public string Notes { get; set; }
         public int Status { get; set; }
         public Nullable<int> AdminID { get; set; }

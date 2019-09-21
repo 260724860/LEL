@@ -71,6 +71,8 @@
     <Compile Include="Report\GoodsSaleDTO.cs" />
     <Compile Include="Report\StoreSaleDto.cs" />
     <Compile Include="Report\SupplierSaleDto.cs" />
+    <Compile Include="ShopOrder\AddBackOrderDto.cs" />
+    <Compile Include="ShopOrder\BackOrderListDto.cs" />
     <Compile Include="ShopOrder\OrderDeatilsParams.cs" />
     <Compile Include="ShopOrder\OrderDetail.cs" />
     <Compile Include="ShopOrder\OrderDto.cs" />
