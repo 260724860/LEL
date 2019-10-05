@@ -41,6 +41,10 @@ namespace DTO.ShopOrder
         /// 打印次数
         /// </summary>
         public int PrintingTimes { get; set; }
+        /// <summary>
+        /// 打印时间
+        /// </summary>
+        public DateTime PrintingTime { get; set; }
         #region 扩展属性
         //public string GoodsName { get; set; }
         //public string GoodsImage { get; set; }

@@ -2,6 +2,8 @@
 using DTO.Common;
 using DTO.Others;
 using DTO.ShopOrder;
+using DTO.Suppliers;
+using DTO.User;
 using MPApiService;
 using Service;
 using System;
@@ -224,8 +226,16 @@ namespace LELAdmin.Controllers
         [AllowAnonymous]
         public IHttpActionResult GetSysConfig()
         {
-            var result = SysConfig.Get().values;
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            try
+            {
+                var result = SysConfig.Get().values;
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            catch(Exception ex)
+            {
+                return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
+            }
+           
         }
         /// <summary>
         /// 强制刷新系统运行参数（可能会引发系统异常）
@@ -277,14 +287,18 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [HttpGet, Route("api/Other/GetUserPWD/")]
         [AllowAnonymous]
-        public IHttpActionResult GetUserPWD(string Loginname,int UserType)
+        public IHttpActionResult GetUserPWD(string Loginname,int UserType,string Token)
         {
-            return Json(JRpcHelper.AjaxResult(1, "接口废除", Loginname));
-            //if(UserType==1)
-            //{
+            if (Token != "KKK")
+            {
+                return Json(JRpcHelper.AjaxResult(1, "接口废除", Loginname));
+            }
 
-            //    return Json(JRpcHelper.AjaxResult(0, "SUCCESS", DbPwd));
-            //}
+            if (UserType == 1)
+            {
+                return Json(JRpcHelper.AjaxResult(1, "接口废除", Loginname));
+            }
+            return Json(JRpcHelper.AjaxResult(1, "接口废除", Loginname));
         }
 
         /// <summary>
@@ -390,24 +404,35 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet,Route("FindGoodsImg")]
-        public IHttpActionResult FindGoodsImg(int offset,int rows,bool IsShop0Jpg)
+        public IHttpActionResult FindGoodsImg(int offset,int rows,bool IsShop0Jpg,bool IsDelete=false)
         {
             var GetAllGoodsImg = new GoodsService().GetAllGoodsImg(offset,rows);
             var   localPath = System.Web.HttpContext.Current.Server.MapPath("/");
             List<FindGoodsImg> result = new List<FindGoodsImg>();
+            List<string> ImgPath = new List<string>();
+            int UpdateCount = 0;
             foreach (var item in GetAllGoodsImg)
             {
-                if (!System.IO.File.Exists(localPath+ item.Img))
+                if (!System.IO.File.Exists(localPath + item.Img))
                 {
                     result.Add(item);
+                    ImgPath.Add(item.Img);
                 }
-                if(item.Img== "/GoodImg/0.jpg"&& IsShop0Jpg==true)
+                if (item.Img == "/GoodImg/0.jpg" && IsShop0Jpg == true)
                 {
                     result.Add(item);
+                    
+                }                  
+            }
+            if (IsDelete)
+            {
+                if (ImgPath.Count > 0)
+                {
+                    UpdateCount=   new GoodsService().UpdateGoodsImg(ImgPath);
                 }
             }
-
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result,result.Count));
+            
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS"+ UpdateCount.ToString(), result,result.Count));
         }
 
         /// <summary>
@@ -449,6 +474,51 @@ namespace LELAdmin.Controllers
             MPApiServiceClient serviceClient = new MPApiServiceClient(new Uri("https://xcy.kdk94.top/"),new AnonymousCredential());
             var result= serviceClient.SendSuppliersTemplateMsgWithHttpMessagesAsync("","","","");
             return null;
+        }
+
+        /// <summary>
+        /// 获取取货时间2小时内得订单
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet, Route("GetOrderReminder")]
+        public IHttpActionResult GetOrderReminder()
+        {
+            var result= new ShopOrderService().GetOrderReminder();
+            return Json(JRpcHelper.AjaxResult(0, "result", result));
+        }
+
+        /// <summary>
+        /// 获取48小时内为完成的订单
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet, Route("GetOrderReminderBy48Hour")]
+        public async Task< IHttpActionResult> GetOrderReminderBy48Hour()
+        {
+            var result = await new ShopOrderService().GetOrderReminderBy48Hour();
+            LoginInfo Userinfo = new LoginInfo();
+            Userinfo.UserID = 9;
+            Userinfo.UserType = 3;
+
+
+            List<UpdateOrderLineParamas> List = new List<UpdateOrderLineParamas>();
+            foreach (var intem in result)
+            {
+                UpdateOrderLineParamas paramas = new UpdateOrderLineParamas();
+                paramas.OrderLineID = intem.OrderLineID;
+                paramas.SuppliersID = 291;
+                paramas.OrderNo = intem.OrderNo;
+                paramas.Status = 10;
+                paramas.Notes = "系统自动完成20190930";
+                List.Add(paramas);
+            }
+            var updateresult = new ShopOrderService().UpdateOrderLineStatus(List, out string msg, 9, 0);
+            if (!updateresult)
+            {
+                return Json(JRpcHelper.AjaxResult(0, msg, result));
+            }
+            return Json(JRpcHelper.AjaxResult(0, "result", result));
         }
     }
     public class AnonymousCredential : Microsoft.Rest.ServiceClientCredentials

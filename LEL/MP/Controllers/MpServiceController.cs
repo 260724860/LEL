@@ -167,7 +167,45 @@ namespace MP.Controllers
             }
             return null;
         }
-
+        /// <summary>
+        /// 发送供应商超时消息
+        /// </summary>
+        /// <param name="Openid"></param>
+        /// <param name="OrderNO"></param>
+        /// <param name="Uionid"></param>
+        /// <param name="PickupTime"></param>
+        /// <returns></returns>
+        [HttpGet, Route("SendSupplierOrderReminider")]
+        public ActionResult SendSupplierOrderReminider(string Openid,string OrderNO, string Uionid,string PickupTime)
+        {
+            string token = AccessTokenContainer.TryGetAccessToken(appId, appSecret);
+            Openid = string.IsNullOrEmpty(Openid) ? "oXeYqvzZcyS63MEL4HGuJkXhRHf8" : Openid;
+            OrderNO = string.IsNullOrEmpty(OrderNO) ? "oXeYqvzZcyS63MEL4HGuJkXhRHf8" : OrderNO;
+            PickupTime = string.IsNullOrEmpty(PickupTime) ? DateTime.Now.ToString("F") : PickupTime;
+            //  Unionid=string.IsNullOrEmpty(Unionid)?
+            string template_id = "7OxuJIvR-rRLkgxjkCcav4KB-qVhx3Y9XnHTkKacCkA";
+            string miniprogram_appid = "wx41878160d625e1cb";
+            var TempleteData = new
+            {
+                first = new TemplateDataItem(string.Format("您有一笔订单即将超时，请立即处理。", SystemTime.Now.ToString("T"))),
+                keyword1 = new TemplateDataItem(OrderNO),
+                keyword2 = new TemplateDataItem("未接单"),              
+                remark = new TemplateDataItem("请在" + PickupTime + "前送达！", "#FF0000")
+            };
+            //TempleteModel_MiniProgram MiniProgram =new TempleteModel_MiniProgram();
+            //MiniProgram.appid = miniprogram_appid;
+            //MiniProgram.pagepath = "pages/order/details/details?unionid="+ Unionid+ "&OrderNO =" + OrderNO;
+            var TempleteMsgresult = TemplateApi.SendTemplateMessage(token, Openid, template_id, null, TempleteData);
+            if (TempleteMsgresult.errcode != 0)
+            {
+                return Json(new { code = 1, msg = TempleteMsgresult.errmsg, content = "" });
+            }
+            else
+            {
+                return Json(new { code = 0, msg = TempleteMsgresult.errmsg, content = "" });
+            }
+            return null;
+        }
         /// <summary>
         /// 获取给前端UI使用的JSSDK信息包（扫一扫/分享等功能)
         /// </summary>

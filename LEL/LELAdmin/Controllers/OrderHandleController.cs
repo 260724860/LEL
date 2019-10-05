@@ -1,4 +1,5 @@
 ﻿using Common;
+using DTO.Goods;
 using DTO.ShopOrder;
 using DTO.Suppliers;
 using LELAdmin.Models;
@@ -7,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using static DTO.Common.Enum;
 
@@ -326,7 +328,7 @@ namespace LELAdmin.Controllers
             if (dto.Remark == null) dto.Remark = "";
             var result = new BackOrderService().AddBackOrder(dto.Barcode, dto.GoodsName, dto.PurchasePrice, dto.SellingPrice,
              dto.Specifications, dto.GoodsCount, dto.Merchant, dto.MerchantCode, dto.Classify, dto.ClassifyCode
-            , dto.UsersID, dto.Flag, dto.Remark, dto.InStock, dto.ID, out string Msg);
+            , dto.UsersID, dto.Flag, dto.Remark, dto.InStock,dto.IsDeleted, dto.ID ,out string Msg);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "新增成功", null));
@@ -335,6 +337,145 @@ namespace LELAdmin.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, Msg, null));
             }
+        }
+
+        /// <summary>
+        /// 获取半小时未结单订单
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Route("api/ShopOrder/GetWDJOrderList")]
+        [HttpPost]
+        public async Task< IHttpActionResult> GetWDJOrderList()
+        {
+            var result = await ShopOrderBLL.GetWDJOrderList();
+            return Json(JRpcHelper.AjaxResult(0, "新增成功", result));
+        }
+
+        /// <summary>
+        /// 添加购物车
+        /// </summary>
+        /// <param name="GoodsID">商品ID</param>
+        /// <param name="GoodValueID">商品属性ID</param>
+        /// <param name="GoodsCount">商品数量</param>
+        /// <param name="cumulation">商品数量是否累加</param>
+        /// <param name="ReturnCount">购物车退货数量</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost, Route("api/OrderHandle/AddCart/")]
+        public IHttpActionResult AddCart(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, bool cumulation,int UserID, int? ReturnCount = 0)
+        {           
+            if (GoodsCount <= 0&& ReturnCount==0)
+            {
+                return Json(JRpcHelper.AjaxResult(1, "GoodsCount或者 ReturnCount参数错误", GoodsCount));
+            }
+            string Msg;
+            var result =new  ShopOrderService().AddCart(GoodsID, GoodValueID, GoodsCount, UserID, cumulation, out Msg, ReturnCount);
+            if (result > 0)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            return Json(JRpcHelper.AjaxResult(1, Msg, result));
+        }
+
+        /// <summary>
+        /// 保存订单 （从购物车获取）后台提交
+        /// </summary>     
+        /// <returns></returns>
+        [HttpPost, Route("api/OrderHandle/OrderSave/")]
+        [AllowAnonymous]
+        public IHttpActionResult OrderSave(OrderSaveParams Data)
+        {
+            int[] OrderTypes = { 1, 2, 3 }; int[] ExpressTypes = { 1, 2 };
+            //if (GetUserID() == -1)
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
+            //}
+            if (!OrderTypes.Contains(Data.OrderType) || !ExpressTypes.Contains(Data.ExpressType))
+            {
+                return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", Data.OrderType.ToString() + "," + Data.ExpressType.ToString()));
+            }
+
+            if (Data.ExpressType == 2)
+            {
+                if (!Data.PickupTime.HasValue&&!string.IsNullOrEmpty(Data.PickupTimeStr))
+                {
+                    try
+                    {
+                        Data.PickupTime = Convert.ToDateTime(Data.PickupTimeStr);
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(JRpcHelper.AjaxResult(1, ex.Message + "前端传入时间：【" + Data.PickupTimeStr + "】", ex));
+                    }
+                }
+            }
+            //if (Data.PickupTime > new DateTime(2019, 09, 17))
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误", GetUserID()));
+            //}
+            //if (Data.PickupTime > DateTime.Now.AddDays(3))
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误,取货时间限制48小时内", GetUserID()));
+            //}
+            //if(Data.PickupTime <new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day+1))
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "取货时间错误，请重新选择", GetUserID()));
+            //}
+
+           // Data.UserID = GetUserID();
+           
+            string msg;
+            List<ShopCartDto> FailCartList;
+            var result =new ShopOrderService().OrderSave(Data, out msg, out FailCartList,1);
+            if (result != 0)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, msg, result));
+            }
+            return null;
+
+        }
+
+        /// <summary>
+        /// 获取购物车
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("api/ShopOrder/GetCartList/")]
+        public IHttpActionResult GetCartList(int UserID)
+        {
+            //if (GetUserID() == -1)
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
+            //}
+            var result =new ShopOrderService().GetCartList(UserID);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+        /// <summary>
+        ///  删除购物车
+        /// </summary>
+        /// <param name="CartIDList"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/ShopOrder/DeleteCart/")]
+        public IHttpActionResult DeleteCart(List<int> CartIDList)
+        {
+            //if (GetUserID() == -1)
+            //{
+            //    return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
+            //}
+            if (CartIDList == null)
+            {
+                return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", CartIDList));
+            }
+            var result = new ShopOrderService().DeleteCart(CartIDList, null);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            return Json(JRpcHelper.AjaxResult(1, "Fail", result));
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Service
             GoodsListDto list = new GoodsListDto();
             using (Entities ctx = new Entities())
             {
-                var tempIq = ctx.le_goods.Where(s => true);
+                var tempIq = ctx.le_goods.Where(s => s.Stock>0);
                 if (options.IsHot == 1)
                 {
                     tempIq = tempIq.Where(s => s.IsHot == 1);
@@ -81,12 +81,25 @@ namespace Service
 
                 if (!string.IsNullOrEmpty(options.KeyWords)) //搜索
                 {
-                    tempIq = tempIq.Where(s => s.GoodsName.Contains(options.KeyWords)
-                      || s.GoodsID.ToString().Contains(options.KeyWords)
-                       || s.Describe.Contains(options.KeyWords)
-                      || s.GoodsGroupsID.ToString().Contains(options.KeyWords)
-                      || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords) && k.Enable == 1)
-                      ); ;
+                    var KeyArry = options.KeyWords.TrimEnd().Split(' ');
+                    if (KeyArry.Length >= 2)
+                    {
+                        string k1 = KeyArry[0];
+                        string k2 = KeyArry[1];
+                        tempIq = tempIq.Where(s => s.GoodsName.Contains(k1)
+                            || s.GoodsName.Contains(k2)
+                            );
+                    }
+                    else if (KeyArry.Length == 1)
+                    {
+                        string key = KeyArry[0];
+                        tempIq = tempIq.Where(s => s.GoodsName.Contains(key)
+                           || s.GoodsID.ToString().Contains(key)
+                           // || s.Describe.Contains(options.KeyWords)
+                           || s.GoodsGroupsID.ToString().Contains(key)
+                           || s.le_goods_value.Any(k => k.SerialNumber.Contains(key) && k.Enable == 1)
+                           );
+                    }
                 }
                 if (!string.IsNullOrEmpty(options.SerialNumber))
                 {
@@ -108,6 +121,7 @@ namespace Service
                         tempIq = tempIq.Where(s => s.GoodsID > options.GoodsID.Value);
                     }
                 }
+                
                 IQueryable<GroodsModelDto> result = null;
                 result = tempIq.Select(s => new GroodsModelDto
                 {
@@ -188,6 +202,9 @@ namespace Service
                         break;
                     case GoodsSeachOrderByType.GoodsIDDesc:
                         result = result.OrderByDescending(k => k.GoodsID);
+                        break;
+                    case GoodsSeachOrderByType.StockAsc:
+                        result = result.OrderBy(s => s.Stock);
                         break;
                     default:
                         result = result.OrderBy(k => k.Sort);
@@ -274,12 +291,25 @@ namespace Service
 
                 if (!string.IsNullOrEmpty(options.KeyWords)) //搜索
                 {
-                    tempIq = tempIq.Where(s => s.GoodsName.Contains(options.KeyWords)
-                       || s.GoodsID.ToString().Contains(options.KeyWords)
-                       || s.Describe.Contains(options.KeyWords)
-                       || s.GoodsGroupsID.ToString().Contains(options.KeyWords)
-                       || s.le_goods_value.Any(k => k.SerialNumber.Contains(options.KeyWords) && k.Enable == 1)
-                       ); ;
+                    var KeyArry = options.KeyWords.TrimEnd().Split(' ');
+                    if (KeyArry.Length >= 2)
+                    {
+                        string k1 = KeyArry[0];
+                        string k2 = KeyArry[1];
+                        tempIq = tempIq.Where(s => s.GoodsName.Contains(k1)
+                            || s.GoodsName.Contains(k2)                          
+                            );
+                    }
+                    else if(KeyArry.Length==1)
+                    {
+                        string key = KeyArry[0];
+                        tempIq = tempIq.Where(s => s.GoodsName.Contains(key)
+                           || s.GoodsID.ToString().Contains(key)
+                           // || s.Describe.Contains(options.KeyWords)
+                           || s.GoodsGroupsID.ToString().Contains(key)
+                           || s.le_goods_value.Any(k => k.SerialNumber.Contains(key) && k.Enable == 1)
+                           );
+                    }
                 }
                 if (options.GoodsID != null && options.PageTurning != null)
                 {
@@ -339,7 +369,6 @@ namespace Service
                 var AdminRoleSupplier = ctx.lel_admin_suppliers.Where(s => s.AdminID == AdminID).Select(s => s.SupplierID).ToList();
                 var tmepGroup = tempJoin.Where(s => AdminRoleSupplier.Contains(s.SupplierID));//.ToList();
 
-
                 list.PageCount = await tmepGroup.CountAsync();
                 #region 排序              
                 switch (options.SortKey)
@@ -379,6 +408,9 @@ namespace Service
                         break;
                     case GoodsSeachOrderByType.GoodsIDDesc:
                         tmepGroup = tmepGroup.OrderByDescending(k => k.GoodsID);
+                        break;
+                    case GoodsSeachOrderByType.StockAsc:
+                        tmepGroup = tmepGroup.OrderBy(s => s.Stock);
                         break;
                     default:
                         tmepGroup = tmepGroup.OrderBy(s => s.Sort);
@@ -558,7 +590,7 @@ namespace Service
                         goodsValues.GoodsValueID = GoodValue.GoodsValueID;
                         goodsValues.GoodsValueName = GoodValue.GoodsValue;
                         goodsValues.SerialNumber = GoodValue.SerialNumber;
-
+                        goodsValues.GoodsID = GoodValue.GoodsID;
                         ListgoodsValues.Add(goodsValues);
                     }
                 }
@@ -1004,7 +1036,7 @@ namespace Service
                 GoodLogModel.BeforeSpecialOffer = model.SpecialOffer;
                 GoodLogModel.BeforeStock = model.Stock;
                 GoodLogModel.GoodsID = model.GoodsID;
-
+                GoodLogModel.BeforeMinimumPurchase = model.MinimumPurchase;
                 if (model == null)
                 {
                     msg = "该记录不存在，请确认后重试";
@@ -1080,6 +1112,7 @@ namespace Service
                 GoodLogModel.AfterSheLvesStatus = model.IsShelves;
                 GoodLogModel.AfterSpecialOffer = model.SpecialOffer;
                 GoodLogModel.AfterStock = model.Stock;
+                GoodLogModel.AfterMinimumPurchase = model.MinimumPurchase;
                 if (!string.IsNullOrEmpty(dto.ShelfLife))
                 {
                     model.ShelfLife = dto.ShelfLife;
@@ -1126,6 +1159,7 @@ namespace Service
                     }
                     ID = ExitModel.GoodsMappingID;
                     ExitModel.IsDeleted = 0;
+                    ExitModel.Supplyprice = Price;
                     ExitModel.UpdateTime = DateTime.Now;
                     ctx.Entry<le_goods_suppliers>(ExitModel).State = EntityState.Modified;
                 }
@@ -1910,9 +1944,94 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                var GoodsIDList = ctx.le_goods.Where(s => true).OrderBy(s => s.GoodsID).Skip(offset).Take(rows)
+                var GoodsIDList = ctx.le_goods.Where(s => s.IsShelves==1).OrderBy(s => s.GoodsID).Skip(offset).Take(rows)
                     .Select(s=>new FindGoodsImg { GoodsID=s.GoodsID,Img=s.Image, GoodsName =s.GoodsName}).ToList();
                 return GoodsIDList;
+            }
+        }
+
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="createOrEditDto"></param>
+        /// <returns></returns>
+        public bool QualityTestingCreateOrEdit(QualityTestingCreateOrEditDto createOrEditDto)
+        {
+            using (Entities ctx = new Entities())
+            {
+                bool IsAdd=false;
+                var model = new le_qualitytesting();
+                if (createOrEditDto.ID != null && createOrEditDto.ID != 0)
+                {
+                    model = ctx.le_qualitytesting.Where(s => s.ID == createOrEditDto.ID&&s.IsDelete==0).FirstOrDefault();
+                    if(model==null)
+                    {
+                        IsAdd = true;
+                    }
+                    else
+                    {
+                        IsAdd = false;
+                    }
+                }
+                model.Image = createOrEditDto.Image;
+               // model.IsDelete = createOrEditDto.IsDelete;
+                model.SupplierID = createOrEditDto.SupplierID;
+                model.CreateTime = DateTime.Now;
+                model.GoodsID = createOrEditDto.GoodsID;
+                if(IsAdd)
+                {
+                    ctx.le_qualitytesting.Add(model);
+                }
+                else
+                {
+                    ctx.Entry<le_qualitytesting>(model).State = EntityState.Modified;
+                }
+                if(ctx.SaveChanges()>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public List<le_qualitytesting> GetQualityTestingList(int GoodsID)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var List = ctx.le_qualitytesting.Where(s => s.GoodsID == GoodsID).ToList();
+                return List;
+            }
+        }
+
+
+        /// <summary>
+        /// 删除数据库指定路径得商品图片
+        /// </summary>
+        /// <returns></returns>
+        public int UpdateGoodsImg(List<string> dto)
+        {
+            using (Entities ctx=new Entities())
+            {
+                var result= ctx.le_goods_img.Where(s => dto.Contains(s.Src));
+                foreach(var item in result)
+                {
+                    item.IsDelete = 1;
+                    //item.UpdateTime = DateTime.Now;
+                    ctx.Entry<le_goods_img>(item).State = EntityState.Modified;
+                }
+                int count = ctx.SaveChanges();
+                return count;
+                //if (count>0)
+                //{
+                //    return true;
+                //}
+                //else
+                //{
+                //    return false;
+                //}
             }
         }
 

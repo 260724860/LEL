@@ -20,5 +20,8 @@ namespace DTO.LogDto
         public int BeforeQuota { get; set; }
         public Nullable<int> AfterQuota { get; set; }
         public System.DateTime CreateTime { get; set; }
+
+       public int? BeforeMinimumPurchase { get; set; }
+       public int? AfterMinimumPurchase { get; set; }
     }
 }

@@ -72,6 +72,9 @@
     <File Include="Areas/HelpPage/Views/_ViewStart.cshtml">
       <publishTime>08/14/2019 11:12:39</publishTime>
     </File>
+    <File Include="ASPX/WebForm1.aspx">
+      <publishTime>09/02/2019 10:16:11</publishTime>
+    </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>08/14/2019 11:12:39</publishTime>
     </File>
@@ -79,22 +82,22 @@
       <publishTime>08/14/2019 11:12:39</publishTime>
     </File>
     <File Include="bin/Common.dll">
-      <publishTime>08/30/2019 20:45:07</publishTime>
+      <publishTime>09/29/2019 16:25:50</publishTime>
     </File>
     <File Include="bin/Common.dll.config">
       <publishTime>08/14/2019 11:12:39</publishTime>
     </File>
     <File Include="bin/Common.pdb">
-      <publishTime>08/30/2019 20:45:07</publishTime>
+      <publishTime>09/29/2019 16:25:50</publishTime>
     </File>
     <File Include="bin/DG.Swagger.API.XML">
-      <publishTime>08/30/2019 20:45:08</publishTime>
+      <publishTime>09/29/2019 16:25:53</publishTime>
     </File>
     <File Include="bin/DTO.dll">
-      <publishTime>08/30/2019 20:45:07</publishTime>
+      <publishTime>09/29/2019 16:25:50</publishTime>
     </File>
     <File Include="bin/DTO.pdb">
-      <publishTime>08/30/2019 20:45:07</publishTime>
+      <publishTime>09/29/2019 16:25:50</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>08/14/2019 11:12:39</publishTime>
@@ -106,10 +109,10 @@
       <publishTime>08/15/2018 17:16:34</publishTime>
     </File>
     <File Include="bin/LEL.dll">
-      <publishTime>08/30/2019 20:45:08</publishTime>
+      <publishTime>09/29/2019 16:25:53</publishTime>
     </File>
     <File Include="bin/LEL.pdb">
-      <publishTime>08/30/2019 20:45:08</publishTime>
+      <publishTime>09/29/2019 16:25:53</publishTime>
     </File>
     <File Include="bin/log4net.dll">
       <publishTime>08/14/2019 11:12:40</publishTime>
@@ -140,6 +143,9 @@
     </File>
     <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
       <publishTime>08/14/2019 11:12:40</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Rest.ClientRuntime.dll">
+      <publishTime>07/21/2016 17:21:10</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>08/14/2019 11:12:40</publishTime>
@@ -313,13 +319,13 @@
       <publishTime>08/14/2019 11:12:40</publishTime>
     </File>
     <File Include="bin/Service.dll">
-      <publishTime>08/30/2019 20:45:08</publishTime>
+      <publishTime>09/29/2019 16:25:52</publishTime>
     </File>
     <File Include="bin/Service.dll.config">
-      <publishTime>08/14/2019 11:12:39</publishTime>
+      <publishTime>09/29/2019 15:58:51</publishTime>
     </File>
     <File Include="bin/Service.pdb">
-      <publishTime>08/30/2019 20:45:08</publishTime>
+      <publishTime>09/29/2019 16:25:52</publishTime>
     </File>
     <File Include="bin/Swashbuckle.Core.dll">
       <publishTime>08/14/2019 11:12:40</publishTime>
@@ -459,6 +465,12 @@
     <File Include="Global.asax">
       <publishTime>08/14/2019 11:12:39</publishTime>
     </File>
+    <File Include="HtmlPage2.html">
+      <publishTime>09/25/2019 08:20:09</publishTime>
+    </File>
+    <File Include="libman.json">
+      <publishTime>09/09/2019 10:49:33</publishTime>
+    </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>08/14/2019 11:12:39</publishTime>
     </File>
@@ -502,7 +514,7 @@
       <publishTime>08/14/2019 11:12:39</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>08/30/2019 20:45:09</publishTime>
+      <publishTime>09/29/2019 16:25:54</publishTime>
     </File>
   </ItemGroup>
 </Project>

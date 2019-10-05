@@ -55,6 +55,7 @@
         TotalSalesVolumesDESC = 10,
         GoodsIDAsc=11,
         GoodsIDDesc=12,
+        StockAsc=13,
     }
 
 }

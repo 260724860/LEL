@@ -75,6 +75,9 @@ namespace Service
                     AnotherName = a.AnotherName,
                     Token = a.Token,
 
+                    ClientLoginTime=a.ClientLoginTime,
+                    ClientVersion=a.ClientVersion,
+                    IsLogingClient=a.IsLogingClient
                 });//.Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
 
                 if(!string.IsNullOrEmpty(Unionid))
@@ -513,6 +516,45 @@ namespace Service
                     return false;
                 }
             }
+        }
+
+        /// <summary>
+        /// 修改供应商客户端信息
+        /// </summary>
+        /// <param name="SupplierID"></param>
+        /// <param name="ClientVersion"></param>
+        /// <param name="IsLoginClient"></param>
+        /// <param name="LoginClientTime"></param>
+        /// <returns></returns>
+        public bool UpdateSupplierVision(int SupplierID,string ClientVersion, int? IsLoginClient,DateTime? LoginClientTime)
+        {
+            using (Entities ctx=new Entities())
+            {
+                var model= ctx.le_suppliers.Where(s => s.SuppliersID == SupplierID).FirstOrDefault();
+                if (!string.IsNullOrEmpty(ClientVersion))
+                {
+                    model.ClientVersion = ClientVersion;
+                }
+                if(LoginClientTime!=null)
+                {
+                    model.ClientLoginTime = LoginClientTime;
+                }
+                if(IsLoginClient!=null)
+                {
+                    model.IsLogingClient = IsLoginClient;
+                }
+                ctx.Entry<le_suppliers>(model).State = EntityState.Modified;
+                int Count = ctx.SaveChanges();
+                if(Count>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+                
         }
     }
 

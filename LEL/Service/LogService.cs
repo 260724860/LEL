@@ -168,8 +168,10 @@ namespace Service
                     BeforeQuota = s.BeforeQuota,
                     CreateTime = s.CreateTime,
                     GoodsID = s.GoodsID,
-                    OperationRecordID = s.OperationRecordID
-
+                    OperationRecordID = s.OperationRecordID,
+                    AfterMinimumPurchase=s.AfterMinimumPurchase,
+                    BeforeMinimumPurchase=s.BeforeMinimumPurchase
+                    
 
 
                 });

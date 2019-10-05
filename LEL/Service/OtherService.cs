@@ -2,6 +2,7 @@
 using DTO.Others;
 using log4net;
 using MPApiService;
+
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -260,7 +261,8 @@ namespace Service
                           ReceiveArea = s.ReceiveArea,
                           ReceiveName = s.ReceiveName,
                           ReceivePhone = s.ReceivePhone,
-                          UserID = s.UserID
+                          UserID = s.UserID,
+                          CartNumber=s.le_users.CarNumber
                       });
                 if (!string.IsNullOrEmpty(options.KeyWords))
                 {
@@ -587,7 +589,7 @@ namespace Service
                 foreach (var item in WeixinUserList)
                 {
                     MPApiServiceClient serviceClient = new MPApiServiceClient(new Uri("https://xcy.kdk94.top/"), new AnonymousCredential());
-                    var result = serviceClient.SendSuppliersTemplateMsgWithHttpMessagesAsync(item.openid, OrderNO,item.unionid, PickupTime);
+                    var result =  serviceClient.SendSuppliersTemplateMsgWithHttpMessagesAsync(item.openid, OrderNO,item.unionid, PickupTime);
                 }
 
                 var model = ctx.le_pushmsg.Where(s => s.UserID == UserID && s.UserType == UserType).FirstOrDefault();

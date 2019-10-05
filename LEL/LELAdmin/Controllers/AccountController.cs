@@ -1,5 +1,6 @@
 ﻿using Common;
 using DTO.Admin;
+using DTO.User;
 using LELAdmin.App_Start;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
@@ -71,6 +72,57 @@ namespace LELAdmin.Controllers
                 return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
             }
         }
+        /// <summary>
+        /// 后台用户登录
+        /// </summary>
+        /// <param name="LoginName"></param>
+        /// <param name="PWD"></param>
+        /// <param name="Msg"></param>
+        /// <returns></returns>
+        [Route("Login")]
+        [HttpPost]
+        [AllowAnonymous]
+        public IHttpActionResult Login(AdminLogin login)
+        {
+            try
+            {
+                var dto = AdService.Login(login.LoginName, login.PWD);
+                if (dto.code != 0)
+                {
+                    return Json(JRpcHelper.AjaxResult(1, dto.msg, null));
+                }
+                var tokenExpiration = TimeSpan.FromHours(24);
+                ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
+                identity.AddClaim(new Claim(ClaimTypes.Name, login.LoginName));
+                identity.AddClaim(new Claim("UserID", dto.AdminID.ToString()));
+                identity.AddClaim(new Claim("UserType", "3"));
+                identity.AddClaim(new Claim("Status", dto.status.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Sid, dto.AdminID.ToString()));
+                var props = new AuthenticationProperties()
+                {
+                    IssuedUtc = DateTime.UtcNow,
+                    ExpiresUtc = DateTime.UtcNow.Add(tokenExpiration),
+                };
+                var ticket = new AuthenticationTicket(identity, props);
+                var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
+
+                JObject tokenResponse = new JObject(
+                                            new JProperty("result", JsonConvert.SerializeObject(dto)),
+                                            new JProperty("access_token", accessToken),
+                                            new JProperty("token_type", "bearer"),
+                                            new JProperty("expires_in", tokenExpiration.TotalSeconds.ToString()),
+                                            new JProperty(".issued", ticket.Properties.IssuedUtc.ToString()),
+                                            new JProperty(".expires", ticket.Properties.ExpiresUtc.ToString()));
+
+                return Json(new { code = 0, msg = "SUCCESS", content = tokenResponse });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 1, msg = "ERROR", content = ex.ToString() });
+            }
+        }
+
 
         /// <summary>
         /// 添加后台用户

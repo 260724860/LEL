@@ -56,6 +56,7 @@
     <Compile Include="Goods\GoodsSeachOptions.cs" />
     <Compile Include="Goods\GoodsStock.cs" />
     <Compile Include="Goods\GroodsListDto.cs" />
+    <Compile Include="Goods\QualityTestingCreateOrEditDto.cs" />
     <Compile Include="Goods\SupplierGoodsPriceDto.cs" />
     <Compile Include="HqManager\Goods\GoodsListDTO.cs" />
     <Compile Include="HqManager\Index\IndexDTO.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="ShopOrder\OrderLineDto.cs" />
     <Compile Include="ShopOrder\OrderLineSeachParames.cs" />
     <Compile Include="ShopOrder\OrderPackCount.cs" />
+    <Compile Include="ShopOrder\OrderReminderDto.cs" />
     <Compile Include="ShopOrder\OrderSavebyWinForm.cs" />
     <Compile Include="ShopOrder\OrderSaveParams.cs" />
     <Compile Include="ShopOrder\OrderSeachParams.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Suppliers\SuppliersDto.cs" />
     <Compile Include="Suppliers\UpdateOrderLineParamas.cs" />
     <Compile Include="SupplierUser\SupplierUserDto.cs" />
+    <Compile Include="User\AdminLogin.cs" />
     <Compile Include="User\UserBaseInfoDto.cs" />
     <Compile Include="User\UserInfo.cs" />
     <Compile Include="User\UserRegistDTO.cs" />

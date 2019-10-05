@@ -404,7 +404,7 @@ namespace LEL.Controllers
         public IHttpActionResult UpdateOrderLineStatusBySupplier(UpdateOrderLineStatusBySupplierDto param )
         {
             //int AdminID = GetLoginInfo().UserID;
-            int[] limit = { 100, 2, 3,6 };
+            int[] limit = { 100, 2, 3,6,10 };
             if (!((IList)limit).Contains(param.Status))
             {
                 return Json(JRpcHelper.AjaxResult(1, "请输入正常的状态码限定范围[100, 2,3,6]", param.Status));
@@ -452,12 +452,69 @@ namespace LEL.Controllers
         /// <param name="Remarks"></param>
         /// <param name="Types"></param>
         /// <returns></returns>
+        [HttpPost, Route("api/OrderHandle/CreateOrUpdate/")]
         public IHttpActionResult CreateOrUpdate(string OutNo,  string A, string B, string C, string Remarks, string Types)
         {
             PrintingService bll = new PrintingService();
             var result = bll.CreateOrUpdate( OutNo, GetUserID() ,A,  B,  C,  Remarks,  Types);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
+        /// <summary>
+        /// 更新供应商客户端信息
+        /// </summary>
+        /// <param name="ClientVersion"></param>
+        /// <param name="IsLoginClient"></param>
+        /// <param name="LoginClientTime"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/Suppliers/UpdateSupplierVision")]
+        public IHttpActionResult UpdateSupplierVision( string ClientVersion="", int? IsLoginClient=null, DateTime? LoginClientTime=null)
+        {
+             var result = SupplierUserService.UpdateSupplierVision(GetUserID(),ClientVersion, IsLoginClient, LoginClientTime);
+            if(result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, "没有更新到数据", result));
+            }
+        }
+
+        /// <summary>
+        /// 上传质检报告
+        /// </summary>
+        /// <param name="createOrEditDto"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/Suppliers/QualityTestingCreateOrEdit")]
+        public IHttpActionResult QualityTestingCreateOrEdit(QualityTestingCreateOrEditDto createOrEditDto)
+        {
+            createOrEditDto.SupplierID = GetUserID();
+            var result = GoodService.QualityTestingCreateOrEdit(createOrEditDto);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, "没有更新到数据", result));
+            }
+        }
+
+        /// <summary>
+        /// 获取质检报告
+        /// </summary>
+        /// <param name="GoodsID"></param>
+        /// <returns></returns>
+        [HttpPost, Route("api/Suppliers/GetQualityTestingList")]
+        public IHttpActionResult GetQualityTestingList(int  GoodsID)
+        {
+            var result = GoodService.GetQualityTestingList(GoodsID);
+           
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+          
+        }
+
+
         /// <summary>
         /// 修改供应商价格
         /// </summary>
@@ -503,6 +560,7 @@ namespace LEL.Controllers
         //        return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
         //    }
         //}
+
 
     }
 }

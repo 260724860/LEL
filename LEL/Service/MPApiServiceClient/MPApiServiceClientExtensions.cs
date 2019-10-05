@@ -137,6 +137,78 @@ namespace MPApiService
             }
 
             /// <summary>
+            /// 发送供应商超时消息
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='openid'>
+            /// </param>
+            /// <param name='orderNO'>
+            /// </param>
+            /// <param name='uionid'>
+            /// </param>
+            /// <param name='pickupTime'>
+            /// </param>
+            public static void SendSupplierOrderReminider(this IMPApiServiceClient operations, string openid = default(string), string orderNO = default(string), string uionid = default(string), string pickupTime = default(string))
+            {
+                Task.Factory.StartNew(s => ((IMPApiServiceClient)s).SendSupplierOrderReminiderAsync(openid, orderNO, uionid, pickupTime), operations, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// 发送供应商超时消息
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='openid'>
+            /// </param>
+            /// <param name='orderNO'>
+            /// </param>
+            /// <param name='uionid'>
+            /// </param>
+            /// <param name='pickupTime'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task SendSupplierOrderReminiderAsync(this IMPApiServiceClient operations, string openid = default(string), string orderNO = default(string), string uionid = default(string), string pickupTime = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                await operations.SendSupplierOrderReminiderWithHttpMessagesAsync(openid, orderNO, uionid, pickupTime, null, cancellationToken).ConfigureAwait(false);
+            }
+
+            /// <summary>
+            /// 获取给前端UI使用的JSSDK信息包（扫一扫/分享等功能)
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='url'>
+            /// 当前页面Url
+            /// </param>
+            public static void GetJsSdkUiPackage(this IMPApiServiceClient operations, string url = default(string))
+            {
+                Task.Factory.StartNew(s => ((IMPApiServiceClient)s).GetJsSdkUiPackageAsync(url), operations, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// 获取给前端UI使用的JSSDK信息包（扫一扫/分享等功能)
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='url'>
+            /// 当前页面Url
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task GetJsSdkUiPackageAsync(this IMPApiServiceClient operations, string url = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                await operations.GetJsSdkUiPackageWithHttpMessagesAsync(url, null, cancellationToken).ConfigureAwait(false);
+            }
+
+            /// <summary>
             /// GET请求用于处理微信小程序后台的URL验证
             /// </summary>
             /// <param name='operations'>

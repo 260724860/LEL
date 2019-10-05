@@ -70,6 +70,9 @@ namespace Service
         public string ManagingBrands { get; set; }
         public string AnotherName { get; set; }
         public string Token { get; set; }
+        public string ClientVersion { get; set; }
+        public Nullable<int> IsLogingClient { get; set; }
+        public Nullable<System.DateTime> ClientLoginTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_goods_suppliers> le_goods_suppliers { get; set; }

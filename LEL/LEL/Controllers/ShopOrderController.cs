@@ -62,6 +62,8 @@ namespace LEL.Controllers
             return Json(JRpcHelper.AjaxResult(1, Msg, result));
         }
 
+
+
         /// <summary>
         ///  删除购物车
         /// </summary>
@@ -140,11 +142,11 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误,取货时间限制48小时内", GetUserID()));
             }
-            if(Data.PickupTime <new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day+1))
+            if (Data.PickupTime < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1))
             {
                 return Json(JRpcHelper.AjaxResult(1, "取货时间错误，请重新选择", GetUserID()));
             }
-          
+
             Data.UserID = GetUserID();
             using (Entities ctx=new Entities())
             {
@@ -400,7 +402,7 @@ namespace LEL.Controllers
             if (dto.Remark == null) dto.Remark = "";
             var result = new BackOrderService().AddBackOrder(dto.Barcode, dto.GoodsName, dto.PurchasePrice, dto.SellingPrice,
              dto.Specifications, dto.GoodsCount, dto.Merchant, dto.MerchantCode, dto.Classify, dto.ClassifyCode
-            , dto.UsersID, dto.Flag, dto.Remark, dto.InStock, dto.ID, out string Msg);
+            , dto.UsersID, dto.Flag, dto.Remark, dto.InStock, dto.ID,dto.IsDeleted, out string Msg);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "新增成功", null));
@@ -455,7 +457,7 @@ namespace LEL.Controllers
                 dt.Columns.Remove("PurchasePrice");
                 dt.Columns.Remove("SellingPrice");
                 dt.Columns.Remove("ID");
-
+                dt.Columns.Remove("IsDeleted");
                 List<DtoImportExcel> DtList = new List<DtoImportExcel>();
 
                 DtList.Add(new DtoImportExcel { dt = dt, SheetNmae = "自采商品列表" });
@@ -470,6 +472,26 @@ namespace LEL.Controllers
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
                    
+        }
+
+        /// <summary>
+        /// 删除自采列表
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Route("api/ShopOrder/DeleteBackOrderlist")]
+        [HttpPost]
+        public IHttpActionResult DeleteBackOrderlist(int UserID,string Barcode)
+        {
+            var result= new BackOrderService().DeleteBackOrderlist(UserID, Barcode);
+            if(result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, "更新失败", result));
+            }
         }
     }
 }

@@ -24,6 +24,8 @@ namespace DTO.ShopOrder
         public string Remark { get; set; } = "";
         public string InStock { get; set; } = "";
         public int ID { get; set; } = 0;
+
+        public int IsDeleted { get; set; } = 0;
        
     }
     

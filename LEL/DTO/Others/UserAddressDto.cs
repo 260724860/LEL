@@ -10,5 +10,7 @@
         public string ReceiveAddress { get; set; }
         public int DefaultAddr { get; set; }
         public int Status { get; set; }
+
+        public string CartNumber { get; set; }
     }
 }

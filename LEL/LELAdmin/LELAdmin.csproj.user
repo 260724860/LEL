@@ -18,7 +18,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <ProjectView>ProjectFiles</ProjectView>
-    <NameOfLastUsedPublishProfile>FolderProfile</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>CustomProfile</NameOfLastUsedPublishProfile>
     <ActiveDebugTarget>
     </ActiveDebugTarget>
   </PropertyGroup>

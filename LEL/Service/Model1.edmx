@@ -100,6 +100,7 @@
           <Property Name="InStock" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="IsDeleted" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="le_cart_goodsvalue">
           <Key>
@@ -211,6 +212,8 @@
           <Property Name="AfterSpecialOffer" Type="decimal" Precision="9" Scale="2" />
           <Property Name="BeforeSheLvesStatus" Type="int" Nullable="false" />
           <Property Name="AfterSheLvesStatus" Type="int" />
+          <Property Name="BeforeMinimumPurchase" Type="int" />
+          <Property Name="AfterMinimumPurchase" Type="int" />
           <Property Name="BeforeStock" Type="int" Nullable="false" />
           <Property Name="AfterStock" Type="int" />
           <Property Name="BeforeQuota" Type="int" Nullable="false" />
@@ -448,6 +451,17 @@
           <Property Name="IsDeleted" Type="int" Nullable="false" />
           <Property Name="MsgType" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="le_qualitytesting">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Image" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsDelete" Type="int" Nullable="false" />
+          <Property Name="GoodsID" Type="int" Nullable="false" />
+          <Property Name="SupplierID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="le_shop_cart">
           <Key>
             <PropertyRef Name="CartID" />
@@ -458,6 +472,7 @@
           <Property Name="GoodsCount" Type="int" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="9" Scale="2" Nullable="false" />
           <Property Name="ReturnCount" Type="int" Nullable="false" />
+          <Property Name="IsBackgroundAddition" Type="int" Nullable="false" />
           <Property Name="Createtime" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="le_sms">
@@ -538,6 +553,9 @@
           <Property Name="ManagingBrands" Type="varchar" MaxLength="20" />
           <Property Name="AnotherName" Type="varchar" MaxLength="20" />
           <Property Name="Token" Type="varchar" MaxLength="50" />
+          <Property Name="ClientVersion" Type="varchar" MaxLength="50" />
+          <Property Name="IsLogingClient" Type="int" />
+          <Property Name="ClientLoginTime" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="le_sys_address">
           <Key>
@@ -642,19 +660,6 @@
           <Property Name="CustomerService" Type="varchar" MaxLength="50" />
           <Property Name="CustomerServicePhone" Type="varchar" MaxLength="50" />
           <Property Name="Token" Type="varchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="le_weixinmp">
-          <Key>
-            <PropertyRef Name="AppID" />
-          </Key>
-          <Property Name="AppID" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="OriginalID" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="AppSecret" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="QrcodeUrl" Type="varchar" MaxLength="256" Nullable="false" />
-          <Property Name="Alias" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="Nickname" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="HeadImg" Type="varchar" MaxLength="256" Nullable="false" />
-          <Property Name="PrincipalName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="le_weixinuser">
           <Key>
@@ -1171,46 +1176,46 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="leerledbtestModelStoreContainer">
-          <EntitySet Name="le_ad" EntityType="Self.le_ad" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_admin" EntityType="Self.le_admin" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_admin_re_users" EntityType="Self.le_admin_re_users" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_admin_role" EntityType="Self.le_admin_role" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_admin_role_mapping" EntityType="Self.le_admin_role_mapping" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_admin_role_value" EntityType="Self.le_admin_role_value" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_backorder" EntityType="Self.le_backorder" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_cart_goodsvalue" EntityType="Self.le_cart_goodsvalue" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_goods" EntityType="Self.le_goods" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_goods_brand" EntityType="Self.le_goods_brand" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_goods_img" EntityType="Self.le_goods_img" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_goods_log" EntityType="Self.le_goods_log" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_goods_suppliers" EntityType="Self.le_goods_suppliers" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_goods_value" EntityType="Self.le_goods_value" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_goodsgroups" EntityType="Self.le_goodsgroups" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_navigation" EntityType="Self.le_navigation" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_order_pack" EntityType="Self.le_order_pack" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orderline_goodsvalue" EntityType="Self.le_orderline_goodsvalue" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_head" EntityType="Self.le_orders_head" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_head_log" EntityType="Self.le_orders_head_log" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_lines" EntityType="Self.le_orders_lines" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_lines_log" EntityType="Self.le_orders_lines_log" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_lines_mapping" EntityType="Self.le_orders_lines_mapping" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_modify_record" EntityType="Self.le_orders_modify_record" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_operationrecord" EntityType="Self.le_orders_operationrecord" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_orders_timelimit" EntityType="Self.le_orders_timelimit" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_pushmsg" EntityType="Self.le_pushmsg" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_shop_cart" EntityType="Self.le_shop_cart" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_sms" EntityType="Self.le_sms" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_store_bulkcargo" EntityType="Self.le_store_bulkcargo" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_suppliers" EntityType="Self.le_suppliers" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_sys_address" EntityType="Self.le_sys_address" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_sysconfig" EntityType="Self.le_sysconfig" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_sysversion" EntityType="Self.le_sysversion" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_weixinmp" EntityType="Self.le_weixinmp" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="le_weixinuser" EntityType="Self.le_weixinuser" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest3" store:Type="Tables" />
-          <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest3" store:Type="Tables" />
+          <EntitySet Name="le_ad" EntityType="Self.le_ad" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_admin" EntityType="Self.le_admin" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_admin_re_users" EntityType="Self.le_admin_re_users" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_admin_role" EntityType="Self.le_admin_role" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_admin_role_mapping" EntityType="Self.le_admin_role_mapping" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_admin_role_value" EntityType="Self.le_admin_role_value" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_backorder" EntityType="Self.le_backorder" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_cart_goodsvalue" EntityType="Self.le_cart_goodsvalue" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_goods" EntityType="Self.le_goods" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_goods_brand" EntityType="Self.le_goods_brand" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_goods_img" EntityType="Self.le_goods_img" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_goods_log" EntityType="Self.le_goods_log" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_goods_suppliers" EntityType="Self.le_goods_suppliers" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_goods_value" EntityType="Self.le_goods_value" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_goodsgroups" EntityType="Self.le_goodsgroups" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_navigation" EntityType="Self.le_navigation" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_order_pack" EntityType="Self.le_order_pack" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orderline_goodsvalue" EntityType="Self.le_orderline_goodsvalue" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_head" EntityType="Self.le_orders_head" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_head_log" EntityType="Self.le_orders_head_log" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_lines" EntityType="Self.le_orders_lines" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_lines_log" EntityType="Self.le_orders_lines_log" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_lines_mapping" EntityType="Self.le_orders_lines_mapping" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_modify_record" EntityType="Self.le_orders_modify_record" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_operationrecord" EntityType="Self.le_orders_operationrecord" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_orders_timelimit" EntityType="Self.le_orders_timelimit" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_pushmsg" EntityType="Self.le_pushmsg" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_qualitytesting" EntityType="Self.le_qualitytesting" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_shop_cart" EntityType="Self.le_shop_cart" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_sms" EntityType="Self.le_sms" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_store_bulkcargo" EntityType="Self.le_store_bulkcargo" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_suppliers" EntityType="Self.le_suppliers" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_sys_address" EntityType="Self.le_sys_address" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_sysconfig" EntityType="Self.le_sysconfig" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_sysversion" EntityType="Self.le_sysversion" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_user_address" EntityType="Self.le_user_address" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_users" EntityType="Self.le_users" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="le_weixinuser" EntityType="Self.le_weixinuser" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="lel_admin_suppliers" EntityType="Self.lel_admin_suppliers" Schema="leerledbtest" store:Type="Tables" />
+          <EntitySet Name="lel_imei" EntityType="Self.lel_imei" Schema="leerledbtest" store:Type="Tables" />
           <AssociationSet Name="FK__le_orders_head" Association="Self.FK__le_orders_head">
             <End Role="le_orders_head" EntitySet="le_orders_head" />
             <End Role="le_orders_modify_record" EntitySet="le_orders_modify_record" />
@@ -1400,6 +1405,7 @@
           <EntitySet Name="le_orders_operationrecord" EntityType="leerledbtestModel.le_orders_operationrecord" />
           <EntitySet Name="le_orders_timelimit" EntityType="leerledbtestModel.le_orders_timelimit" />
           <EntitySet Name="le_pushmsg" EntityType="leerledbtestModel.le_pushmsg" />
+          <EntitySet Name="le_qualitytesting" EntityType="leerledbtestModel.le_qualitytesting" />
           <EntitySet Name="le_shop_cart" EntityType="leerledbtestModel.le_shop_cart" />
           <EntitySet Name="le_sms" EntityType="leerledbtestModel.le_sms" />
           <EntitySet Name="le_store_bulkcargo" EntityType="leerledbtestModel.le_store_bulkcargo" />
@@ -1409,7 +1415,6 @@
           <EntitySet Name="le_sysversion" EntityType="leerledbtestModel.le_sysversion" />
           <EntitySet Name="le_user_address" EntityType="leerledbtestModel.le_user_address" />
           <EntitySet Name="le_users" EntityType="leerledbtestModel.le_users" />
-          <EntitySet Name="le_weixinmp" EntityType="leerledbtestModel.le_weixinmp" />
           <EntitySet Name="le_weixinuser" EntityType="leerledbtestModel.le_weixinuser" />
           <EntitySet Name="lel_admin_suppliers" EntityType="leerledbtestModel.lel_admin_suppliers" />
           <EntitySet Name="lel_imei" EntityType="leerledbtestModel.lel_imei" />
@@ -1676,6 +1681,7 @@
           <Property Name="InStock" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <Property Name="IsDeleted" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="le_cart_goodsvalue">
           <Key>
@@ -1806,6 +1812,8 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="le_admin" Relationship="leerledbtestModel.FK_le_goods_Log_le_admin" FromRole="le_goods_log" ToRole="le_admin" />
           <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_goods_Log_le_goods" FromRole="le_goods_log" ToRole="le_goods" />
+          <Property Name="BeforeMinimumPurchase" Type="Int32" />
+          <Property Name="AfterMinimumPurchase" Type="Int32" />
         </EntityType>
         <EntityType Name="le_goods_suppliers">
           <Key>
@@ -2072,6 +2080,17 @@
           <Property Name="IsDeleted" Type="Int32" Nullable="false" />
           <Property Name="MsgType" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="le_qualitytesting">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Image" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsDelete" Type="Int32" Nullable="false" />
+          <Property Name="GoodsID" Type="Int32" Nullable="false" />
+          <Property Name="SupplierID" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="le_shop_cart">
           <Key>
             <PropertyRef Name="CartID" />
@@ -2086,6 +2105,7 @@
           <NavigationProperty Name="le_cart_goodsvalue" Relationship="leerledbtestModel.FK_le_cart_goodsvalue_le_shop_cart" FromRole="le_shop_cart" ToRole="le_cart_goodsvalue" />
           <NavigationProperty Name="le_goods" Relationship="leerledbtestModel.FK_le_shop_cart_le_goods" FromRole="le_shop_cart" ToRole="le_goods" />
           <NavigationProperty Name="le_users" Relationship="leerledbtestModel.FK_le_shop_cart_le_users" FromRole="le_shop_cart" ToRole="le_users" />
+          <Property Name="IsBackgroundAddition" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="le_sms">
           <Key>
@@ -2165,6 +2185,9 @@
           <Property Name="ManagingBrands" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="AnotherName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Token" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ClientVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsLogingClient" Type="Int32" />
+          <Property Name="ClientLoginTime" Type="DateTime" />
           <NavigationProperty Name="le_goods_suppliers" Relationship="leerledbtestModel.FK_le_goods_suppliers_le_suppliers" FromRole="le_suppliers" ToRole="le_goods_suppliers" />
           <NavigationProperty Name="le_order_pack" Relationship="leerledbtestModel.FK_le_order_pack_le_suppliers" FromRole="le_suppliers" ToRole="le_order_pack" />
           <NavigationProperty Name="le_orders_head_log" Relationship="leerledbtestModel.FK_le_orders_headschangerecord_le_suppliers" FromRole="le_suppliers" ToRole="le_orders_head_log" />
@@ -2283,19 +2306,6 @@
           <NavigationProperty Name="le_orders_lines_log" Relationship="leerledbtestModel.FK_le_orders_lineschangerecord_le_users" FromRole="le_users" ToRole="le_orders_lines_log" />
           <NavigationProperty Name="le_shop_cart" Relationship="leerledbtestModel.FK_le_shop_cart_le_users" FromRole="le_users" ToRole="le_shop_cart" />
           <NavigationProperty Name="le_user_address" Relationship="leerledbtestModel.FK_le_user_address_le_users" FromRole="le_users" ToRole="le_user_address" />
-        </EntityType>
-        <EntityType Name="le_weixinmp">
-          <Key>
-            <PropertyRef Name="AppID" />
-          </Key>
-          <Property Name="AppID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="OriginalID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="AppSecret" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="QrcodeUrl" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Name="Alias" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="Nickname" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="HeadImg" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Name="PrincipalName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="le_weixinuser">
           <Key>
@@ -2902,6 +2912,7 @@
           <EntitySetMapping Name="le_backorder">
             <EntityTypeMapping TypeName="leerledbtestModel.le_backorder">
               <MappingFragment StoreEntitySet="le_backorder">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="InStock" ColumnName="InStock" />
@@ -3026,6 +3037,8 @@
           <EntitySetMapping Name="le_goods_log">
             <EntityTypeMapping TypeName="leerledbtestModel.le_goods_log">
               <MappingFragment StoreEntitySet="le_goods_log">
+                <ScalarProperty Name="AfterMinimumPurchase" ColumnName="AfterMinimumPurchase" />
+                <ScalarProperty Name="BeforeMinimumPurchase" ColumnName="BeforeMinimumPurchase" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="AfterQuota" ColumnName="AfterQuota" />
                 <ScalarProperty Name="BeforeQuota" ColumnName="BeforeQuota" />
@@ -3289,9 +3302,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="le_qualitytesting">
+            <EntityTypeMapping TypeName="leerledbtestModel.le_qualitytesting">
+              <MappingFragment StoreEntitySet="le_qualitytesting">
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="le_shop_cart">
             <EntityTypeMapping TypeName="leerledbtestModel.le_shop_cart">
               <MappingFragment StoreEntitySet="le_shop_cart">
+                <ScalarProperty Name="IsBackgroundAddition" ColumnName="IsBackgroundAddition" />
                 <ScalarProperty Name="Createtime" ColumnName="Createtime" />
                 <ScalarProperty Name="ReturnCount" ColumnName="ReturnCount" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
@@ -3336,6 +3362,9 @@
           <EntitySetMapping Name="le_suppliers">
             <EntityTypeMapping TypeName="leerledbtestModel.le_suppliers">
               <MappingFragment StoreEntitySet="le_suppliers">
+                <ScalarProperty Name="ClientLoginTime" ColumnName="ClientLoginTime" />
+                <ScalarProperty Name="IsLogingClient" ColumnName="IsLogingClient" />
+                <ScalarProperty Name="ClientVersion" ColumnName="ClientVersion" />
                 <ScalarProperty Name="Token" ColumnName="Token" />
                 <ScalarProperty Name="AnotherName" ColumnName="AnotherName" />
                 <ScalarProperty Name="ManagingBrands" ColumnName="ManagingBrands" />
@@ -3490,20 +3519,6 @@
                 <ScalarProperty Name="UsersNickname" ColumnName="UsersNickname" />
                 <ScalarProperty Name="UsersName" ColumnName="UsersName" />
                 <ScalarProperty Name="UsersID" ColumnName="UsersID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="le_weixinmp">
-            <EntityTypeMapping TypeName="leerledbtestModel.le_weixinmp">
-              <MappingFragment StoreEntitySet="le_weixinmp">
-                <ScalarProperty Name="PrincipalName" ColumnName="PrincipalName" />
-                <ScalarProperty Name="HeadImg" ColumnName="HeadImg" />
-                <ScalarProperty Name="Nickname" ColumnName="Nickname" />
-                <ScalarProperty Name="Alias" ColumnName="Alias" />
-                <ScalarProperty Name="QrcodeUrl" ColumnName="QrcodeUrl" />
-                <ScalarProperty Name="AppSecret" ColumnName="AppSecret" />
-                <ScalarProperty Name="OriginalID" ColumnName="OriginalID" />
-                <ScalarProperty Name="AppID" ColumnName="AppID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

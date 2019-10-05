@@ -157,5 +157,9 @@ namespace DTO.SupplierUser
         /// 登陆token
         /// </summary>
         public string Token { get; set; }
+
+        public string ClientVersion { get; set; }
+        public int? IsLogingClient { get; set;  }
+        public DateTime? ClientLoginTime { get; set; }
     }
 }

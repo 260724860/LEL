@@ -179,5 +179,56 @@ namespace Service
                 return result;
             }
         }
+
+        /// <summary>
+        /// 获取Openid列表
+        /// </summary>
+        /// <param name="UserType"></param>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public List<OpenIDListDto> GetOpenIDList(int UserType,List<int?> UserIDList)
+        {
+            using (Entities ctx = new Entities())
+            {
+                IQueryable<OpenIDListDto> Iquery = null;
+
+                switch (UserType)
+                {
+
+                    case 1:
+                        Iquery = ctx.le_weixinuser.Where(s => s.UserType == 1 && UserIDList.Contains(s.UserID)).Select(s=> new OpenIDListDto {
+                            OpenID=s.Openid,
+                            UserID=s.UserID
+                        });
+                        break;
+                    case 2:
+                        Iquery = ctx.le_weixinuser.Where(s => s.UserType == 2 && UserIDList.Contains(s.UserID)).Select(s => new OpenIDListDto
+                        {
+                            OpenID = s.Openid,
+                            UserID = s.UserID
+                        });
+                        break;
+                    case 3:
+                        Iquery = ctx.le_weixinuser.Where(s => s.UserType == 3 && UserIDList.Contains(s.UserID)).Select(s => new OpenIDListDto
+                        {
+                            OpenID = s.Openid,
+                            UserID = s.UserID
+                        });
+                        break;
+
+                    default:
+                        new Exception("非法的UserType");
+                        break;
+                }
+                var result = Iquery.ToList();
+                return result;
+            }
+        }
+        public class OpenIDListDto
+        {
+            public string OpenID { get; set; }
+            public int UserID { get; set; }
+
+        }
     }
 }

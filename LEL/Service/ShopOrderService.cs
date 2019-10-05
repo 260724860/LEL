@@ -5,6 +5,7 @@ using DTO.ShopOrder;
 using DTO.Suppliers;
 using DTO.User;
 using log4net;
+using MPApiService;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
@@ -13,6 +14,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Threading.Tasks;
 using static DTO.Common.Enum;
 
 namespace Service
@@ -40,7 +42,7 @@ namespace Service
                 {
                     bool IsAdd = true;
                     le_shop_cart ShopCarModel = new le_shop_cart();
-                    var UserCartList = ctx.le_shop_cart.Where(s => s.GoodsID == GoodsID && s.UserID == UserID).ToList();
+                    var UserCartList = ctx.le_shop_cart.Where(s => s.GoodsID == GoodsID && s.UserID == UserID&& s.IsBackgroundAddition == 0).ToList();
                     
                     
                     foreach (var CartModel in UserCartList)
@@ -154,7 +156,142 @@ namespace Service
             Mes = "操作失败";
             return 0;
         }
+        /// <summary>
+        /// 添加购物车 （后台添加）
+        /// </summary>
+        /// <param name="GoodsID"></param>
+        /// <param name="GoodValueID"></param>
+        /// <param name="GoodsCount"></param>
+        /// <param name="Mes"></param>
+        /// <param name="cumulation">是否累加</param>
+        /// <returns></returns>
+        public int AddCartByBackground(int GoodsID, List<AddGoodsValues> GoodValueID, int GoodsCount, int UserID, bool cumulation, out string Mes, int? ReturnCount = 1)
+        {
+            using (Entities ctx = new Entities())
+            {
+                try
+                {
+                    bool IsAdd = true;
+                    le_shop_cart ShopCarModel = new le_shop_cart();
+                    ShopCarModel.IsBackgroundAddition = 1;
+                    var UserCartList = ctx.le_shop_cart.Where(s => s.GoodsID == GoodsID && s.UserID == UserID&&s.IsBackgroundAddition==1).ToList();
 
+
+                    foreach (var CartModel in UserCartList)
+                    {
+
+                        var existGoodsValue = CartModel
+                        .le_cart_goodsvalue.Select(k => new AddGoodsValues { CategoryType = k.CategoryType, GoodsValueID = k.GoodsValueID }).ToList();
+                        if (existGoodsValue != null)
+                        {
+                            var isExit = IsEqual(existGoodsValue, GoodValueID);
+                            if (isExit)
+                            {
+                                ShopCarModel = CartModel;
+                                IsAdd = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    var ListGoodValueID = GoodValueID.Select(s => s.GoodsValueID).ToList();
+
+                    //var GoodsValuePrice = GoodValueMaping[0];
+                    var GoodsModel = ctx.le_goods.Where(s => s.GoodsID == GoodsID).Select(s => new
+                    {
+                        s.SpecialOffer,
+                        s.Stock,
+                        s.Quota,
+                        s.IsShelves,
+
+                    }).FirstOrDefault();
+
+                    if (GoodsModel.IsShelves == 0)
+                    {
+                        Mes = string.Format("该商品已经下架，加入购物车失败");
+                        return 0;
+                    }
+                    if (GoodsModel.Stock <= 0 || GoodsModel.Stock - GoodsCount < 0)
+                    {
+                        Mes = string.Format("该商品库存不足，加入购物车失败.当前库存【{0}】", GoodsModel.Stock);
+                        return 0;
+                    }
+                    //增加
+                    if (IsAdd)
+                    {
+
+                        le_shop_cart model = new le_shop_cart();
+                        model.Createtime = DateTime.Now;
+                        model.GoodsCount = GoodsCount;
+                        model.GoodsID = GoodsID;
+                        model.Price = GoodsModel.SpecialOffer;
+                        model.UserID = UserID;
+                        model.ReturnCount = ReturnCount.Value;
+                        foreach (var inde in GoodValueID)
+                        {
+                            le_cart_goodsvalue le_Cart_Goodsvalue = new le_cart_goodsvalue();
+                            le_Cart_Goodsvalue.GoodsValueID = inde.GoodsValueID;
+                            le_Cart_Goodsvalue.CategoryType = inde.CategoryType;
+                            model.le_cart_goodsvalue.Add(le_Cart_Goodsvalue);
+                        }
+                        if (GoodsModel.Quota != -1 && model.GoodsCount > GoodsModel.Quota)
+                        {
+                            Mes = string.Format("该商品每人限购{0}件", GoodsModel.Quota);
+                            return 0;
+                        }
+                        ctx.le_shop_cart.Add(model);
+                        if (ctx.SaveChanges() > 0)
+                        {
+                            Mes = "SUCCESS";
+                            return model.CartID;
+                        }
+                    }
+                    //修改
+                    else
+                    {
+
+                        if (cumulation)//是否累加
+                        {
+                            ShopCarModel.GoodsCount += GoodsCount;
+                            ShopCarModel.ReturnCount = ReturnCount.Value;
+                        }
+                        else
+                        {
+                            ShopCarModel.GoodsCount = GoodsCount;
+                            ShopCarModel.ReturnCount = ReturnCount.Value;
+                        }
+                        if (GoodsModel.Quota != -1 && ShopCarModel.GoodsCount > GoodsModel.Quota)
+                        {
+                            Mes = string.Format("该商品每人限购{0}件", GoodsModel.Quota);
+                            return 0;
+                        }
+                        ctx.Entry<le_shop_cart>(ShopCarModel).State = EntityState.Modified;
+                        if (ctx.SaveChanges() > 0)
+                        {
+                            Mes = "SUCCESS";
+                            return ShopCarModel.CartID;
+                        }
+                        else
+                        {
+                            Mes = "修改失败";
+                            return 0;
+                        }
+                    }
+                    Mes = "操作失败";
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    log.Error(GoodsID, ex);
+                }
+            }
+            Mes = "操作失败";
+            return 0;
+        }
+        //public int AddReturnGoodsCart(int GoodsID,int UserID,int )
+        //{
+
+        //}
         /// <summary>
         /// 删除购物车
         /// </summary>
@@ -206,11 +343,11 @@ namespace Service
         /// </summary>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        public List<ShopCartDto> GetCartList(int UserID)
+        public List<ShopCartDto> GetCartList(int UserID,int IsBackgroundAddition=0)
         {
             using (Entities ctx = new Entities())
             {
-                var result = ctx.le_shop_cart.Where(s => s.UserID == UserID).Select(s => new ShopCartDto
+                var result = ctx.le_shop_cart.Where(s => s.UserID == UserID&&s.IsBackgroundAddition== IsBackgroundAddition).Select(s => new ShopCartDto
                 {
                     CartID = s.CartID,
                     GoodsCount = s.GoodsCount,
@@ -261,18 +398,15 @@ namespace Service
             return null;
         }
 
-        /// <summary>
-        ///  保存订单 从购物车获取
-        /// </summary>
-        /// <param name="orderGoodsList"></param>
-        /// <param name="UserID"></param>
-        /// <param name="AddressID"></param>
-        /// <param name="Notes"></param>
-        /// <param name="OrderType">订单类型/ 1订货单 2 退货单</param>
-        /// <param name="ExpressType">快递类型/1快递物流 2 自提</param>
-        /// <param name="Msg"></param>
-        /// <returns></returns>
-        public int OrderSave(OrderSaveParams ParamasData, out string Msg, out List<ShopCartDto> FailCartList)
+       /// <summary>
+       /// 保存订单（从购物车获取）
+       /// </summary>
+       /// <param name="ParamasData"></param>
+       /// <param name="Msg"></param>
+       /// <param name="FailCartList"></param>
+       /// <param name="IsBackgroundAddition">0 用户提交 1后台提交</param>
+       /// <returns></returns>
+        public int OrderSave(OrderSaveParams ParamasData, out string Msg, out List<ShopCartDto> FailCartList,int IsBackgroundAddition = 0)
         {
             Msg = "未知错误";
             using (Entities ctx = new Entities())
@@ -298,7 +432,7 @@ namespace Service
                     return 0;
                 }
 
-                if (CartList.Any(s => s.GoodsCount == 0))
+                if (CartList.Any(s => s.GoodsCount == 0&& ParamasData.OrderType==1))
                 {
                     Msg = "下单数不能0，请检查购物车内商品下单数";
                     return 0;
@@ -529,7 +663,6 @@ namespace Service
                 }
                 if (!IsHaveStock)
                 {
-
                     Msg = "访问人次太多,请稍后再试!";
                     log.Debug(Msg + goodsStocksList[0].GoodsID.ToString());
                     return 0;
@@ -574,8 +707,17 @@ namespace Service
                         return 0;
                     }
                     var RemoveCart = FailCartList.Select(s => s.CartID).ToArray();
+                    List<le_shop_cart> CartLists=new List<le_shop_cart>();
+                    if (ParamasData.OrderType==1)
+                    {
+                         CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.UserID && !RemoveCart.Contains(s.CartID)&&s.IsBackgroundAddition== IsBackgroundAddition).ToList();
+                    }
+                    if(ParamasData.OrderType == 2)
+                    {
+                        CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.UserID && !RemoveCart.Contains(s.CartID)&&s.ReturnCount>0&&s.IsBackgroundAddition== IsBackgroundAddition).ToList();
+                    }
                     //删除购物车,待优化
-                    var CartLists = ctx.le_shop_cart.Where(s => s.UserID == ParamasData.UserID&& !RemoveCart.Contains(s.CartID)).ToList();
+                   
                     foreach (var CartModel in CartLists)
                     {
 
@@ -645,6 +787,12 @@ namespace Service
             return 0;
         }
 
+        /// <summary>
+        /// 外部参数获取
+        /// </summary>
+        /// <param name="ParamasData"></param>
+        /// <param name="Msg"></param>
+        /// <returns></returns>
         public string OrderSave(OrderSaveParamesExtend ParamasData, out string Msg)
         {
             using (Entities ctx = new Entities())
@@ -1777,6 +1925,7 @@ namespace Service
                                 modhead.DeliverCount += data.GoodsCount;
                                 modhead.RealSupplyAmount += (Linemodel.SupplyPrice * data.GoodsCount);
                                 modhead.RealAmount += (Linemodel.GoodsPrice * data.GoodsCount);
+
                                 if (Linemodel.le_goods.Stock < 0)
                                 {
                                     msg = "商品【" + Linemodel.le_goods.GoodsName + "】库存不足，请确认！";
@@ -1807,6 +1956,11 @@ namespace Service
                         }
                         OrderLineList.Add(Linemodel);
                        
+                        if (Linemodel.DeliverCount>Linemodel.GoodsCount)
+                        {
+                            msg = "商品【" + Linemodel.le_goods.GoodsName + "】实发数不能大于下单数！";
+                            return false;
+                        }
                         ctx.Entry<le_orders_lines>(Linemodel).State = EntityState.Modified;
 
                     }
@@ -2023,7 +2177,7 @@ namespace Service
                 }
 
 
-                GroupResult = GroupResult.OrderByDescending(s => s.CreateTime).ThenBy(t=>t.PickupTime);
+                GroupResult = GroupResult.OrderByDescending(s => s.PickupTime).ThenBy(t=>t.CreateTime);
                 Count = GroupResult.Count();
                 GroupResult = GroupResult.Skip(SeachOptions.Offset).Take(SeachOptions.Rows);
                 var filter = GroupResult.ToList();
@@ -2031,14 +2185,15 @@ namespace Service
                 var OrderNoArr = filter.Select(s => s.Out_Trade_No).ToList();
                 string SuppliersId = SeachOptions.SuppliersID.Value.ToString();
 
-                var OrdersLinePrint = ctx.le_orders_lines_mapping.Where(s => s.A == SuppliersId && OrderNoArr.Contains(s.OutTradeNo)).Select(s=>new { s.PrintingTimes,s.OutTradeNo });
+                var OrdersLinePrint = ctx.le_orders_lines_mapping.Where(s => s.A == SuppliersId && OrderNoArr.Contains(s.OutTradeNo)).Select(s=>new { s.PrintingTimes,s.OutTradeNo,s.UpdateTime }).ToList();
 
                 foreach(var item in OrdersLinePrint)
                 {
-                    var Model = filter.Where(s => s.OrderNo == item.OutTradeNo).FirstOrDefault();
-                    if(Model==null)
+                    var Model = filter.Where(s => s.Out_Trade_No == item.OutTradeNo).FirstOrDefault();
+                    if(Model!=null)
                     {
                         Model.PrintingTimes = item.PrintingTimes;
+                        Model.PrintingTime = item.UpdateTime;
                     }                   
                 }
                 //List<OrderLineDto> ResultList = new List<OrderLineDto>();
@@ -2103,9 +2258,15 @@ namespace Service
                 try
                 {
                     var LinesList = OrderHeadModel.le_orders_lines.ToList();
-                  
+                    var temp = "";
                     foreach (var IndexLine in OrderLineList)
                     {
+                       if(IndexLine.OrderNo != temp)
+                        {
+                            temp = IndexLine.OrderNo;
+                            OrderHeadModel = ctx.le_orders_head.Where(s => s.OutTradeNo == IndexLine.OrderNo).FirstOrDefault();
+                            LinesList = ctx.le_orders_lines.Where(s => s.le_orders_head.OutTradeNo == IndexLine.OrderNo).ToList();
+                        }
                         if (AdminID != 0) //总部操作
                         {
                             if (IndexLine.SuppliersID == 0)
@@ -2234,8 +2395,9 @@ namespace Service
                                 new OtherService().UpdatePushMsg(CurrentLine.AdminID, OrderHeadModel.OutTradeNo, 3);
                                 new OtherService().UpdatePushMsg(CurrentLine.SuppliersID, OrderHeadModel.OutTradeNo, 2,1,1);
                                 break;
-                            //case OrderLineStatus.YiWanCheng: //已完成
-                            //    CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
+
+                            case OrderLineStatus.YiWanCheng: //已完成
+                                CurrentLine.Status = (int)OrderLineStatus.YiWanCheng;
 
 
                                 break;
@@ -3210,7 +3372,97 @@ namespace Service
            // throw new Exception("ProcessingOrderHeadStatus-处理订单头状态失败");
         }
         
-         
+        /// <summary>
+        /// 获取2小时内得取货订单 门店
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<OrderReminderDto>> GetOrderReminder()
+        {
+            using (Entities ctx=new Entities())
+            {
+                var datetime = DateTime.Now.AddHours(2);
+                var BeginTime = DateTime.Now;
+                var temp=  ctx.le_orders_head.
+                    Where(s => s.PickupTime <=datetime && s.PickupTime> BeginTime&&s.OrderType==1&&s.ExpressType==2&&s.Status!=5&&s.Status!=1&&s.Status!=100)
+                    .Select(s=>new OrderReminderDto {
+                    OrderNo=s.OutTradeNo,
+                    PickUpTime=s.PickupTime,
+                    UserID=s.UsersID
+                });
+
+                var result = temp.ToListAsync();
+                return await result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取48小时内为完成的订单
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<OrderReminderBy48Hour>> GetOrderReminderBy48Hour()
+        {
+            using (Entities ctx = new Entities())
+            {
+                string start = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd ") + "00:00:00";
+                string end = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd ") + "23:59:59";
+                var startDate = Convert.ToDateTime(start);
+                var endDate = Convert.ToDateTime(end);
+               // 
+                var temp =await ctx.le_orders_lines.Where(s => s.le_orders_head.PickupTime <= endDate && s.le_orders_head.PickupTime > startDate && s.Status != 10 && s.Status != 3&&s.le_orders_head.OrderType!=2&&s.SuppliersID==291)
+                    .Select(s=>new OrderReminderBy48Hour { OrderLineID=s.OrdersLinesID,OrderNo=s.le_orders_head.OutTradeNo}).ToListAsync();
+
+                return temp;
+            }
+        }
+
+        /// <summary>
+        /// 获取半小时未结单订单
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetWJDOrderDto>> GetWDJOrderList()
+        {
+            using (Entities ctx = new Entities())
+            {
+                var BeginTime = DateTime.Now.AddHours(-1);
+                var EndTime = DateTime.Now.AddDays(-2);
+                var temp = ctx.le_orders_lines.
+                    Where(s=>s.le_orders_head.PickupTime<= BeginTime && s.le_orders_head.PickupTime >= EndTime&& s.le_orders_head.OrderType == 1 
+                    && s.le_orders_head.ExpressType == 2 && (s.Status==1||s.Status==7)&&s.SuppliersID!=291&&s.SuppliersID!=null)
+                    .Select(s => new GetWJDOrderDto
+                    {
+                        OrderLineID=s.OrdersLinesID,
+                        OrderNo = s.le_orders_head.OutTradeNo,
+                        PickUpTime = s.le_orders_head.PickupTime,
+                        SupplierID=s.SuppliersID,
+                        OrderCreateTime=s.CreateTime
+                    });
+                var result = await temp.ToListAsync();
+                var GroupList = result.GroupBy(s => s.SupplierID).Select(s => new GetWJDOrderDto
+                {
+                    OrderLineID = s.Max(k => k.OrderLineID),
+                    OrderNo = s.Max(k => k.OrderNo),
+                    PickUpTime = s.Max(k => k.PickUpTime),
+                    SupplierID = s.Key,
+                    OrderCreateTime = s.Max(k => k.OrderCreateTime),
+                });
+                var SupplierIDList = GroupList.Select(s => s.SupplierID).ToList();
+                var OpenidList= new WeixinUserService().GetOpenIDList(2,SupplierIDList);
+                foreach(var item in GroupList)
+                {
+                    string  PickupTimesStr = item.PickUpTime.HasValue ? DateTime.Now.ToString("F") :"";
+                    var Openid = OpenidList.Where(s => s.UserID == item.SupplierID).FirstOrDefault();
+                    if (Openid!=null)
+                    {
+                        MPApiServiceClient serviceClient = new MPApiServiceClient(new Uri("https://xcy.kdk94.top/"), new AnonymousCredential());
+                        var klk=  await serviceClient.SendSupplierOrderReminiderWithHttpMessagesAsync(Openid.OpenID, item.OrderNo, null, PickupTimesStr);
+                    }
+                }
+                return  result;
+            }
+        }
+
+       // public async Task<>
         public bool ProcessingShopCartShelves()
         {
             using (Entities ctx=new Entities())

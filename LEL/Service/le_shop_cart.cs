@@ -27,6 +27,7 @@ namespace Service
         public decimal Price { get; set; }
         public int ReturnCount { get; set; }
         public Nullable<System.DateTime> Createtime { get; set; }
+        public int IsBackgroundAddition { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<le_cart_goodsvalue> le_cart_goodsvalue { get; set; }

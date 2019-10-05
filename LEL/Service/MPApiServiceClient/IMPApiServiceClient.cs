@@ -96,6 +96,39 @@ namespace MPApiService
         Task<HttpOperationResponse> SendSuppliersTemplateMsgWithHttpMessagesAsync(string openid = default(string), string orderNO = default(string), string unionid = default(string), string pickupTime = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// 发送供应商超时消息
+        /// </summary>
+        /// <param name='openid'>
+        /// </param>
+        /// <param name='orderNO'>
+        /// </param>
+        /// <param name='uionid'>
+        /// </param>
+        /// <param name='pickupTime'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> SendSupplierOrderReminiderWithHttpMessagesAsync(string openid = default(string), string orderNO = default(string), string uionid = default(string), string pickupTime = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// 获取给前端UI使用的JSSDK信息包（扫一扫/分享等功能)
+        /// </summary>
+        /// <param name='url'>
+        /// 当前页面Url
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> GetJsSdkUiPackageWithHttpMessagesAsync(string url = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// GET请求用于处理微信小程序后台的URL验证
         /// </summary>
         /// <param name='postModel'>

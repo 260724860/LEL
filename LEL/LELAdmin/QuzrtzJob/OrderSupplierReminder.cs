@@ -10,15 +10,15 @@ using System.Web;
 namespace LELAdmin.QuzrtzJob
 {
     /// <summary>
-    /// 门店订单超时提醒
+    /// 供应商超时送货提示 1小时
     /// </summary>
-    public class OrderReminderJob:IJob
+    public class OrderSupplierReminder : IJob
     {
         private static ILog log = LogManager.GetLogger(typeof(ClearSalesVoilumesJob));
         public Task Execute(IJobExecutionContext context)
         {
 
-            return   new ShopOrderService().GetOrderReminder();
+            return new ShopOrderService().GetWDJOrderList();
 
 
             GoodsService GoodsBLL = new GoodsService();
@@ -26,5 +26,7 @@ namespace LELAdmin.QuzrtzJob
             log.Error("清空月销量字段");
             return GoodsBLL.ClearSalesVolumesAsync();
         }
+
+      
     }
 }

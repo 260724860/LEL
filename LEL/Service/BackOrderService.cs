@@ -15,7 +15,7 @@ namespace Service
         private static ILog log = LogManager.GetLogger(typeof(BackOrderService));
         public bool AddBackOrder(string Barcode,string GoodsName,string PurchasePrice,string SellingPrice,
             string Specifications,int GoodsCount,string Merchant,string MerchantCode,string Classify,string ClassifyCode
-            ,int UsersID,string Flag,string Remark,string InStock,int  ID,out string Msg)
+            ,int UsersID,string Flag,string Remark,string InStock,int IsDeleted,int  ID,out string Msg)
         {
             log.Error(Barcode + GoodsName + PurchasePrice + SellingPrice + Specifications + GoodsCount + Merchant + MerchantCode + Classify + ClassifyCode);
             using (Entities ctx=new Entities())
@@ -25,6 +25,7 @@ namespace Service
                 if (ID!=0)
                 {
                     model = ctx.le_backorder.Where(s => s.ID == ID).FirstOrDefault();
+                    model.IsDeleted = IsDeleted;
                     if(model==null)
                     {
                         Msg = "ID输入错误";
@@ -37,7 +38,7 @@ namespace Service
                     string end = DateTime.Now.ToString("yyyy-MM-dd ") + "23:59:59";
                     var startDate = Convert.ToDateTime(start);
                     var endDate = Convert.ToDateTime(end);
-                    model = ctx.le_backorder.Where(s => s.UsersID == UsersID && s.Flag == Flag && s.CreateTime> startDate&&s.CreateTime<= endDate && s.BarCode == Barcode).FirstOrDefault();
+                    model = ctx.le_backorder.Where(s => s.UsersID == UsersID && s.Flag == Flag && s.CreateTime> startDate&&s.CreateTime<= endDate && s.BarCode == Barcode&&s.IsDeleted==0).FirstOrDefault();
                     if(model!=null)
                     {
                         IsAdd = false;
@@ -47,8 +48,7 @@ namespace Service
                         model = new le_backorder();
                     }
                 }
-                
-                
+                               
                 model.Classify = Classify;
                 model.ClassifyCode = ClassifyCode;
                 model.BarCode = Barcode;
@@ -123,6 +123,7 @@ namespace Service
                 {
                     result = result.Where(s => s.CreateTime <= EndTime);
                 }
+                result = result.Where(s => s.IsDeleted == 0);
                 switch( OrderByType )
                 {
                     case BackOrderOrderByType.BarCodeAsc:
@@ -174,6 +175,40 @@ namespace Service
             }
 
         }
-        
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public bool DeleteBackOrderlist(int UserID,string BarCode)
+        {
+            using (Entities ctx = new Entities())
+            {
+                var modelList = ctx.le_backorder.Where(s => s.UsersID==UserID&&s.BarCode==BarCode).ToList();
+                if(modelList == null|| modelList.Count<=0)
+                {
+                    return false;
+                }
+                else
+                {
+                    foreach (var model in modelList)
+                    {
+                        model.IsDeleted = 1;
+                        ctx.Entry<le_backorder>(model).State = EntityState.Modified;
+                        
+                    }
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                
+            }
+        }
     }
 }
