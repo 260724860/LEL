@@ -16,8 +16,7 @@ namespace Service
         public bool AddBackOrder(string Barcode,string GoodsName,string PurchasePrice,string SellingPrice,
             string Specifications,int GoodsCount,string Merchant,string MerchantCode,string Classify,string ClassifyCode
             ,int UsersID,string Flag,string Remark,string InStock,int IsDeleted,int  ID,out string Msg)
-        {
-            log.Error(Barcode + GoodsName + PurchasePrice + SellingPrice + Specifications + GoodsCount + Merchant + MerchantCode + Classify + ClassifyCode);
+        {          
             using (Entities ctx=new Entities())
             {
                 bool IsAdd = true;

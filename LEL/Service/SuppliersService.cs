@@ -123,7 +123,10 @@ namespace Service
                     CartModel = s.CartModel,
                     Classify = s.Classify,
                     AnotherName = s.AnotherName,
-                    Token=s.Token
+                    Token=s.Token,
+                    AccountHolder = s.AccountHolder,
+                    OpeningBank = s.OpeningBank,
+                    BankNumber = s.BankNumber,
 
             }).ToList();
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using static DTO.Common.Enum;
 
 namespace LELAdmin.QuzrtzJob
 {
@@ -30,17 +31,17 @@ namespace LELAdmin.QuzrtzJob
                 paramas.OrderLineID = intem.OrderLineID;
                 paramas.SuppliersID = 291;
                 paramas.OrderNo = intem.OrderNo;
-                paramas.Status = 3;
+                paramas.Status = (int)(OrderLineStatus.YiQuXiao);
                 paramas.Notes = "取货时间超时，系统自动取消";
                 List.Add(paramas);
             }
             var UpdateBool = ShopBLL.UpdateOrderLineStatus(List, out string Msg, 0, 291);
             if (!UpdateBool)
             {
-                log.Error(DateTime.Now.ToString("F") + "执行错误");
+                log.Error(DateTime.Now.ToString("F") + "执行错误|"+ Msg);
             }
             //System.Threading.Thread.Sleep(5000);
-            log.Error("清空月销量字段");
+            log.Error("取消48小时内未取货的订单");
             //return ShopBLL.GetOrderReminderBy48Hour();//GoodsBLL.ClearSalesVolumesAsync();
         }
     }

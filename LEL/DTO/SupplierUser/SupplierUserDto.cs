@@ -161,5 +161,17 @@ namespace DTO.SupplierUser
         public string ClientVersion { get; set; }
         public int? IsLogingClient { get; set;  }
         public DateTime? ClientLoginTime { get; set; }
+        /// <summary>
+        /// 开户行
+        /// </summary>
+        public string OpeningBank { get; set; }
+        /// <summary>
+        /// 开户人
+        /// </summary>
+        public string AccountHolder { get; set; }
+        /// <summary>
+        /// 银行卡号
+        /// </summary>
+        public string BankNumber { get; set; }
     }
 }

@@ -29,6 +29,8 @@ namespace Service
         public Nullable<decimal> BeforeSupplierAmout { get; set; }
         public Nullable<decimal> AfterSupplierAmout { get; set; }
         public string Actions { get; set; }
+        public Nullable<System.DateTime> BeforePickUpTime { get; set; }
+        public Nullable<System.DateTime> AfterPickUpTime { get; set; }
     
         public virtual le_admin le_admin { get; set; }
         public virtual le_orders_head le_orders_head { get; set; }

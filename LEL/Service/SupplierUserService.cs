@@ -77,8 +77,11 @@ namespace Service
 
                     ClientLoginTime=a.ClientLoginTime,
                     ClientVersion=a.ClientVersion,
-                    IsLogingClient=a.IsLogingClient
-                });//.Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
+                    IsLogingClient=a.IsLogingClient,
+                    AccountHolder = a.AccountHolder,
+                    OpeningBank = a.OpeningBank,
+                    BankNumber = a.BankNumber,
+            });//.Where(s => s.Suppliers_MobilePhone == LoginName).Where(s => s.UserType == 2).FirstOrDefault();
 
                 if(!string.IsNullOrEmpty(Unionid))
                 {
@@ -202,7 +205,9 @@ namespace Service
                 model.CartModel = dto.CartModel;
                 model.Classify = dto.Classify;
                 model.AnotherName = dto.AnotherName;
-
+                model.AccountHolder = dto.AccountHolder;
+                model.OpeningBank = dto.OpeningBank;
+                model.BankNumber = dto.BankNumber;
                 string updateGoodsSupplierSql = "";
                 string UpdateGoodsSql = "";
                 string updateGoodsSupplierByDefaultSql = "";
@@ -246,7 +251,7 @@ namespace Service
                         }
                     }
                 }
-                if (model.Status == 1)
+                if (model.Status == 1&&dto.Suppliers_Status!=1&&!oneself)
                 {
                     var temp = ctx.le_goods_suppliers.Where(s => s.SuppliersID == model.SuppliersID&&s.IsDeleted==1).Select(s=>s.GoodsID);
                     var temp1 = ctx.le_goods_suppliers.Where(s => temp.Contains(s.GoodsID))

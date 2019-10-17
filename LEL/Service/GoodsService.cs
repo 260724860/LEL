@@ -81,24 +81,32 @@ namespace Service
 
                 if (!string.IsNullOrEmpty(options.KeyWords)) //搜索
                 {
-                    var KeyArry = options.KeyWords.TrimEnd().Split(' ');
-                    if (KeyArry.Length >= 2)
+                    //如果能转换则认为是条码
+                    if (long.TryParse(options.KeyWords, out long IsSerialNumber))
                     {
-                        string k1 = KeyArry[0];
-                        string k2 = KeyArry[1];
-                        tempIq = tempIq.Where(s => s.GoodsName.Contains(k1)
-                            || s.GoodsName.Contains(k2)
-                            );
+                        options.SerialNumber = IsSerialNumber.ToString();
                     }
-                    else if (KeyArry.Length == 1)
+                    else
                     {
-                        string key = KeyArry[0];
-                        tempIq = tempIq.Where(s => s.GoodsName.Contains(key)
-                           || s.GoodsID.ToString().Contains(key)
-                           // || s.Describe.Contains(options.KeyWords)
-                           || s.GoodsGroupsID.ToString().Contains(key)
-                           || s.le_goods_value.Any(k => k.SerialNumber.Contains(key) && k.Enable == 1)
-                           );
+                        var KeyArry = options.KeyWords.TrimEnd().Split(' ');
+                        if (KeyArry.Length >= 2)
+                        {
+                            string k1 = KeyArry[0];
+                            string k2 = KeyArry[1];
+                            tempIq = tempIq.Where(s => s.GoodsName.Contains(k1)
+                                && s.GoodsName.Contains(k2)
+                                );
+                        }
+                        else if (KeyArry.Length == 1)
+                        {
+                            string key = KeyArry[0];
+                            tempIq = tempIq.Where(s => s.GoodsName.Contains(key)
+                               //|| s.GoodsID.ToString().Contains(key)
+                               // || s.Describe.Contains(options.KeyWords)
+                               //|| s.GoodsGroupsID.ToString().Contains(key)
+                               // || s.le_goods_value.Any(k => k.SerialNumber.Contains(key) && k.Enable == 1)
+                               );
+                        }
                     }
                 }
                 if (!string.IsNullOrEmpty(options.SerialNumber))
@@ -331,7 +339,7 @@ namespace Service
                     tempIq = tempIq.Where(s => s.le_goods_suppliers.Any(k => k.SuppliersID == options.SupplierID && k.IsDeleted == 0));
                 }
 
-                var tempJoin = tempIq.Join(ctx.le_goods_suppliers, o => o.GoodsID, p => p.GoodsID, (p, o) => new GroodsModelDto
+                var tempJoin = tempIq.Join(ctx.le_goods_suppliers.Where(s => s.IsDeleted == 0), o => o.GoodsID, p => p.GoodsID, (p, o) => new GroodsModelDto
                 {
                     GoodsID = o.GoodsID,
                     GoodsName = p.GoodsName,
@@ -366,6 +374,42 @@ namespace Service
                     }).ToList(),
                     SupplierID = o.SuppliersID
                 });
+
+                //var tempJoin = tempIq.Select(p=>new GroodsModelDto
+                //{
+                //    GoodsID = p.GoodsID,
+                //    GoodsName = p.GoodsName,
+                //    GoodsGroups_ID = p.GoodsGroupsID,
+                //    Sort = p.Sort,
+                //    Specifications = p.Specifications,
+                //    Describe = p.Describe,
+                //    IsShelves = p.IsShelves,
+                //    Image = BasePath + p.Image,
+                //    IsHot = p.IsHot,
+                //    IsNewGoods = p.IsNewGoods,
+                //    IsRecommend = p.IsRecommend,
+                //    IsSeckill = p.IsSeckill,
+                //    CreateTime = p.CreateTime,
+                //    SpecialOffer = p.SpecialOffer,
+                //    OriginalPrice = p.OriginalPrice,
+                //    GoodsGroupName = p.le_goodsgroups.Name,
+                //    PackingNumber = p.PackingNumber,
+                //    SalesVolumes = p.SalesVolumes,
+                //    TotalSalesVolumes = p.TotalSalesVolume,
+                //    Stock = p.Stock,
+                //    Quota = p.Quota,
+                //    MSRP = p.MSRP,
+                //    MinimumPurchase = p.MinimumPurchase,
+                //    GoodsValueList = p.le_goods_value.Where(k => k.Enable == 1).Select(k => new GoodsValues()
+                //    {
+                //        SerialNumber = k.SerialNumber,
+                //        CategoryType = k.CategoryType,
+                //        GoodsID = k.GoodsID,
+                //        GoodsValueID = k.GoodsValueID,
+                //        GoodsValueName = k.GoodsValue
+                //    }).ToList(),
+                //    SupplierID = p.le_goods_suppliers.Where(s=>s.IsDeleted==0).Select(k=>k.SuppliersID).FirstOrDefault()
+                //});
                 var AdminRoleSupplier = ctx.lel_admin_suppliers.Where(s => s.AdminID == AdminID).Select(s => s.SupplierID).ToList();
                 var tmepGroup = tempJoin.Where(s => AdminRoleSupplier.Contains(s.SupplierID));//.ToList();
 
@@ -986,16 +1030,22 @@ namespace Service
         /// </summary>
         /// <param name="GoodsID"></param>
         /// <returns></returns>
-        public bool UnShelvesGoods(int GoodsID, out string msg)
+        public bool UnShelvesGoods(int GoodsID, out string msg, int AdminID = 0)
         {
             using (Entities ctx = new Entities())
             {
+                
                 var dto = ctx.le_goods.Where(s => s.GoodsID == GoodsID).FirstOrDefault();
                 if (dto == null)
                 {
                     msg = "该记录不存在，请确认后重试";
                     return false;
                 }
+                le_goods_log LogModelLog = new le_goods_log();
+                LogModelLog.AdminID = AdminID;
+                LogModelLog.BeforeSheLvesStatus = dto.IsShelves;
+                LogModelLog.BeforeGoodsName = dto.GoodsName;
+                LogModelLog.GoodsID = dto.GoodsID;
                 if (dto.IsShelves == 0)
                 {
                     dto.IsShelves = 1;
@@ -1004,6 +1054,8 @@ namespace Service
                 {
                     dto.IsShelves = 0;
                 }
+                LogModelLog.AfterSheLvesStatus = dto.IsShelves;
+                ctx.le_goods_log.Add(LogModelLog);
                 ctx.Entry<le_goods>(dto).State = EntityState.Modified;
                 if (ctx.SaveChanges() > 0)
                 {
@@ -1937,7 +1989,6 @@ namespace Service
                     return false;
                 }
             }
-
         }
 
         public List<FindGoodsImg> GetAllGoodsImg(int offset, int rows)
@@ -1945,13 +1996,13 @@ namespace Service
             using (Entities ctx = new Entities())
             {
                 var GoodsIDList = ctx.le_goods.Where(s => s.IsShelves==1).OrderBy(s => s.GoodsID).Skip(offset).Take(rows)
-                    .Select(s=>new FindGoodsImg { GoodsID=s.GoodsID,Img=s.Image, GoodsName =s.GoodsName}).ToList();
+                    .Select(s=>new FindGoodsImg { GoodsID=s.GoodsID,Img=s.Image, GoodsName =s.GoodsName,GoodsGroup=s.le_goodsgroups.Name}).ToList();
                 return GoodsIDList;
             }
         }
 
         /// <summary>
-        /// 新增
+        /// 新增检测报告
         /// </summary>
         /// <param name="createOrEditDto"></param>
         /// <returns></returns>
@@ -1959,31 +2010,40 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                bool IsAdd=false;
+                bool IsAdd=true;
                 var model = new le_qualitytesting();
                 if (createOrEditDto.ID != null && createOrEditDto.ID != 0)
                 {
                     model = ctx.le_qualitytesting.Where(s => s.ID == createOrEditDto.ID&&s.IsDelete==0).FirstOrDefault();
                     if(model==null)
                     {
+                       
                         IsAdd = true;
                     }
                     else
                     {
                         IsAdd = false;
                     }
-                }
-                model.Image = createOrEditDto.Image;
-               // model.IsDelete = createOrEditDto.IsDelete;
-                model.SupplierID = createOrEditDto.SupplierID;
-                model.CreateTime = DateTime.Now;
-                model.GoodsID = createOrEditDto.GoodsID;
+                }              
                 if(IsAdd)
                 {
-                    ctx.le_qualitytesting.Add(model);
+                    var  Addmodel = new le_qualitytesting();
+                    Addmodel.Image = createOrEditDto.Image;
+                    Addmodel.IsDelete = createOrEditDto.IsDelete;
+                    Addmodel.SupplierID = createOrEditDto.SupplierID;
+                    //model.CreateTime = DateTime.Now;
+                    Addmodel.GoodsID = createOrEditDto.GoodsID;
+                    ctx.le_qualitytesting.Add(Addmodel);
                 }
                 else
                 {
+                    model.Image = createOrEditDto.Image;
+                    model.IsDelete = createOrEditDto.IsDelete;
+                    model.SupplierID = createOrEditDto.SupplierID;
+                    //model.CreateTime = DateTime.Now;
+                    model.GoodsID = createOrEditDto.GoodsID;
+                    //ctx.le_qualitytesting.Add(model);
+
                     ctx.Entry<le_qualitytesting>(model).State = EntityState.Modified;
                 }
                 if(ctx.SaveChanges()>0)
@@ -2001,7 +2061,7 @@ namespace Service
         {
             using (Entities ctx = new Entities())
             {
-                var List = ctx.le_qualitytesting.Where(s => s.GoodsID == GoodsID).ToList();
+                var List = ctx.le_qualitytesting.Where(s => s.GoodsID == GoodsID&&s.IsDelete==0).ToList();
                 return List;
             }
         }
@@ -2040,8 +2100,72 @@ namespace Service
             public string Img { get; set; }
             public int GoodsID { get; set; }
             public string GoodsName { get; set; }
+            public string GoodsGroup { get; set; }
+            public string SerialNumber { get; set; }
            // public string SerialNumber { get; set; }
         }
 
+        /// <summary>
+        /// 删除商品
+        /// </summary>
+        /// <param name="GoodsID"></param>
+        /// <param name="Msg"></param>
+        /// <returns></returns>
+        public bool DeleteGoods(int GoodsID,out string Msg)
+        {
+            using (Entities ctx=new Entities())
+            {
+                //查询出原有商品
+                var SourceModel = ctx.le_goods.Where(s => s.GoodsID == GoodsID).FirstOrDefault();
+                if(SourceModel==null)
+                {
+                    Msg = "商品不存在请重新输入";
+                    return false;
+                }
+                string GoodsName = SourceModel.GoodsName.Trim();
+                //查询是否有重复商品并且上架
+                var RepeatModel = ctx.le_goods.Where(s => s.GoodsName.Trim() == GoodsName && s.IsShelves==1&&s.GoodsID!= SourceModel.GoodsID).FirstOrDefault();
+                var OrderLinesList = ctx.le_orders_lines.Where(s => s.GoodsID == SourceModel.GoodsID).ToList();
+               if(RepeatModel==null&& OrderLinesList.Count>0)
+                {
+                    Msg = "商品已存在销售订单记录 无法删除";
+                    return false;
+                }
+                foreach(var Item in OrderLinesList)
+                {
+
+                    Item.GoodsID = RepeatModel.GoodsID;
+                    ctx.Entry<le_orders_lines>(Item).State = EntityState.Modified;
+                    var updateOrderLinesql = ctx.Database.ExecuteSqlCommand("delete from le_orderline_goodsvalue where orderlineid= "+ Item.OrdersLinesID);
+                }
+                ctx.le_goods_img.RemoveRange(SourceModel.le_goods_img);
+                ctx.le_goods_log.RemoveRange(SourceModel.le_goods_log);
+              
+                ctx.le_goods_suppliers.RemoveRange(SourceModel.le_goods_suppliers);
+                ctx.le_goods_value.RemoveRange(SourceModel.le_goods_value);
+                var RemoveList = SourceModel.le_shop_cart.ToList();
+
+                var GoodsValueList = SourceModel.le_goods_value.ToList();
+                foreach (var carshop in RemoveList)
+                {
+                    ctx.le_cart_goodsvalue.RemoveRange(carshop.le_cart_goodsvalue);
+                }
+                //foreach(var kk in )
+             
+                ctx.le_shop_cart.RemoveRange(SourceModel.le_shop_cart);
+                //ctx.le_cart_goodsvalue.RemoveRange(SourceModel.le_shop_cart.to)
+                ctx.le_goods.Remove(SourceModel);
+               if(ctx.SaveChanges()>0)
+                {
+                    Msg = "删除成功";
+                    return true;
+                }
+               else
+                {
+                    Msg = "删除失败";
+                    return false;
+                }
+            }
+        }
     }
 }

@@ -86,7 +86,7 @@ namespace LELAdmin.Controllers
                     string filePath = System.Web.HttpContext.Current.Server.MapPath("/") + folderPath + fileName;
                     hpf.SaveAs(filePath);
                     // string path = System.Web.HttpContext.Current.Server.MapPath("/") + "UploadFile/1.xlsx";
-                    var ImportData = UploadFileBLL.InsertGoodsBaseInfo(filePath, out string Msg);
+                    var ImportData = UploadFileBLL.AddGoodsInfoByExcel(filePath, out string Msg,1);
                     if (ImportData)
                     {
                         return Json(JRpcHelper.AjaxResult(0, "上传成功", null));

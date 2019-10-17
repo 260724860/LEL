@@ -129,7 +129,8 @@ namespace LELAdmin.Controllers
             try
             {
                 string Msg;
-                var result = GService.UnShelvesGoods(GoodsID, out Msg);
+                int UserID= GetLoginInfo().UserID;
+                var result = GService.UnShelvesGoods(GoodsID, out Msg,  UserID );
                 if (Msg.Equals("SUCCESS") && result)
                 {
                     return Json(new { code = 0, msg = "SUCCESS", content = Msg });
@@ -400,6 +401,26 @@ namespace LELAdmin.Controllers
             result = GService.BarcodeGeneration(IsBulkCargo);
 
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+        }
+        /// <summary>
+        /// 删除商品
+        /// </summary>
+        /// <param name="GoodsID"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Route("DeleteGoods")]
+        [HttpPost]
+        public IHttpActionResult DeleteGoods(int GoodsID)
+        {
+            var result = GService.DeleteGoods(GoodsID,out string Msg);
+            if (result)
+            {
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            }
+            else
+            {
+                return Json(JRpcHelper.AjaxResult(1, Msg, result));
+            }
         }
 
         /// <summary>

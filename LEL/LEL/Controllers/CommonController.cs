@@ -250,5 +250,31 @@ namespace LEL.Controllers
             var result = Convert.ToDateTime(start);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
+
+        /// <summary>
+        /// 日志测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("LogTest")]
+        [AllowAnonymous]
+        public IHttpActionResult LogTest()
+        {
+            new ShopOrderService().LogTest();
+            return Json(JRpcHelper.AjaxResult(0, "1111", ""));
+        }
+
+        /// <summary>
+        /// 获取购物车优化版本
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <param name="IsBackgroundAddition"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetCartListByshort")]
+        [AllowAnonymous]
+        public IHttpActionResult GetCartListByshort(int UserID, int IsBackgroundAddition = 0)
+        {
+           var reuslt=  new ShopOrderService().GetCartListByshort(UserID, IsBackgroundAddition);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", reuslt));
+        }
     }
 }

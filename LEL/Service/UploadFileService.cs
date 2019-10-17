@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.DBUtility;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1082,6 +1083,9 @@ namespace Service
                             le_Goods.Stock = 100000;
                             //Msg = string.Format("在【商品录入】中商品序列号：{0}的【库存】格式错误", GoodsNumber);
                             //return false;
+                        }else
+                        {
+                            le_Goods.Stock = Convert.ToInt32(GoodsInfoDt.Rows[i]["库存"].ToString());
                         }
                     }
                     else
@@ -1433,19 +1437,34 @@ namespace Service
                 decimal SpecialOffer;
                 int GoodsID;
                 int IsSeckill;
+                int IsShelves;
                 string BarCode = "";
                 for (int i = 0; i < GoodsInfoDt.Rows.Count; i++)
                 {
                     if(!int.TryParse(GoodsInfoDt.Rows[i]["商品id"].ToString(),out GoodsID))
                     {
                         Msg = "【商品id】不能为空";
-                        return false;
+                        continue;
+                        //return false;
 
                     }
                     BarCode = GoodsInfoDt.Rows[i]["商品条码"].ToString();
-                    if (!int.TryParse(GoodsInfoDt.Rows[i]["是否秒杀"].ToString(), out IsSeckill))
+                    if(GoodsInfoDt.Columns.Contains("是否秒杀"))
                     {
-                        Msg = "【是否秒杀】不能为空";
+                        if (!int.TryParse(GoodsInfoDt.Rows[i]["是否秒杀"].ToString(), out IsSeckill))
+                        {
+                            Msg = "【是否秒杀】不能为空";
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        IsSeckill = 0;
+                    }
+                   
+                    if(!int.TryParse(GoodsInfoDt.Rows[i]["是否上架"].ToString(), out IsShelves))
+                    {
+                        Msg = "【是否上架】不能为空";
                         return false;
                     }
                     if (GoodsInfoDt.Rows[i]["平台售价"].ToString() == string.Empty)
@@ -1453,19 +1472,21 @@ namespace Service
                         Msg = "平台售价不能为空";
                         return false;
                     }
+                    
                     SpecialOffer = decimal.Parse(GoodsInfoDt.Rows[i]["平台售价"].ToString());
                     if (!decimal.TryParse(GoodsInfoDt.Rows[i]["划线价"].ToString(), out OriginalPrice))
                     {
                         OriginalPrice = 0;
                     }
-                    DHPTSql += "update le_goods set OriginalPrice=" + OriginalPrice + ",SpecialOffer="+ SpecialOffer + ",IsSeckill="+ IsSeckill + " where GoodsID="+ GoodsID + ";";
-                    JXCSql += "update t_bd_item_info set base_price='"+ SpecialOffer + "' where item_subno='"+ BarCode + "'";
+                    DHPTSql += "update le_goods set OriginalPrice=" + OriginalPrice + ",SpecialOffer="+ SpecialOffer + ",IsSeckill="+ IsSeckill + " ,Isshelves="+IsShelves+",updatetime=now() where GoodsID="+ GoodsID + ";";
+                    JXCSql += "update t_bd_item_info set base_price='"+ SpecialOffer + "' where item_subno='"+ BarCode + "';";
 
                 }
                 try
+                
                 {
                     var DHPTSqlCount= ctx.Database.ExecuteSqlCommand(DHPTSql);
-                    var JXCSqlCount = DbHelperMySQL.ExecuteSql(JXCSql);
+                    var JXCSqlCount = DbHelperSQL.ExecuteSql(JXCSql);
                     Msg = "SUCCESS";
                     return true;
                 }

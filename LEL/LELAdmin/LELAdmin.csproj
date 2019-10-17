@@ -322,6 +322,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="UploadFile\商品批量导入格式.xlsx" />
     <Content Include="UploadFile\商品供应价格批量上传格式.xlsx" />
+    <Content Include="UploadFile\爆品改价.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

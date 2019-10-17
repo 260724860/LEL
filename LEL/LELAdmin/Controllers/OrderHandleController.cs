@@ -123,7 +123,6 @@ namespace LELAdmin.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "请输入正常的状态码限定范围[100, 2,3]", param.Status));
             }
-
             var result = ShopOrderBLL.UpdateOrderLineStatusBySupplier(param.OrderNO, AdminID, param.SuppliersID, param.Status, out string Msg);
             if (!result)
             {
@@ -140,11 +139,12 @@ namespace LELAdmin.Controllers
         [HttpPost, Route("api/OrderHandle/UpdateOrderInfo/")]
         public IHttpActionResult UpdateOrderInfo(OrderEditInfo orderEditInfo)
         {
+            int AdminID = GetLoginInfo().UserID;
             if (orderEditInfo == null)
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误", orderEditInfo));
             }
-            var result = ShopOrderBLL.UpdateOrderInfo(orderEditInfo);
+            var result = ShopOrderBLL.UpdateOrderInfo(orderEditInfo, AdminID);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -164,8 +164,8 @@ namespace LELAdmin.Controllers
         [HttpPost, Route("api/OrderHandle/GetPushMsg/")]
         public IHttpActionResult GetPushMsg(int UserID, int UserType)
         {
-            var result = new OtherService().GetPushMsg(UserID, UserType);
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
+            //var result = new OtherService().GetPushMsg(UserID, UserType);
+            return Json(JRpcHelper.AjaxResult(0, "SUCCESS", 1));
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace LELAdmin.Controllers
                 return Json(JRpcHelper.AjaxResult(1, "GoodsCount或者 ReturnCount参数错误", GoodsCount));
             }
             string Msg;
-            var result =new  ShopOrderService().AddCart(GoodsID, GoodValueID, GoodsCount, UserID, cumulation, out Msg, ReturnCount);
+            var result =new  ShopOrderService().AddCart(GoodsID, GoodValueID, GoodsCount, UserID, cumulation, out Msg, ReturnCount,1);
             if (result > 0)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -451,7 +451,7 @@ namespace LELAdmin.Controllers
             //{
             //    return Json(JRpcHelper.AjaxResult(1, "未通过审核", GetUserID()));
             //}
-            var result =new ShopOrderService().GetCartList(UserID);
+            var result =new ShopOrderService().GetCartList(UserID,1);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
         /// <summary>

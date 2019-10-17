@@ -46,7 +46,10 @@ namespace DTO.ShopOrder
         /// </summary>
         public string PickupTimeStr { get; set; }
         
-        
+        /// <summary>
+        /// 微信id
+        /// </summary>
+        public string OpenID { get; set; }
     }
 
 }

@@ -632,5 +632,10 @@ namespace Service
                 return result;
             }
         }
+
+        public void LogTest()
+        {
+            log.Debug("1231231");
+        }
     }
 }

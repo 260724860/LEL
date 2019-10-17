@@ -13,7 +13,9 @@ namespace Common.DBUtility
     public abstract class DbHelperSQL
     {
          //数据库连接字符串(web.config来配置)，可以动态更改connectionString支持多数据库.		
-        public static string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+       // public static string connectionString = ConfigurationManager.ConnectionStrings["SqlserverConnectionString"].ConnectionString;
+
+        public static string connectionString= ConfigurationManager.AppSettings["SqlserverConnectionString"];
         public DbHelperSQL(){ }
 
         #region 公用方法

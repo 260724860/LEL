@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Http;
+using static DTO.Common.Enum;
 using static Service.GoodsService;
 
 namespace LELAdmin.Controllers
@@ -34,7 +35,7 @@ namespace LELAdmin.Controllers
             }
         }
 
-   
+
         /// <summary>
         /// 新增门店散货
         /// </summary>
@@ -60,7 +61,7 @@ namespace LELAdmin.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
             }
-           
+
         }
         /// <summary>
         /// 查询门店散货表
@@ -72,7 +73,7 @@ namespace LELAdmin.Controllers
         [HttpPost, Route("api/Other/GetStoreBulkCargoDtos/")]
         public IHttpActionResult GetStoreBulkCargoDtos(string Barcode, string Name, int? UserID)
         {
-            var result = new StoreBulkCargoService(). GetStoreBulkCargoDtos(Barcode, Name, UserID);
+            var result = new StoreBulkCargoService().GetStoreBulkCargoDtos(Barcode, Name, UserID);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
@@ -231,11 +232,11 @@ namespace LELAdmin.Controllers
                 var result = SysConfig.Get().values;
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(JRpcHelper.AjaxResult(1, ex.Message, ex));
             }
-           
+
         }
         /// <summary>
         /// 强制刷新系统运行参数（可能会引发系统异常）
@@ -287,7 +288,7 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [HttpGet, Route("api/Other/GetUserPWD/")]
         [AllowAnonymous]
-        public IHttpActionResult GetUserPWD(string Loginname,int UserType,string Token)
+        public IHttpActionResult GetUserPWD(string Loginname, int UserType, string Token)
         {
             if (Token != "KKK")
             {
@@ -312,13 +313,13 @@ namespace LELAdmin.Controllers
         /// <param name="Remarks">备注</param>
         /// <returns></returns>
         [HttpGet, Route("api/Other/CreateOrUpdateSysSversion/")]
-        public IHttpActionResult CreateOrUpdateSysSversion(int? id, string MajorVersion, string ViversionNumber, string Description, string LeftoverBug, string Remarks )
+        public IHttpActionResult CreateOrUpdateSysSversion(int? id, string MajorVersion, string ViversionNumber, string Description, string LeftoverBug, string Remarks)
         {
-            var result = new SysSversionService().CreateOrUpdate(id,  MajorVersion,  ViversionNumber,  Description,  LeftoverBug,  Remarks, out string msg);
+            var result = new SysSversionService().CreateOrUpdate(id, MajorVersion, ViversionNumber, Description, LeftoverBug, Remarks, out string msg);
 
-            if(result)
+            if (result)
             {
-                return   Json(JRpcHelper.AjaxResult(0, msg, ""));
+                return Json(JRpcHelper.AjaxResult(0, msg, ""));
             }
             else
             {
@@ -335,9 +336,9 @@ namespace LELAdmin.Controllers
         {
             var result = new SysSversionService().GetSysVersionList();
 
-          
+
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
-           
+
         }
 
         /// <summary>
@@ -347,21 +348,21 @@ namespace LELAdmin.Controllers
         [HttpGet, Route("api/Other/GetOrdersTimeLimitList/")]
         public IHttpActionResult GetOrdersTimeLimitList()
         {
-            var result=  new OrdersTimeLimitService().GetOrdersTimeLimitList();
+            var result = new OrdersTimeLimitService().GetOrdersTimeLimitList();
 
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
 
-      /// <summary>
-      /// 设置或者修改下单时间设置
-      /// </summary>
-      /// <param name="dto">ID未空或者0表示新增否则修改</param>
-      /// <returns></returns>
+        /// <summary>
+        /// 设置或者修改下单时间设置
+        /// </summary>
+        /// <param name="dto">ID未空或者0表示新增否则修改</param>
+        /// <returns></returns>
         [HttpPost, Route("api/Other/CreateOrUpdate/")]
         public IHttpActionResult CreateOrUpdate(OrdersTimeLimitEditDto dto)
         {
-           
-            var result = new OrdersTimeLimitService().CreateOrUpdate(GetLoginInfo().UserID,dto,out string msg);
+
+            var result = new OrdersTimeLimitService().CreateOrUpdate(GetLoginInfo().UserID, dto, out string msg);
             if (result)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -383,7 +384,7 @@ namespace LELAdmin.Controllers
         public async Task<IHttpActionResult> GetOrderLimitByTimeSlot(DateTime? TimeSlot)
         {
             DateTime newDate;
-            if (TimeSlot==null)
+            if (TimeSlot == null)
             {
                 newDate = DateTime.Now;
             }
@@ -391,7 +392,7 @@ namespace LELAdmin.Controllers
             {
                 newDate = TimeSlot.Value;
             }
-          
+
             var result = await new OrdersTimeLimitService().GetOrderLimitForTimeSlot(newDate);
             return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
         }
@@ -403,36 +404,37 @@ namespace LELAdmin.Controllers
         /// <param name="rows"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpGet,Route("FindGoodsImg")]
-        public IHttpActionResult FindGoodsImg(int offset,int rows,bool IsShop0Jpg,bool IsDelete=false)
+        [HttpGet, Route("FindGoodsImg")]
+        public IHttpActionResult FindGoodsImg(int offset, int rows, bool IsShop0Jpg, bool IsDelete = false)
         {
-            var GetAllGoodsImg = new GoodsService().GetAllGoodsImg(offset,rows);
-            var   localPath = System.Web.HttpContext.Current.Server.MapPath("/");
-            List<FindGoodsImg> result = new List<FindGoodsImg>();
-            List<string> ImgPath = new List<string>();
-            int UpdateCount = 0;
-            foreach (var item in GetAllGoodsImg)
-            {
-                if (!System.IO.File.Exists(localPath + item.Img))
-                {
-                    result.Add(item);
-                    ImgPath.Add(item.Img);
-                }
-                if (item.Img == "/GoodImg/0.jpg" && IsShop0Jpg == true)
-                {
-                    result.Add(item);
-                    
-                }                  
-            }
-            if (IsDelete)
-            {
-                if (ImgPath.Count > 0)
-                {
-                    UpdateCount=   new GoodsService().UpdateGoodsImg(ImgPath);
-                }
-            }
-            
-            return Json(JRpcHelper.AjaxResult(0, "SUCCESS"+ UpdateCount.ToString(), result,result.Count));
+            //var GetAllGoodsImg = new GoodsService().GetAllGoodsImg(offset, rows);
+            //var localPath = System.Web.HttpContext.Current.Server.MapPath("/");
+            //List<FindGoodsImg> result = new List<FindGoodsImg>();
+            //List<string> ImgPath = new List<string>();
+            //int UpdateCount = 0;
+            //foreach (var item in GetAllGoodsImg)
+            //{
+            //    if (!System.IO.File.Exists(localPath + item.Img))
+            //    {
+            //        result.Add(item);
+            //        ImgPath.Add(item.Img);
+            //    }
+            //    if (item.Img == "/GoodImg/0.jpg" && IsShop0Jpg == true)
+            //    {
+            //        result.Add(item);
+
+            //    }
+            //}
+            //if (IsDelete)
+            //{
+            //    if (ImgPath.Count > 0)
+            //    {
+            //        UpdateCount = new GoodsService().UpdateGoodsImg(ImgPath);
+            //    }
+            //}
+
+            //return Json(JRpcHelper.AjaxResult(0, "SUCCESS" + UpdateCount.ToString(), result, result.Count));
+            return Json(JRpcHelper.AjaxResult(0, "Come on.", null));
         }
 
         /// <summary>
@@ -443,19 +445,19 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet, Route("FlushTokenbyUser")]
-        public IHttpActionResult FlushTokenbyUser(int UserType,string LoginName="")
+        public IHttpActionResult FlushTokenbyUser(int UserType, string LoginName = "")
         {
             var IsSuccess = new SupplierUserService().FlushTokenbyUser(UserType, LoginName);
-            if(IsSuccess)
+            if (IsSuccess)
             {
-                return  Json(JRpcHelper.AjaxResult(0, "SUCCESS", LoginName));
+                return Json(JRpcHelper.AjaxResult(0, "SUCCESS", LoginName));
             }
             else
             {
                 return Json(JRpcHelper.AjaxResult(1, "Fail", LoginName));
             }
         }
-        
+
         /// <summary>
         /// 处理购物车内已经下架的商品
         /// </summary>
@@ -471,8 +473,8 @@ namespace LELAdmin.Controllers
         [HttpGet, Route("Test")]
         public IHttpActionResult Test()
         {
-            MPApiServiceClient serviceClient = new MPApiServiceClient(new Uri("https://xcy.kdk94.top/"),new AnonymousCredential());
-            var result= serviceClient.SendSuppliersTemplateMsgWithHttpMessagesAsync("","","","");
+            MPApiServiceClient serviceClient = new MPApiServiceClient(new Uri("https://xcy.kdk94.top/"), new AnonymousCredential());
+            var result = serviceClient.SendSuppliersTemplateMsgWithHttpMessagesAsync("", "", "", "");
             return null;
         }
 
@@ -484,7 +486,7 @@ namespace LELAdmin.Controllers
         [HttpGet, Route("GetOrderReminder")]
         public IHttpActionResult GetOrderReminder()
         {
-            var result= new ShopOrderService().GetOrderReminder();
+            var result = new ShopOrderService().GetOrderReminder();
             return Json(JRpcHelper.AjaxResult(0, "result", result));
         }
 
@@ -494,7 +496,7 @@ namespace LELAdmin.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet, Route("GetOrderReminderBy48Hour")]
-        public async Task< IHttpActionResult> GetOrderReminderBy48Hour()
+        public async Task<IHttpActionResult> GetOrderReminderBy48Hour()
         {
             var result = await new ShopOrderService().GetOrderReminderBy48Hour();
             LoginInfo Userinfo = new LoginInfo();
@@ -509,18 +511,30 @@ namespace LELAdmin.Controllers
                 paramas.OrderLineID = intem.OrderLineID;
                 paramas.SuppliersID = 291;
                 paramas.OrderNo = intem.OrderNo;
-                paramas.Status = 10;
-                paramas.Notes = "系统自动完成20190930";
+                paramas.Status = (int)OrderLineStatus.YiQuXiao;
+                paramas.Notes = "取货时间超时，系统自动取消";
                 List.Add(paramas);
             }
-            var updateresult = new ShopOrderService().UpdateOrderLineStatus(List, out string msg, 9, 0);
+            var updateresult = new ShopOrderService().UpdateOrderLineStatus(List, out string msg, 0, 291);
             if (!updateresult)
             {
                 return Json(JRpcHelper.AjaxResult(0, msg, result));
             }
             return Json(JRpcHelper.AjaxResult(0, "result", result));
         }
+        /// <summary>
+        /// 日志测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("LogTest")]
+        [AllowAnonymous]
+        public IHttpActionResult LogTest()
+        {
+            new OtherService().LogTest();
+            return Json(JRpcHelper.AjaxResult(0, "1111", ""));
+        }
     }
+
     public class AnonymousCredential : Microsoft.Rest.ServiceClientCredentials
 
     {

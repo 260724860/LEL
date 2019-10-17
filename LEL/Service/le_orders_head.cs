@@ -47,6 +47,17 @@ namespace Service
         public int DeliverCount { get; set; }
         public int OrderType { get; set; }
         public int ExpressType { get; set; }
+        public string pay_TimeEnd { get; set; }
+        public string pay_ResultCode { get; set; }
+        public string pay_ErrDes { get; set; }
+        public string Openid { get; set; }
+        public string pay_BankType { get; set; }
+        public Nullable<int> pay_TotalFee { get; set; }
+        public Nullable<int> pay_cashfee { get; set; }
+        public string pay_attach { get; set; }
+        public string pay_ErrCode { get; set; }
+        public Nullable<int> pay_status { get; set; }
+        public string pay_TransactionId { get; set; }
     
         public virtual le_admin le_admin { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

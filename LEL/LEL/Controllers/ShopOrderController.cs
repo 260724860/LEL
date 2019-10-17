@@ -2,6 +2,8 @@
 using DTO.Common;
 using DTO.Goods;
 using DTO.ShopOrder;
+using log4net;
+using Newtonsoft.Json;
 using Service;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace LEL.Controllers
     {
         ShopOrderService shopOrderService = new ShopOrderService();
         OtherService OtherService = new OtherService();
+        private static ILog log = LogManager.GetLogger(typeof(ShopOrderController));
         private int UserID { get; set; }
 
         private int GetUserID()
@@ -110,6 +113,8 @@ namespace LEL.Controllers
         [HttpPost, Route("api/ShopOrder/OrderSave/")]
         public IHttpActionResult OrderSave(OrderSaveParams Data)
         {
+            
+            DateTime beforeDT = System.DateTime.Now;
             int[] OrderTypes = { 1, 2, 3 }; int[] ExpressTypes = { 1, 2 };
             if (GetUserID() == -1)
             {
@@ -119,7 +124,6 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, "参数错误,请检查", Data.OrderType.ToString() + "," + Data.ExpressType.ToString()));
             }
-
             if (Data.ExpressType == 2)
             {
                 if (!Data.PickupTime.HasValue)
@@ -134,39 +138,23 @@ namespace LEL.Controllers
                     }
                 }
             }
-            //if (Data.PickupTime > new DateTime(2019, 09, 17))
-            //{
-            //    return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误", GetUserID()));
-            //}
+           
             if (Data.PickupTime > DateTime.Now.AddDays(3))
             {
                 return Json(JRpcHelper.AjaxResult(1, "取货时间格式错误,取货时间限制48小时内", GetUserID()));
             }
-            if (Data.PickupTime < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1))
+            if (Data.PickupTime.Value.Day ==DateTime.Now.Day)
             {
                 return Json(JRpcHelper.AjaxResult(1, "取货时间错误，请重新选择", GetUserID()));
             }
-
-            Data.UserID = GetUserID();
-            using (Entities ctx=new Entities())
-            {
-                string Classify = ctx.le_users.Where(s => s.UsersID == UserID).Select(s=>s.Classify).FirstOrDefault();
-                string Environment = "";
-                string url = Request.RequestUri.Host.ToString();
-                var SubdomainArrty = url.Split('.');
-                if (SubdomainArrty.Length > 0)
-                {
-                    Environment = SubdomainArrty[0];
-                }
-                //if(Classify=="lelshoptest"&& Environment== "lelshoptest")
-                //{
-                //    return Json(JRpcHelper.AjaxResult(1, "下单失败，只能从lelshoptest2.muguxia.cn/Content网址下单", Classify));
-                //}
-
-            }
+            Data.UserID = GetUserID();         
             string msg;
             List<ShopCartDto> FailCartList;
             var result = shopOrderService.OrderSave(Data, out msg, out FailCartList);
+            DateTime afterDT = System.DateTime.Now;
+            TimeSpan ts = afterDT.Subtract(beforeDT);
+            var resultDateTime= ts.TotalMilliseconds;
+            log.Debug("参数:" + JsonConvert.SerializeObject(Data) + "返回结果:" + result.ToString() + "返回消息:" + msg+"执行时间:"+ resultDateTime.ToString());
             if (result != 0)
             {
                 return Json(JRpcHelper.AjaxResult(0, "SUCCESS", result));
@@ -175,9 +163,21 @@ namespace LEL.Controllers
             {
                 return Json(JRpcHelper.AjaxResult(1, msg, result));
             }
+
             return null;
 
         }
+
+        /// <summary>
+        /// 订单支付
+        /// </summary>
+        /// <returns></returns>
+        //[HttpPost, Route("api/ShopOrder/OrderSave/")]
+        //public IHttpActionResult OrderPay(OrderSaveParams Data)
+        //{
+            //var result= shopOrderService.OrderSave(Data, 50, "测试", out string Msg, 0);
+           // return Json(JRpcHelper.AjaxResult(0, "SUCCESS", null));
+        //}
         /// <summary>
         /// 保存订单 接口
         /// </summary>

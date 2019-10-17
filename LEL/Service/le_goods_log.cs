@@ -22,14 +22,14 @@ namespace Service
         public decimal BeforeSpecialOffer { get; set; }
         public Nullable<decimal> AfterSpecialOffer { get; set; }
         public int BeforeSheLvesStatus { get; set; }
+        public Nullable<int> BeforeMinimumPurchase { get; set; }
+        public Nullable<int> AfterMinimumPurchase { get; set; }
         public Nullable<int> AfterSheLvesStatus { get; set; }
         public int BeforeStock { get; set; }
         public Nullable<int> AfterStock { get; set; }
         public int BeforeQuota { get; set; }
         public Nullable<int> AfterQuota { get; set; }
         public System.DateTime CreateTime { get; set; }
-        public Nullable<int> BeforeMinimumPurchase { get; set; }
-        public Nullable<int> AfterMinimumPurchase { get; set; }
     
         public virtual le_admin le_admin { get; set; }
         public virtual le_goods le_goods { get; set; }
